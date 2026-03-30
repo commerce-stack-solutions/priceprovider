@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Kainų eilutės",
+    "currencies": "Valiutos",
+    "taxClasses": "Mokesčių klasės",
+    "units": "Vienetai",
+    "languages": "Kalbos",
+    "groups": "Grupės",
+    "organizations": "Organizacijos",
+    "countries": "Šalys",
+    "channels": "Kanalai",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Pasirinkti kalbą",
+    "currentLanguage": "Dabartinė kalba"
+  }
+}

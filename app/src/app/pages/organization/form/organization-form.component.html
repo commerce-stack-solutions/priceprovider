@@ -1,0 +1,143 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ isEditMode() ? ('pages.organizations.editOrganization' | transloco) : ('pages.organizations.createOrganization' | transloco) }}</h2>
+    <div>
+      <a [routerLink]="['/' + lang(), 'organizations']" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (error()) {
+      <div class="alert alert-danger">
+        {{ error() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert alert-success">
+        {{ successMessage() }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.fields.id' | transloco }} @if ('id' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id"
+              formControlName="id"
+              [class.is-invalid]="form.get('id')?.invalid && form.get('id')?.touched || hasFieldError('id')"
+            >
+            @if (form.get('id')?.invalid && form.get('id')?.touched) {
+              <div class="invalid-feedback d-block">
+                {{ 'common.messages.requiredField' | transloco }}
+              </div>
+            }
+            @if (hasFieldError('id')) {
+              @for (error of getFieldErrors('id'); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.fields.name' | transloco }} @if ('name' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched || hasFieldError('name')"
+            >
+            @if (form.get('name')?.invalid && form.get('name')?.touched) {
+              <div class="invalid-feedback d-block">
+                {{ 'common.messages.requiredField' | transloco }}
+              </div>
+            }
+            @if (hasFieldError('name')) {
+              @for (error of getFieldErrors('name'); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+
+          <div class="mb-3">
+            <label for="organizationType" class="form-label">{{ 'common.fields.organizationType' | transloco }} <span class="text-danger">*</span></label>
+            <app-enum-selector
+              [values]="organizationTypeValues"
+              [formControlName]="'organizationType'"
+              [required]="true"
+            ></app-enum-selector>
+            @if (form.get('organizationType')?.invalid && form.get('organizationType')?.touched) {
+              <div class="invalid-feedback d-block">
+                {{ 'common.messages.requiredField' | transloco }}
+              </div>
+            }
+            @if (hasFieldError('organizationType')) {
+              @for (error of getFieldErrors('organizationType'); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.fields.parents' | transloco }}</label>
+            <app-referencelist-edit
+              [formControlName]="'parentRefs'"
+              [label]="'common.messages.parentOrganizationId' | transloco"
+              [dataSource]="groupsDataSource"
+              [allowCreate]="true"
+              (createNew)="onCreateNewParentOrganization($event)">
+            </app-referencelist-edit>
+            @if (hasFieldError('parentRefs') || hasFieldError('parents')) {
+              @for (error of getFieldErrors('parentRefs').concat(getFieldErrors('parents')); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.fields.children' | transloco }}</label>
+            <app-referencelist-edit
+              [formControlName]="'subRefs'"
+              [label]="'common.messages.subOrganizationId' | transloco"
+              [dataSource]="groupsDataSource"
+              [allowCreate]="true"
+              (createNew)="onCreateNewSubOrganization($event)">
+            </app-referencelist-edit>
+            @if (hasFieldError('subRefs') || hasFieldError('subs')) {
+              @for (error of getFieldErrors('subRefs').concat(getFieldErrors('subs')); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="container mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+          }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

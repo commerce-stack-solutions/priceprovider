@@ -1,0 +1,34 @@
+[
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 3.5,
+    "minQuantity": 1,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "MATERIAL_COST",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 3.0,
+    "minQuantity": 10,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "MATERIAL_COST",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  }
+]

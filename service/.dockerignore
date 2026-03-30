@@ -1,0 +1,24 @@
+# Build output (will be generated during Docker build)
+build
+.gradle
+out
+
+# IDE and editor files
+.vscode
+.idea
+*.iml
+
+# Git files
+.git
+.gitignore
+
+# Documentation
+README.md
+AGENTS.md
+arc-doc
+
+# Docker files (not needed in the image)
+Dockerfile
+.dockerignore
+dockerimage-*.sh
+dockerimage-*.bat

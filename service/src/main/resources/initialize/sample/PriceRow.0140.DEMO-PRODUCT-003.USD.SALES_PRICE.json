@@ -1,0 +1,144 @@
+[
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 149.99,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 139.99,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 129.99,
+    "minQuantity": 25,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 119.99,
+    "minQuantity": 50,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 135.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 125.0,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 130.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM/DEMO-GROUP-VIP"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 160.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2025-01-01T00:00:00.000Z",
+    "validTo": "2025-12-31T23:59:59.999Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 170.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2026-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  }
+]

@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Laipni lūdzam price|manager",
+    "description": "Šī ir sākumlapa. Šeit ir daži saīsinājumi uz sarakstu lapām:",
+    "shortcuts": "Saīsinājumi"
+  },
+  "languages": {
+    "title": "Valodas",
+    "addLanguage": "Pievienot valodu",
+    "editLanguage": "Rediģēt valodu",
+    "languageDetails": "Valodas informācija",
+    "deleteConfirm": "Dzēst {{count}} atlasītās valodas?",
+    "fields": {
+      "isoKey": "ISO atslēga",
+      "active": "Aktīvs",
+      "mandatory": "Obligāts"
+    }
+  },
+  "currencies": {
+    "title": "Valūtas",
+    "addCurrency": "Pievienot valūtu",
+    "editCurrency": "Rediģēt valūtu",
+    "currencyDetails": "Valūtas informācija",
+    "createCurrency": "Izveidot valūtu"
+  },
+  "units": {
+    "title": "Vienības",
+    "addUnit": "Pievienot vienību",
+    "editUnit": "Rediģēt vienību",
+    "unitDetails": "Vienības informācija",
+    "createUnit": "Izveidot vienību"
+  },
+  "taxclasses": {
+    "title": "Nodokļu klases",
+    "addTaxClass": "Pievienot nodokļu klasi",
+    "editTaxClass": "Rediģēt nodokļu klasi",
+    "taxClassDetails": "Nodokļu klases informācija",
+    "createTaxClass": "Izveidot nodokļu klasi"
+  },
+  "groups": {
+    "title": "Grupas",
+    "addGroup": "Pievienot grupu",
+    "editGroup": "Rediģēt grupu",
+    "groupDetails": "Grupas informācija",
+    "createGroup": "Izveidot grupu",
+    "deleteConfirm": "Vai tiešām vēlaties dzēst {{count}} atlasītās grupas?"
+  },
+  "organizations": {
+    "title": "Organizācijas",
+    "addOrganization": "Pievienot organizāciju",
+    "editOrganization": "Rediģēt organizāciju",
+    "organizationDetails": "Organizācijas informācija",
+    "createOrganization": "Izveidot organizāciju"
+  },
+  "pricerows": {
+    "title": "Cenu rindas",
+    "addPriceRow": "Pievienot cenu rindu",
+    "editPriceRow": "Rediģēt cenu rindu",
+    "priceRowDetails": "Cenu rindas informācija",
+    "createPriceRow": "Izveidot cenu rindu"
+  },
+  "countries": {
+    "title": "Valstis",
+    "addCountry": "Pievienot valsti",
+    "editCountry": "Rediģēt valsti",
+    "countryDetails": "Valsts informācija",
+    "createCountry": "Izveidot valsti",
+    "deleteConfirm": "Dzēst {{count}} atlasītās valstis?"
+  },
+  "channels": {
+    "title": "Kanāli",
+    "addChannel": "Pievienot kanālu",
+    "editChannel": "Rediģēt kanālu",
+    "channelDetails": "Kanāla informācija",
+    "createChannel": "Izveidot kanālu",
+    "deleteConfirm": "Dzēst {{count}} atlasītos kanālus?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

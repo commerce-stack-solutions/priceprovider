@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Dobrodošli v price|manager",
+    "description": "To je začetna stran. Tukaj je nekaj bližnjic do strani s seznami:",
+    "shortcuts": "Bližnjice"
+  },
+  "languages": {
+    "title": "Jeziki",
+    "addLanguage": "Dodaj jezik",
+    "editLanguage": "Uredi jezik",
+    "languageDetails": "Podrobnosti jezika",
+    "deleteConfirm": "Izbriši {{count}} izbranih jezikov?",
+    "fields": {
+      "isoKey": "ISO ključ",
+      "active": "Aktiven",
+      "mandatory": "Obvezno"
+    }
+  },
+  "currencies": {
+    "title": "Valute",
+    "addCurrency": "Dodaj valuto",
+    "editCurrency": "Uredi valuto",
+    "currencyDetails": "Podrobnosti valute",
+    "createCurrency": "Ustvari valuto"
+  },
+  "units": {
+    "title": "Enote",
+    "addUnit": "Dodaj enoto",
+    "editUnit": "Uredi enoto",
+    "unitDetails": "Podrobnosti enote",
+    "createUnit": "Ustvari enoto"
+  },
+  "taxclasses": {
+    "title": "Davčni razredi",
+    "addTaxClass": "Dodaj davčni razred",
+    "editTaxClass": "Uredi davčni razred",
+    "taxClassDetails": "Podrobnosti davčnega razreda",
+    "createTaxClass": "Ustvari davčni razred"
+  },
+  "groups": {
+    "title": "Skupine",
+    "addGroup": "Dodaj skupino",
+    "editGroup": "Uredi skupino",
+    "groupDetails": "Podrobnosti skupine",
+    "createGroup": "Ustvari skupino",
+    "deleteConfirm": "Ali ste prepričani, da želite izbrisati {{count}} izbranih skupin?"
+  },
+  "organizations": {
+    "title": "Organizacije",
+    "addOrganization": "Dodaj organizacijo",
+    "editOrganization": "Uredi organizacijo",
+    "organizationDetails": "Podrobnosti organizacije",
+    "createOrganization": "Ustvari organizacijo"
+  },
+  "pricerows": {
+    "title": "Cenovne vrstice",
+    "addPriceRow": "Dodaj cenovno vrstico",
+    "editPriceRow": "Uredi cenovno vrstico",
+    "priceRowDetails": "Podrobnosti cenovne vrstice",
+    "createPriceRow": "Ustvari cenovno vrstico"
+  },
+  "countries": {
+    "title": "Države",
+    "addCountry": "Dodaj državo",
+    "editCountry": "Uredi državo",
+    "countryDetails": "Podrobnosti države",
+    "createCountry": "Ustvari državo",
+    "deleteConfirm": "Izbrisati {{count}} izbranih držav?"
+  },
+  "channels": {
+    "title": "Kanali",
+    "addChannel": "Dodaj kanal",
+    "editChannel": "Uredi kanal",
+    "channelDetails": "Podrobnosti kanala",
+    "createChannel": "Ustvari kanal",
+    "deleteConfirm": "Izbrisati {{count}} izbranih kanalov?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

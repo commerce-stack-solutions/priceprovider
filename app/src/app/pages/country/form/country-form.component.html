@@ -1,0 +1,148 @@
+@if (!isModalMode()) {
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>{{ isEditMode() ? ('pages.countries.editCountry' | transloco) : ('pages.countries.addCountry' | transloco) }}</h1>
+      <div>
+        <a [routerLink]="['/' + lang(), 'countries']" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+        </a>
+      </div>
+    </div>
+    @if (loading()) {
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+        </div>
+      </div>
+    }
+    @if (error()) {
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+      </div>
+    }
+    @if (successMessage()) {
+      <div class="alert alert-success" role="alert">
+        <i class="bi bi-check-circle"></i> {{ successMessage() }}
+      </div>
+    }
+  </div>
+}
+
+@if (isModalMode() && error()) {
+  <div class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+  </div>
+}
+
+@if (!loading()) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" [class.container]="!isModalMode()" [class.mt-4]="!isModalMode()">
+    <div [class.card]="!isModalMode()">
+      <div [class.card-body]="!isModalMode()">
+        <div class="row mb-3">
+          <label for="isoKey" class="col-sm-3 col-form-label">{{ 'common.fields.isoKey' | transloco }} @if ('isoKey' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <input
+              type="text"
+              class="form-control text-uppercase"
+              id="isoKey"
+              formControlName="isoKey"
+              [class.is-invalid]="(form.get('isoKey')?.invalid && form.get('isoKey')?.touched) || hasFieldError('isoKey')"
+              placeholder="{{ 'common.fields.isoKeyPlaceholder' | transloco }}"
+              [readonly]="isEditMode()">
+            @if (form.get('isoKey')?.invalid && form.get('isoKey')?.touched) {
+              <div class="invalid-feedback">
+                @if (form.get('isoKey')?.errors?.['required']) {
+                  {{ 'common.messages.idRequired' | transloco }}
+                }
+                @if (form.get('isoKey')?.errors?.['pattern']) {
+                  Must be 2 uppercase letters (e.g., DE, AT, CH).
+                }
+              </div>
+            }
+            @if (hasFieldError('isoKey')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('isoKey'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+            @if (isEditMode() && !isModalMode()) {
+              <small class="form-text text-muted">{{ 'common.messages.idCannotBeChanged' | transloco }}</small>
+            }
+          </div>
+        </div>
+
+        <app-localized-stringfield-edit
+          [form]="form"
+          [fieldPrefix]="'name_'"
+          [fieldLabel]="'Name'"
+          [configuredLanguages]="languages"
+          [fieldErrors]="fieldErrors"
+          [isEditMode]="isEditMode()"
+          [isModalMode]="isModalMode()"
+          (removeLanguageEvent)="removeLanguage($event)"
+          (addLanguageEvent)="addLanguage($event)">
+        </app-localized-stringfield-edit>
+
+        <div class="row mb-3">
+          <label for="allowedCurrencyRefs" class="col-sm-3 col-form-label">{{ 'common.fields.allowedCurrencyRefs' | transloco }} @if ('allowedCurrencyRefs' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <app-referencelist-edit
+              formControlName="allowedCurrencyRefs"
+              [dataSource]="currenciesDataSource"
+              placeholder="{{ 'common.fields.allowedCurrencyRefsPlaceholder' | transloco }}"
+              [allowCreate]="false">
+            </app-referencelist-edit>
+            @if (hasFieldError('allowedCurrencyRefs')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('allowedCurrencyRefs'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="primaryCurrencyRef" class="col-sm-3 col-form-label">{{ 'common.fields.primaryCurrencyRef' | transloco }} @if ('primaryCurrencyRef' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <input
+              type="text"
+              class="form-control"
+              id="primaryCurrencyRef"
+              formControlName="primaryCurrencyRef"
+              [class.is-invalid]="hasFieldError('primaryCurrencyRef')"
+              placeholder="{{ 'common.fields.primaryCurrencyRefPlaceholder' | transloco }}">
+            @if (hasFieldError('primaryCurrencyRef')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('primaryCurrencyRef'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [class]="isModalMode() ? 'd-flex justify-content-end gap-2' : 'container mt-4 d-flex gap-2'">
+      @if (isModalMode()) {
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          @if (saving()) { <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> }
+          {{ 'common.actions.create' | transloco }}
+        </button>
+      } @else {
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) { <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      }
+    </div>
+  </form>
+}

@@ -1,0 +1,123 @@
+[
+  {
+    "isoKey": "DE",
+    "name": {
+      "de": "Deutschland",
+      "en": "Germany",
+      "fr": "Allemagne",
+      "es": "Alemania"
+    },
+    "allowedCurrencyRefs": ["EUR"],
+    "primaryCurrencyRef": "EUR"
+  },
+  {
+    "isoKey": "AT",
+    "name": {
+      "de": "Österreich",
+      "en": "Austria",
+      "fr": "Autriche",
+      "es": "Austria"
+    },
+    "allowedCurrencyRefs": ["EUR"],
+    "primaryCurrencyRef": "EUR"
+  },
+  {
+    "isoKey": "CH",
+    "name": {
+      "de": "Schweiz",
+      "en": "Switzerland",
+      "fr": "Suisse",
+      "es": "Suiza"
+    },
+    "allowedCurrencyRefs": ["CHF", "EUR"],
+    "primaryCurrencyRef": "CHF"
+  },
+  {
+    "isoKey": "SE",
+    "name": {
+      "de": "Schweden",
+      "en": "Sweden",
+      "fr": "Suède",
+      "es": "Suecia"
+    },
+    "allowedCurrencyRefs": ["SEK"],
+    "primaryCurrencyRef": "SEK"
+  },
+  {
+    "isoKey": "NO",
+    "name": {
+      "de": "Norwegen",
+      "en": "Norway",
+      "fr": "Norvège",
+      "es": "Noruega"
+    },
+    "allowedCurrencyRefs": ["NOK"],
+    "primaryCurrencyRef": "NOK"
+  },
+  {
+    "isoKey": "DK",
+    "name": {
+      "de": "Dänemark",
+      "en": "Denmark",
+      "fr": "Danemark",
+      "es": "Dinamarca"
+    },
+    "allowedCurrencyRefs": ["DKK"],
+    "primaryCurrencyRef": "DKK"
+  },
+  {
+    "isoKey": "FI",
+    "name": {
+      "de": "Finnland",
+      "en": "Finland",
+      "fr": "Finlande",
+      "es": "Finlandia"
+    },
+    "allowedCurrencyRefs": ["EUR"],
+    "primaryCurrencyRef": "EUR"
+  },
+  {
+    "isoKey": "PL",
+    "name": {
+      "de": "Polen",
+      "en": "Poland",
+      "fr": "Pologne",
+      "es": "Polonia"
+    },
+    "allowedCurrencyRefs": ["PLN"],
+    "primaryCurrencyRef": "PLN"
+  },
+  {
+    "isoKey": "CZ",
+    "name": {
+      "de": "Tschechien",
+      "en": "Czech Republic",
+      "fr": "République tchèque",
+      "es": "República Checa"
+    },
+    "allowedCurrencyRefs": ["CZK"],
+    "primaryCurrencyRef": "CZK"
+  },
+  {
+    "isoKey": "US",
+    "name": {
+      "de": "Vereinigte Staaten",
+      "en": "United States",
+      "fr": "États-Unis",
+      "es": "Estados Unidos"
+    },
+    "allowedCurrencyRefs": ["USD"],
+    "primaryCurrencyRef": "USD"
+  },
+  {
+    "isoKey": "GB",
+    "name": {
+      "de": "Vereinigtes Königreich",
+      "en": "United Kingdom",
+      "fr": "Royaume-Uni",
+      "es": "Reino Unido"
+    },
+    "allowedCurrencyRefs": ["GBP"],
+    "primaryCurrencyRef": "GBP"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "価格行",
+    "currencies": "通貨",
+    "taxClasses": "税区分",
+    "units": "単位",
+    "languages": "言語",
+    "groups": "グループ",
+    "organizations": "組織",
+    "countries": "国",
+    "channels": "チャンネル",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "言語を選択",
+    "currentLanguage": "現在の言語"
+  }
+}

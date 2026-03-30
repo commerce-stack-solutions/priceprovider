@@ -1,0 +1,69 @@
+<div class="row mb-3" [formGroup]="form">
+  <label class="col-sm-3 col-form-label">{{ fieldLabel }} *</label>
+  <div class="col-sm-9">
+    @for (lang of visibleLanguages(); track lang) {
+      <div class="input-group mb-2" [class.opacity-50]="isInactive(lang)">
+        <span class="input-group-text">
+          <strong>{{ lang | uppercase }}</strong>@if (isMandatory(lang)) {<strong class="text-danger">*</strong>}
+        </span>
+        <input 
+          type="text" 
+          class="form-control" 
+          [formControlName]="getControlName(lang)"
+          [class.is-invalid]="(form.get(getControlName(lang))?.invalid && form.get(getControlName(lang))?.touched) || hasFieldError(fieldPrefix.replace('_', '')) || hasFieldError(getControlName(lang))"
+          [placeholder]="fieldLabel + ' in ' + (lang | uppercase) + (isInactive(lang) ? ' (inactive language)' : '')">
+        @if (!isMandatory(lang) && !isInactive(lang)) {
+          <button class="btn btn-outline-danger" type="button" (click)="removeLanguage(lang)" title="Remove this language field">
+            <i class="bi bi-trash"></i>
+          </button>
+        }
+        @if (form.get(getControlName(lang))?.invalid && form.get(getControlName(lang))?.touched) {
+          <div class="invalid-feedback d-block">
+            {{ 'common.messages.requiredField' | transloco }}
+          </div>
+        }
+        @if (hasFieldError(fieldPrefix.replace('_', '')) || hasFieldError(getControlName(lang))) {
+          <div class="invalid-feedback d-block">
+            @for (error of getFieldErrors(fieldPrefix.replace('_', '')); track error) {
+              <div>{{ error }}</div>
+            }
+            @for (error of getFieldErrors(getControlName(lang)); track error) {
+              <div>{{ error }}</div>
+            }
+          </div>
+        }
+      </div>
+    }
+    
+    <div class="mb-2 d-flex gap-2">
+      @if (hasHiddenLocalizedValues() && !showAllLocalizedValues()) {
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="toggleShowAllLocalizedValues()">
+          <i class="bi bi-eye"></i> View All Localized Values
+        </button>
+      }
+      @if (showAllLocalizedValues() && hasHiddenLocalizedValues()) {
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="toggleShowAllLocalizedValues()">
+          <i class="bi bi-eye-slash"></i> Hide Optional Values
+        </button>
+      }
+      @if (availableToAdd().length > 0 && !isModalMode && !hasHiddenLocalizedValues()) {
+        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-plus-circle"></i> Add Language
+        </button>
+        <ul class="dropdown-menu">
+          @for (lang of availableToAdd(); track lang) {
+            <li>
+              <a class="dropdown-item" href="javascript:void(0)" (click)="addLanguage(lang)">
+                {{ lang | uppercase }}
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+    
+    <small class="form-text text-muted mt-2 d-block">
+      <strong class="text-danger">*</strong> = Mandatory languages are required. Inactive languages (greyed out) are shown but cannot be edited.
+    </small>
+  </div>
+</div>

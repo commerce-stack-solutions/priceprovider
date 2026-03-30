@@ -1,0 +1,48 @@
+# Development Profile Configuration
+# This profile is designed for local development with IntelliJ IDEA or other IDEs
+# It enables developer-friendly features like Swagger UI, detailed logging, and H2 console
+
+spring:
+  jpa:
+    show-sql: false          # Enable SQL logging for debugging
+    properties:
+      hibernate:
+        format_sql: false    # Format SQL for better readability
+  h2:
+    console:
+      enabled: true         # Enable H2 console at /h2-console
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${PPS_OIDC_ISSUER_URI:http://localhost:8081/realms/priceprovider}
+
+# Enable Swagger UI for API documentation and testing
+springdoc:
+  api-docs:
+    enabled: true           # Enable OpenAPI docs at /v3/api-docs
+  swagger-ui:
+    enabled: true           # Enable Swagger UI at /swagger-ui.html
+    path: /swagger-ui.html  # Explicit path for Swagger UI
+    operations-sorter: alpha # Sort operations alphabetically
+    tags-sorter: alpha      # Sort tags alphabetically
+    try-it-out-enabled: true # Enable "Try it out" by default
+
+# Enable both essential and sample data initialization for development
+service-config:
+  initialize:
+    essential-data-on: true
+    sample-data-on: true
+
+priceprovider:
+  cors:
+    allowed-origins: "http://localhost:4200,http://localhost:3000,http://localhost:3001,http://localhost:8081"
+
+# Development logging configuration
+logging:
+  level:
+    de.ebusyness.priceproviderservice: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

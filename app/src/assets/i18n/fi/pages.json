@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Tervetuloa price|manageriin",
+    "description": "Tämä on aloitussivu. Tässä on joitain pikakuvakkeita listasivuille:",
+    "shortcuts": "Pikakuvakkeet"
+  },
+  "languages": {
+    "title": "Kielet",
+    "addLanguage": "Lisää kieli",
+    "editLanguage": "Muokkaa kieltä",
+    "languageDetails": "Kielen tiedot",
+    "deleteConfirm": "Poista {{count}} valittua kieltä?",
+    "fields": {
+      "isoKey": "ISO-avain",
+      "active": "Aktiivinen",
+      "mandatory": "Pakollinen"
+    }
+  },
+  "currencies": {
+    "title": "Valuutat",
+    "addCurrency": "Lisää valuutta",
+    "editCurrency": "Muokkaa valuuttaa",
+    "currencyDetails": "Valuutan tiedot",
+    "createCurrency": "Create Currency"
+  },
+  "units": {
+    "title": "Yksiköt",
+    "addUnit": "Lisää yksikkö",
+    "editUnit": "Muokkaa yksikköä",
+    "unitDetails": "Yksikön tiedot",
+    "createUnit": "Create Unit"
+  },
+  "taxclasses": {
+    "title": "Veroluokat",
+    "addTaxClass": "Lisää veroluokka",
+    "editTaxClass": "Muokkaa veroluokkaa",
+    "taxClassDetails": "Veroluokan tiedot",
+    "createTaxClass": "Create Tax Class"
+  },
+  "groups": {
+    "title": "Ryhmät",
+    "addGroup": "Lisää ryhmä",
+    "editGroup": "Muokkaa ryhmää",
+    "groupDetails": "Ryhmän tiedot",
+    "createGroup": "Create Group",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected groups?"
+  },
+  "organizations": {
+    "title": "Organisaatiot",
+    "addOrganization": "Lisää organisaatio",
+    "editOrganization": "Muokkaa organisaatiota",
+    "organizationDetails": "Organisaation tiedot",
+    "createOrganization": "Create Organization"
+  },
+  "pricerows": {
+    "title": "Hintarivit",
+    "addPriceRow": "Lisää hintarivi",
+    "editPriceRow": "Muokkaa hintariviä",
+    "priceRowDetails": "Hintarivin tiedot",
+    "createPriceRow": "Create Price Row"
+  },
+  "countries": {
+    "title": "Maat",
+    "addCountry": "Lisää maa",
+    "editCountry": "Muokkaa maata",
+    "countryDetails": "Maan tiedot",
+    "createCountry": "Luo maa",
+    "deleteConfirm": "Poistetaanko {{count}} valittua maata?"
+  },
+  "channels": {
+    "title": "Kanavat",
+    "addChannel": "Lisää kanava",
+    "editChannel": "Muokkaa kanavaa",
+    "channelDetails": "Kanavan tiedot",
+    "createChannel": "Luo kanava",
+    "deleteConfirm": "Poistetaanko {{count}} valittua kanavaa?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

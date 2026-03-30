@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Řádky cen",
+    "currencies": "Měny",
+    "taxClasses": "Daňové třídy",
+    "units": "Jednotky",
+    "languages": "Jazyky",
+    "groups": "Skupiny",
+    "organizations": "Organizace",
+    "countries": "Země",
+    "channels": "Kanály",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Vybrat jazyk",
+    "currentLanguage": "Aktuální jazyk"
+  }
+}

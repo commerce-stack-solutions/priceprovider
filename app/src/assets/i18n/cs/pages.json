@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Vítejte v price|manager",
+    "description": "Toto je úvodní stránka. Zde jsou některé zkratky na seznam stránek:",
+    "shortcuts": "Zkratky"
+  },
+  "languages": {
+    "title": "Jazyky",
+    "addLanguage": "Přidat jazyk",
+    "editLanguage": "Upravit jazyk",
+    "languageDetails": "Detaily jazyka",
+    "deleteConfirm": "Smazat {{count}} vybraný(ch) jazyk(ů)?",
+    "fields": {
+      "isoKey": "ISO klíč",
+      "active": "Aktivní",
+      "mandatory": "Povinné"
+    }
+  },
+  "currencies": {
+    "title": "Měny",
+    "addCurrency": "Přidat měnu",
+    "editCurrency": "Upravit měnu",
+    "currencyDetails": "Detaily měny",
+    "createCurrency": "Create Currency"
+  },
+  "units": {
+    "title": "Jednotky",
+    "addUnit": "Přidat jednotku",
+    "editUnit": "Upravit jednotku",
+    "unitDetails": "Detaily jednotky",
+    "createUnit": "Create Unit"
+  },
+  "taxclasses": {
+    "title": "Daňové třídy",
+    "addTaxClass": "Přidat daňovou třídu",
+    "editTaxClass": "Upravit daňovou třídu",
+    "taxClassDetails": "Detaily daňové třídy",
+    "createTaxClass": "Create Tax Class"
+  },
+  "groups": {
+    "title": "Skupiny",
+    "addGroup": "Přidat skupinu",
+    "editGroup": "Upravit skupinu",
+    "groupDetails": "Detaily skupiny",
+    "createGroup": "Create Group",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected groups?"
+  },
+  "organizations": {
+    "title": "Organizace",
+    "addOrganization": "Přidat organizaci",
+    "editOrganization": "Upravit organizaci",
+    "organizationDetails": "Detaily organizace",
+    "createOrganization": "Create Organization"
+  },
+  "pricerows": {
+    "title": "Řádky cen",
+    "addPriceRow": "Přidat řádek ceny",
+    "editPriceRow": "Upravit řádek ceny",
+    "priceRowDetails": "Detaily řádku ceny",
+    "createPriceRow": "Create Price Row"
+  },
+  "countries": {
+    "title": "Země",
+    "addCountry": "Přidat zemi",
+    "editCountry": "Upravit zemi",
+    "countryDetails": "Detaily země",
+    "createCountry": "Vytvořit zemi",
+    "deleteConfirm": "Smazat {{count}} vybrané země?"
+  },
+  "channels": {
+    "title": "Kanály",
+    "addChannel": "Přidat kanál",
+    "editChannel": "Upravit kanál",
+    "channelDetails": "Detaily kanálu",
+    "createChannel": "Vytvořit kanál",
+    "deleteConfirm": "Smazat {{count}} vybrané kanály?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

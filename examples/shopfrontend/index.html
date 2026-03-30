@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Demo – Price Provider</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header .brand { font-size: 1.3rem; font-weight: 600; letter-spacing: 0.5px; }
+    .auth-section { display: flex; align-items: center; gap: 1rem; }
+    .user-info { font-size: 0.9rem; opacity: 0.85; }
+    .btn {
+      padding: 0.4rem 1rem;
+      border: 1px solid rgba(255,255,255,.4);
+      background: transparent;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: rgba(255,255,255,.15); }
+    .btn-primary { background: #e94560; border-color: #e94560; }
+    .btn-primary:hover { background: #c73652; }
+
+    /* ── Main ─────────────────────────────────── */
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+
+    .product-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+    }
+    @media (max-width: 640px) { .product-card { grid-template-columns: 1fr; } }
+
+    .product-image {
+      background: #e8e8e8;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+    }
+
+    .product-details { padding: 2rem; }
+    .product-name { font-size: 1.6rem; font-weight: 700; margin-bottom: .5rem; }
+    .product-description { color: #666; margin-bottom: 1.5rem; line-height: 1.5; }
+
+    .sku-selector { display: flex; gap: .5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .sku-btn {
+      padding: .35rem .8rem;
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: .85rem;
+      transition: all .15s;
+    }
+    .sku-btn.active { border-color: #e94560; color: #e94560; background: #fff0f3; }
+    .sku-btn:hover:not(.active) { border-color: #999; }
+
+    .quantity-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .quantity-row label { font-weight: 500; }
+    .quantity-input {
+      width: 80px;
+      padding: .4rem .6rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .price-box {
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .price-box .price-label { font-size: .8rem; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+    .price-box .price-value { font-size: 2rem; font-weight: 700; color: #1a1a2e; }
+    .price-box .price-currency { font-size: 1rem; color: #555; margin-left: .3rem; }
+    .price-box .price-note { font-size: .8rem; color: #888; margin-top: .3rem; }
+    .price-box.loading { opacity: .5; }
+    .price-box.error .price-value { font-size: 1rem; color: #e94560; }
+
+    .auth-notice {
+      padding: .8rem 1rem;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      font-size: .9rem;
+      margin-bottom: 1.5rem;
+    }
+    .auth-notice.authenticated {
+      background: #d1ecf1;
+      border-color: #17a2b8;
+    }
+
+    .add-to-cart-btn {
+      width: 100%;
+      padding: .8rem;
+      background: #e94560;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .add-to-cart-btn:hover { background: #c73652; }
+
+    /* ── Status bar ─────────────────────────────── */
+    .status-bar {
+      margin-top: 2rem;
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      font-size: .85rem;
+      color: #555;
+    }
+    .status-bar strong { color: #1a1a2e; }
+    pre.debug { background: #f0f0f0; padding: .5rem; border-radius: 4px; overflow-x: auto; margin-top: .5rem; font-size: .75rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="brand">🛒 Shop Demo</span>
+  <div class="auth-section">
+    <span class="user-info" id="userInfo"></span>
+    <button class="btn btn-primary" id="loginBtn" onclick="login()">Login</button>
+    <button class="btn" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<main>
+  <div class="product-card">
+    <div class="product-image">🔧</div>
+    <div class="product-details">
+
+      <h1 class="product-name" id="productName">Industrial Torque Wrench Pro</h1>
+      <p class="product-description">
+        Professional-grade torque wrench for precision tightening. Features a dual-direction mechanism,
+        ergonomic grip and ±4% accuracy. Ideal for automotive and industrial applications.
+      </p>
+
+      <div class="sku-selector" id="skuSelector">
+        <button class="sku-btn active" data-sku="TOOL-TORQUE-25NM" onclick="selectSku(this)">25 Nm</button>
+        <button class="sku-btn" data-sku="TOOL-TORQUE-50NM" onclick="selectSku(this)">50 Nm</button>
+        <button class="sku-btn" data-sku="TOOL-TORQUE-100NM" onclick="selectSku(this)">100 Nm</button>
+      </div>
+
+      <div class="quantity-row">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="999">
+        <button class="btn" onclick="updatePrice()" style="border-color:#1a1a2e; color:#1a1a2e">
+          Update Price
+        </button>
+      </div>
+
+      <div id="authNotice" class="auth-notice">
+        <strong>Anonymous pricing:</strong> You are viewing public prices. 
+        <a href="#" onclick="login();return false">Login</a> to see your organization's contract prices.
+      </div>
+
+      <div class="price-box" id="priceBox">
+        <div class="price-label">Your Price</div>
+        <div class="price-value" id="priceValue">–</div>
+        <div class="price-note" id="priceNote">Loading...</div>
+      </div>
+
+      <button class="add-to-cart-btn">Add to Cart</button>
+    </div>
+  </div>
+
+  <div class="status-bar" id="statusBar">
+    <strong>Status:</strong> <span id="statusText">Initializing...</span>
+    <pre class="debug" id="debugOutput" style="display:none"></pre>
+  </div>
+</main>
+
+<!-- Keycloak JS adapter -->
+<script src="http://localhost:8081/js/keycloak.js"></script>
+<script>
+  // ── Configuration ────────────────────────────────────────────────────
+  const CONFIG = {
+    keycloakUrl:    'http://localhost:8081',
+    realm:          'priceprovider',
+    clientId:       'shopfrontend',
+    serviceBaseUrl: 'http://localhost:8080',
+    // Public price API params
+    channelId:      'global-b2b-sales-channel',
+    countryKey:     'US',
+    priceType:      'SALES_PRICE',
+  };
+
+  let keycloak = null;
+  let currentSku = 'TOOL-TORQUE-25NM';
+
+  // ── Keycloak init ─────────────────────────────────────────────────────
+  async function initKeycloak() {
+    try {
+      keycloak = new Keycloak({
+        url:      CONFIG.keycloakUrl,
+        realm:    CONFIG.realm,
+        clientId: CONFIG.clientId,
+      });
+
+      const authenticated = await keycloak.init({
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
+        pkceMethod: 'S256',
+      });
+
+      updateAuthUI(authenticated);
+      setStatus(authenticated ? `Logged in as ${keycloak.tokenParsed?.preferred_username}` : 'Anonymous – not logged in');
+      await updatePrice();
+    } catch (err) {
+      setStatus('Keycloak unavailable – showing public prices', err);
+      await updatePrice();
+    }
+  }
+
+  // ── Auth UI ──────────────────────────────────────────────────────────
+  function updateAuthUI(authenticated) {
+    const loginBtn  = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userInfo  = document.getElementById('userInfo');
+    const notice    = document.getElementById('authNotice');
+
+    if (authenticated && keycloak?.tokenParsed) {
+      const name = keycloak.tokenParsed.preferred_username || keycloak.tokenParsed.name || 'User';
+      userInfo.textContent = `👤 ${name}`;
+      loginBtn.style.display  = 'none';
+      logoutBtn.style.display = '';
+      notice.className = 'auth-notice authenticated';
+      const org = extractOrganization();
+      notice.innerHTML = org
+        ? `<strong>Organization pricing active:</strong> Showing prices for <strong>${org}</strong>.`
+        : `<strong>Authenticated:</strong> Showing prices for your account (no organization filter active).`;
+    } else {
+      userInfo.textContent = '';
+      loginBtn.style.display  = '';
+      logoutBtn.style.display = 'none';
+      notice.className = 'auth-notice';
+      notice.innerHTML = `<strong>Anonymous pricing:</strong> You are viewing public prices. <a href="#" onclick="login();return false">Login</a> to see your organization's contract prices.`;
+    }
+  }
+
+  function login() {
+    if (keycloak) keycloak.login();
+  }
+
+  function logout() {
+    if (keycloak) keycloak.logout({ redirectUri: window.location.href });
+  }
+
+  // ── Organization extraction ──────────────────────────────────────────
+  function extractOrganization() {
+    if (!keycloak?.tokenParsed?.groups) return null;
+    const prefix = '/organizations/';
+    const orgGroups = keycloak.tokenParsed.groups
+      .filter(g => g && g.startsWith(prefix))
+      .sort((a, b) => b.split('/').length - a.split('/').length); // deepest first
+    if (!orgGroups.length) return null;
+    return orgGroups[0].substring(prefix.length); // return full path (without prefix)
+  }
+
+  // ── Price fetching ────────────────────────────────────────────────────
+  async function updatePrice() {
+    const quantity = parseInt(document.getElementById('quantity').value, 10) || 1;
+    const priceBox = document.getElementById('priceBox');
+    priceBox.className = 'price-box loading';
+
+    try {
+      const price = await fetchPrice(currentSku, quantity);
+      displayPrice(price);
+      priceBox.className = 'price-box';
+    } catch (err) {
+      priceBox.className = 'price-box error';
+      document.getElementById('priceValue').textContent = 'Price unavailable';
+      document.getElementById('priceNote').textContent = err.message;
+      setStatus('Price fetch error', err);
+    }
+  }
+
+  async function fetchPrice(sku, quantity) {
+    const { serviceBaseUrl, channelId, countryKey, priceType } = CONFIG;
+
+    // Organization filter is now automatically derived by the service from the JWT group claim.
+    const url = `${serviceBaseUrl}/public/api/channels/${channelId}/countries/${countryKey}/pricedresource/${sku}/${priceType}?quantity=${quantity}&unit=piece&currency=USD`;
+
+    const headers = { "Accept": "application/json" };
+    if (keycloak?.authenticated && keycloak.token) {
+      // Refresh token if close to expiry
+      await keycloak.updateToken(30).catch(() => {});
+      headers['Authorization'] = `Bearer ${keycloak.token}`;
+    }
+
+    const response = await fetch(url, { headers });
+    if (!response.ok) {
+      if (response.status === 404) throw new Error('No price found for this product / configuration.');
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  function displayPrice(priceData) {
+    const value = priceData.priceValue ?? priceData.price ?? '–';
+    const currency = priceData.currency ?? priceData.currencyRef ?? '';
+    const taxLabel = priceData.taxIncluded ? 'incl. VAT' : 'excl. VAT';
+    const validFrom = priceData.validFrom ? new Date(priceData.validFrom).toLocaleDateString() : '';
+    const validTo   = priceData.validTo   ? new Date(priceData.validTo).toLocaleDateString()   : '';
+    const validity  = validFrom && validTo ? `Valid: ${validFrom} – ${validTo}` : (validFrom ? `Valid from: ${validFrom}` : '');
+
+    document.getElementById('priceValue').innerHTML =
+      `${Number(value).toFixed(2)}<span class="price-currency">${currency}</span>`;
+    document.getElementById('priceNote').textContent = [taxLabel, validity].filter(Boolean).join(' · ');
+
+    document.getElementById('debugOutput').textContent = JSON.stringify(priceData, null, 2);
+    document.getElementById('debugOutput').style.display = '';
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────────────
+  function selectSku(btn) {
+    document.querySelectorAll('.sku-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentSku = btn.dataset.sku;
+    updatePrice();
+  }
+
+  function setStatus(msg, err) {
+    document.getElementById('statusText').textContent = msg;
+    if (err) console.error(msg, err);
+  }
+
+  // ── Boot ─────────────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', initKeycloak);
+</script>
+</body>
+</html>

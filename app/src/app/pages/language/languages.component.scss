@@ -1,0 +1,16 @@
+.sortable {
+  user-select: none;
+  
+  span {
+    cursor: pointer;
+  }
+  
+  &:hover span {
+    color: #0d6efd;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+

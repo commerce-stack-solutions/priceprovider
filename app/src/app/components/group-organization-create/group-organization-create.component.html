@@ -1,0 +1,112 @@
+<div class="container-fluid">
+  @if (error()) {
+    <div class="alert alert-danger">
+      {{ error() }}
+    </div>
+  }
+
+  <div class="mb-3">
+    <label class="form-label fw-bold">Create Type</label>
+    <div class="btn-group w-100" role="group">
+      <button 
+        type="button" 
+        class="btn"
+        [class.btn-primary]="entityType() === 'group'"
+        [class.btn-outline-secondary]="entityType() !== 'group'"
+        (click)="onEntityTypeChange('group')">
+        <i class="bi bi-folder"></i> Group
+      </button>
+      <button 
+        type="button" 
+        class="btn"
+        [class.btn-primary]="entityType() === 'organization'"
+        [class.btn-outline-secondary]="entityType() !== 'organization'"
+        (click)="onEntityTypeChange('organization')">
+        <i class="bi bi-building"></i> Organization
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="id" class="form-label">ID <span class="text-danger">*</span></label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="id" 
+        formControlName="id"
+        [class.is-invalid]="form.get('id')?.invalid && form.get('id')?.touched || hasFieldError('id')"
+      >
+      @if (form.get('id')?.invalid && form.get('id')?.touched) {
+        <div class="invalid-feedback d-block">
+          ID is required.
+        </div>
+      }
+      @if (hasFieldError('id')) {
+        @for (error of getFieldErrors('id'); track error) {
+          <div class="invalid-feedback d-block">{{ error }}</div>
+        }
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+      <input 
+        type="text" 
+        class="form-control" 
+        id="name" 
+        formControlName="name"
+        [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched || hasFieldError('name')"
+      >
+      @if (form.get('name')?.invalid && form.get('name')?.touched) {
+        <div class="invalid-feedback d-block">
+          Name is required.
+        </div>
+      }
+      @if (hasFieldError('name')) {
+        @for (error of getFieldErrors('name'); track error) {
+          <div class="invalid-feedback d-block">{{ error }}</div>
+        }
+      }
+    </div>
+
+    @if (entityType() === 'organization') {
+      <div class="mb-3">
+        <label for="organizationType" class="form-label">Organization Type <span class="text-danger">*</span></label>
+        <select 
+          class="form-select"
+          id="organizationType"
+          formControlName="organizationType"
+          [class.is-invalid]="form.get('organizationType')?.invalid && form.get('organizationType')?.touched || hasFieldError('organizationType')"
+        >
+          <option value="">Select...</option>
+          @for (type of organizationTypeValues; track type) {
+            <option [value]="type">{{ formatEnumLabel(type) }}</option>
+          }
+        </select>
+        @if (form.get('organizationType')?.invalid && form.get('organizationType')?.touched) {
+          <div class="invalid-feedback d-block">
+            Organization Type is required.
+          </div>
+        }
+        @if (hasFieldError('organizationType')) {
+          @for (error of getFieldErrors('organizationType'); track error) {
+            <div class="invalid-feedback d-block">{{ error }}</div>
+          }
+        }
+      </div>
+    }
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary me-2" [disabled]="saving()">
+        @if (saving()) {
+          <span class="spinner-border spinner-border-sm me-1"></span>
+        }
+        Create {{ entityType() === 'group' ? 'Group' : 'Organization' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="saving()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

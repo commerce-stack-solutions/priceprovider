@@ -1,0 +1,32 @@
+[
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 159.99,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "CHF",
+    "taxClassRef": "ch-vat-full",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 149.99,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "CHF",
+    "taxClassRef": "ch-vat-full",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel"
+    ]
+  }
+]

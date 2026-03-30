@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Hinnaread",
+    "currencies": "Valuutad",
+    "taxClasses": "Maksuklassid",
+    "units": "Ühikud",
+    "languages": "Keeled",
+    "groups": "Rühmad",
+    "organizations": "Organisatsioonid",
+    "countries": "Riigid",
+    "channels": "Kanalid",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Vali keel",
+    "currentLanguage": "Praegune keel"
+  }
+}

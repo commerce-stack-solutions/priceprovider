@@ -1,0 +1,90 @@
+<div class="container mt-4">
+  @if (error()) {
+    <div class="alert alert-danger">
+      {{ error() }}
+    </div>
+  }
+
+  @if (!group() && !error()) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+    </div>
+  }
+
+  @if (group(); as group) {
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>{{ 'pages.groups.groupDetails' | transloco }}</h2>
+      <div>
+        <a [routerLink]="['/' + lang(), 'groups']" class="btn btn-outline-secondary me-2">
+          <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+        </a>
+        <a [routerLink]="canWrite() ? ['/' + lang(), 'groups', group.id, 'edit'] : null" class="btn btn-primary me-2" [class.text-decoration-underline]="showEditKeyHint()"
+           [class.disabled]="!canWrite()"
+           [attr.aria-disabled]="!canWrite()"
+           [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+          <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+        </a>
+        <button class="btn btn-danger" (click)="deleteGroup()"
+                [disabled]="!canDelete()"
+                [attr.aria-disabled]="!canDelete()"
+                [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          <i class="bi bi-trash"></i> {{ 'common.actions.delete' | transloco }}
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Main Details Section (Left) -->
+      <div [class]="infoSections().length > 0 ? 'col-md-8' : 'col-md-12'">
+        <div class="card">
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label fw-bold">{{ 'common.fields.id' | transloco }}</label>
+              <div>{{ group.id }}</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">{{ 'common.fields.name' | transloco }}</label>
+              <div>{{ group.name }}</div>
+            </div>
+
+            @if (group.parentRefs && group.parentRefs.length > 0) {
+              <div class="mb-3">
+                <label class="form-label fw-bold">{{ 'common.fields.parents' | transloco }}</label>
+                <div>
+                  @for (ref of group.parentRefs; track ref) {
+                    <a [routerLink]="['/' + lang(), 'groups', ref]" class="ref-badge me-1">{{ ref }}</a>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (group.subRefs && group.subRefs.length > 0) {
+              <div class="mb-3">
+                <label class="form-label fw-bold">{{ 'common.fields.children' | transloco }}</label>
+                <div>
+                  @for (ref of group.subRefs; track ref) {
+                    <a [routerLink]="['/' + lang(), 'groups', ref]" class="ref-badge me-1">{{ ref }}</a>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Section (Right) - only render container if there's content -->
+      @if (infoSections().length > 0) {
+        <div class="col-md-4">
+          <app-info-section [sections]="infoSections()"></app-info-section>
+        </div>
+      }
+    </div>
+  }
+
+  @if (showEditKeyHint()) {
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-info" style="z-index: 1050">
+      {{ 'common.messages.navigatingToEdit' | transloco }}
+    </div>
+  }
+</div>

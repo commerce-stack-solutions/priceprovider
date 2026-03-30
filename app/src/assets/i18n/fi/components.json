@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Hintarivit",
+    "currencies": "Valuutat",
+    "taxClasses": "Veroluokat",
+    "units": "Yksiköt",
+    "languages": "Kielet",
+    "groups": "Ryhmät",
+    "organizations": "Organisaatiot",
+    "countries": "Maat",
+    "channels": "Kanavat",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Valitse kieli",
+    "currentLanguage": "Nykyinen kieli"
+  }
+}

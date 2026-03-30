@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Lignes de prix",
+    "currencies": "Devises",
+    "taxClasses": "Classes fiscales",
+    "units": "Unités",
+    "languages": "Langues",
+    "groups": "Groupes",
+    "organizations": "Organisations",
+    "countries": "Pays",
+    "channels": "Canaux",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Sélectionner la langue",
+    "currentLanguage": "Langue actuelle"
+  }
+}

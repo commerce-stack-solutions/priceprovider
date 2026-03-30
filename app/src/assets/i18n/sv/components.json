@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Prisrader",
+    "currencies": "Valutor",
+    "taxClasses": "Skatteklasser",
+    "units": "Enheter",
+    "languages": "Språk",
+    "groups": "Grupper",
+    "organizations": "Organisationer",
+    "countries": "Länder",
+    "channels": "Kanaler",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Välj språk",
+    "currentLanguage": "Nuvarande språk"
+  }
+}

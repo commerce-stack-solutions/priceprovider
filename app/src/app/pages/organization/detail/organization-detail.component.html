@@ -1,0 +1,96 @@
+<div class="container mt-4">
+  @if (error()) {
+  <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (!organization() && !error()) {
+  <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+    </div>
+  </div>
+  }
+
+  @if (organization(); as org) {
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ 'pages.organizations.organizationDetails' | transloco }}</h2>
+    <div>
+      <a [routerLink]="['/' + lang(), 'organizations']" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+      @if (organization()) {
+      <a [routerLink]="canWrite() ? ['/' + lang(), 'organizations', organization()!.id, 'edit'] : null"
+        class="btn btn-primary me-2" [class.text-decoration-underline]="showEditKeyHint()"
+        [class.disabled]="!canWrite()" [attr.aria-disabled]="!canWrite()"
+        [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+        <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+      </a>
+      <button class="btn btn-danger" (click)="deleteOrganization()" [disabled]="!canDelete()"
+        [attr.aria-disabled]="!canDelete()"
+        [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+        <i class="bi bi-trash"></i> {{ 'common.actions.delete' | transloco }}
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Main Details Section (Left) -->
+    <div [class]="infoSections().length > 0 ? 'col-md-8' : 'col-md-12'">
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ 'common.fields.id' | transloco }}</label>
+            <div>{{ org.id }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ 'common.fields.name' | transloco }}</label>
+            <div>{{ org.name }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ 'common.fields.organizationType' | transloco }}</label>
+            <div>{{ org.organizationType }}</div>
+          </div>
+
+          @if (org.parentRefs && org.parentRefs.length > 0) {
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ 'common.fields.parent' | transloco }}</label>
+            <div>
+              @for (ref of org.parentRefs; track ref) {
+              <a [routerLink]="['/' + lang(), 'organizations', ref]" class="ref-badge me-1">{{ ref }}</a>
+              }
+            </div>
+          </div>
+          }
+
+          @if (org.subRefs && org.subRefs.length > 0) {
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ 'common.fields.children' | transloco }}</label>
+            <div>
+              @for (ref of org.subRefs; track ref) {
+              <a [routerLink]="['/' + lang(), 'organizations', ref]" class="ref-badge me-1">{{ ref }}</a>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Section (Right) - only render container if there's content -->
+    @if (infoSections().length > 0) {
+    <div class="col-md-4">
+      <app-info-section [sections]="infoSections()"></app-info-section>
+    </div>
+    }
+  </div>
+  }
+
+  @if (showEditKeyHint()) {
+  <div class="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-info" style="z-index: 1050">
+    {{ 'common.messages.navigatingToEdit' | transloco }}
+  </div>
+  }
+</div>

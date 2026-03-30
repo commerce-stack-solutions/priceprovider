@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: ${PPS_DB_JDBCURL:jdbc:h2:mem:priceProviderService}
+    driverClassName: ${PPS_DB_DRIVER:org.h2.Driver}
+    username: ${PPS_DB_USERNAME:sa}
+    password: ${PPS_DB_PASSWORD:password}
+  jpa:
+    database-platform: ${PPS_JPA_DB_PLATFORM:org.hibernate.dialect.H2Dialect}
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${PPS_OIDC_ISSUER_URI:http://localhost:8081/realms/priceprovider}
+
+service-config:
+  initialize:
+    data-folder: "src/main/resources/initialize/"
+    essential-data-on: false
+    sample-data-on: false
+
+priceprovider:
+  oidc:
+    client-id: ${PPS_OIDC_CLIENT_ID:priceprovider-service}
+    groups-claim: ${PPS_OIDC_GROUPS_CLAIM:groups}
+    organization-path-prefix: ${PPS_OIDC_ORG_PATH_PREFIX:/organizations/}
+    resource-access-roles-path: resource_access.{clientId}.roles
+    realm-roles-path: realm_access.roles
+  cors:
+    allowed-origins: ${PPS_CORS_ALLOWED_ORIGINS:*}
+
+log:
+  file:
+    path: logs/

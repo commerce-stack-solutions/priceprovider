@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "price|managerへようこそ",
+    "description": "これはスタートページです。リストページへのショートカット：",
+    "shortcuts": "ショートカット"
+  },
+  "languages": {
+    "title": "言語",
+    "addLanguage": "言語を追加",
+    "editLanguage": "言語を編集",
+    "languageDetails": "言語の詳細",
+    "deleteConfirm": "選択した{{count}}個の言語を削除しますか？",
+    "fields": {
+      "isoKey": "ISOキー",
+      "active": "アクティブ",
+      "mandatory": "必須"
+    }
+  },
+  "currencies": {
+    "title": "通貨",
+    "addCurrency": "通貨を追加",
+    "editCurrency": "通貨を編集",
+    "currencyDetails": "通貨の詳細",
+    "createCurrency": "通貨を作成"
+  },
+  "units": {
+    "title": "単位",
+    "addUnit": "単位を追加",
+    "editUnit": "単位を編集",
+    "unitDetails": "単位の詳細",
+    "createUnit": "単位を作成"
+  },
+  "taxclasses": {
+    "title": "税区分",
+    "addTaxClass": "税区分を追加",
+    "editTaxClass": "税区分を編集",
+    "taxClassDetails": "税区分の詳細",
+    "createTaxClass": "税区分を作成"
+  },
+  "groups": {
+    "title": "グループ",
+    "addGroup": "グループを追加",
+    "editGroup": "グループを編集",
+    "groupDetails": "グループの詳細",
+    "createGroup": "グループを作成",
+    "deleteConfirm": "選択した{{count}}個のグループを削除しますか？"
+  },
+  "organizations": {
+    "title": "組織",
+    "addOrganization": "組織を追加",
+    "editOrganization": "組織を編集",
+    "organizationDetails": "組織の詳細",
+    "createOrganization": "組織を作成"
+  },
+  "pricerows": {
+    "title": "価格行",
+    "addPriceRow": "価格行を追加",
+    "editPriceRow": "価格行を編集",
+    "priceRowDetails": "価格行の詳細",
+    "createPriceRow": "価格行を作成"
+  },
+  "countries": {
+    "title": "国",
+    "addCountry": "国を追加",
+    "editCountry": "国を編集",
+    "countryDetails": "国の詳細",
+    "createCountry": "国を作成",
+    "deleteConfirm": "{{count}} 件の国を削除しますか？"
+  },
+  "channels": {
+    "title": "チャンネル",
+    "addChannel": "チャンネルを追加",
+    "editChannel": "チャンネルを編集",
+    "channelDetails": "チャンネルの詳細",
+    "createChannel": "チャンネルを作成",
+    "deleteConfirm": "{{count}} 件のチャンネルを削除しますか？"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

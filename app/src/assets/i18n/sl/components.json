@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Cenovne vrstice",
+    "currencies": "Valute",
+    "taxClasses": "Davčni razredi",
+    "units": "Enote",
+    "languages": "Jeziki",
+    "groups": "Skupine",
+    "organizations": "Organizacije",
+    "countries": "Države",
+    "channels": "Kanali",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Izberi jezik",
+    "currentLanguage": "Trenutni jezik"
+  }
+}

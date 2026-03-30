@@ -1,0 +1,112 @@
+{
+  "home": {
+    "title": "Willkommen bei price|manager",
+    "description": "Dies ist die Startseite. Hier sind einige Verknüpfungen zu den Auflistungsseiten:",
+    "shortcuts": "Verknüpfungen"
+  },
+  "languages": {
+    "title": "Sprachen",
+    "addLanguage": "Sprache hinzufügen",
+    "editLanguage": "Sprache bearbeiten",
+    "languageDetails": "Sprachdetails",
+    "deleteConfirm": "{{count}} ausgewählte Sprache(n) löschen?",
+    "fields": {
+      "isoKey": "ISO-Schlüssel",
+      "active": "Aktiv",
+      "mandatory": "Pflichtfeld"
+    }
+  },
+  "currencies": {
+    "title": "Währungen",
+    "addCurrency": "Währung hinzufügen",
+    "editCurrency": "Währung bearbeiten",
+    "currencyDetails": "Währungsdetails",
+    "createCurrency": "Währung erstellen"
+  },
+  "units": {
+    "title": "Einheiten",
+    "addUnit": "Einheit hinzufügen",
+    "editUnit": "Einheit bearbeiten",
+    "unitDetails": "Einheitsdetails",
+    "createUnit": "Einheit erstellen"
+  },
+  "taxclasses": {
+    "title": "Steuerklassen",
+    "addTaxClass": "Steuerklasse hinzufügen",
+    "editTaxClass": "Steuerklasse bearbeiten",
+    "taxClassDetails": "Steuerklassendetails",
+    "createTaxClass": "Steuerklasse erstellen"
+  },
+  "groups": {
+    "title": "Gruppen",
+    "addGroup": "Gruppe hinzufügen",
+    "editGroup": "Gruppe bearbeiten",
+    "groupDetails": "Gruppendetails",
+    "createGroup": "Gruppe erstellen",
+    "deleteConfirm": "Möchten Sie wirklich {{count}} ausgewählte Gruppen löschen?"
+  },
+  "organizations": {
+    "title": "Organisationen",
+    "addOrganization": "Organisation hinzufügen",
+    "editOrganization": "Organisation bearbeiten",
+    "organizationDetails": "Organisationsdetails",
+    "createOrganization": "Organisation erstellen"
+  },
+  "pricerows": {
+    "title": "Preiszeilen",
+    "addPriceRow": "Preiszeile hinzufügen",
+    "editPriceRow": "Preiszeile bearbeiten",
+    "priceRowDetails": "Preiszeilendetails",
+    "createPriceRow": "Preiszeile erstellen"
+  },
+  "countries": {
+    "title": "Länder",
+    "addCountry": "Land hinzufügen",
+    "editCountry": "Land bearbeiten",
+    "countryDetails": "Länderdetails",
+    "createCountry": "Land erstellen",
+    "deleteConfirm": "Möchten Sie {{count}} ausgewählte Länder wirklich löschen?"
+  },
+  "channels": {
+    "title": "Kanäle",
+    "addChannel": "Kanal hinzufügen",
+    "editChannel": "Kanal bearbeiten",
+    "channelDetails": "Kanaldetails",
+    "createChannel": "Kanal erstellen",
+    "deleteConfirm": "Möchten Sie {{count}} ausgewählte Kanäle wirklich löschen?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details",
+    "addAppPermission": "Berechtigung hinzufügen"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Service-Initialisierung",
+    "description": "Service-Daten manuell initialisieren. Wählen Sie die zu ladenden Daten aus und klicken Sie auf die Schaltfläche Daten laden.",
+    "selectDataTitle": "Zu ladende Daten auswählen",
+    "essentialData": "Wesentliche Daten",
+    "essentialDataDescription": "Kerndaten, die für den Betrieb des Service erforderlich sind (Sprachen, Währungen, Länder, Einheiten, Steuerklassen, Berechtigungen, Rollen)",
+    "sampleData": "Beispieldaten",
+    "sampleDataDescription": "Beispieldaten zum Testen und zur Demonstration (Organisationen, Gruppen, Kanäle, Preiszeilen)",
+    "loadButton": "Daten laden",
+    "loading": "Wird geladen...",
+    "previewTitle": "Vorschau der Datendateien",
+    "essentialFiles": "Wesentliche Datendateien",
+    "sampleFiles": "Beispieldatendateien",
+    "directory": "Verzeichnis",
+    "noFiles": "Keine Dateien gefunden",
+    "loadingPreview": "Vorschau wird geladen...",
+    "refreshPermissions": "Berechtigungen aktualisieren",
+    "refreshPermissionsHint": "Laden Sie Ihre Berechtigungen nach dem Laden neuer Daten neu"
+  }
+}

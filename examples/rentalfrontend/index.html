@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tool Rental – Price Provider</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; color: #1c1e21; line-height: 1.5; }
+    header { background: #24292e; color: #fff; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-size: 1.25rem; font-weight: bold; }
+    .auth-section { display: flex; align-items: center; gap: 1rem; }
+    .btn { padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; border: none; font-size: 0.9rem; font-weight: 500; }
+    .btn-primary { background: #2da44e; color: white; }
+    .btn-outline { background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); }
+
+    main { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 1fr 350px; gap: 2rem; }
+    @media (max-width: 850px) { main { grid-template-columns: 1fr; } }
+    .card { background: white; border-radius: 8px; border: 1px solid #ddd; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; color: #24292e; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-weight: 500; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    select, input { width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
+
+    .rental-period { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .price-summary { background: #f8f9fa; border-radius: 8px; padding: 1.5rem; border: 1px solid #e1e4e8; position: sticky; top: 2rem; }
+    .summary-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .summary-total { border-top: 2px solid #ddd; margin-top: 1rem; padding-top: 1rem; font-weight: bold; font-size: 1.3rem; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.85rem; }
+    th { text-align: left; background: #f6f8fa; padding: 0.6rem; border: 1px solid #d1d5da; }
+    td { padding: 0.6rem; border: 1px solid #d1d5da; }
+    .active-bulk { background: #e6ffec; font-weight: bold; color: #2da44e; }
+
+    .auth-banner { background: #fff8c5; border: 1px solid rgba(27,31,35,0.15); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .auth-banner.authenticated { background: #ddf4ff; border-color: #54aeff; }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="brand">🛠️ Rental Solutions</span>
+  <div class="auth-section">
+    <span id="userName"></span>
+    <button id="loginBtn" class="btn btn-primary" onclick="login()">Login</button>
+    <button id="logoutBtn" class="btn btn-outline" style="display:none" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<main>
+  <div class="content">
+    <div id="authBanner" class="auth-banner">
+      You are browsing as a guest. Prices shown are public rates.
+      <a href="#" onclick="login(); return false;">Login</a> to see your organization's contract rates.
+    </div>
+
+    <div class="card">
+      <div class="card-title">Rental Configuration</div>
+      <div class="form-group">
+        <label for="device">Tool / Device</label>
+        <select id="device" onchange="updateView()">
+          <option value="RENT-DRILL">Professional Power Drill</option>
+          <option value="RENT-SAW">Industrial Circular Saw</option>
+          <option value="RENT-MOWER">Commercial Lawn Mower</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="quantity">Number of Devices (1-10)</label>
+        <input type="number" id="quantity" min="1" max="10" value="1" onchange="updateView()">
+      </div>
+      <div class="rental-period">
+        <div class="form-group">
+          <label for="startDate">Start Date</label>
+          <input type="date" id="startDate" onchange="updateView()">
+        </div>
+        <div class="form-group">
+          <label for="endDate">End Date</label>
+          <input type="date" id="endDate" onchange="updateView()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Bulk Price Matrix</div>
+      <p style="font-size: 0.8rem; color: #666; margin-bottom: 1rem;">
+        Prices change based on rental quantity (Base Price) and duration (Daily Rate).
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+          <label>Base Price (per unit)</label>
+          <table id="basePriceTable">
+            <thead><tr><th>Min Qty</th><th>Price</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div>
+          <label>Daily Rate (per unit/day)</label>
+          <table id="dailyRateTable">
+            <thead><tr><th>Min Days</th><th>Price</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div class="price-summary">
+      <div class="card-title" style="border:none">Order Summary</div>
+      <div id="summaryContent">
+        <div class="summary-item"><span>Tool:</span> <strong id="sumDevice">-</strong></div>
+        <div class="summary-item"><span>Quantity:</span> <strong id="sumQty">-</strong></div>
+        <div class="summary-item"><span>Period:</span> <strong id="sumDays">-</strong></div>
+        <hr style="margin: 1rem 0; border: 0; border-top: 1px solid #ddd;">
+        <div class="summary-item"><span>Base Price:</span> <span id="sumBasePrice">-</span></div>
+        <div class="summary-item"><span>Daily Rate:</span> <span id="sumDailyRate">-</span></div>
+        <div class="summary-total">
+          <div style="font-size: 0.8rem; color: #666; font-weight: normal;">Estimated Total</div>
+          <div id="sumTotal">-</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%; margin-top: 1.5rem; padding: 0.8rem;">Confirm Rental</button>
+    </div>
+  </aside>
+</main>
+
+<script src="http://localhost:8081/js/keycloak.js"></script>
+<script>
+  const CONFIG = {
+    keycloakUrl: 'http://localhost:8081',
+    realm: 'priceprovider',
+    clientId: 'rentalfrontend',
+    apiUrl: 'http://localhost:8080/public/api',
+    channel: 'rental-channel',
+    country: 'DE',
+    currency: 'EUR'
+  };
+
+  let keycloak;
+  let currentPrices = { base: null, daily: null };
+
+  async function initAuth() {
+    // Set default dates FIRST so the UI is usable even if auth fails
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+    document.getElementById('startDate').value = today.toISOString().split('T')[0];
+    document.getElementById('endDate').value = nextWeek.toISOString().split('T')[0];
+
+    if (typeof Keycloak !== 'undefined') {
+      keycloak = new Keycloak({
+        url: CONFIG.keycloakUrl,
+        realm: CONFIG.realm,
+        clientId: CONFIG.clientId
+      });
+
+      try {
+        const auth = await keycloak.init({ onLoad: 'check-sso', pkceMethod: 'S256' });
+        updateAuthUI(auth);
+      } catch (e) {
+        console.warn("Auth init failed - continuing as guest", e);
+      }
+    } else {
+      console.warn("Keycloak library not loaded - continuing as guest");
+    }
+
+    updateView();
+  }
+
+  function updateAuthUI(auth) {
+    const banner = document.getElementById('authBanner');
+    const userName = document.getElementById('userName');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (auth) {
+      const user = keycloak.tokenParsed.preferred_username;
+      const groups = keycloak.tokenParsed.groups || [];
+      const org = groups.find(g => g.startsWith('/organizations/'))?.substring('/organizations/'.length) || 'Account';
+
+      banner.className = "auth-banner authenticated";
+      banner.innerHTML = `Signed in as <strong>${user}</strong>. Applying contract prices for <strong>${org}</strong>.`;
+      userName.textContent = `👤 ${user}`;
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'block';
+    }
+  }
+
+  function login() { keycloak.login(); }
+  function logout() { keycloak.logout({ redirectUri: window.location.origin }); }
+
+  async function updateView() {
+    const deviceId = document.getElementById('device').value;
+    const qty = parseInt(document.getElementById('quantity').value) || 1;
+    const start = new Date(document.getElementById('startDate').value);
+    const end = new Date(document.getElementById('endDate').value);
+
+    let days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    if (days < 1) days = 1;
+
+    try {
+      const headers = { 'Accept': 'application/json' };
+      if (keycloak?.token) headers['Authorization'] = `Bearer ${keycloak.token}`;
+
+      // Call the new bulk endpoint for the selected configuration
+      const basePriceUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=${deviceId}&quantity=${qty}&unit=piece&currency=${CONFIG.currency}`;
+      const dailyRateUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricerows/RENTAL_DAILY_RATE?pricedresourceIds=${deviceId}&quantity=${days}&unit=d&currency=${CONFIG.currency}`;
+
+      const [baseRes, dailyRes] = await Promise.all([
+        fetch(basePriceUrl, { headers }).then(r => r.json()),
+        fetch(dailyRateUrl, { headers }).then(r => r.json())
+      ]);
+
+      currentPrices.base = baseRes.items ? baseRes.items[0] : null;
+      currentPrices.daily = dailyRes.items ? dailyRes.items[0] : null;
+
+      // Fetch ALL quantity-specific best prices for the matrix
+      const matrixBaseUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricedresource/${deviceId}/RENTAL_BASE_PRICE/all-quantities?unit=piece&currency=${CONFIG.currency}`;
+      const matrixDailyUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricedresource/${deviceId}/RENTAL_DAILY_RATE/all-quantities?unit=d&currency=${CONFIG.currency}`;
+
+      const [allBase, allDaily] = await Promise.all([
+        fetch(matrixBaseUrl, { headers }).then(r => r.json()),
+        fetch(matrixDailyUrl, { headers }).then(r => r.json())
+      ]);
+
+      renderMatrix('basePriceTable', allBase.items || [], qty);
+      renderMatrix('dailyRateTable', allDaily.items || [], days);
+      renderSummary(deviceId, qty, days);
+
+    } catch (e) {
+      console.error("Price fetch failed", e);
+      document.getElementById('sumTotal').textContent = "Error";
+    }
+  }
+
+  function renderMatrix(tableId, items, currentVal) {
+    const tbody = document.querySelector(`#${tableId} tbody`);
+    tbody.innerHTML = '';
+
+    const sorted = items.sort((a,b) => a.minQuantity - b.minQuantity);
+
+    sorted.forEach(item => {
+      const row = document.createElement('tr');
+      if (currentVal >= item.minQuantity && (!sorted.find(s => s.minQuantity > item.minQuantity && currentVal >= s.minQuantity))) {
+        row.className = 'active-bulk';
+      }
+      row.innerHTML = `<td>${item.minQuantity}+</td><td>${item.priceValue.toFixed(2)} ${item.currencyRef || item.currency}</td>`;
+      tbody.appendChild(row);
+    });
+  }
+
+  function renderSummary(deviceId, qty, days) {
+    document.getElementById('sumDevice').textContent = document.querySelector(`#device option[value="${deviceId}"]`).text;
+    document.getElementById('sumQty').textContent = qty;
+    document.getElementById('sumDays').textContent = `${days} day(s)`;
+
+    const baseVal = currentPrices.base?.priceValue || 0;
+    const dailyVal = currentPrices.daily?.priceValue || 0;
+    const curr = currentPrices.base?.currencyRef || currentPrices.base?.currency || CONFIG.currency;
+
+    document.getElementById('sumBasePrice').textContent = `${baseVal.toFixed(2)} ${curr} (one-time)`;
+    document.getElementById('sumDailyRate').textContent = `${dailyVal.toFixed(2)} ${curr} / day`;
+
+    const total = (baseVal + (dailyVal * days)) * qty;
+    document.getElementById('sumTotal').textContent = `${total.toFixed(2)} ${curr}`;
+  }
+
+  window.onload = initAuth;
+</script>
+
+</body>
+</html>

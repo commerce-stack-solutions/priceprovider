@@ -1,0 +1,12 @@
+{
+  "name": "shopfrontend",
+  "version": "1.0.0",
+  "description": "Demo shop frontend consuming the Price Provider public API with Keycloak login",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

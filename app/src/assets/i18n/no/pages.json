@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Velkommen til price|manager",
+    "description": "Dette er startsiden. Her er noen snarveier til listesidene:",
+    "shortcuts": "Snarveier"
+  },
+  "languages": {
+    "title": "Språk",
+    "addLanguage": "Legg til språk",
+    "editLanguage": "Rediger språk",
+    "languageDetails": "Språkdetaljer",
+    "deleteConfirm": "Slett {{count}} valgte språk?",
+    "fields": {
+      "isoKey": "ISO-nøkkel",
+      "active": "Aktiv",
+      "mandatory": "Obligatorisk"
+    }
+  },
+  "currencies": {
+    "title": "Valutaer",
+    "addCurrency": "Legg til valuta",
+    "editCurrency": "Rediger valuta",
+    "currencyDetails": "Valutadetaljer",
+    "createCurrency": "Opprett valuta"
+  },
+  "units": {
+    "title": "Enheter",
+    "addUnit": "Legg til enhet",
+    "editUnit": "Rediger enhet",
+    "unitDetails": "Enhetsdetaljer",
+    "createUnit": "Opprett enhet"
+  },
+  "taxclasses": {
+    "title": "Skatteklasser",
+    "addTaxClass": "Legg til skatteklasse",
+    "editTaxClass": "Rediger skatteklasse",
+    "taxClassDetails": "Skatteklassedetaljer",
+    "createTaxClass": "Opprett skatteklasse"
+  },
+  "groups": {
+    "title": "Grupper",
+    "addGroup": "Legg til gruppe",
+    "editGroup": "Rediger gruppe",
+    "groupDetails": "Gruppedetaljer",
+    "createGroup": "Opprett gruppe",
+    "deleteConfirm": "Er du sikker på at du vil slette {{count}} valgte grupper?"
+  },
+  "organizations": {
+    "title": "Organisasjoner",
+    "addOrganization": "Legg til organisasjon",
+    "editOrganization": "Rediger organisasjon",
+    "organizationDetails": "Organisasjonsdetaljer",
+    "createOrganization": "Opprett organisasjon"
+  },
+  "pricerows": {
+    "title": "Prisrader",
+    "addPriceRow": "Legg til prisrad",
+    "editPriceRow": "Rediger prisrad",
+    "priceRowDetails": "Prisraddetaljer",
+    "createPriceRow": "Opprett prisrad"
+  },
+  "countries": {
+    "title": "Land",
+    "addCountry": "Legg til land",
+    "editCountry": "Rediger land",
+    "countryDetails": "Landdetaljer",
+    "createCountry": "Opprett land",
+    "deleteConfirm": "Slette {{count}} valgte land?"
+  },
+  "channels": {
+    "title": "Kanaler",
+    "addChannel": "Legg til kanal",
+    "editChannel": "Rediger kanal",
+    "channelDetails": "Kanaldetaljer",
+    "createChannel": "Opprett kanal",
+    "deleteConfirm": "Slette {{count}} valgte kanaler?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

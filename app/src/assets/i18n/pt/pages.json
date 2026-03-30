@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Bem-vindo ao price|manager",
+    "description": "Esta é a página inicial. Aqui estão alguns atalhos para as páginas de listagem:",
+    "shortcuts": "Atalhos"
+  },
+  "languages": {
+    "title": "Idiomas",
+    "addLanguage": "Adicionar idioma",
+    "editLanguage": "Editar idioma",
+    "languageDetails": "Detalhes do idioma",
+    "deleteConfirm": "Excluir {{count}} idioma(s) selecionado(s)?",
+    "fields": {
+      "isoKey": "Chave ISO",
+      "active": "Ativo",
+      "mandatory": "Obrigatório"
+    }
+  },
+  "currencies": {
+    "title": "Moedas",
+    "addCurrency": "Adicionar moeda",
+    "editCurrency": "Editar moeda",
+    "currencyDetails": "Detalhes da moeda",
+    "createCurrency": "Create Currency"
+  },
+  "units": {
+    "title": "Unidades",
+    "addUnit": "Adicionar unidade",
+    "editUnit": "Editar unidade",
+    "unitDetails": "Detalhes da unidade",
+    "createUnit": "Create Unit"
+  },
+  "taxclasses": {
+    "title": "Classes de impostos",
+    "addTaxClass": "Adicionar classe de imposto",
+    "editTaxClass": "Editar classe de imposto",
+    "taxClassDetails": "Detalhes da classe de imposto",
+    "createTaxClass": "Create Tax Class"
+  },
+  "groups": {
+    "title": "Grupos",
+    "addGroup": "Adicionar grupo",
+    "editGroup": "Editar grupo",
+    "groupDetails": "Detalhes do grupo",
+    "createGroup": "Create Group",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected groups?"
+  },
+  "organizations": {
+    "title": "Organizações",
+    "addOrganization": "Adicionar organização",
+    "editOrganization": "Editar organização",
+    "organizationDetails": "Detalhes da organização",
+    "createOrganization": "Create Organization"
+  },
+  "pricerows": {
+    "title": "Linhas de preço",
+    "addPriceRow": "Adicionar linha de preço",
+    "editPriceRow": "Editar linha de preço",
+    "priceRowDetails": "Detalhes da linha de preço",
+    "createPriceRow": "Create Price Row"
+  },
+  "countries": {
+    "title": "Países",
+    "addCountry": "Adicionar país",
+    "editCountry": "Editar país",
+    "countryDetails": "Detalhes do país",
+    "createCountry": "Criar país",
+    "deleteConfirm": "Excluir {{count}} países selecionados?"
+  },
+  "channels": {
+    "title": "Canais",
+    "addChannel": "Adicionar canal",
+    "editChannel": "Editar canal",
+    "channelDetails": "Detalhes do canal",
+    "createChannel": "Criar canal",
+    "deleteConfirm": "Excluir {{count}} canais selecionados?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

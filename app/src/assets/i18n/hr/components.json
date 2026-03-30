@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Cjenovni redovi",
+    "currencies": "Valute",
+    "taxClasses": "Porezne klase",
+    "units": "Jedinice",
+    "languages": "Jezici",
+    "groups": "Grupe",
+    "organizations": "Organizacije",
+    "countries": "Države",
+    "channels": "Kanali",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Odaberi jezik",
+    "currentLanguage": "Trenutni jezik"
+  }
+}

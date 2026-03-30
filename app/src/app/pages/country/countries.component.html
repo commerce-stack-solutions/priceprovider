@@ -1,0 +1,76 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>{{ 'pages.countries.title' | transloco }}</h1>
+    <div>
+      @if (selectedCountries().size > 0) {
+        <button class="btn btn-danger me-2" (click)="deleteSelected()" [disabled]="!permissionService.hasDeletePermission('Country')">
+          <i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedCountries().size }})
+        </button>
+      }
+      @if (permissionService.isLoggedIn()) {
+        <a class="btn btn-primary" [routerLink]="['/' + lang(), 'countries', 'add']" [class.disabled]="!permissionService.hasWritePermission('Country')">
+          <i class="bi bi-plus-circle"></i> {{ 'pages.countries.addCountry' | transloco }}
+        </a>
+      }
+    </div>
+  </div>
+  @if (deleteError()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ deleteError() }}
+      <button type="button" class="btn-close" (click)="deleteError.set(null)" aria-label="Close"></button>
+    </div>
+  }
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th style="width: 50px;">
+          <input type="checkbox" class="form-check-input"
+                 [checked]="selectedCountries().size === countries().length && countries().length > 0"
+                 (change)="toggleAllSelection($any($event.target).checked)">
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('isoKey')">{{ 'common.fields.isoKey' | transloco }}{{ getSortIndicator('isoKey') }}</span>
+          @if (getFilterConfig('isoKey'); as config) {
+            <app-column-filter [config]="config" [activeFilter]="getActiveFilter('isoKey')" (filterApplied)="onFilterApplied($event)" (filterRemoved)="onFilterRemoved($event)"></app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('name')">{{ 'common.fields.name' | transloco }}{{ getSortIndicator('name') }}</span>
+          @if (getFilterConfig('name'); as config) {
+            <app-column-filter [config]="config" [activeFilter]="getActiveFilter('name')" (filterApplied)="onFilterApplied($event)" (filterRemoved)="onFilterRemoved($event)"></app-column-filter>
+          }
+        </th>
+        <th>{{ 'common.fields.actions' | transloco }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let country of countries()">
+        <td>
+          <input type="checkbox" class="form-check-input"
+                 [checked]="selectedCountries().has(country.isoKey)"
+                 (change)="toggleSelection(country.isoKey)">
+        </td>
+        <td><a [routerLink]="['/' + lang(), 'countries', country.isoKey]" class="ref-badge">{{ country.isoKey }}</a></td>
+        <td>{{ getLocalizedName(country) }}</td>
+        <td>
+          <a [routerLink]="['/' + lang(), 'countries', country.isoKey, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Country')">
+            <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="page() === 0">
+        <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
+      </li>
+      <li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
+        <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
+        <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
+      </li>
+    </ul>
+  </nav>
+</div>

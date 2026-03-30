@@ -1,0 +1,76 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ 'pages.currencies.currencyDetails' | transloco }}</h1>
+    <div>
+      <a [routerLink]="['/' + lang(), 'currencies']" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+      @if (currency()) {
+        <a [routerLink]="canWrite() ? ['/' + lang(), 'currencies', currency()?.currencyKey, 'edit'] : null" class="btn btn-primary me-2" [class.text-decoration-underline]="showEditKeyHint()"
+           [class.disabled]="!canWrite()"
+           [attr.aria-disabled]="!canWrite()"
+           [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+          <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+        </a>
+        <button class="btn btn-danger" (click)="deleteCurrency()"
+                [disabled]="!canDelete()"
+                [attr.aria-disabled]="!canDelete()"
+                [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          <i class="bi bi-trash"></i> {{ 'common.actions.delete' | transloco }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  }
+
+  @if (!error() && !currency()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (currency() && !error()) {
+    <div class="row">
+      <!-- Main Details Section (Left) -->
+      <div [class]="infoSections().length > 0 ? 'col-md-8' : 'col-md-12'">
+        <div class="card">
+          <div class="card-body">
+            <dl class="row">
+              <dt class="col-sm-3">{{ 'common.fields.currencyKey' | transloco }}</dt>
+              <dd class="col-sm-9">{{ currency()!.currencyKey }}</dd>
+
+              <dt class="col-sm-3">{{ 'common.fields.symbol' | transloco }}</dt>
+              <dd class="col-sm-9">{{ currency()!.symbol }}</dd>
+
+              <dt class="col-sm-3">{{ 'common.fields.name' | transloco }}</dt>
+              <dd class="col-sm-9">{{ getLocalizedName(currency()!.name) }}</dd>
+            </dl>
+
+            @if (currency()!.name) {
+              <hr>
+              <h5>Translations</h5>
+              <app-localized-stringfield-view
+                [values]="currency()!.name"
+                [fieldLabel]="'Name (Translations)'">
+              </app-localized-stringfield-view>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Section (Right) - only render container if there's content -->
+      @if (infoSections().length > 0) {
+        <div class="col-md-4">
+          <app-info-section [sections]="infoSections()"></app-info-section>
+        </div>
+      }
+    </div>
+  }
+</div>

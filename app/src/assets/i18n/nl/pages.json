@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Welkom bij price|manager",
+    "description": "Dit is de startpagina. Hier zijn enkele snelkoppelingen naar de lijstpagina's:",
+    "shortcuts": "Snelkoppelingen"
+  },
+  "languages": {
+    "title": "Talen",
+    "addLanguage": "Taal toevoegen",
+    "editLanguage": "Taal bewerken",
+    "languageDetails": "Taaldetails",
+    "deleteConfirm": "{{count}} geselecteerde taal/talen verwijderen?",
+    "fields": {
+      "isoKey": "ISO-sleutel",
+      "active": "Actief",
+      "mandatory": "Verplicht"
+    }
+  },
+  "currencies": {
+    "title": "Valuta's",
+    "addCurrency": "Valuta toevoegen",
+    "editCurrency": "Valuta bewerken",
+    "currencyDetails": "Valutadetails",
+    "createCurrency": "Create Currency"
+  },
+  "units": {
+    "title": "Eenheden",
+    "addUnit": "Eenheid toevoegen",
+    "editUnit": "Eenheid bewerken",
+    "unitDetails": "Eenheidsdetails",
+    "createUnit": "Create Unit"
+  },
+  "taxclasses": {
+    "title": "Belastingklassen",
+    "addTaxClass": "Belastingklasse toevoegen",
+    "editTaxClass": "Belastingklasse bewerken",
+    "taxClassDetails": "Belastingklassedetails",
+    "createTaxClass": "Create Tax Class"
+  },
+  "groups": {
+    "title": "Groepen",
+    "addGroup": "Groep toevoegen",
+    "editGroup": "Groep bewerken",
+    "groupDetails": "Groepsdetails",
+    "createGroup": "Create Group",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected groups?"
+  },
+  "organizations": {
+    "title": "Organisaties",
+    "addOrganization": "Organisatie toevoegen",
+    "editOrganization": "Organisatie bewerken",
+    "organizationDetails": "Organisatiedetails",
+    "createOrganization": "Create Organization"
+  },
+  "pricerows": {
+    "title": "Prijsregels",
+    "addPriceRow": "Prijsregel toevoegen",
+    "editPriceRow": "Prijsregel bewerken",
+    "priceRowDetails": "Prijsregeldetails",
+    "createPriceRow": "Create Price Row"
+  },
+  "countries": {
+    "title": "Landen",
+    "addCountry": "Land toevoegen",
+    "editCountry": "Land bewerken",
+    "countryDetails": "Landgegevens",
+    "createCountry": "Land aanmaken",
+    "deleteConfirm": "{{count}} geselecteerde landen verwijderen?"
+  },
+  "channels": {
+    "title": "Kanalen",
+    "addChannel": "Kanaal toevoegen",
+    "editChannel": "Kanaal bewerken",
+    "channelDetails": "Kanaalgegevens",
+    "createChannel": "Kanaal aanmaken",
+    "deleteConfirm": "{{count}} geselecteerde kanalen verwijderen?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

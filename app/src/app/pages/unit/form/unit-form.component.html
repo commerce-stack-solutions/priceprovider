@@ -1,0 +1,188 @@
+<!-- Page Mode - Header and messages -->
+@if (!isModalMode()) {
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>{{ isEditMode() ? ('pages.units.editUnit' | transloco) : ('pages.units.addUnit' | transloco) }}</h1>
+      <div>
+        <a [routerLink]="['/' + lang(), 'units']" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+        </a>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+        </div>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert alert-success" role="alert">
+        <i class="bi bi-check-circle"></i> {{ successMessage() }}
+      </div>
+    }
+  </div>
+}
+
+<!-- Modal Mode - Error messages -->
+@if (isModalMode() && error()) {
+  <div class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+  </div>
+}
+
+<!-- Single Form - used by both page and modal modes with non-modal field structure -->
+@if (!loading()) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" [class.container]="!isModalMode()" [class.mt-4]="!isModalMode()">
+    <div [class.card]="!isModalMode()">
+      <div [class.card-body]="!isModalMode()">
+        <!-- Form Fields (using non-modal version with row layout) -->
+        <div class="row mb-3">
+          <label class="col-sm-3 col-form-label">{{ 'common.fields.symbol' | transloco }} @if ('symbol' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="symbol" 
+              formControlName="symbol"
+              [class.is-invalid]="(form.get('symbol')?.invalid && form.get('symbol')?.touched) || hasFieldError('symbol')">
+            @if (form.get('symbol')?.invalid && form.get('symbol')?.touched) {
+              <div class="invalid-feedback">
+                {{ 'common.messages.requiredField' | transloco }}
+              </div>
+            }
+            @if (hasFieldError('symbol')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('symbol'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+            @if (isEditMode() && !isModalMode()) {
+              <small class="form-text text-muted">{{ 'common.messages.idCannotBeChanged' | transloco }}</small>
+            }
+          </div>
+        </div>
+
+        <app-localized-stringfield-edit
+          [form]="form"
+          [fieldPrefix]="'name_'"
+          [fieldLabel]="'Name'"
+          [configuredLanguages]="languages"
+          [fieldErrors]="fieldErrors"
+          [isEditMode]="isEditMode()"
+          [isModalMode]="isModalMode()"
+          (removeLanguageEvent)="removeLanguage($event)"
+          (addLanguageEvent)="addLanguage($event)">
+        </app-localized-stringfield-edit>
+
+        <div class="row mb-3">
+          <label for="measure" class="col-sm-3 col-form-label">{{ 'common.fields.measure' | transloco }}</label>
+          <div class="col-sm-9">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="measure" 
+              formControlName="measure"
+              [class.is-invalid]="hasFieldError('measure')"
+              placeholder="e.g., length, mass, volume">
+            @if (hasFieldError('measure')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('measure'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+            @if (!isModalMode()) {
+              <small class="form-text text-muted">{{ 'common.messages.measureOptional' | transloco }}</small>
+            }
+          </div>
+        </div>
+
+        @if (!isModalMode()) {
+          <div class="row mb-3">
+            <label for="baseUnitRef" class="col-sm-3 col-form-label">{{ 'common.fields.baseUnit' | transloco }}</label>
+            <div class="col-sm-9">
+              <app-reference-edit
+                [inputFormControl]="form.get('baseUnitRef')"
+                [dataSource]="baseUnitsDataSource"
+                placeholder="e.g., m"
+                [isInvalid]="hasFieldError('baseUnitRef')"
+                [allowCreate]="true"
+                (cleared)="clearBaseUnitRef()"
+                (createNew)="onCreateNewBaseUnit($event)">
+              </app-reference-edit>
+              @if (hasFieldError('baseUnitRef')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('baseUnitRef'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.baseUnitOptional' | transloco }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="factor" class="col-sm-3 col-form-label">{{ 'common.fields.factor' | transloco }}</label>
+            <div class="col-sm-9">
+              <input 
+                type="text" 
+                class="form-control" 
+                id="factor" 
+                formControlName="factor"
+                placeholder="{{ 'common.fields.factorPlaceholder' | transloco }}"
+                [class.is-invalid]="(form.get('factor')?.invalid && form.get('factor')?.touched) || hasFieldError('factor')">
+              @if (form.get('factor')?.invalid && form.get('factor')?.touched) {
+                <div class="invalid-feedback">
+                  {{ 'common.messages.factorInvalid' | transloco }}
+                </div>
+              }
+              @if (hasFieldError('factor')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('factor'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.factorOptional' | transloco }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Form Buttons -->
+    <div [class]="isModalMode() ? 'd-flex justify-content-end gap-2' : 'container mt-4 d-flex gap-2'">
+      @if (isModalMode()) {
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          {{ 'common.actions.create' | transloco }}
+        </button>
+      } @else {
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      }
+    </div>
+  </form>
+}

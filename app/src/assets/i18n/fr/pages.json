@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Bienvenue dans price|manager",
+    "description": "Ceci est la page d'accueil. Voici quelques raccourcis vers les pages de liste :",
+    "shortcuts": "Raccourcis"
+  },
+  "languages": {
+    "title": "Langues",
+    "addLanguage": "Ajouter une langue",
+    "editLanguage": "Modifier la langue",
+    "languageDetails": "Détails de la langue",
+    "deleteConfirm": "Supprimer {{count}} langue(s) sélectionnée(s) ?",
+    "fields": {
+      "isoKey": "Clé ISO",
+      "active": "Actif",
+      "mandatory": "Obligatoire"
+    }
+  },
+  "currencies": {
+    "title": "Devises",
+    "addCurrency": "Ajouter une devise",
+    "editCurrency": "Modifier la devise",
+    "currencyDetails": "Détails de la devise",
+    "createCurrency": "Créer une devise"
+  },
+  "units": {
+    "title": "Unités",
+    "addUnit": "Ajouter une unité",
+    "editUnit": "Modifier l'unité",
+    "unitDetails": "Détails de l'unité",
+    "createUnit": "Créer une unité"
+  },
+  "taxclasses": {
+    "title": "Classes fiscales",
+    "addTaxClass": "Ajouter une classe fiscale",
+    "editTaxClass": "Modifier la classe fiscale",
+    "taxClassDetails": "Détails de la classe fiscale",
+    "createTaxClass": "Créer une classe d'impôt"
+  },
+  "groups": {
+    "title": "Groupes",
+    "addGroup": "Ajouter un groupe",
+    "editGroup": "Modifier le groupe",
+    "groupDetails": "Détails du groupe",
+    "createGroup": "Créer un groupe",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} groupes sélectionnés?"
+  },
+  "organizations": {
+    "title": "Organisations",
+    "addOrganization": "Ajouter une organisation",
+    "editOrganization": "Modifier l'organisation",
+    "organizationDetails": "Détails de l'organisation",
+    "createOrganization": "Créer une organisation"
+  },
+  "pricerows": {
+    "title": "Lignes de prix",
+    "addPriceRow": "Ajouter une ligne de prix",
+    "editPriceRow": "Modifier la ligne de prix",
+    "priceRowDetails": "Détails de la ligne de prix",
+    "createPriceRow": "Créer une ligne de prix"
+  },
+  "countries": {
+    "title": "Pays",
+    "addCountry": "Ajouter un pays",
+    "editCountry": "Modifier le pays",
+    "countryDetails": "Détails du pays",
+    "createCountry": "Créer un pays",
+    "deleteConfirm": "Voulez-vous supprimer {{count}} pays ?"
+  },
+  "channels": {
+    "title": "Canaux",
+    "addChannel": "Ajouter un canal",
+    "editChannel": "Modifier le canal",
+    "channelDetails": "Détails du canal",
+    "createChannel": "Créer un canal",
+    "deleteConfirm": "Voulez-vous supprimer {{count}} canaux ?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

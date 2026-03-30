@@ -1,0 +1,22 @@
+[
+  {
+    "id": "dach-sales-channel",
+    "countryRefs": ["DE", "AT", "CH"],
+    "priceRepresentationMode": "FORCE_GROSS"
+  },
+  {
+    "id": "euro-sales-channel",
+    "countryRefs": ["DE", "AT", "SE", "NO", "DK", "FI", "PL", "CZ"],
+    "priceRepresentationMode": "FORCE_GROSS"
+  },
+  {
+    "id": "global-b2b-sales-channel",
+    "countryRefs": ["DE", "AT", "CH", "SE", "NO", "DK", "FI", "PL", "CZ", "US"],
+    "priceRepresentationMode": "FORCE_NET"
+  },
+  {
+    "id": "rental-channel",
+    "countryRefs": ["DE", "AT", "CH"],
+    "priceRepresentationMode": "FORCE_GROSS"
+  }
+]

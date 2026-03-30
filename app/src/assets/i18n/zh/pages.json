@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "欢迎使用 price|manager",
+    "description": "这是起始页。这里有一些列表页的快捷方式：",
+    "shortcuts": "快捷方式"
+  },
+  "languages": {
+    "title": "语言",
+    "addLanguage": "添加语言",
+    "editLanguage": "编辑语言",
+    "languageDetails": "语言详情",
+    "deleteConfirm": "删除 {{count}} 个所选语言？",
+    "fields": {
+      "isoKey": "ISO键",
+      "active": "激活",
+      "mandatory": "必填"
+    }
+  },
+  "currencies": {
+    "title": "货币",
+    "addCurrency": "添加货币",
+    "editCurrency": "编辑货币",
+    "currencyDetails": "货币详情",
+    "createCurrency": "Create Currency"
+  },
+  "units": {
+    "title": "单位",
+    "addUnit": "添加单位",
+    "editUnit": "编辑单位",
+    "unitDetails": "单位详情",
+    "createUnit": "Create Unit"
+  },
+  "taxclasses": {
+    "title": "税种",
+    "addTaxClass": "添加税种",
+    "editTaxClass": "编辑税种",
+    "taxClassDetails": "税种详情",
+    "createTaxClass": "Create Tax Class"
+  },
+  "groups": {
+    "title": "组",
+    "addGroup": "添加组",
+    "editGroup": "编辑组",
+    "groupDetails": "组详情",
+    "createGroup": "Create Group",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected groups?"
+  },
+  "organizations": {
+    "title": "组织",
+    "addOrganization": "添加组织",
+    "editOrganization": "编辑组织",
+    "organizationDetails": "组织详情",
+    "createOrganization": "Create Organization"
+  },
+  "pricerows": {
+    "title": "价格行",
+    "addPriceRow": "添加价格行",
+    "editPriceRow": "编辑价格行",
+    "priceRowDetails": "价格行详情",
+    "createPriceRow": "Create Price Row"
+  },
+  "countries": {
+    "title": "国家",
+    "addCountry": "添加国家",
+    "editCountry": "编辑国家",
+    "countryDetails": "国家详情",
+    "createCountry": "创建国家",
+    "deleteConfirm": "确定要删除 {{count}} 个选定国家吗？"
+  },
+  "channels": {
+    "title": "渠道",
+    "addChannel": "添加渠道",
+    "editChannel": "编辑渠道",
+    "channelDetails": "渠道详情",
+    "createChannel": "创建渠道",
+    "deleteConfirm": "确定要删除 {{count}} 个选定渠道吗？"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

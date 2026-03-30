@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Bienvenido a price|manager",
+    "description": "Esta es la página de inicio. Aquí hay algunos accesos directos a las páginas de listado:",
+    "shortcuts": "Accesos directos"
+  },
+  "languages": {
+    "title": "Idiomas",
+    "addLanguage": "Agregar idioma",
+    "editLanguage": "Editar idioma",
+    "languageDetails": "Detalles del idioma",
+    "deleteConfirm": "¿Eliminar {{count}} idioma(s) seleccionado(s)?",
+    "fields": {
+      "isoKey": "Clave ISO",
+      "active": "Activo",
+      "mandatory": "Obligatorio"
+    }
+  },
+  "currencies": {
+    "title": "Monedas",
+    "addCurrency": "Agregar moneda",
+    "editCurrency": "Editar moneda",
+    "currencyDetails": "Detalles de la moneda",
+    "createCurrency": "Crear moneda"
+  },
+  "units": {
+    "title": "Unidades",
+    "addUnit": "Agregar unidad",
+    "editUnit": "Editar unidad",
+    "unitDetails": "Detalles de la unidad",
+    "createUnit": "Crear unidad"
+  },
+  "taxclasses": {
+    "title": "Clases de impuestos",
+    "addTaxClass": "Agregar clase de impuesto",
+    "editTaxClass": "Editar clase de impuesto",
+    "taxClassDetails": "Detalles de la clase de impuesto",
+    "createTaxClass": "Crear clase de impuesto"
+  },
+  "groups": {
+    "title": "Grupos",
+    "addGroup": "Agregar grupo",
+    "editGroup": "Editar grupo",
+    "groupDetails": "Detalles del grupo",
+    "createGroup": "Crear grupo",
+    "deleteConfirm": "¿Está seguro de que desea eliminar {{count}} grupos seleccionados?"
+  },
+  "organizations": {
+    "title": "Organizaciones",
+    "addOrganization": "Agregar organización",
+    "editOrganization": "Editar organización",
+    "organizationDetails": "Detalles de la organización",
+    "createOrganization": "Crear organización"
+  },
+  "pricerows": {
+    "title": "Filas de precios",
+    "addPriceRow": "Agregar fila de precio",
+    "editPriceRow": "Editar fila de precio",
+    "priceRowDetails": "Detalles de la fila de precio",
+    "createPriceRow": "Crear fila de precio"
+  },
+  "countries": {
+    "title": "Países",
+    "addCountry": "Agregar país",
+    "editCountry": "Editar país",
+    "countryDetails": "Detalles del país",
+    "createCountry": "Crear país",
+    "deleteConfirm": "¿Eliminar {{count}} países seleccionados?"
+  },
+  "channels": {
+    "title": "Canales",
+    "addChannel": "Agregar canal",
+    "editChannel": "Editar canal",
+    "channelDetails": "Detalles del canal",
+    "createChannel": "Crear canal",
+    "deleteConfirm": "¿Eliminar {{count}} canales seleccionados?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

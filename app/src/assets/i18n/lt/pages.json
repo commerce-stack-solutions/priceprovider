@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Sveiki atvykę į price|manager",
+    "description": "Tai pradinis puslapis. Čia yra keletas nuorodų į sąrašų puslapius:",
+    "shortcuts": "Nuorodos"
+  },
+  "languages": {
+    "title": "Kalbos",
+    "addLanguage": "Pridėti kalbą",
+    "editLanguage": "Redaguoti kalbą",
+    "languageDetails": "Kalbos informacija",
+    "deleteConfirm": "Ištrinti {{count}} pasirinktas kalbas?",
+    "fields": {
+      "isoKey": "ISO raktas",
+      "active": "Aktyvus",
+      "mandatory": "Privalomas"
+    }
+  },
+  "currencies": {
+    "title": "Valiutos",
+    "addCurrency": "Pridėti valiutą",
+    "editCurrency": "Redaguoti valiutą",
+    "currencyDetails": "Valiutos informacija",
+    "createCurrency": "Create Currency"
+  },
+  "units": {
+    "title": "Vienetai",
+    "addUnit": "Pridėti vienetą",
+    "editUnit": "Redaguoti vienetą",
+    "unitDetails": "Vieneto informacija",
+    "createUnit": "Create Unit"
+  },
+  "taxclasses": {
+    "title": "Mokesčių klasės",
+    "addTaxClass": "Pridėti mokesčių klasę",
+    "editTaxClass": "Redaguoti mokesčių klasę",
+    "taxClassDetails": "Mokesčių klasės informacija",
+    "createTaxClass": "Create Tax Class"
+  },
+  "groups": {
+    "title": "Grupės",
+    "addGroup": "Pridėti grupę",
+    "editGroup": "Redaguoti grupę",
+    "groupDetails": "Grupės informacija",
+    "createGroup": "Create Group",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected groups?"
+  },
+  "organizations": {
+    "title": "Organizacijos",
+    "addOrganization": "Pridėti organizaciją",
+    "editOrganization": "Redaguoti organizaciją",
+    "organizationDetails": "Organizacijos informacija",
+    "createOrganization": "Create Organization"
+  },
+  "pricerows": {
+    "title": "Kainų eilutės",
+    "addPriceRow": "Pridėti kainų eilutę",
+    "editPriceRow": "Redaguoti kainų eilutę",
+    "priceRowDetails": "Kainų eilutės informacija",
+    "createPriceRow": "Create Price Row"
+  },
+  "countries": {
+    "title": "Šalys",
+    "addCountry": "Pridėti šalį",
+    "editCountry": "Redaguoti šalį",
+    "countryDetails": "Šalies informacija",
+    "createCountry": "Sukurti šalį",
+    "deleteConfirm": "Ištrinti {{count}} pasirinktas šalis?"
+  },
+  "channels": {
+    "title": "Kanalai",
+    "addChannel": "Pridėti kanalą",
+    "editChannel": "Redaguoti kanalą",
+    "channelDetails": "Kanalo informacija",
+    "createChannel": "Sukurti kanalą",
+    "deleteConfirm": "Ištrinti {{count}} pasirinktus kanalus?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

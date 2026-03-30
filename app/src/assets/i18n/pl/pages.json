@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Witamy w price|manager",
+    "description": "To jest strona startowa. Oto kilka skrótów do stron list:",
+    "shortcuts": "Skróty"
+  },
+  "languages": {
+    "title": "Języki",
+    "addLanguage": "Dodaj język",
+    "editLanguage": "Edytuj język",
+    "languageDetails": "Szczegóły języka",
+    "deleteConfirm": "Usunąć {{count}} wybrany(ch) język(ów)?",
+    "fields": {
+      "isoKey": "Klucz ISO",
+      "active": "Aktywny",
+      "mandatory": "Obowiązkowy"
+    }
+  },
+  "currencies": {
+    "title": "Waluty",
+    "addCurrency": "Dodaj walutę",
+    "editCurrency": "Edytuj walutę",
+    "currencyDetails": "Szczegóły waluty",
+    "createCurrency": "Utwórz walutę"
+  },
+  "units": {
+    "title": "Jednostki",
+    "addUnit": "Dodaj jednostkę",
+    "editUnit": "Edytuj jednostkę",
+    "unitDetails": "Szczegóły jednostki",
+    "createUnit": "Utwórz jednostkę"
+  },
+  "taxclasses": {
+    "title": "Klasy podatkowe",
+    "addTaxClass": "Dodaj klasę podatkową",
+    "editTaxClass": "Edytuj klasę podatkową",
+    "taxClassDetails": "Szczegóły klasy podatkowej",
+    "createTaxClass": "Utwórz klasę podatkową"
+  },
+  "groups": {
+    "title": "Grupy",
+    "addGroup": "Dodaj grupę",
+    "editGroup": "Edytuj grupę",
+    "groupDetails": "Szczegóły grupy",
+    "createGroup": "Utwórz grupę",
+    "deleteConfirm": "Czy na pewno chcesz usunąć {{count}} wybrane grupy?"
+  },
+  "organizations": {
+    "title": "Organizacje",
+    "addOrganization": "Dodaj organizację",
+    "editOrganization": "Edytuj organizację",
+    "organizationDetails": "Szczegóły organizacji",
+    "createOrganization": "Utwórz organizację"
+  },
+  "pricerows": {
+    "title": "Wiersze cen",
+    "addPriceRow": "Dodaj wiersz ceny",
+    "editPriceRow": "Edytuj wiersz ceny",
+    "priceRowDetails": "Szczegóły wiersza ceny",
+    "createPriceRow": "Utwórz wiersz ceny"
+  },
+  "countries": {
+    "title": "Kraje",
+    "addCountry": "Dodaj kraj",
+    "editCountry": "Edytuj kraj",
+    "countryDetails": "Szczegóły kraju",
+    "createCountry": "Utwórz kraj",
+    "deleteConfirm": "Usunąć {{count}} wybrane kraje?"
+  },
+  "channels": {
+    "title": "Kanały",
+    "addChannel": "Dodaj kanał",
+    "editChannel": "Edytuj kanał",
+    "channelDetails": "Szczegóły kanału",
+    "createChannel": "Utwórz kanał",
+    "deleteConfirm": "Usunąć {{count}} wybrane kanały?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

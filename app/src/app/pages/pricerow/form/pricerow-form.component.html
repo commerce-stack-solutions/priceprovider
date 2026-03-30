@@ -1,0 +1,305 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ isEditMode() ? ('pages.pricerows.editPriceRow' | transloco) : 'Add Price Row' }}</h1>
+    <div>
+      <a [routerLink]="['/' + lang(), 'pricerows']" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert alert-success" role="alert">
+      <i class="bi bi-check-circle"></i> {{ successMessage() }}
+    </div>
+  }
+
+  @if (!loading()) {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <label for="pricedResourceId" class="col-sm-3 col-form-label">{{ 'common.fields.pricedResourceId' | transloco }} @if ('pricedResourceId' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <input
+                type="text"
+                class="form-control"
+                id="pricedResourceId"
+                formControlName="pricedResourceId"
+                [class.is-invalid]="(form.get('pricedResourceId')?.invalid && form.get('pricedResourceId')?.touched) || hasFieldError('pricedResourceId')">
+              @if (form.get('pricedResourceId')?.invalid && form.get('pricedResourceId')?.touched) {
+                <div class="invalid-feedback">
+                  {{ 'common.messages.requiredField' | transloco }}
+                </div>
+              }
+              @if (hasFieldError('pricedResourceId')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('pricedResourceId'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="channelRefs" class="col-sm-3 col-form-label">{{ 'common.fields.channelRefs' | transloco }}</label>
+            <div class="col-sm-9">
+              <app-referencelist-edit
+                formControlName="channelRefs"
+                [dataSource]="channelsDataSource"
+                placeholder="{{ 'common.fields.channelRefsPlaceholder' | transloco }}"
+                [allowCreate]="false"
+                (changed)="onChannelRefsChanged($event)">
+              </app-referencelist-edit>
+              @if (hasFieldError('channelRefs')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('channelRefs'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.channelRefs' | transloco }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="priceValue" class="col-sm-3 col-form-label">{{ 'common.fields.priceValue' | transloco }} @if ('priceValue' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <input
+                type="text"
+                class="form-control"
+                id="priceValue"
+                formControlName="priceValue"
+                placeholder="{{ 'common.fields.priceValuePlaceholder' | transloco }}"
+                [step]="0.01"
+                [class.is-invalid]="form.get('priceValue')?.invalid && form.get('priceValue')?.touched">
+              @if (form.get('priceValue')?.invalid && form.get('priceValue')?.touched) {
+                <div class="invalid-feedback">
+                  {{ 'common.messages.fieldRequiredValidNumber' | transloco }}
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="minQuantity" class="col-sm-3 col-form-label">{{ 'common.fields.minQuantity' | transloco }} @if ('minQuantity' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <input
+                type="text"
+                class="form-control"
+                id="minQuantity"
+                formControlName="minQuantity"
+                placeholder="{{ 'common.fields.minQuantityPlaceholder' | transloco }}"
+                [class.is-invalid]="form.get('minQuantity')?.invalid && form.get('minQuantity')?.touched">
+              @if (form.get('minQuantity')?.invalid && form.get('minQuantity')?.touched) {
+                <div class="invalid-feedback">
+                  {{ 'common.messages.fieldRequiredValidNumber' | transloco }}
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="unitRef" class="col-sm-3 col-form-label">{{ 'common.fields.unitReference' | transloco }} @if ('unitRef' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <app-reference-edit
+                [inputFormControl]="form.get('unitRef')"
+                [dataSource]="unitsDataSource"
+                placeholder="{{ 'common.fields.unitReferencePlaceholder' | transloco }}"
+                [isInvalid]="(form.get('unitRef')?.invalid && form.get('unitRef')?.touched) || hasFieldError('unitRef')"
+                [allowCreate]="true"
+                (cleared)="clearUnitRef()"
+                (createNew)="onCreateNewUnit($event)">
+              </app-reference-edit>
+              @if (form.get('unitRef')?.invalid && form.get('unitRef')?.touched) {
+                <div class="invalid-feedback d-block">
+                  {{ 'common.messages.requiredField' | transloco }}
+                </div>
+              }
+              @if (hasFieldError('unitRef')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('unitRef'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.unitReference' | transloco }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="currency" class="col-sm-3 col-form-label">{{ 'common.fields.currency' | transloco }} @if ('currencyRef' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <app-reference-edit
+                [inputFormControl]="form.get('currency')"
+                [dataSource]="currenciesDataSource"
+                placeholder="{{ 'common.fields.currencyPlaceholder' | transloco }}"
+                [isInvalid]="(form.get('currency')?.invalid && form.get('currency')?.touched) || hasFieldError('currency')"
+                [allowCreate]="true"
+                (cleared)="clearCurrency()"
+                (createNew)="onCreateNewCurrency($event)">
+              </app-reference-edit>
+              @if (form.get('currency')?.invalid && form.get('currency')?.touched) {
+                <div class="invalid-feedback d-block">
+                  {{ 'common.messages.requiredField' | transloco }}
+                </div>
+              }
+              @if (hasFieldError('currency')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('currency'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.currencyReference' | transloco }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="taxClassRef" class="col-sm-3 col-form-label">{{ 'common.fields.taxClass' | transloco }} @if ('taxClassRef' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <app-reference-edit
+                [inputFormControl]="form.get('taxClassRef')"
+                [dataSource]="taxClassesDataSource"
+                placeholder="{{ 'common.fields.taxClassPlaceholder' | transloco }}"
+                [isInvalid]="(form.get('taxClassRef')?.invalid && form.get('taxClassRef')?.touched) || hasFieldError('taxClassRef')"
+                [allowCreate]="true"
+                (cleared)="clearTaxClassRef()"
+                (createNew)="onCreateNewTaxClass($event)">
+              </app-reference-edit>
+              @if (form.get('taxClassRef')?.invalid && form.get('taxClassRef')?.touched) {
+                <div class="invalid-feedback d-block">
+                  {{ 'common.messages.requiredField' | transloco }}
+                </div>
+              }
+              @if (hasFieldError('taxClassRef')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('taxClassRef'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.taxClassReference' | transloco }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-3 col-form-label">{{ 'common.fields.taxIncluded' | transloco }} @if ('taxIncluded' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="taxIncludedTrue"
+                  formControlName="taxIncluded"
+                  [value]="true">
+                <label class="form-check-label" for="taxIncludedTrue">
+                  Yes
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  id="taxIncludedFalse"
+                  formControlName="taxIncluded"
+                  [value]="false">
+                <label class="form-check-label" for="taxIncludedFalse">
+                  No
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="validFrom" class="col-sm-3 col-form-label">{{ 'common.fields.validFrom' | transloco }}</label>
+            <div class="col-sm-9">
+              <input
+                type="datetime-local"
+                class="form-control"
+                id="validFrom"
+                formControlName="validFrom"
+                [class.is-invalid]="hasFieldError('validFrom')">
+              @if (hasFieldError('validFrom')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('validFrom'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.validFrom' | transloco }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="validTo" class="col-sm-3 col-form-label">{{ 'common.fields.validTo' | transloco }}</label>
+            <div class="col-sm-9">
+              <input
+                type="datetime-local"
+                class="form-control"
+                id="validTo"
+                formControlName="validTo"
+                [class.is-invalid]="hasFieldError('validTo')">
+              @if (hasFieldError('validTo')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('validTo'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.validTo' | transloco }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="groupRefs" class="col-sm-3 col-form-label">{{ 'common.fields.groupRefs' | transloco }}</label>
+            <div class="col-sm-9">
+              <app-referencelist-edit
+                formControlName="groupRefs"
+                [dataSource]="groupsDataSource"
+                placeholder="{{ 'common.fields.groupRefsPlaceholder' | transloco }}"
+                [allowCreate]="false"
+                (changed)="onGroupRefsChanged($event)">
+              </app-referencelist-edit>
+              @if (hasFieldError('groupRefs')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('groupRefs'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              <small class="form-text text-muted">{{ 'common.messages.groupRefs' | transloco }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

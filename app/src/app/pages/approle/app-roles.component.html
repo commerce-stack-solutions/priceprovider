@@ -1,0 +1,101 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>{{ 'pages.appRoles.title' | transloco }}</h1>
+    <div>
+      @if (selectedRoles().size > 0) {
+        <button class="btn btn-danger me-2"
+                (click)="deleteSelected()"
+                [disabled]="!canDelete()"
+                [attr.aria-disabled]="!canDelete()"
+                [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          <i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedRoles().size }})
+        </button>
+      }
+      @if (permissionService.isLoggedIn()) {
+        <a class="btn btn-primary"
+           [routerLink]="canWrite() ? ['/' + lang(), 'app-roles', 'add'] : null"
+           [class.disabled]="!canWrite()"
+           [attr.aria-disabled]="!canWrite()"
+           [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+          <i class="bi bi-plus-circle"></i> {{ 'pages.appRoles.addAppRole' | transloco }}
+        </a>
+      }
+    </div>
+  </div>
+
+  @if (deleteError()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ deleteError() }}
+      <button type="button" class="btn-close" (click)="deleteError.set(null)" aria-label="Close"></button>
+    </div>
+  }
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th style="width: 50px;">
+          <input type="checkbox" class="form-check-input"
+                 [checked]="selectedRoles().size === roles().length && roles().length > 0"
+                 (change)="toggleAllSelection($event.target.checked)">
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
+          @if (getFilterConfig('id'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('id')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('description')">{{ 'common.fields.description' | transloco }}{{ getSortIndicator('description') }}</span>
+          @if (getFilterConfig('description'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('description')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th>{{ 'common.fields.actions' | transloco }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let role of roles()">
+        <td>
+          <input type="checkbox" class="form-check-input"
+                 [checked]="selectedRoles().has(role.id)"
+                 (change)="toggleSelection(role.id)">
+        </td>
+        <td><a [routerLink]="['/' + lang(), 'app-roles', role.id]" class="ref-badge">{{ role.id }}</a></td>
+        <td>{{ role.description }}</td>
+        <td>
+          <a [routerLink]="canWrite() ? ['/' + lang(), 'app-roles', role.id, 'edit'] : null"
+             class="btn btn-sm btn-outline-primary me-1"
+             [class.disabled]="!canWrite()"
+             [attr.aria-disabled]="!canWrite()"
+             [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+            <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="page() === 0">
+        <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
+      </li>
+      <li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
+        <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
+        <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
+      </li>
+    </ul>
+  </nav>
+</div>

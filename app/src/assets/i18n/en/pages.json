@@ -1,0 +1,112 @@
+{
+  "home": {
+    "title": "Welcome to price|manager",
+    "description": "This is the start page. Here are some shortcuts to the listing pages:",
+    "shortcuts": "Shortcuts"
+  },
+  "languages": {
+    "title": "Languages",
+    "addLanguage": "Add Language",
+    "editLanguage": "Edit Language",
+    "languageDetails": "Language Details",
+    "deleteConfirm": "Delete {{count}} selected language(s)?",
+    "fields": {
+      "isoKey": "ISO Key",
+      "active": "Active",
+      "mandatory": "Mandatory"
+    }
+  },
+  "currencies": {
+    "title": "Currencies",
+    "addCurrency": "Add Currency",
+    "editCurrency": "Edit Currency",
+    "currencyDetails": "Currency Details",
+    "createCurrency": "Create Currency"
+  },
+  "units": {
+    "title": "Units",
+    "addUnit": "Add Unit",
+    "editUnit": "Edit Unit",
+    "unitDetails": "Unit Details",
+    "createUnit": "Create Unit"
+  },
+  "taxclasses": {
+    "title": "Tax Classes",
+    "addTaxClass": "Add Tax Class",
+    "editTaxClass": "Edit Tax Class",
+    "taxClassDetails": "Tax Class Details",
+    "createTaxClass": "Create Tax Class"
+  },
+  "groups": {
+    "title": "Groups",
+    "addGroup": "Add Group",
+    "editGroup": "Edit Group",
+    "groupDetails": "Group Details",
+    "createGroup": "Create Group",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected groups?"
+  },
+  "organizations": {
+    "title": "Organizations",
+    "addOrganization": "Add Organization",
+    "editOrganization": "Edit Organization",
+    "organizationDetails": "Organization Details",
+    "createOrganization": "Create Organization"
+  },
+  "pricerows": {
+    "title": "Price Rows",
+    "addPriceRow": "Add Price Row",
+    "editPriceRow": "Edit Price Row",
+    "priceRowDetails": "Price Row Details",
+    "createPriceRow": "Create Price Row"
+  },
+  "countries": {
+    "title": "Countries",
+    "addCountry": "Add Country",
+    "editCountry": "Edit Country",
+    "countryDetails": "Country Details",
+    "createCountry": "Create Country",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected countries?"
+  },
+  "channels": {
+    "title": "Channels",
+    "addChannel": "Add Channel",
+    "editChannel": "Edit Channel",
+    "channelDetails": "Channel Details",
+    "createChannel": "Create Channel",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected channels?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details",
+    "addAppPermission": "Add App Permission"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Service Initialization",
+    "description": "Initialize service data manually. Select the data you want to load and click the Load Data button.",
+    "selectDataTitle": "Select Data to Load",
+    "essentialData": "Essential Data",
+    "essentialDataDescription": "Core data required for the service to function (languages, currencies, countries, units, tax classes, permissions, roles)",
+    "sampleData": "Sample Data",
+    "sampleDataDescription": "Sample data for testing and demonstration (organizations, groups, channels, price rows)",
+    "loadButton": "Load Data",
+    "loading": "Loading...",
+    "previewTitle": "Data Files Preview",
+    "essentialFiles": "Essential Data Files",
+    "sampleFiles": "Sample Data Files",
+    "directory": "Directory",
+    "noFiles": "No files found",
+    "loadingPreview": "Loading preview...",
+    "refreshPermissions": "Refresh Permissions",
+    "refreshPermissionsHint": "Reload your permissions after loading new data"
+  }
+}

@@ -1,0 +1,30 @@
+<div class="language-switcher dropdown">
+  <button 
+    class="btn btn-outline-secondary dropdown-toggle" 
+    type="button" 
+    (click)="toggleDropdown()"
+    [attr.aria-expanded]="isOpen()">
+    <i class="bi bi-globe"></i>
+    <span class="ms-2">{{ currentLangLabel }}</span>
+  </button>
+  @if (isOpen()) {
+    <div class="dropdown-menu show" (click)="$event.stopPropagation()">
+      @for (lang of availableLanguages; track lang.id) {
+        <button 
+          class="dropdown-item" 
+          [class.active]="lang.id === currentLang"
+          type="button"
+          (click)="selectLanguage(lang.id)">
+          {{ lang.label }}
+          @if (lang.id === currentLang) {
+            <i class="bi bi-check float-end"></i>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>
+
+@if (isOpen()) {
+  <div class="dropdown-backdrop" (click)="closeDropdown()"></div>
+}

@@ -1,0 +1,164 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>{{ 'pages.organizations.title' | transloco }}</h1>
+    <div>
+      @if (selectedIds().size > 0) {
+        <button class="btn btn-danger me-2" (click)="bulkDelete()" [disabled]="!permissionService.hasDeletePermission('Organization')">
+          <i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedIds().size }})
+        </button>
+      }
+      @if (permissionService.isLoggedIn()) {
+        <a [routerLink]="['/' + lang(), 'organizations', 'add']" class="btn btn-primary" [class.disabled]="!permissionService.hasWritePermission('Organization')">
+          <i class="bi bi-plus-circle"></i> {{ 'pages.organizations.addOrganization' | transloco }}
+        </a>
+      }
+    </div>
+  </div>
+  
+  @if (error()) {
+    <div class="alert alert-danger">
+      {{ error() }}
+    </div>
+  }
+
+  @if (deleteError()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ deleteError() }}
+      <button type="button" class="btn-close" (click)="deleteError.set(null)" aria-label="Close"></button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+    </div>
+  }
+
+  @if (!loading()) {
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th style="width: 50px;">
+            <input type="checkbox" class="form-check-input" 
+                   [checked]="selectedIds().size === organizations().length && organizations().length > 0"
+                   (change)="toggleSelectAll()">
+          </th>
+          <th class="sortable">
+            <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
+            @if (getFilterConfig('id'); as config) {
+              <app-column-filter 
+                [config]="config"
+                [activeFilter]="getActiveFilter('id')"
+                (filterApplied)="onFilterApplied($event)"
+                (filterRemoved)="onFilterRemoved($event)">
+              </app-column-filter>
+            }
+          </th>
+          <th class="sortable">
+            <span (click)="sortByField('name')">{{ 'common.fields.name' | transloco }}{{ getSortIndicator('name') }}</span>
+            @if (getFilterConfig('name'); as config) {
+              <app-column-filter 
+                [config]="config"
+                [activeFilter]="getActiveFilter('name')"
+                (filterApplied)="onFilterApplied($event)"
+                (filterRemoved)="onFilterRemoved($event)">
+              </app-column-filter>
+            }
+          </th>
+          <th class="sortable">
+            <span (click)="sortByField('organizationType')">{{ 'common.fields.organizationType' | transloco }}{{ getSortIndicator('organizationType') }}</span>
+            @if (getFilterConfig('organizationType'); as config) {
+              <app-column-filter 
+                [config]="config"
+                [activeFilter]="getActiveFilter('organizationType')"
+                (filterApplied)="onFilterApplied($event)"
+                (filterRemoved)="onFilterRemoved($event)">
+              </app-column-filter>
+            }
+          </th>
+          <th>
+            {{ 'common.fields.parents' | transloco }}
+            @if (getFilterConfig('parentRefs'); as config) {
+              <app-column-filter 
+                [config]="config"
+                [activeFilter]="getActiveFilter('parentRefs')"
+                (filterApplied)="onFilterApplied($event)"
+                (filterRemoved)="onFilterRemoved($event)">
+              </app-column-filter>
+            }
+          </th>
+          <th>
+            {{ 'common.fields.children' | transloco }}
+            @if (getFilterConfig('subRefs'); as config) {
+              <app-column-filter 
+                [config]="config"
+                [activeFilter]="getActiveFilter('subRefs')"
+                (filterApplied)="onFilterApplied($event)"
+                (filterRemoved)="onFilterRemoved($event)">
+              </app-column-filter>
+            }
+          </th>
+          <th>{{ 'common.fields.actions' | transloco }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (org of organizations(); track org.id) {
+          <tr>
+            <td>
+              <input type="checkbox" class="form-check-input" 
+                     [checked]="selectedIds().has(org.id)"
+                     (change)="toggleSelection(org.id)">
+            </td>
+            <td>
+              <a [routerLink]="['/' + lang(), 'organizations', org.id]" class="ref-badge">
+                {{ org.id }}
+              </a>
+            </td>
+            <td>{{ org.name }}</td>
+            <td>{{ org.organizationType }}</td>
+            <td>
+              @if (org.parentRefs && org.parentRefs.length > 0) {
+                <span class="badge bg-secondary">{{ org.parentRefs.length }}</span>
+              } @else {
+                -
+              }
+            </td>
+            <td>
+              @if (org.subRefs && org.subRefs.length > 0) {
+                <span class="badge bg-secondary">{{ org.subRefs.length }}</span>
+              } @else {
+                -
+              }
+            </td>
+            <td>
+              <a [routerLink]="['/' + lang(), 'organizations', org.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Organization')">
+                <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+              </a>
+            </td>
+          </tr>
+        }
+        @if (organizations().length === 0) {
+          <tr>
+            <td colspan="7" class="text-center text-muted">{{ 'common.messages.noData' | transloco }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="page() === 0">
+          <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
+        </li>
+        @for (p of getPageNumbers(); track p) {
+          <li class="page-item" [class.active]="p === page()">
+            <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="page() === totalPages() - 1">
+          <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
+        </li>
+      </ul>
+    </nav>
+  }
+</div>

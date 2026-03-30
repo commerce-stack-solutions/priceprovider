@@ -1,0 +1,21 @@
+<div class="mb-3">
+  <label *ngIf="label" class="form-label">
+    {{ label }}
+    <span *ngIf="required" class="text-danger">*</span>
+  </label>
+<select 
+  class="form-select"
+  [class.is-invalid]="isInvalid"
+  [ngModel]="selectedValue()"
+  (ngModelChange)="onValueChange($event)"
+  [disabled]="disabled"
+>
+  <option [value]="null">{{ placeholder }}</option>
+  <option *ngFor="let option of options" [value]="option.value">
+    {{ option.label }}
+  </option>
+</select>
+  <div class="invalid-feedback" *ngIf="isInvalid">
+    This field is required
+  </div>
+</div>

@@ -1,0 +1,20 @@
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+dl {
+  margin-bottom: 0;
+}
+
+dt {
+  font-weight: 500;
+  color: #6c757d;
+}
+
+dd {
+  margin-bottom: 1rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

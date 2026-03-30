@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Tere tulemast price|manager",
+    "description": "See on avaleht. Siin on mõned otseteed loendilehtedele:",
+    "shortcuts": "Otseteed"
+  },
+  "languages": {
+    "title": "Keeled",
+    "addLanguage": "Lisa keel",
+    "editLanguage": "Muuda keelt",
+    "languageDetails": "Keele üksikasjad",
+    "deleteConfirm": "Kustuta {{count}} valitud keelt?",
+    "fields": {
+      "isoKey": "ISO võti",
+      "active": "Aktiivne",
+      "mandatory": "Kohustuslik"
+    }
+  },
+  "currencies": {
+    "title": "Valuutad",
+    "addCurrency": "Lisa valuuta",
+    "editCurrency": "Muuda valuutat",
+    "currencyDetails": "Valuuta üksikasjad",
+    "createCurrency": "Loo valuuta"
+  },
+  "units": {
+    "title": "Ühikud",
+    "addUnit": "Lisa ühik",
+    "editUnit": "Muuda ühikut",
+    "unitDetails": "Ühiku üksikasjad",
+    "createUnit": "Loo ühik"
+  },
+  "taxclasses": {
+    "title": "Maksuklassid",
+    "addTaxClass": "Lisa maksuklass",
+    "editTaxClass": "Muuda maksuklassi",
+    "taxClassDetails": "Maksuklassi üksikasjad",
+    "createTaxClass": "Loo maksuklass"
+  },
+  "groups": {
+    "title": "Rühmad",
+    "addGroup": "Lisa rühm",
+    "editGroup": "Muuda rühma",
+    "groupDetails": "Rühma üksikasjad",
+    "createGroup": "Loo rühm",
+    "deleteConfirm": "Kas olete kindel, et soovite kustutada {{count}} valitud rühma?"
+  },
+  "organizations": {
+    "title": "Organisatsioonid",
+    "addOrganization": "Lisa organisatsioon",
+    "editOrganization": "Muuda organisatsiooni",
+    "organizationDetails": "Organisatsiooni üksikasjad",
+    "createOrganization": "Loo organisatsioon"
+  },
+  "pricerows": {
+    "title": "Hinnaread",
+    "addPriceRow": "Lisa hinnarida",
+    "editPriceRow": "Muuda hinnarida",
+    "priceRowDetails": "Hinnarea üksikasjad",
+    "createPriceRow": "Loo hinnarida"
+  },
+  "countries": {
+    "title": "Riigid",
+    "addCountry": "Lisa riik",
+    "editCountry": "Muuda riiki",
+    "countryDetails": "Riigi andmed",
+    "createCountry": "Loo riik",
+    "deleteConfirm": "Kustutada {{count}} valitud riiki?"
+  },
+  "channels": {
+    "title": "Kanalid",
+    "addChannel": "Lisa kanal",
+    "editChannel": "Muuda kanalit",
+    "channelDetails": "Kanali andmed",
+    "createChannel": "Loo kanal",
+    "deleteConfirm": "Kustutada {{count}} valitud kanalit?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  }
+}

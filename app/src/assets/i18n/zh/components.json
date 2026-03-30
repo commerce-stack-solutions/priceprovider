@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "价格行",
+    "currencies": "货币",
+    "taxClasses": "税种",
+    "units": "单位",
+    "languages": "语言",
+    "groups": "组",
+    "organizations": "组织",
+    "countries": "国家",
+    "channels": "渠道",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "选择语言",
+    "currentLanguage": "当前语言"
+  }
+}

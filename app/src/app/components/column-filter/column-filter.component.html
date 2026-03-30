@@ -1,0 +1,98 @@
+<div class="column-filter-wrapper">
+  <button 
+    type="button" 
+    class="btn btn-sm filter-toggle"
+    [class.active]="hasActiveFilter()"
+    (click)="togglePopover()"
+    [attr.aria-label]="'common.actions.filter' | transloco">
+    <i class="bi" [class.bi-funnel-fill]="hasActiveFilter()" [class.bi-funnel]="!hasActiveFilter()"></i>
+  </button>
+  
+  @if (isOpen()) {
+    <div class="filter-popover" (click)="$event.stopPropagation()">
+      <div class="filter-popover-header">
+        <h6 class="mb-0">{{ config().label }}</h6>
+        <button type="button" class="btn-close btn-sm" (click)="closePopover()" [attr.aria-label]="'common.actions.close' | transloco"></button>
+      </div>
+      
+      <div class="filter-popover-body">
+        <!-- Operator Selection -->
+        <div class="mb-3">
+          <label class="form-label">{{ 'common.filterLabels.operator' | transloco }}</label>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedOperator" (ngModelChange)="selectedOperator.set($event)">
+            @for (op of allowedOperators(); track op) {
+              <option [value]="op">{{ getOperatorLabel(op) | transloco }}</option>
+            }
+          </select>
+        </div>
+        
+        <!-- Value Input(s) -->
+        @if (needsValue()) {
+          @if (isRangeOperator()) {
+            <!-- Range inputs -->
+            <div class="mb-3">
+              <label class="form-label">{{ 'common.filterLabels.from' | transloco }}</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [(ngModel)]="filterValueFrom"
+                (ngModelChange)="filterValueFrom.set($event)"
+                [placeholder]="'common.filterLabels.fromPlaceholder' | transloco">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ 'common.filterLabels.to' | transloco }}</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [(ngModel)]="filterValueTo"
+                (ngModelChange)="filterValueTo.set($event)"
+                [placeholder]="'common.filterLabels.toPlaceholder' | transloco">
+            </div>
+          } @else {
+            <!-- Single value input -->
+            <div class="mb-3">
+              <label class="form-label">{{ 'common.filterLabels.value' | transloco }}</label>
+              @if (config().type === 'boolean') {
+                <select class="form-select form-select-sm" [(ngModel)]="filterValue" (ngModelChange)="filterValue.set($event)">
+                  <option value="true">{{ 'common.actions.yes' | transloco }}</option>
+                  <option value="false">{{ 'common.actions.no' | transloco }}</option>
+                </select>
+              } @else {
+                <input 
+                  type="text" 
+                  class="form-control form-control-sm" 
+                  [(ngModel)]="filterValue"
+                  (ngModelChange)="filterValue.set($event)"
+                  [placeholder]="'common.filterLabels.valuePlaceholder' | transloco">
+              }
+            </div>
+          }
+        } @else if (isExistsOperator()) {
+          <!-- Exists operator -->
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.filterLabels.value' | transloco }}</label>
+            <select class="form-select form-select-sm" [(ngModel)]="filterValue" (ngModelChange)="filterValue.set($event)">
+              <option value="true">{{ 'common.filterLabels.hasValue' | transloco }}</option>
+              <option value="false">{{ 'common.filterLabels.noValue' | transloco }}</option>
+            </select>
+          </div>
+        }
+      </div>
+      
+      <div class="filter-popover-footer">
+        <div class="d-flex justify-content-between">
+          @if (hasActiveFilter()) {
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeFilter()">
+              <i class="bi bi-x-circle"></i> {{ 'common.actions.remove' | transloco }}
+            </button>
+          } @else {
+            <div></div>
+          }
+          <button type="button" class="btn btn-sm btn-primary" (click)="applyFilter()">
+            <i class="bi bi-check-circle"></i> {{ 'common.actions.apply' | transloco }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,29 @@
+.language-switcher {
+  position: relative;
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+    
+    .dropdown-item {
+      &.active {
+        background-color: var(--bs-primary);
+        color: white;
+      }
+    }
+  }
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  background: transparent;
+}

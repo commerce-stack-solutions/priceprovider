@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Cenu rindas",
+    "currencies": "Valūtas",
+    "taxClasses": "Nodokļu klases",
+    "units": "Vienības",
+    "languages": "Valodas",
+    "groups": "Grupas",
+    "organizations": "Organizācijas",
+    "countries": "Valstis",
+    "channels": "Kanāli",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Atlasīt valodu",
+    "currentLanguage": "Pašreizējā valoda"
+  }
+}

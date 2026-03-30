@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "priceRows": "Prijsregels",
+    "currencies": "Valuta's",
+    "taxClasses": "Belastingklassen",
+    "units": "Eenheden",
+    "languages": "Talen",
+    "groups": "Groepen",
+    "organizations": "Organisaties",
+    "countries": "Landen",
+    "channels": "Kanalen",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles"
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Taal selecteren",
+    "currentLanguage": "Huidige taal"
+  }
+}

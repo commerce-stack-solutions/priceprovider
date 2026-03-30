@@ -1,0 +1,83 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ 'pages.channels.channelDetails' | transloco }}</h1>
+    <div>
+      <a [routerLink]="['/' + lang(), 'channels']" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+      <ng-container *ngIf="channel()">
+        <a [routerLink]="canWrite() ? ['/' + lang(), 'channels', channel()?.id, 'edit'] : null"
+           class="btn btn-primary me-2"
+           [class.text-decoration-underline]="showEditKeyHint()"
+           [class.disabled]="!canWrite()"
+           [attr.aria-disabled]="!canWrite()"
+           [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+          <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+        </a>
+        <button class="btn btn-danger" (click)="deleteChannel()" [disabled]="!canDelete()" [attr.aria-disabled]="!canDelete()" [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          <i class="bi bi-trash"></i> {{ 'common.actions.delete' | transloco }}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-container *ngIf="error()">
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!error() && !channel()">
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="channel() && !error()">
+    <div class="row">
+      <div [class]="infoSections().length > 0 ? 'col-md-8' : 'col-md-12'">
+        <div class="card">
+          <div class="card-body">
+            <dl class="row">
+              <dt class="col-sm-3">{{ 'common.fields.id' | transloco }}</dt>
+              <dd class="col-sm-9">{{ channel()!.id }}</dd>
+            </dl>
+            <ng-container *ngIf="channel()!.priceRepresentationMode">
+              <hr>
+              <dl class="row">
+                <dt class="col-sm-3">
+                  {{ 'common.fields.priceRepresentationMode' | transloco }}
+                </dt>
+                <dd class="col-sm-9">
+                  <div class="d-flex align-items-start gap-2">
+                    <span class="badge bg-primary">{{ channel()!.priceRepresentationMode }}</span>
+                    <span class="text-muted" style="cursor: help;" [title]="getPriceRepresentationModeDescription(channel()!.priceRepresentationMode)">
+                      <i class="bi bi-info-circle"></i>
+                    </span>
+                  </div>
+                  <small class="text-muted d-block mt-1">{{ getPriceRepresentationModeDescription(channel()!.priceRepresentationMode) }}</small>
+                </dd>
+              </dl>
+            </ng-container>
+            <ng-container *ngIf="channel()!.allowedCountryRefs && channel()!.allowedCountryRefs!.length > 0">
+              <hr>
+              <h6>{{ 'common.fields.allowedCountryRefs' | transloco }}</h6>
+              <div>
+                <ng-container *ngFor="let ref of channel()!.allowedCountryRefs!">
+                  <a [routerLink]="['/' + lang(), 'countries', ref]" class="badge bg-secondary text-decoration-none me-1">{{ ref }}</a>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="infoSections().length > 0">
+        <div class="col-md-4">
+          <app-info-section [sections]="infoSections()"></app-info-section>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,124 @@
+[
+  {
+    "id": "GRP-26-SALE-PROMOTION-SUMMER",
+    "name": "Summer Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-WINTER",
+    "name": "Winter Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-VIP",
+    "name": "Promo 2026 - VIP Customers",
+    "parentRefs": [
+      "GRP-26-SALE-PROMOTION-WINTER",
+      "GRP-26-SALE-PROMOTION-SUMMER"
+    ]
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-SPRING",
+    "name": "Spring Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-AUTUMN",
+    "name": "Autumn Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-BLACK-FRIDAY",
+    "name": "Black Friday 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-CYBER-MONDAY",
+    "name": "Cyber Monday 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-EASTER",
+    "name": "Easter Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-CHRISTMAS",
+    "name": "Christmas Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-NEW-YEAR",
+    "name": "New Year Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-MOTHERS-DAY",
+    "name": "Mother's Day Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-FATHERS-DAY",
+    "name": "Father's Day Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-VALENTINES",
+    "name": "Valentine's Day Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-HALLOWEEN",
+    "name": "Halloween Sale 2026"
+  },
+  {
+    "id": "GRP-26-SALE-PROMOTION-BACK-TO-SCHOOL",
+    "name": "Back to School 2026"
+  },
+  {
+    "id": "GRP-26-EMPLOYEE-DISCOUNT",
+    "name": "Employee Discount Program"
+  },
+  {
+    "id": "GRP-26-PARTNER-DISCOUNT",
+    "name": "Partner Discount Program"
+  },
+  {
+    "id": "GRP-26-LOYALTY-GOLD",
+    "name": "Loyalty Program - Gold Tier"
+  },
+  {
+    "id": "GRP-26-LOYALTY-SILVER",
+    "name": "Loyalty Program - Silver Tier"
+  },
+  {
+    "id": "GRP-26-LOYALTY-BRONZE",
+    "name": "Loyalty Program - Bronze Tier"
+  },
+  {
+    "id": "GRP-26-CORPORATE-ACCOUNTS",
+    "name": "Corporate Accounts Group"
+  },
+  {
+    "id": "GRP-26-WHOLESALE-CUSTOMERS",
+    "name": "Wholesale Customers Group"
+  },
+  {
+    "id": "GRP-26-RETAIL-CUSTOMERS",
+    "name": "Retail Customers Group"
+  },
+  {
+    "id": "GRP-26-ONLINE-CUSTOMERS",
+    "name": "Online Customers Group"
+  },
+  {
+    "id": "GRP-26-PREMIUM-MEMBERS",
+    "name": "Premium Members"
+  },
+  {
+    "id": "DEMO-GROUP-STANDARD",
+    "name": "Standard Customers"
+  },
+  {
+    "id": "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM",
+    "name": "Premium Customers",
+    "parentRefs": [
+      "DEMO-GROUP-STANDARD"
+    ]
+  },
+  {
+    "id": "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM/DEMO-GROUP-VIP",
+    "name": "VIP Customers",
+    "parentRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
+    ]
+  }
+]

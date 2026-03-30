@@ -1,0 +1,34 @@
+[
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 100.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "PURCHASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-003",
+    "priceValue": 90.0,
+    "minQuantity": 20,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "PURCHASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  }
+]

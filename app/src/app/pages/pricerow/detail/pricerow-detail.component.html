@@ -1,0 +1,128 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ 'pages.pricerows.priceRowDetails' | transloco }}</h1>
+    <div>
+      <button class="btn btn-outline-secondary me-2" type="button" (click)="navigateToList()">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </button>
+      @if (priceRow()) {
+        <button class="btn btn-primary me-2" type="button" (click)="navigateToEdit()" [class.text-decoration-underline]="showEditKeyHint()"
+                [class.disabled]="!canWrite()"
+                [attr.aria-disabled]="!canWrite()"
+                [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+          <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+        </button>
+        <button class="btn btn-danger" type="button" (click)="deletePriceRow()"
+                [disabled]="!canDelete()"
+                [attr.aria-disabled]="!canDelete()"
+                [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          <i class="bi bi-trash"></i> {{ 'common.actions.delete' | transloco }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  }
+
+  @if (priceRow() && !loading()) {
+    <div class="row">
+      <!-- Main Details Section (Left) -->
+      <div [class]="infoSections().length > 0 ? 'col-md-8' : 'col-md-12'">
+        <div class="card">
+          <div class="card-body">
+            <dl class="row">
+              <dt class="col-sm-4">ID</dt>
+              <dd class="col-sm-8">{{ priceRow()!.id }}</dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.channelRefs' | transloco }}</dt>
+              <dd class="col-sm-8">
+                @if (priceRow()!.channelRefs && priceRow()!.channelRefs!.length > 0) {
+                  @for (channelRef of priceRow()!.channelRefs; track channelRef) {
+                    <a [routerLink]="['/' + lang(), 'channels', channelRef]" class="ref-badge me-1">{{ channelRef }}</a>
+                  }
+                } @else {
+                  -
+                }
+              </dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.pricedResourceId' | transloco }}</dt>
+              <dd class="col-sm-8">{{ priceRow()!.pricedResourceId }}</dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.priceValue' | transloco }}</dt>
+              <dd class="col-sm-8">{{ priceRow()!.priceValue }}</dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.minQuantity' | transloco }}</dt>
+              <dd class="col-sm-8">{{ priceRow()!.minQuantity }}</dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.unit' | transloco }}</dt>
+              <dd class="col-sm-8">
+                @if (priceRow()!.unitRef) {
+                  <a [routerLink]="['/' + lang(), 'units', priceRow()!.unitRef]" class="ref-badge">{{ priceRow()!.unitRef }}</a>
+                } @else {
+                  -
+                }
+              </dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.currency' | transloco }}</dt>
+              <dd class="col-sm-8">
+                @if (priceRow()!.currencyRef) {
+                  <a [routerLink]="['/' + lang(), 'currencies', priceRow()!.currencyRef]" class="ref-badge">{{ priceRow()!.currencyRef }}</a>
+                } @else {
+                  -
+                }
+              </dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.taxClass' | transloco }}</dt>
+              <dd class="col-sm-8">
+                @if (priceRow()!.taxClassRef) {
+                  <a [routerLink]="['/' + lang(), 'taxclasses', priceRow()!.taxClassRef]" class="ref-badge">{{ priceRow()!.taxClassRef }}</a>
+                } @else {
+                  -
+                }
+              </dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.taxIncluded' | transloco }}</dt>
+              <dd class="col-sm-8">{{ priceRow()!.taxIncluded ? 'Yes' : 'No' }}</dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.validFrom' | transloco }}</dt>
+              <dd class="col-sm-8">{{ formatDate(priceRow()!.validFrom) }}</dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.validTo' | transloco }}</dt>
+              <dd class="col-sm-8">{{ formatDate(priceRow()!.validTo) }}</dd>
+
+              <dt class="col-sm-4">{{ 'common.fields.groupRefs' | transloco }}</dt>
+              <dd class="col-sm-8">
+                @if (priceRow()!.groupRefs && priceRow()!.groupRefs!.length > 0) {
+                  @for (groupRef of priceRow()!.groupRefs; track groupRef) {
+                    <a [routerLink]="['/' + lang(), 'groups', groupRef]" class="ref-badge me-1">{{ groupRef }}</a>
+                  }
+                } @else {
+                  -
+                }
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Section (Right) - only render container if there's content -->
+      @if (infoSections().length > 0) {
+        <div class="col-md-4">
+          <app-info-section [sections]="infoSections()"></app-info-section>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,97 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ isEditMode() ? ('pages.appRoles.editAppRole' | transloco) : ('pages.appRoles.createAppRole' | transloco) }}</h2>
+    <div>
+      <a [routerLink]="['/' + lang(), 'app-roles']" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (!loading()) {
+    @if (error()) {
+      <div class="alert alert-danger">{{ error() }}</div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert alert-success">{{ successMessage() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.fields.id' | transloco }} @if ('id' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id"
+              formControlName="id"
+              [class.is-invalid]="form.get('id')?.invalid && form.get('id')?.touched || hasFieldError('id')"
+            >
+            @if (form.get('id')?.invalid && form.get('id')?.touched) {
+              <div class="invalid-feedback d-block">
+                {{ 'common.messages.idRequired' | transloco }}
+              </div>
+            }
+            @if (hasFieldError('id')) {
+              @for (error of getFieldErrors('id'); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.fields.description' | transloco }}</label>
+            <input
+              type="text"
+              class="form-control"
+              id="description"
+              formControlName="description"
+              [class.is-invalid]="hasFieldError('description')"
+            >
+            @if (hasFieldError('description')) {
+              @for (error of getFieldErrors('description'); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">{{ 'pages.appRoles.permissions' | transloco }}</label>
+            <app-referencelist-edit
+              [formControlName]="'permissionRefs'"
+              [label]="'pages.appRoles.permissionId' | transloco"
+              [dataSource]="permissionsDataSource">
+            </app-referencelist-edit>
+            @if (hasFieldError('permissionRefs')) {
+              @for (error of getFieldErrors('permissionRefs'); track error) {
+                <div class="invalid-feedback d-block">{{ error }}</div>
+              }
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="container mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-1"></span>
+          }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      </div>
+    </form>
+  }
+</div>
