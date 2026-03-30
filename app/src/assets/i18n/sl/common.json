@@ -259,6 +259,9 @@
       "notFound": "Kanal z ID '{{id}}' ni bil najden",
       "alreadyExists": "Kanal z ID '{{id}}' že obstaja",
       "deleteError": "Napaka pri brisanju kanalov."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "navigation": {

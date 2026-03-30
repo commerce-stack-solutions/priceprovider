@@ -276,6 +276,9 @@
       "notFound": "Kanavaa ID '{{id}}' ei löydy",
       "alreadyExists": "Kanava ID '{{id}}' on jo olemassa",
       "deleteError": "Virhe kanavien poistamisessa."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "filterOperators": {

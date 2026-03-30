@@ -276,6 +276,9 @@
       "notFound": "Kanal med ID '{{id}}' hittades inte",
       "alreadyExists": "Kanal med ID '{{id}}' finns redan",
       "deleteError": "Fel vid borttagning av kanaler."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "filterOperators": {

@@ -276,6 +276,9 @@
       "notFound": "Kanalas su ID '{{id}}' nerastas",
       "alreadyExists": "Kanalas su ID '{{id}}' jau egzistuoja",
       "deleteError": "Klaida trinant kanalus."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "filterOperators": {

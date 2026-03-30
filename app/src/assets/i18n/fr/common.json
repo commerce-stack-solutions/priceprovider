@@ -259,6 +259,9 @@
       "notFound": "Canal avec ID '{{id}}' introuvable",
       "alreadyExists": "Un canal avec ID '{{id}}' existe déjà",
       "deleteError": "Erreur lors de la suppression des canaux."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "navigation": {
