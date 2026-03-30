@@ -1,0 +1,14 @@
+.idea/
+app/pricemanager-app/package-lock.json
+service/logs/
+**/node_modules/
+**/dist/
+**/build/
+**/.gradle/
+**/out/
+*.log
+/.instructions.md
+*.bak
+*.bak2
+*.bak*
+
