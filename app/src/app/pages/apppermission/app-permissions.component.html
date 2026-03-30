@@ -2,6 +2,15 @@
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>{{ 'pages.appPermissions.title' | transloco }}</h1>
     <div>
+      @if (selectedPermissions().size > 0) {
+        <button class="btn btn-danger me-2"
+                (click)="deleteSelected()"
+                [disabled]="!canDelete()"
+                [attr.aria-disabled]="!canDelete()"
+                [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          <i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedPermissions().size }})
+        </button>
+      }
       @if (permissionService.isLoggedIn()) {
         <a class="btn btn-primary"
            [routerLink]="canWrite() ? ['/' + lang(), 'app-permissions', 'add'] : null"
@@ -14,9 +23,26 @@
     </div>
   </div>
 
+  <div class="alert alert-warning d-flex align-items-start" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div>{{ 'pages.appPermissions.dangerWarning' | transloco }}</div>
+  </div>
+
+  @if (deleteError()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ deleteError() }}
+      <button type="button" class="btn-close" (click)="deleteError.set(null)" aria-label="Close"></button>
+    </div>
+  }
+
   <table class="table table-hover">
     <thead>
       <tr>
+        <th style="width: 50px;">
+          <input type="checkbox" class="form-check-input"
+                 [checked]="selectedPermissions().size === permissions().length && permissions().length > 0"
+                 (change)="toggleAllSelection($event.target.checked)">
+        </th>
         <th class="sortable">
           <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
           @if (getFilterConfig('id'); as config) {
@@ -44,6 +70,11 @@
     </thead>
     <tbody>
       <tr *ngFor="let permission of permissions()">
+        <td>
+          <input type="checkbox" class="form-check-input"
+                 [checked]="selectedPermissions().has(permission.id)"
+                 (change)="toggleSelection(permission.id)">
+        </td>
         <td><a [routerLink]="['/' + lang(), 'app-permissions', permission.id]" class="ref-badge">{{ permission.id }}</a></td>
         <td>{{ permission.description }}</td>
         <td>
@@ -57,6 +88,14 @@
              [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
             <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
           </a>
+          <button type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="deletePermission(permission.id)"
+                  [disabled]="!canDelete()"
+                  [attr.aria-disabled]="!canDelete()"
+                  [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : ( 'pages.appPermissions.deleteWarning' | transloco )">
+            <i class="bi bi-trash"></i> {{ 'common.actions.delete' | transloco }}
+          </button>
         </td>
       </tr>
     </tbody>

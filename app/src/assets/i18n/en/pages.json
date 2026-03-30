@@ -78,7 +78,12 @@
   "appPermissions": {
     "title": "App Permissions",
     "details": "App Permission Details",
-    "addAppPermission": "Add App Permission"
+    "addAppPermission": "Add App Permission",
+    "createAppPermission": "Create App Permission",
+    "editAppPermission": "Edit App Permission",
+    "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
+    "deleteWarning": "Deleting this permission can break application access. Continue?",
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
   },
   "appRoles": {
     "title": "App Roles",

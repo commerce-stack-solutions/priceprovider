@@ -223,6 +223,9 @@
       "alreadyExists": "Steuerklasse mit taxClassId '{{taxClassId}}' existiert bereits",
       "deleteError": "Fehler beim Löschen von Steuerklassen. Einige werden möglicherweise verwendet."
     },
+    "appPermission": {
+      "deleteError": "Fehler beim Löschen von Berechtigungen. Einige werden möglicherweise verwendet."
+    },
     "validation": {
       "mandatoryField": "Feld '{{field}}' ist Pflichtfeld und darf nicht leer sein",
       "invalidReference": "Ungültige {{referenceType}}-Referenz: Gruppe mit ID '{{referenceId}}' existiert nicht",
