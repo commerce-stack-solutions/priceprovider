@@ -1,5 +1,24 @@
 [
   {
+    "id": "priceprovider.admin:Superuser",
+    "description": "All permissions including AppPermission management",
+    "permissionRefs": [
+      "priceprovider.admin:AppPermission:read", "priceprovider.admin:AppPermission:write", "priceprovider.admin:AppPermission:delete",
+      "priceprovider.admin:AppRole:read", "priceprovider.admin:AppRole:write", "priceprovider.admin:AppRole:delete",
+      "priceprovider.admin:Channel:read", "priceprovider.admin:Channel:write", "priceprovider.admin:Channel:delete",
+      "priceprovider.admin:Country:read", "priceprovider.admin:Country:write", "priceprovider.admin:Country:delete",
+      "priceprovider.admin:Currency:read", "priceprovider.admin:Currency:write", "priceprovider.admin:Currency:delete",
+      "priceprovider.admin:Group:read", "priceprovider.admin:Group:write", "priceprovider.admin:Group:delete",
+      "priceprovider.admin:Language:read", "priceprovider.admin:Language:write", "priceprovider.admin:Language:delete",
+      "priceprovider.admin:Organization:read", "priceprovider.admin:Organization:write", "priceprovider.admin:Organization:delete",
+      "priceprovider.admin:PriceRow:read", "priceprovider.admin:PriceRow:write", "priceprovider.admin:PriceRow:delete",
+      "priceprovider.admin:TaxClass:read", "priceprovider.admin:TaxClass:write", "priceprovider.admin:TaxClass:delete",
+      "priceprovider.admin:Unit:read", "priceprovider.admin:Unit:write", "priceprovider.admin:Unit:delete",
+      "priceprovider.admin:ServiceInitialization:write",
+      "priceprovider.public:PriceRow:read"
+    ]
+  },
+  {
     "id": "priceprovider.admin:Admin",
     "description": "Full admin access",
     "permissionRefs": [
@@ -75,4 +94,3 @@
     ]
   }
 ]
-
