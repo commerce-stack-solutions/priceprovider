@@ -6,6 +6,38 @@ For detailed information on the project's architecture, development guidelines, 
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
 
+## Developer Setup
+
+### Prerequisites
+
+#### Node.js and npm
+
+Node.js and npm are required to build and run this application. The recommended way to install and manage Node.js versions is via **NVM (Node Version Manager)**:
+
+*   **NVM** (optional but recommended): [https://github.com/nvm-sh/nvm](https://github.com/nvm-sh/nvm)
+
+    Install the Node.js version specified in `.nvmrc` (if present) or the latest LTS release:
+    ```bash
+    nvm install --lts
+    nvm use --lts
+    ```
+
+    If you prefer not to use NVM, download and install Node.js (which includes npm) directly from [https://nodejs.org/](https://nodejs.org/).
+
+#### Angular CLI
+
+Once Node.js and npm are installed, install the Angular CLI globally:
+
+```bash
+npm install -g @angular/cli
+```
+
+Verify the installation:
+
+```bash
+ng version
+```
+
 ## Development server
 
 To start a local development server, run:
