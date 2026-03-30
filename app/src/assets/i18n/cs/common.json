@@ -276,6 +276,9 @@
       "notFound": "Kanál s ID '{{id}}' nebyl nalezen",
       "alreadyExists": "Kanál s ID '{{id}}' již existuje",
       "deleteError": "Chyba při mazání kanálů."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "filterOperators": {

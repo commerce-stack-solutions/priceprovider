@@ -5,7 +5,7 @@ import { AppPermissionsService } from '../../service/approle/app-permission.serv
 import { AppPermission } from '../../model/approle/app-permission.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../service/session.service';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ColumnFilterComponent } from '../../components/column-filter/column-filter.component';
 import { FilterDefinition, ColumnFilterConfig, buildQueryString, parseQueryString } from '../../model/column-filter.model';
 import { PermissionService } from '../../service/permission.service';
@@ -21,6 +21,7 @@ export class AppPermissionsComponent {
   private appPermissionsService = inject(AppPermissionsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private transloco = inject(TranslocoService);
   sessionService = inject(SessionService);
   protected permissionService = inject(PermissionService);
 
@@ -37,6 +38,8 @@ export class AppPermissionsComponent {
   totalPages = signal(0);
   sortBy = signal<string[]>([]);
   sortDirection = signal<string>('asc');
+  selectedPermissions = signal<Set<string>>(new Set());
+  deleteError = signal<string | null>(null);
   activeFilters = signal<Map<string, FilterDefinition>>(new Map());
 
   filterConfigs: ColumnFilterConfig[] = [
@@ -75,6 +78,7 @@ export class AppPermissionsComponent {
           const info = data.$info?.paging;
           this.totalItems.set(info?.['total-items'] ?? 0);
           this.totalPages.set(info?.['total-pages'] ?? 0);
+          this.selectedPermissions.set(new Set());
         },
         error: () => {
           this.permissions.set([]);
@@ -160,5 +164,57 @@ export class AppPermissionsComponent {
 
   getFilterConfig(field: string): ColumnFilterConfig | undefined {
     return this.filterConfigs.find(c => c.field === field);
+  }
+
+  toggleSelection(id: string): void {
+    const selected = new Set(this.selectedPermissions());
+    if (selected.has(id)) {
+      selected.delete(id);
+    } else {
+      selected.add(id);
+    }
+    this.selectedPermissions.set(selected);
+  }
+
+  toggleAllSelection(checked: boolean): void {
+    const selected = new Set<string>();
+    if (checked) {
+      this.permissions().forEach(permission => selected.add(permission.id));
+    }
+    this.selectedPermissions.set(selected);
+  }
+
+  deleteSelected(): void {
+    if (!this.canDelete() || this.selectedPermissions().size === 0) return;
+    const ids = Array.from(this.selectedPermissions());
+    const warning = this.transloco.translate('pages.appPermissions.deleteSelectedWarning', { count: ids.length });
+    if (!confirm(warning)) return;
+
+    this.appPermissionsService.bulkDeleteAppPermissions(ids)
+      .subscribe({
+        next: () => {
+          this.deleteError.set(null);
+          this.selectedPermissions.set(new Set());
+          this.loadPermissions();
+        },
+        error: () => {
+          this.deleteError.set(this.transloco.translate('common.errors.appPermission.deleteError'));
+          this.loadPermissions();
+        }
+      });
+  }
+
+  deletePermission(id: string): void {
+    if (!this.canDelete()) return;
+    const warning = this.transloco.translate('pages.appPermissions.deleteWarning', { id });
+    if (!confirm(warning)) return;
+
+    this.appPermissionsService.deleteAppPermission(id).subscribe({
+      next: () => this.loadPermissions(),
+      error: () => {
+        this.deleteError.set(this.transloco.translate('common.errors.appPermission.deleteError'));
+        this.loadPermissions();
+      }
+    });
   }
 }

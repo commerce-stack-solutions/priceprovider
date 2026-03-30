@@ -10,11 +10,14 @@ The system uses a fine-grained RBAC model where **AppPermissions** are assigned 
 
 Defined in `AppRole.0010.json`:
 
+- **priceprovider.admin:Superuser**: All permissions, including managing AppPermissions and AppRoles.
 - **priceprovider.admin:Admin**: Full admin access to all data types.
 - **priceprovider.admin:Contributor**: Read and write access to all data types.
 - **priceprovider.admin:Reader**: Read-only access to all data types.
 - **priceprovider.admin:ChannelContributor**: Full access to channels only.
 - **priceprovider.public:PriceRowReader**: Access to the public price API, scoped by organization.
+
+The admin role remains protected from AppPermission write/delete operations to prevent accidental permission loss. Use the superuser role when permission maintenance is required.
 
 ### App Permissions
 
@@ -55,6 +58,7 @@ The following sample users are pre-configured in the `priceprovider` realm (`idp
 
 | Username | Password | Role | Description |
 |----------|----------|------|-------------|
+| `super-user` | `superuser123` | `priceprovider.admin:Superuser` | Unrestricted access, including AppPermission management. |
 | `admin-user` | `admin123` | `priceprovider.admin:Admin` | Full system administrator. |
 | `contributor-user` | `contributor123` | `priceprovider.admin:Contributor` | Editor for all master data. |
 | `reader-user` | `reader123` | `priceprovider.admin:Reader` | Read-only access for auditing. |

@@ -223,6 +223,9 @@
       "alreadyExists": "TaxClass with taxClassId '{{taxClassId}}' already exists",
       "deleteError": "Error deleting tax classes. Some may be in use."
     },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
+    },
     "validation": {
       "mandatoryField": "Field '{{field}}' is mandatory and cannot be null or empty",
       "invalidReference": "Invalid {{referenceType}} reference: Group with id '{{referenceId}}' does not exist",

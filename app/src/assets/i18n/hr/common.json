@@ -276,6 +276,9 @@
       "notFound": "Kanal s ID '{{id}}' nije pronađen",
       "alreadyExists": "Kanal s ID '{{id}}' već postoji",
       "deleteError": "Greška pri brisanju kanala."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "filterOperators": {

@@ -30,6 +30,7 @@ import { ChannelFormComponent } from './pages/channel/form/channel-form.componen
 import { ChannelDetailComponent } from './pages/channel/detail/channel-detail.component';
 import { AppPermissionsComponent } from './pages/apppermission/app-permissions.component';
 import { AppPermissionDetailComponent } from './pages/apppermission/detail/app-permission-detail.component';
+import { AppPermissionFormComponent } from './pages/apppermission/form/app-permission-form.component';
 import { AppRolesComponent } from './pages/approle/app-roles.component';
 import { AppRoleDetailComponent } from './pages/approle/detail/app-role-detail.component';
 import { AppRoleFormComponent } from './pages/approle/form/app-role-form.component';
@@ -114,7 +115,9 @@ export const routes: Routes = [
       { path: 'channels/:id', component: ChannelDetailComponent },
       { path: 'channels/:id/edit', component: ChannelFormComponent },
       { path: 'app-permissions', component: AppPermissionsComponent },
+      { path: 'app-permissions/add', component: AppPermissionFormComponent },
       { path: 'app-permissions/:id', component: AppPermissionDetailComponent },
+      { path: 'app-permissions/:id/edit', component: AppPermissionFormComponent },
       { path: 'app-roles', component: AppRolesComponent },
       { path: 'app-roles/add', component: AppRoleFormComponent },
       { path: 'app-roles/:id', component: AppRoleDetailComponent },

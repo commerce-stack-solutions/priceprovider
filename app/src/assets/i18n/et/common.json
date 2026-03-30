@@ -276,6 +276,9 @@
       "notFound": "Kanalit ID '{{id}}' ei leitud",
       "alreadyExists": "Kanal ID '{{id}}' on juba olemas",
       "deleteError": "Viga kanalite kustutamisel."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "filterOperators": {

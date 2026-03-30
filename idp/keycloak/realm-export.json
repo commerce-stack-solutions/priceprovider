@@ -133,6 +133,10 @@
   "roles": {
     "realm": [
       {
+        "name": "priceprovider.admin:Superuser",
+        "description": "All permissions including AppPermission management"
+      },
+      {
         "name": "priceprovider.admin:Admin",
         "description": "Full admin access: read, write, delete all data types in the admin API"
       },
@@ -201,6 +205,25 @@
     }
   ],
   "users": [
+    {
+      "username": "super-user",
+      "email": "superuser@priceprovider.local",
+      "firstName": "Super",
+      "lastName": "User",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "superuser123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "priceprovider.admin:Superuser"
+      ],
+      "groups": []
+    },
     {
       "username": "admin-user",
       "email": "admin@priceprovider.local",

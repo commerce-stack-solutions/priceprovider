@@ -78,7 +78,12 @@
   "appPermissions": {
     "title": "App Permissions",
     "details": "App Permission Details",
-    "addAppPermission": "Berechtigung hinzufügen"
+    "addAppPermission": "Berechtigung hinzufügen",
+    "createAppPermission": "Berechtigung anlegen",
+    "editAppPermission": "Berechtigung bearbeiten",
+    "dangerWarning": "Das Bearbeiten oder Löschen von Berechtigungen kann den Zugriff auf die Anwendung blockieren. Fahren Sie nur fort, wenn Sie einen Superuser haben und die Auswirkungen kennen.",
+    "deleteWarning": "Das Löschen dieser Berechtigung kann den Zugriff auf die Anwendung beeinträchtigen. Fortfahren?",
+    "deleteSelectedWarning": "Das Löschen von {{count}} Berechtigung(en) kann den Zugriff auf die Anwendung beeinträchtigen. Fortfahren?"
   },
   "appRoles": {
     "title": "App Roles",

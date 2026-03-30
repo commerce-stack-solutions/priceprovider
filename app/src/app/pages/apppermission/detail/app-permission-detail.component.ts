@@ -87,7 +87,8 @@ export class AppPermissionDetailComponent {
     const p = this.permission();
     if (!p) return;
 
-    if (confirm(this.transloco.translate('common.messages.confirmDelete'))) {
+    const warning = this.transloco.translate('pages.appPermissions.deleteWarning', { id: p.id });
+    if (confirm(warning)) {
       this.appPermissionsService.deleteAppPermission(p.id).subscribe({
         next: () => this.router.navigate(['/' + this.lang(), 'app-permissions']),
         error: () => this.error.set(this.transloco.translate('common.errors.appPermission.deleteError'))

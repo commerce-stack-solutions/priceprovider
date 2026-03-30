@@ -259,6 +259,9 @@
       "notFound": "Kanāls ar ID '{{id}}' nav atrasts",
       "alreadyExists": "Kanāls ar ID '{{id}}' jau pastāv",
       "deleteError": "Kļūda dzēšot kanālus."
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "navigation": {

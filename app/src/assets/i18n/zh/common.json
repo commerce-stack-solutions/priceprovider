@@ -276,6 +276,9 @@
       "notFound": "未找到 ID 为 '{{id}}' 的渠道",
       "alreadyExists": "ID 为 '{{id}}' 的渠道已存在",
       "deleteError": "删除渠道时出错。"
+    },
+    "appPermission": {
+      "deleteError": "Error deleting app permissions. Some may be in use."
     }
   },
   "filterOperators": {
