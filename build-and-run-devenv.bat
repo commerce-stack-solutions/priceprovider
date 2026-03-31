@@ -1,6 +1,7 @@
 @echo off
 REM build-and-run-devenv.bat
 REM Fast setup: builds dev Docker images (0.0.0-SNAPSHOT) for the service and app, then starts the full stack.
+REM If Node.js / npm is available, example frontends are also installed and started.
 
 setlocal ENABLEDELAYEDEXPANSION
 
@@ -55,6 +56,23 @@ if %errorlevel% neq 0 (
 
 for /f "tokens=*" %%v in ('docker --version') do set "DOCKER_VER=%%v"
 echo   [OK] Docker Desktop is running  (%DOCKER_VER%)
+
+REM Check for Node.js / npm (optional)
+set "NODE_AVAILABLE=false"
+where node >nul 2>&1
+if %errorlevel% equ 0 (
+    where npm >nul 2>&1
+    if !errorlevel! equ 0 (
+        set "NODE_AVAILABLE=true"
+        for /f "tokens=*" %%n in ('node --version') do set "NODE_VER=%%n"
+        echo   [OK] Node.js is available  (!NODE_VER!)  – example frontends will be started
+    )
+)
+if "!NODE_AVAILABLE!"=="false" (
+    echo   [--] Node.js / npm not found – example frontends will be skipped
+    echo        Install from https://nodejs.org/ to also run the example frontends
+)
+
 echo.
 echo ================================================================
 echo.
@@ -116,18 +134,42 @@ if %errorlevel% neq 0 (
 )
 popd
 
+REM ---------------------------------------------------------------------------
+REM Start example frontends (only when Node.js / npm are available)
+REM ---------------------------------------------------------------------------
+if "!NODE_AVAILABLE!"=="true" (
+    echo.
+    echo ================================================================
+    echo.
+    echo Starting example frontends...
+    echo.
+
+    for %%f in (shopfrontend rentalfrontend) do (
+        echo   Installing dependencies for %%f...
+        pushd "%SCRIPT_DIR%\examples\%%f"
+        call npm install --silent
+        echo   Starting %%f in the background...
+        start "%%f" /min cmd /c "npm start > %TEMP%\%%f.log 2>&1"
+        echo   [OK] %%f started  (log: %TEMP%\%%f.log)
+        popd
+    )
+)
+
 echo.
 echo ================================================================
 echo.
 echo   All services are starting up!
 echo.
-echo   Price Manager App   -^>  http://localhost
-echo   Price Provider API  -^>  http://localhost:8080
-echo   Keycloak (IdP)      -^>  http://localhost:8081
+echo   Price Manager App      -^>  http://localhost
+echo   Price Provider API     -^>  http://localhost:8080
+echo   Keycloak (IdP)         -^>  http://localhost:8081
+if "!NODE_AVAILABLE!"=="true" (
+    echo   Shop Frontend (demo^)   -^>  http://localhost:3000
+    echo   Rental Frontend (demo^) -^>  http://localhost:3001
+)
 echo.
-echo   To stream logs:  docker-compose logs -f
-echo   To stop:         docker-compose-down.bat
-echo            or:     docker-compose down
+echo   To stream logs:  docker compose logs -f
+echo   To stop:         docker compose down
 echo.
 echo ================================================================
 echo.
