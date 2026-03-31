@@ -4,15 +4,12 @@ import de.ebusyness.commons.exception.InvalidParameterException;
 
 import de.ebusyness.commons.query.exception.QueryParseException;
 import de.ebusyness.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import de.ebusyness.priceproviderservice.dataaccess.pricerow.enums.PriceType;
 import de.ebusyness.commons.service.entity.EntityService;
+import de.ebusyness.priceproviderservice.service.pricerow.smartmatching.PriceRowMatchingContext;
 import org.springframework.data.domain.Page;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Service interface for PriceRow entity operations.
@@ -65,31 +62,13 @@ public interface PriceRowService extends EntityService<PriceRowEntity> {
     void deleteById(Long id);
     
     /**
-     * Finds a price row by matching key fields (excluding price value).
-     * This is used for bulk create-or-update operations to determine if a price row should be updated.
-     * 
-     * @param pricedResourceId the priced resource identifier
-     * @param minQuantity the minimum quantity
-     * @param unitRef the unit reference (symbol)
-     * @param currencyRef the currency reference (key)
-     * @param taxClassRef the tax class reference (id)
-     * @param taxIncluded whether tax is included
-     * @param priceType the price type
-     * @param validFrom the valid from date
-     * @param validTo the valid to date
-     * @param groupRefs the group references
+     * Finds a price row matching the given criteria using the configured
+     * {@link de.ebusyness.priceproviderservice.service.pricerow.smartmatching.SmartMatchingStrategy}.
+     * This is used by bulk create-or-update operations to determine whether to update an
+     * existing row or create a new one.
+     *
+     * @param context the matching criteria
      * @return optional containing the matching price row if found
      */
-    Optional<PriceRowEntity> findByMatchingFields(
-        String pricedResourceId,
-        BigDecimal minQuantity,
-        String unitRef,
-        String currencyRef,
-        String taxClassRef,
-        boolean taxIncluded,
-        PriceType priceType,
-        OffsetDateTime validFrom,
-        OffsetDateTime validTo,
-        Set<String> groupRefs
-    );
+    Optional<PriceRowEntity> findByMatchingFields(PriceRowMatchingContext context);
 }
