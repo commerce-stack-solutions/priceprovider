@@ -5694,6 +5694,11 @@
                     "type": "string"
                   },
                   {
+                    "key": "clientSecret",
+                    "value": "",
+                    "type": "string"
+                  },
+                  {
                     "key": "username",
                     "value": "customer-city-health",
                     "type": "string"
@@ -6788,6 +6793,11 @@
               {
                 "key": "clientId",
                 "value": "rentalfrontend",
+                "type": "string"
+              },
+              {
+                "key": "clientSecret",
+                "value": "",
                 "type": "string"
               },
               {
@@ -10413,6 +10423,11 @@
       {
         "key": "clientId",
         "value": "{{oidcClientId}}",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "",
         "type": "string"
       },
       {
