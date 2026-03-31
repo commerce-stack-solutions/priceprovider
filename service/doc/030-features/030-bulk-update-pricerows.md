@@ -61,7 +61,7 @@ When you **omit the `id` field**, the system performs smart matching based on al
    - `priceType` - Type of price (e.g., "SALES_PRICE", "PURCHASE_PRICE")
    - `validFrom` - Price validity start date
    - `validTo` - Price validity end date
-   - `groupRefs` - Set of group IDs this price applies to
+   - `groupRefs` - Set of group IDs this price applies to (exact match required)
 
 2. If **all fields match** an existing price row:
    - **UPDATE** the existing entity (changes only `priceValue`)
