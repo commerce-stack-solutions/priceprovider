@@ -38,10 +38,12 @@
       "serviceAccountsEnabled": false,
       "protocol": "openid-connect",
       "redirectUris": [
+        "http://localhost/*",
         "http://localhost:4200/*",
         "http://localhost:80/*"
       ],
       "webOrigins": [
+        "http://localhost",
         "http://localhost:4200",
         "http://localhost:80"
       ],
