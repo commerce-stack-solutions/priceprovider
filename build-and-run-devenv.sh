@@ -103,7 +103,7 @@ echo ""
 # Ensure the example frontend origins are allowed by the service (CORS).
 # The dev profile in application-dev.yaml already lists these; here we set
 # the same value via env-var so the Dockerised service honours them too.
-export PPS_CORS_ALLOWED_ORIGINS="${PPS_CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001}"
+export PPS_CORS_ALLOWED_ORIGINS="${PPS_CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001,http://localhost:8081}"
 export VERSION
 cd "${SCRIPT_DIR}"
 docker compose up -d

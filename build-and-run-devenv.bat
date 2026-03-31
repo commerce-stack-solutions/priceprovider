@@ -125,7 +125,7 @@ echo.
 
 REM Ensure the example frontend origins are allowed by the service (CORS).
 if not defined PPS_CORS_ALLOWED_ORIGINS (
-    set "PPS_CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001"
+    set "PPS_CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001,http://localhost:8081"
 )
 
 set "VERSION=%VERSION%"
