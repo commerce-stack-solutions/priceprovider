@@ -56,7 +56,7 @@ Available folders:
 - `Languages (Admin API)`
 - `Currencies (Admin API)`
 - `Price Rows (Admin API)`
-- `Public Price API`
+- `Public Price API` ← includes `Rental (Example)` sub-folder
 - `Tax Classes (Admin API)`
 - `Groups (Admin API)`
 - `Organizations (Admin API)`

@@ -34,17 +34,22 @@ The primary tool. Download from [postman.com](https://www.postman.com/).
 
 The collection uses the following variables (all set to local defaults):
 
-| Variable        | Default                   | Description                                     |
-|-----------------|---------------------------|-------------------------------------------------|
-| `baseUrl`       | `http://localhost:8080`   | Price Provider Service base URL                 |
-| `keycloakUrl`   | `http://localhost:8081`   | Keycloak base URL                               |
-| `oidcRealm`     | `priceprovider`           | Keycloak realm name                             |
-| `oidcClientId`  | `priceprovider-app`       | OIDC public client ID                           |
-| `oidcUsername`  | `admin-user`              | Test user with full Admin role                  |
-| `oidcPassword`  | `admin123`                | Password for the test user                      |
-| `accessToken`   | *(empty)*                 | JWT token — populated by the login request      |
+| Variable              | Default                   | Description                                               |
+|-----------------------|---------------------------|-----------------------------------------------------------|
+| `baseUrl`             | `http://localhost:8080`   | Price Provider Service base URL                           |
+| `keycloakUrl`         | `http://localhost:8081`   | Keycloak base URL                                         |
+| `oidcRealm`           | `priceprovider`           | Keycloak realm name                                       |
+| `oidcClientId`        | `priceprovider-app`       | OIDC public client ID                                     |
+| `oidcUsername`        | `admin-user`              | Test user with full Admin role                            |
+| `oidcPassword`        | `admin123`                | Password for the test user                                |
+| `accessToken`         | *(empty)*                 | Admin JWT token — populated by the login request          |
+| `customerAccessToken` | *(empty)*                 | Customer JWT token — populated by the customer login      |
+| `rentalAccessToken`   | *(empty)*                 | Rental JWT token — populated by the rental login requests |
 
-To customize, click on the collection name and go to the **Variables** tab.
+In **Postman**, these are collection variables (set on the **Variables** tab of the collection).  
+In **Hoppscotch**, these must be set as **environment variables** before running, or they are populated automatically by the login requests into the active environment.
+
+To customize in Postman, click on the collection name and go to the **Variables** tab.
 
 ## Authentication (Keycloak OIDC)
 
@@ -53,9 +58,12 @@ The Admin API requires a valid JWT Bearer token. The collection includes an **Au
 ### How it works
 
 1. The `Authentication / Get Admin Access Token (Keycloak)` request performs an OIDC [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) (ROPC) grant against Keycloak.
-2. The test script extracts the returned `access_token` and stores it in `{{accessToken}}`.
+2. The test script extracts the returned `access_token` and stores it in the **environment variable** `{{accessToken}}` (via `pm.environment.set()`).
 3. All Admin API folders inherit **Bearer `{{accessToken}}`** from the collection-level auth setting automatically.
 4. The `Health` and `Public Price API` folders are marked `noauth` and need no token.
+5. The `Rental (Example)` requests (inside `Public Price API`) store their tokens in `{{rentalAccessToken}}` using the same `pm.environment.set()` mechanism.
+
+> **Hoppscotch compatibility**: The scripts use `pm.environment.set()` exclusively, which is supported in both Newman and Hoppscotch. Make sure you have an active environment selected in Hoppscotch before running the login requests.
 
 ### Prerequisites
 
@@ -69,7 +77,7 @@ Keycloak starts on port **8081** and auto-imports the `priceprovider` realm with
 
 ### Running with authentication
 
-**Postman / Hoppscotch**: Run the `Authentication / Get Admin Access Token (Keycloak)` request first, then execute any other request.
+**Postman / Hoppscotch**: Run the `Authentication / Get Admin Access Token (Keycloak)` request first, then execute any other request. In Hoppscotch, ensure an active environment is selected so that `{{accessToken}}` is stored correctly.
 
 **Newman**: Pass the `Authentication` folder first (it is the first folder in the collection, so a full run handles this automatically):
 
@@ -194,7 +202,7 @@ Available folders:
 - `Authentication` ← always run first when testing Admin API endpoints
 - `Health`
 - `Units (Admin API)`, `Languages (Admin API)`, `Currencies (Admin API)`, `Price Rows (Admin API)`
-- `Public Price API`
+- `Public Price API` ← includes `Rental (Example)` sub-folder
 - `Tax Classes (Admin API)`, `Groups (Admin API)`, `Organizations (Admin API)`, `Countries (Admin API)`, `Channels (Admin API)`
 
 ### With Timeouts (for slow environments)
