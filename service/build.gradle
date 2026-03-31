@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-group = 'de.ebusyness.priceproviderservice'
+group = 'io.commercestacksolutions.priceproviderservice'
 version = '1.0.0'
 
 repositories {

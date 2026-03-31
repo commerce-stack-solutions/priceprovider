@@ -7,7 +7,7 @@ For an overview of the layering concept, see [Architecture Overview](../010-arch
 ## Package Structure
 
 ```
-de.ebusyness.priceproviderservice.service/
+io.commercestacksolutions.priceproviderservice.service/
 ├── {entity}/
 │   ├── {Entity}Service.java              # Interface defining the contract
 │   ├── {Entity}ServiceImpl.java          # Default implementation
@@ -26,10 +26,10 @@ All services follow IDD principles: define an interface, implement it in a separ
 Service interfaces should extend `EntityService<T>` to inherit common entity operations:
 
 ```java
-package de.ebusyness.priceproviderservice.service.unit;
+package io.commercestacksolutions.priceproviderservice.service.unit;
 
-import de.ebusyness.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import de.ebusyness.commons.service.entity.EntityService;
+import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.commons.service.entity.EntityService;
 import org.springframework.data.domain.Page;
 import java.util.List;
 
@@ -51,13 +51,13 @@ public interface UnitService extends EntityService<UnitEntity> {
 ### Step 2: Implement the Service
 
 ```java
-package de.ebusyness.priceproviderservice.service.unit;
+package io.commercestacksolutions.priceproviderservice.service.unit;
 
-import de.ebusyness.priceproviderservice.dataaccess.unit.UnitEntityRepository;
-import de.ebusyness.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import de.ebusyness.commons.service.entity.validation.EntityValidator;
-import de.ebusyness.commons.service.entity.validation.ValidationRule;
-import de.ebusyness.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
+import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
+import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
+import io.commercestacksolutions.commons.web.rest.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -170,12 +170,12 @@ public interface ValidationRule<T> {
 Annotate with `@Component` so Spring discovers and auto-wires it:
 
 ```java
-package de.ebusyness.priceproviderservice.service.language.validation;
+package io.commercestacksolutions.priceproviderservice.service.language.validation;
 
-import de.ebusyness.priceproviderservice.dataaccess.language.entity.LanguageEntity;
-import de.ebusyness.priceproviderservice.commons.messagekeys.MessageKeys;
-import de.ebusyness.commons.service.entity.validation.ValidationRule;
-import de.ebusyness.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
+import io.commercestacksolutions.commons.web.rest.Message;
 import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Collections;
@@ -208,12 +208,12 @@ public class LanguageInactiveMandatoryRule implements ValidationRule<LanguageEnt
 ### Cross-Entity Validation with Service Dependency
 
 ```java
-package de.ebusyness.priceproviderservice.service.pricerow.validation;
+package io.commercestacksolutions.priceproviderservice.service.pricerow.validation;
 
-import de.ebusyness.commons.service.entity.validation.ValidationRule;
-import de.ebusyness.commons.web.rest.Message;
-import de.ebusyness.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import de.ebusyness.priceproviderservice.service.unit.UnitService;
+import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
+import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
+import io.commercestacksolutions.priceproviderservice.service.unit.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Collections;
@@ -264,7 +264,7 @@ public class UnitReferenceExistsRule implements ValidationRule<PriceRowEntity> {
 Always define message keys as constants in `MessageKeys`:
 
 ```java
-// de.ebusyness.priceproviderservice.commons.messagekeys.MessageKeys
+// io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys
 public static final String ERROR_LANGUAGE_MANDATORY_MUST_BE_ACTIVE = "error.language.mandatory.must.be.active";
 public static final String ERROR_UNIT_REFERENCE_NOT_FOUND = "error.unit.reference.not.found";
 ```
@@ -350,7 +350,7 @@ For the complete implementation guide (how to register filterable fields, suppor
 
 ## `RequireMandatoryFieldsRule` — Annotation-Driven Mandatory Field Validation
 
-Instead of writing a custom `ValidationRule` per entity to check mandatory fields, use the shared `RequireMandatoryFieldsRule<T>` from `de.ebusyness.commons.service.entity.validation.rules`.
+Instead of writing a custom `ValidationRule` per entity to check mandatory fields, use the shared `RequireMandatoryFieldsRule<T>` from `io.commercestacksolutions.commons.service.entity.validation.rules`.
 
 This rule reads the mandatory field list from the `EntityMetaInfoRegistry` (populated at startup from `@Id` / `@MetaMandatoryField` annotations) and validates all required fields are non-null (and non-blank for `String`s).
 

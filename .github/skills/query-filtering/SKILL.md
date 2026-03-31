@@ -45,11 +45,11 @@ public interface YourService {
 
 **Add required imports:**
 ```java
-import de.ebusyness.commons.exception.InvalidParameterException;
-import de.ebusyness.commons.query.QueryExpression;
-import de.ebusyness.commons.query.QueryParser;
-import de.ebusyness.commons.query.QueryFilterRuntimeException;
-import de.ebusyness.commons.query.SpecificationBuilder;
+import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.query.QueryParser;
+import io.commercestacksolutions.commons.query.QueryFilterRuntimeException;
+import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,7 +175,7 @@ Expose the `q` query parameter in the REST endpoint.
 
 **Add import:**
 ```java
-import de.ebusyness.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.exception.InvalidParameterException;
 ```
 
 **Update the GET mapping:**

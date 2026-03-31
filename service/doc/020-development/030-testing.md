@@ -19,7 +19,7 @@ The service uses **JUnit 5** and **Spring Boot Test** for all tests. Tests are o
 ./gradlew test
 
 # Run a specific test class
-./gradlew test --tests "de.ebusyness.priceproviderservice.service.unit.UnitEntityServiceCyclicDependencyTest"
+./gradlew test --tests "io.commercestacksolutions.priceproviderservice.service.unit.UnitEntityServiceCyclicDependencyTest"
 ```
 
 ## Unit Tests

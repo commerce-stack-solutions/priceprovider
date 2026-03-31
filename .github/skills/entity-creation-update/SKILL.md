@@ -11,7 +11,7 @@ description: 'Skill for creating or updating a domain entity in the backend serv
 - start with the data model (entity) setup / data model changes in the backend service
   - make sure it implements AuditableEntity and fields: OffsetDateTime createdAt, OffsetDateTime lastModifiedAt exist
 - if required introduce repository / update repository methods / query 
-- if you introduce or extend entities with enum also introduce a (NEW ENTITY)TypeEnumConstraint based on de.ebusyness.commons.dataaccess.dbupdate.AbstractEnumConstraintUpdater
+- if you introduce or extend entities with enum also introduce a (NEW ENTITY)TypeEnumConstraint based on io.commercestacksolutions.commons.dataaccess.dbupdate.AbstractEnumConstraintUpdater
 
 ## Relevant Resources during this phase
 - see [011-development-guide-data-access-layer.md](../../../service/doc/020-development/011-development-guide-data-access-layer.md)

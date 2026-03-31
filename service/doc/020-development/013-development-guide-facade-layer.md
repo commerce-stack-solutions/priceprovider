@@ -7,7 +7,7 @@ For an overview of the layering concept, see [Architecture Overview](../010-arch
 ## Package Structure
 
 ```
-de.ebusyness.priceproviderservice.facade/
+io.commercestacksolutions.priceproviderservice.facade/
 ├── {entity}/
 │   ├── {Entity}FacadeService.java        # Interface defining the contract
 │   ├── {Entity}FacadeImpl.java           # Default implementation
@@ -90,13 +90,13 @@ public class PriceRowRestEntity extends RestEntity<InfoPriceRow, IncludesPriceRo
 ### Facade Interface Pattern
 
 ```java
-package de.ebusyness.priceproviderservice.facade.unit;
+package io.commercestacksolutions.priceproviderservice.facade.unit;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.ebusyness.commons.exception.NotFoundException;
-import de.ebusyness.commons.mapper.exception.DataMappingException;
-import de.ebusyness.priceproviderservice.facade.unit.restentity.UnitListRestEntity;
-import de.ebusyness.priceproviderservice.facade.unit.restentity.UnitRestEntity;
+import io.commercestacksolutions.commons.exception.NotFoundException;
+import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
+import io.commercestacksolutions.priceproviderservice.facade.unit.restentity.UnitListRestEntity;
+import io.commercestacksolutions.priceproviderservice.facade.unit.restentity.UnitRestEntity;
 import java.util.List;
 import java.util.Set;
 
@@ -161,13 +161,13 @@ To convert between entity and REST entity types, use a mapper class that extends
 ### Creating a Mapper
 
 ```java
-package de.ebusyness.priceproviderservice.facade.myentity.mapper;
+package io.commercestacksolutions.priceproviderservice.facade.myentity.mapper;
 
-import de.ebusyness.commons.mapper.AbstractMapper;
-import de.ebusyness.commons.mapper.RestResponseMappingContext;
-import de.ebusyness.commons.mapper.exception.DataMappingException;
-import de.ebusyness.priceproviderservice.dataaccess.myentity.entity.MyEntity;
-import de.ebusyness.priceproviderservice.facade.myentity.restentity.MyRestEntity;
+import io.commercestacksolutions.commons.mapper.AbstractMapper;
+import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
+import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
+import io.commercestacksolutions.priceproviderservice.dataaccess.myentity.entity.MyEntity;
+import io.commercestacksolutions.priceproviderservice.facade.myentity.restentity.MyRestEntity;
 import org.springframework.stereotype.Component;
 
 @Component

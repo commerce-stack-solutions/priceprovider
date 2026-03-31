@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PriceProviderService (dev, postgres)" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="de.ebusyness.PriceProviderServiceApp" />
+    <option name="MAIN_CLASS_NAME" value="io.commercestacksolutions.PriceProviderServiceApp" />
     <option name="VM_PARAMETERS" value="-Dspring.profiles.active=dev" />
     <module name="service.main" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/service" />
@@ -13,7 +13,7 @@
     </envs>
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="de.ebusyness.*" />
+        <option name="PATTERN" value="io.commercestacksolutions.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

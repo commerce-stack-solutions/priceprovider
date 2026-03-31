@@ -9,7 +9,7 @@ For error codes and error response format, see [040-api-reference/020-error-code
 ## Package Structure
 
 ```
-de.ebusyness.priceproviderservice.web.controller/
+io.commercestacksolutions.priceproviderservice.web.controller/
 ├── {entity}/
 │   └── {Entity}Controller.java     # REST controller
 ├── ExceptionHandlerAdvice.java     # Central exception handler (@ControllerAdvice)
