@@ -8,6 +8,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VERSION="0.0.0-SNAPSHOT"
 
+# Helper: emit an OSC 8 clickable hyperlink; gracefully degrades to a plain URL
+# in terminals that do not support hyperlinks.
+link() {
+    local url="$1"
+    local label="${2:-$1}"
+    printf '\e]8;;%s\e\\%s\e]8;;\e\\' "$url" "$label"
+}
+
 # ---------------------------------------------------------------------------
 # Welcome screen
 # ---------------------------------------------------------------------------
@@ -92,6 +100,10 @@ echo "Starting the full stack with docker compose..."
 echo "  (postgres, keycloak, service, app)"
 echo ""
 
+# Ensure the example frontend origins are allowed by the service (CORS).
+# The dev profile in application-dev.yaml already lists these; here we set
+# the same value via env-var so the Dockerised service honours them too.
+export PPS_CORS_ALLOWED_ORIGINS="${PPS_CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001}"
 export VERSION
 cd "${SCRIPT_DIR}"
 docker compose up -d
@@ -121,13 +133,20 @@ echo "================================================================"
 echo ""
 echo "  All services are starting up!"
 echo ""
-echo "  Price Manager App      ->  http://localhost"
-echo "  Price Provider API     ->  http://localhost:8080"
-echo "  Keycloak (IdP)         ->  http://localhost:8081"
+echo "  Price Manager App      ->  $(link 'http://localhost')"
+echo "  Price Provider API     ->  $(link 'http://localhost:8080')"
+echo "  Keycloak (IdP)         ->  $(link 'http://localhost:8081')"
 if [ "${NODE_AVAILABLE}" = "true" ]; then
-echo "  Shop Frontend (demo)   ->  http://localhost:3000"
-echo "  Rental Frontend (demo) ->  http://localhost:3001"
+echo "  Shop Frontend (demo)   ->  $(link 'http://localhost:3000')"
+echo "  Rental Frontend (demo) ->  $(link 'http://localhost:3001')"
 fi
+echo ""
+echo "  Documentation:"
+echo "  Project README         ->  $(link "file://${SCRIPT_DIR}/README.md")"
+echo "  Service README         ->  $(link "file://${SCRIPT_DIR}/service/README.md")"
+echo "  App README             ->  $(link "file://${SCRIPT_DIR}/app/README.md")"
+echo "  Shop Frontend README   ->  $(link "file://${SCRIPT_DIR}/examples/shopfrontend/README.md")"
+echo "  Rental Frontend README ->  $(link "file://${SCRIPT_DIR}/examples/rentalfrontend/README.md")"
 echo ""
 echo "  To stream logs:  docker compose logs -f"
 echo "  To stop:         docker compose down"

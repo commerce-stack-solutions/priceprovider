@@ -119,15 +119,20 @@ echo.
 REM ---------------------------------------------------------------------------
 REM Start the stack
 REM ---------------------------------------------------------------------------
-echo Starting the full stack with docker-compose...
+echo Starting the full stack with docker compose...
 echo   (postgres, keycloak, service, app)
 echo.
 
+REM Ensure the example frontend origins are allowed by the service (CORS).
+if not defined PPS_CORS_ALLOWED_ORIGINS (
+    set "PPS_CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001"
+)
+
 set "VERSION=%VERSION%"
 pushd "%SCRIPT_DIR%"
-docker-compose up -d
+docker compose up -d
 if %errorlevel% neq 0 (
-    echo ERROR: docker-compose up failed.
+    echo ERROR: docker compose up failed.
     popd
     endlocal
     exit /b 1
@@ -167,6 +172,13 @@ if "!NODE_AVAILABLE!"=="true" (
     echo   Shop Frontend (demo^)   -^>  http://localhost:3000
     echo   Rental Frontend (demo^) -^>  http://localhost:3001
 )
+echo.
+echo   Documentation:
+echo   Project README         -^>  %SCRIPT_DIR%\README.md
+echo   Service README         -^>  %SCRIPT_DIR%\service\README.md
+echo   App README             -^>  %SCRIPT_DIR%\app\README.md
+echo   Shop Frontend README   -^>  %SCRIPT_DIR%\examples\shopfrontend\README.md
+echo   Rental Frontend README -^>  %SCRIPT_DIR%\examples\rentalfrontend\README.md
 echo.
 echo   To stream logs:  docker compose logs -f
 echo   To stop:         docker compose down
