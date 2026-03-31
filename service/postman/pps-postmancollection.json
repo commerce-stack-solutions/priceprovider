@@ -69,6 +69,7 @@
                   "var jsonData = pm.response.json();",
                   "var token = jsonData.access_token;",
                   "pm.environment.set('accessToken', token);",
+                  "if (typeof pw !== 'undefined' && pw.env) { pw.env.set('accessToken', token); }",
                   "if (typeof pm.collectionVariables !== 'undefined') { pm.collectionVariables.set('accessToken', token); }"
                 ]
               }
@@ -134,15 +135,19 @@
                   "pm.test(\"response contains access_token\", function () { pm.response.to.have.jsonBody(\"access_token\"); });",
                   "var jsonData = pm.response.json();",
                   "var token = jsonData.access_token;",
-                  "pm.environment.set(\"customerAccessToken\", token);",
-                  "if (typeof pm.collectionVariables !== \"undefined\") { pm.collectionVariables.set(\"customerAccessToken\", token); }"
+                  "pm.environment.set('customerAccessToken', token);",
+                  "if (typeof pw !== 'undefined' && pw.env) { pw.env.set('customerAccessToken', token); }",
+                  "if (typeof pm.collectionVariables !== 'undefined') { pm.collectionVariables.set('customerAccessToken', token); }"
                 ]
               }
             }
           ],
           "response": []
         }
-      ]
+      ],
+      "auth": {
+        "type": "noauth"
+      }
     },
     {
       "name": "Health",
@@ -5625,13 +5630,7 @@
               "name": "Get Torque Price - Authenticated (ORG-CITY-COUNCIL/ORG-CITY-HEALTH)",
               "request": {
                 "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{customerAccessToken}}",
-                    "type": "text"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/TOOL-TORQUE-25NM/SALES_PRICE?quantity=1&unit=piece&currency=USD",
                   "host": [
@@ -5675,7 +5674,57 @@
                     ]
                   }
                 }
-              ]
+              ],
+              "auth": {
+                "type": "oauth2",
+                "oauth2": [
+                  {
+                    "key": "tokenName",
+                    "value": "Customer Token",
+                    "type": "string"
+                  },
+                  {
+                    "key": "accessTokenUrl",
+                    "value": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
+                    "type": "string"
+                  },
+                  {
+                    "key": "clientId",
+                    "value": "{{oidcClientId}}",
+                    "type": "string"
+                  },
+                  {
+                    "key": "username",
+                    "value": "customer-city-health",
+                    "type": "string"
+                  },
+                  {
+                    "key": "password",
+                    "value": "customer123",
+                    "type": "string"
+                  },
+                  {
+                    "key": "grant_type",
+                    "value": "password_credentials",
+                    "type": "string"
+                  },
+                  {
+                    "key": "accessToken",
+                    "value": "{{customerAccessToken}}",
+                    "type": "string"
+                  },
+                  {
+                    "key": "addTokenTo",
+                    "value": "header",
+                    "type": "string"
+                  },
+                  {
+                    "key": "tokenType",
+                    "value": "Bearer",
+                    "type": "string"
+                  }
+                ]
+              }
             }
           ]
         },
@@ -6542,6 +6591,7 @@
                       "var jsonData = pm.response.json();",
                       "var token = jsonData.access_token;",
                       "pm.environment.set('rentalAccessToken', token);",
+                      "if (typeof pw !== 'undefined' && pw.env) { pw.env.set('rentalAccessToken', token); }",
                       "if (typeof pm.collectionVariables !== 'undefined') { pm.collectionVariables.set('rentalAccessToken', token); }"
                     ]
                   }
@@ -6605,6 +6655,7 @@
                       "var jsonData = pm.response.json();",
                       "var token = jsonData.access_token;",
                       "pm.environment.set('rentalAccessToken', token);",
+                      "if (typeof pw !== 'undefined' && pw.env) { pw.env.set('rentalAccessToken', token); }",
                       "if (typeof pm.collectionVariables !== 'undefined') { pm.collectionVariables.set('rentalAccessToken', token); }"
                     ]
                   }
@@ -6615,13 +6666,7 @@
               "name": "RENTAL: Get Best Prices for priced resource ids)",
               "request": {
                 "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{rentalAccessToken}}",
-                    "type": "text"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=RENT-DRILL,RENT-SAW",
                   "host": [
@@ -6676,13 +6721,7 @@
               "name": "RENTAL: Get All-Quantities Best Prices",
               "request": {
                 "method": "GET",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{rentalAccessToken}}",
-                    "type": "text"
-                  }
-                ],
+                "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricedresource/RENT-DRILL/RENTAL_BASE_PRICE/all-quantities?currency=EUR&unit=piece",
                   "host": [
@@ -6732,7 +6771,57 @@
                 }
               ]
             }
-          ]
+          ],
+          "auth": {
+            "type": "oauth2",
+            "oauth2": [
+              {
+                "key": "tokenName",
+                "value": "Rental Token",
+                "type": "string"
+              },
+              {
+                "key": "accessTokenUrl",
+                "value": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
+                "type": "string"
+              },
+              {
+                "key": "clientId",
+                "value": "rentalfrontend",
+                "type": "string"
+              },
+              {
+                "key": "username",
+                "value": "rental-builder-pro",
+                "type": "string"
+              },
+              {
+                "key": "password",
+                "value": "rental123",
+                "type": "string"
+              },
+              {
+                "key": "grant_type",
+                "value": "password_credentials",
+                "type": "string"
+              },
+              {
+                "key": "accessToken",
+                "value": "{{rentalAccessToken}}",
+                "type": "string"
+              },
+              {
+                "key": "addTokenTo",
+                "value": "header",
+                "type": "string"
+              },
+              {
+                "key": "tokenType",
+                "value": "Bearer",
+                "type": "string"
+              }
+            ]
+          }
         }
       ],
       "auth": {
@@ -10309,11 +10398,51 @@
     }
   ],
   "auth": {
-    "type": "bearer",
-    "bearer": [
+    "type": "oauth2",
+    "oauth2": [
       {
-        "key": "token",
+        "key": "tokenName",
+        "value": "Admin Token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{oidcClientId}}",
+        "type": "string"
+      },
+      {
+        "key": "username",
+        "value": "{{oidcUsername}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{oidcPassword}}",
+        "type": "string"
+      },
+      {
+        "key": "grant_type",
+        "value": "password_credentials",
+        "type": "string"
+      },
+      {
+        "key": "accessToken",
         "value": "{{accessToken}}",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      },
+      {
+        "key": "tokenType",
+        "value": "Bearer",
         "type": "string"
       }
     ]

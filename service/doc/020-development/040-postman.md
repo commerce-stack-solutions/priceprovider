@@ -23,7 +23,7 @@ The primary tool. Download from [postman.com](https://www.postman.com/).
 
 [Hoppscotch](https://hoppscotch.io/) is a lightweight, open-source alternative to Postman that runs in the browser. It can import and execute Postman collections and is useful when a full Postman installation is not desired.
 
-> **Note:** Hoppscotch does not support `pm.collectionVariables`. The collection's authentication scripts use `pm.environment.set()` as the primary mechanism for storing tokens, with `pm.collectionVariables.set()` called conditionally (guarded by an existence check). This ensures that token variables are stored correctly in both Postman/Newman and Hoppscotch. When using Hoppscotch, make sure you have an active environment selected so that `pm.environment.set()` has a target to write to.
+The collection uses **OAuth 2.0 (Resource Owner Password Credentials)** auth so that Hoppscotch can handle token acquisition natively — no script execution or separate token-fetch step is needed. When you open an Admin API request in Hoppscotch, the OAuth 2.0 settings (token URL, client ID, username, password) are pre-populated from the collection; click **Get Access Token** to fetch and attach the Bearer token.
 
 ## Importing the Collection into Postman
 
@@ -36,28 +36,37 @@ The primary tool. Download from [postman.com](https://www.postman.com/).
 
 The collection uses the following variables (all set to local defaults):
 
-| Variable        | Default                   | Description                                     |
-|-----------------|---------------------------|-------------------------------------------------|
-| `baseUrl`       | `http://localhost:8080`   | Price Provider Service base URL                 |
-| `keycloakUrl`   | `http://localhost:8081`   | Keycloak base URL                               |
-| `oidcRealm`     | `priceprovider`           | Keycloak realm name                             |
-| `oidcClientId`  | `priceprovider-app`       | OIDC public client ID                           |
-| `oidcUsername`  | `admin-user`              | Test user with full Admin role                  |
-| `oidcPassword`  | `admin123`                | Password for the test user                      |
-| `accessToken`   | *(empty)*                 | JWT token — populated by the login request      |
+| Variable           | Default                   | Description                                                  |
+|--------------------|---------------------------|--------------------------------------------------------------|
+| `baseUrl`          | `http://localhost:8080`   | Price Provider Service base URL                              |
+| `keycloakUrl`      | `http://localhost:8081`   | Keycloak base URL                                            |
+| `oidcRealm`        | `priceprovider`           | Keycloak realm name                                          |
+| `oidcClientId`     | `priceprovider-app`       | OIDC public client ID (used by Admin API auth)               |
+| `oidcUsername`     | `admin-user`              | Test user with full Admin role                               |
+| `oidcPassword`     | `admin123`                | Password for the test user                                   |
+| `accessToken`      | *(empty)*                 | Admin JWT — populated by the Authentication folder requests  |
+| `customerAccessToken` | *(empty)*              | Customer JWT — populated by the Authentication folder        |
+| `rentalAccessToken`   | *(empty)*              | Rental JWT — populated by the Rental token requests          |
 
 To customize, click on the collection name and go to the **Variables** tab.
 
 ## Authentication (Keycloak OIDC)
 
-The Admin API requires a valid JWT Bearer token. The collection includes an **Authentication** folder with a pre-configured login request.
+The Admin API requires a valid JWT Bearer token. The collection uses **OAuth 2.0 (Resource Owner Password Credentials grant)** at the collection level so tokens are handled natively by the client tool.
 
 ### How it works
 
-1. The `Authentication / Get Admin Access Token (Keycloak)` request performs an OIDC [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) (ROPC) grant against Keycloak.
-2. The test script extracts the returned `access_token` and stores it in `{{accessToken}}`.
-3. All Admin API folders inherit **Bearer `{{accessToken}}`** from the collection-level auth setting automatically.
-4. The `Health` and `Public Price API` folders are marked `noauth` and need no token.
+The collection auth is configured as OAuth 2.0 ROPC with the Keycloak token endpoint and the admin credentials from the collection variables (`{{oidcUsername}}`, `{{oidcPassword}}`). Each folder or request that needs a different identity has its own OAuth 2.0 configuration:
+
+| Scope | OAuth 2.0 config | Token variable |
+|-------|-----------------|----------------|
+| All Admin API folders (inherit collection) | `oidcClientId` / `oidcUsername` / `oidcPassword` | `{{accessToken}}` |
+| Torque authenticated request (Public Price API) | `oidcClientId` / `customer-city-health` / `customer123` | `{{customerAccessToken}}` |
+| Rental (Example) folder (Public Price API) | `rentalfrontend` / `rental-builder-pro` / `rental123` | `{{rentalAccessToken}}` |
+
+The `Health` and `Public Price API` folders are marked `noauth` — they need no token (the Rental sub-folder overrides this with its own OAuth 2.0 config).
+
+The **Authentication** folder contains explicit token-fetch requests that store tokens in the relevant variables. These are used automatically by Newman (which runs the collection sequentially) and are also available as manual helpers in Postman and Hoppscotch.
 
 ### Prerequisites
 
@@ -71,9 +80,11 @@ Keycloak starts on port **8081** and auto-imports the `priceprovider` realm with
 
 ### Running with authentication
 
-**Postman / Hoppscotch**: Run the `Authentication / Get Admin Access Token (Keycloak)` request first, then execute any other request.
+**Hoppscotch**: When you open an Admin API request, Hoppscotch shows the pre-configured OAuth 2.0 settings. Click **Generate Token** (or equivalent) to fetch the Bearer token and send the request. The token URL, client ID, username, and password are all pre-filled from the collection.
 
-**Newman**: Pass the `Authentication` folder first (it is the first folder in the collection, so a full run handles this automatically):
+**Postman**: Same as Hoppscotch — open the authorization tab for a request or the collection, click **Get New Access Token**, and use the pre-filled ROPC configuration.
+
+**Newman**: Run the full collection. The `Authentication` folder executes first and stores tokens in the `{{accessToken}}`, `{{customerAccessToken}}`, and `{{rentalAccessToken}}` variables which are then used by the OAuth 2.0 auth configs of subsequent requests:
 
 ```bash
 cd service
@@ -96,16 +107,16 @@ newman run postman/pps-postmancollection.json \
 
 ### Available test users
 
-| Username               | Role                              | Description                    |
-|------------------------|-----------------------------------|--------------------------------|
-| `admin-user`           | `priceprovider.admin/Admin`       | Full access to all Admin APIs  |
-| `contributor-user`     | `priceprovider.admin/Contributor` | Read + write on all entities   |
-| `reader-user`          | `priceprovider.admin/Reader`      | Read-only on all entities      |
-| `customer-city-council`| `priceprovider.public/PriceRowReader` | Org-scoped public prices   |
-| `customer-city-health` | `priceprovider.public/PriceRowReader` | Sub-org-scoped public prices |
-| `customer-techcorp`    | `priceprovider.public/PriceRowReader` | Different org public prices |
-
-All passwords are `admin123` (dev/test only).
+| Username               | Role                              | Password     | Description                    |
+|------------------------|-----------------------------------|--------------|--------------------------------|
+| `admin-user`           | `priceprovider.admin/Admin`       | `admin123`   | Full access to all Admin APIs  |
+| `contributor-user`     | `priceprovider.admin/Contributor` | `admin123`   | Read + write on all entities   |
+| `reader-user`          | `priceprovider.admin/Reader`      | `admin123`   | Read-only on all entities      |
+| `customer-city-council`| `priceprovider.public/PriceRowReader` | `customer123` | Org-scoped public prices   |
+| `customer-city-health` | `priceprovider.public/PriceRowReader` | `customer123` | Sub-org-scoped public prices |
+| `customer-techcorp`    | `priceprovider.public/PriceRowReader` | `customer123` | Different org public prices |
+| `rental-builder-pro`   | *(rental tenant)*                 | `rental123`  | Rental company A (client: `rentalfrontend`) |
+| `rental-green-land`    | *(rental tenant)*                 | `rental123`  | Rental company B (client: `rentalfrontend`) |
 
 ## Available Endpoints in the Collection
 
@@ -180,7 +191,7 @@ newman run postman/pps-postmancollection.json \
   --reporter-html-export reports/newman/collection-report.html
 ```
 
-The `Authentication` folder runs first and populates `{{accessToken}}`; all Admin API folders then inherit the Bearer token automatically.
+The `Authentication` folder runs first and populates `{{accessToken}}`, `{{customerAccessToken}}`, and `{{rentalAccessToken}}`; all Admin API folders then use the stored tokens via their OAuth 2.0 auth configurations automatically.
 
 ### Run Only a Specific Folder
 
