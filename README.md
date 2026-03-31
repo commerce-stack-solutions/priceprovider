@@ -14,6 +14,42 @@ An Angular frontend application that consumes the price provider API to display 
 
 For development guidelines, architectural conventions, and project-specific information, please refer to the `AGENTS.md` file in the root directory and in each subproject directory.
 
+## Quick Start (Build & Run Dev Environment)
+
+The fastest way to get the entire stack running from a fresh clone is to use the all-in-one script at the repository root.
+
+**Prerequisites:** Docker Desktop must be installed and running.
+
+Linux / macOS:
+
+```bash
+./build-and-run-devenv.sh
+```
+
+Windows (cmd.exe):
+
+```cmd
+build-and-run-devenv.bat
+```
+
+The script will:
+1. Show a welcome screen and verify that Docker Desktop is running.
+2. Build a local dev Docker image for the **Price Provider Service** (`price-provider-service:0.0.0-SNAPSHOT`).
+3. Build a local dev Docker image for the **Price Manager App** (`price-manager-app:0.0.0-SNAPSHOT`).
+4. Start the full stack with `docker-compose` (PostgreSQL, Keycloak, service, app).
+
+After the script completes the following endpoints are available:
+
+| Service           | URL                      |
+|-------------------|--------------------------|
+| Price Manager App | http://localhost         |
+| Price Provider API| http://localhost:8080    |
+| Keycloak (IdP)    | http://localhost:8081    |
+
+To stop the stack run `docker-compose down` (or `./docker-compose-down.sh` / `docker-compose-down.bat`).
+
+---
+
 ## Run the Stack
 
 This repo includes convenience scripts at the repository root to start and stop the stack with `docker-compose`:
