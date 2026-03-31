@@ -7,7 +7,7 @@ For an overview of the layering concept, see [Architecture Overview](../010-arch
 ## Package Structure
 
 ```
-de.ebusyness.priceproviderservice.dataaccess/
+io.commercestacksolutions.priceproviderservice.dataaccess/
 ├── {entity}/
 │   ├── entity/
 │   │   └── {Entity}.java               # JPA entity class
@@ -21,10 +21,10 @@ Entity classes represent the persisted data model. They are plain JPA-annotated 
 
 ### AuditableEntity
 
-All entities in this project **must** implement the `AuditableEntity` interface from `de.ebusyness.commons.dataaccess.entity`. This interface requires two audit timestamp fields that are automatically managed by the service layer's `EntityService.updateAuditTimestamps()` method before each `save()`.
+All entities in this project **must** implement the `AuditableEntity` interface from `io.commercestacksolutions.commons.dataaccess.entity`. This interface requires two audit timestamp fields that are automatically managed by the service layer's `EntityService.updateAuditTimestamps()` method before each `save()`.
 
 ```java
-package de.ebusyness.commons.dataaccess.entity;
+package io.commercestacksolutions.commons.dataaccess.entity;
 
 import java.time.OffsetDateTime;
 
@@ -54,9 +54,9 @@ default void updateAuditTimestamps(T entity) {
 ### Example Entity
 
 ```java
-package de.ebusyness.priceproviderservice.dataaccess.unit.entity;
+package io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity;
 
-import de.ebusyness.commons.dataaccess.entity.AuditableEntity;
+import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -123,9 +123,9 @@ Repository interfaces extend `JpaRepository` and optionally `JpaSpecificationExe
 ### Basic Repository
 
 ```java
-package de.ebusyness.priceproviderservice.dataaccess.unit;
+package io.commercestacksolutions.priceproviderservice.dataaccess.unit;
 
-import de.ebusyness.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -309,7 +309,7 @@ Entity fields can be annotated with meta annotations to expose structural metada
 
 ### `@MetaMandatoryField`
 
-Use `@MetaMandatoryField` (package `de.ebusyness.commons.dataaccess.meta`) to mark any **non-`@Id`** field as mandatory:
+Use `@MetaMandatoryField` (package `io.commercestacksolutions.commons.dataaccess.meta`) to mark any **non-`@Id`** field as mandatory:
 
 ```java
 @MetaMandatoryField

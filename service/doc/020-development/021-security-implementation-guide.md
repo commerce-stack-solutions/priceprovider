@@ -4,7 +4,7 @@ This document provides a technical deep dive into the security implementation of
 
 ## Security Configuration
 
-The `SecurityConfig` class in `de.ebusyness.priceproviderservice.config.security` is the entry point for Spring Security. It configures:
+The `SecurityConfig` class in `io.commercestacksolutions.priceproviderservice.config.security` is the entry point for Spring Security. It configures:
 
 - **JWT Decoding**: Validates the JWT access token issued by the Identity Provider.
 - **Resource Protection**: Defines which endpoints are public and which require authentication.

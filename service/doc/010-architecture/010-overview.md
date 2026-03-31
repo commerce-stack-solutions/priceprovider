@@ -65,11 +65,11 @@ Dividing data access, services (domain and business logic), DTO conversion, and 
 
 | Layer       | Package                                              | Responsibility                                                                                                                                                           |
 |-------------|------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commons     | `de.ebusyness.commons`                               | Shared utilities, interfaces, exception handling                                                                                                                         |
-| Data Access | `de.ebusyness.priceproviderservice.dataaccess`       | Repositories, JPA entities, REST clients (external REST access). Typical classes: `(Entity)Repository`, `Entity`, `(View)Projection`                                   |
-| Service     | `de.ebusyness.priceproviderservice.service`          | Domain Services, Business Services. Typical classes: `(Entity)Service`, `(Entity)ImportJob`, `(BusinessLogic)Service`                                                   |
-| Facade      | `de.ebusyness.priceproviderservice.facade`           | RestEntity mapping, service delegation, response shaping. Typical classes: `(Entity)Facade`, `(Entity)Mapper`, `(Entity)RestEntity`                                     |
-| Web         | `de.ebusyness.priceproviderservice.web.controller`   | REST controllers, input validation, API contracts. Typical classes: `(Entity)Controller`, `(Type)Validator`                                                             |
+| Commons     | `io.commercestacksolutions.commons`                               | Shared utilities, interfaces, exception handling                                                                                                                         |
+| Data Access | `io.commercestacksolutions.priceproviderservice.dataaccess`       | Repositories, JPA entities, REST clients (external REST access). Typical classes: `(Entity)Repository`, `Entity`, `(View)Projection`                                   |
+| Service     | `io.commercestacksolutions.priceproviderservice.service`          | Domain Services, Business Services. Typical classes: `(Entity)Service`, `(Entity)ImportJob`, `(BusinessLogic)Service`                                                   |
+| Facade      | `io.commercestacksolutions.priceproviderservice.facade`           | RestEntity mapping, service delegation, response shaping. Typical classes: `(Entity)Facade`, `(Entity)Mapper`, `(Entity)RestEntity`                                     |
+| Web         | `io.commercestacksolutions.priceproviderservice.web.controller`   | REST controllers, input validation, API contracts. Typical classes: `(Entity)Controller`, `(Type)Validator`                                                             |
 
 ### Layer Diagram
 

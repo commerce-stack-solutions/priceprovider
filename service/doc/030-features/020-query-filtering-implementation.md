@@ -10,22 +10,22 @@ The query filtering infrastructure provides a reusable, generic approach for add
 
 ### Core Components
 
-1. **QueryParser** (`de.ebusyness.commons.query.QueryParser`)
+1. **QueryParser** (`io.commercestacksolutions.commons.query.QueryParser`)
    - Parses Lucene-like query syntax into AST (Abstract Syntax Tree)
    - Handles operators: `:`, `>`, `<`, `>=`, `<=`, `[TO]`, `.exists`
    - Supports logical operators: `AND`, `OR`, `NOT`
    - Supports parenthesized grouping
 
-2. **QueryExpression** (`de.ebusyness.commons.query.QueryExpression`)
+2. **QueryExpression** (`io.commercestacksolutions.commons.query.QueryExpression`)
    - Represents parsed query as tree structure
    - Nodes can be leaf (single filter) or composite (logical operations)
 
-3. **SpecificationBuilder** (`de.ebusyness.commons.query.SpecificationBuilder`)
+3. **SpecificationBuilder** (`io.commercestacksolutions.commons.query.SpecificationBuilder`)
    - Converts QueryExpression to JPA Specification
    - Generates type-aware predicates
    - Handles collections and single-valued references
 
-4. **QueryFilterRuntimeException** (`de.ebusyness.commons.query.QueryFilterRuntimeException`)
+4. **QueryFilterRuntimeException** (`io.commercestacksolutions.commons.query.QueryFilterRuntimeException`)
    - Runtime wrapper for checked `InvalidParameterException`
    - Used within JPA Specification lambdas
    - Unwrapped by service layer
@@ -72,11 +72,11 @@ Update the service implementation:
 
 **Add imports:**
 ```java
-import de.ebusyness.commons.exception.InvalidParameterException;
-import de.ebusyness.commons.query.QueryExpression;
-import de.ebusyness.commons.query.QueryParser;
-import de.ebusyness.commons.query.QueryFilterRuntimeException;
-import de.ebusyness.commons.query.SpecificationBuilder;
+import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.query.QueryParser;
+import io.commercestacksolutions.commons.query.QueryFilterRuntimeException;
+import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,7 +203,7 @@ Update the controller to expose the `q` parameter:
 
 **Add import:**
 ```java
-import de.ebusyness.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.exception.InvalidParameterException;
 ```
 
 **Update the GET mapping:**
@@ -296,7 +296,7 @@ Run only parser unit tests locally (fast):
 ```bash
 # from repo root on Windows (cmd.exe)
 cd service
-gradlew.bat test --tests de.ebusyness.commons.query.QueryParserTest
+gradlew.bat test --tests io.commercestacksolutions.commons.query.QueryParserTest
 ```
 
 ### Integration Tests
