@@ -55,11 +55,11 @@ For detailed architecture documentation, development guide, and implementation e
 
 | Layer            | Package                                     | Responsibility                                                                 |
 |------------------|---------------------------------------------|--------------------------------------------------------------------------------|
-| Commons          | `de.ebusyness.commons`                      | Shared utilities, interfaces, exception handling                              |
-| Data Access      | `de.ebusyness.priceprovider.dataaccess`     | Repositories, JPA entities, REST clients (external REST access), typical classes (Entity)Repository, Entity, (View)Projection                           |
-| Service          | `de.ebusyness.priceprovider.service`        | Domain Services, Business Services, typical classes (Entity)Service, (Entity)ImportJob, (Businesslogic)Service                       |
-| Facade           | `de.ebusyness.priceprovider.facade`         | RestEntity mapping, service delegation, response shaping, typical classes (Entity)Facade, (Entity)Mapper, (Entity)RestEntity                           |
-| Web              | `de.ebusyness.priceprovider.web.controller` | REST controllers, input validation, API contracts , typical classes (Entity)Controller, (Type)Validator                            |
+| Commons          | `io.commercestacksolutions.commons`                      | Shared utilities, interfaces, exception handling                              |
+| Data Access      | `io.commercestacksolutions.priceprovider.dataaccess`     | Repositories, JPA entities, REST clients (external REST access), typical classes (Entity)Repository, Entity, (View)Projection                           |
+| Service          | `io.commercestacksolutions.priceprovider.service`        | Domain Services, Business Services, typical classes (Entity)Service, (Entity)ImportJob, (Businesslogic)Service                       |
+| Facade           | `io.commercestacksolutions.priceprovider.facade`         | RestEntity mapping, service delegation, response shaping, typical classes (Entity)Facade, (Entity)Mapper, (Entity)RestEntity                           |
+| Web              | `io.commercestacksolutions.priceprovider.web.controller` | REST controllers, input validation, API contracts , typical classes (Entity)Controller, (Type)Validator                            |
 
 
 ### Diagram 

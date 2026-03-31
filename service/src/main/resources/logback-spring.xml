@@ -19,7 +19,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="de.ebusyness" level="DEBUG" additivity="false">
+    <logger name="io.commercestacksolutions" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </logger>

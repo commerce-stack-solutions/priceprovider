@@ -81,7 +81,7 @@ sequenceDiagram
 #### ChannelCountryGuard
 **Class:** `ChannelCountryGuard` (interface) / `DefaultChannelCountryGuard` (default implementation)
 
-**Location:** `de.ebusyness.priceproviderservice.facade.publicprice`
+**Location:** `io.commercestacksolutions.priceproviderservice.facade.publicprice`
 
 **Responsibility:** Reject price requests for countries that are not in the channel's `allowedCountryRefs` before any database query is issued.
 
@@ -129,7 +129,7 @@ if (countryKey != null && !countryKey.isEmpty()) {
 
 #### ChannelCountryConsistencyRule
 
-**Location:** `de.ebusyness.priceproviderservice.service.pricerow.validation`
+**Location:** `io.commercestacksolutions.priceproviderservice.service.pricerow.validation`
 
 **Responsibility:** Ensure a price row's tax class country is allowed in every assigned channel. Reject any `save()` call for a price row where the tax class's country is not in every referenced channel's `allowedCountryRefs`.
 
@@ -147,7 +147,7 @@ For each channel in priceRow.channelRefs:
 
 #### TaxClassMandatoryCountryAssignmentRule
 
-**Location:** `de.ebusyness.priceproviderservice.service.taxclass.validation`
+**Location:** `io.commercestacksolutions.priceproviderservice.service.taxclass.validation`
 
 **Responsibility:** Ensure every `TaxClassEntity` has a non-null, non-empty `countryRef` before it is saved.
 
