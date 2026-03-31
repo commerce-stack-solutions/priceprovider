@@ -1,26 +1,34 @@
 package io.commercestacksolutions.priceproviderservice.facade.taxclass;
 
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.dataaccess.country.CountryEntityRepository;
+import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.facade.taxclass.restentity.TaxClassListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.taxclass.restentity.TaxClassRestEntity;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration test for createOrUpdateAllTaxClasses functionality.
  * Tests error handling and partial success scenarios.
+ * Tests are independent of sample data and can run in any profile.
  */
 @SpringBootTest
+@ActiveProfiles("test")
 public class TaxClassCreateOrUpdateAllIntegrationTest {
 
     @Autowired
@@ -29,9 +37,26 @@ public class TaxClassCreateOrUpdateAllIntegrationTest {
     @Autowired
     private TaxClassEntityRepository taxClassRepository;
 
+    @Autowired
+    private CountryEntityRepository countryRepository;
+
     @BeforeEach
     public void setup() {
-        // Clean up test tax classes
+        cleanupTestTaxClasses();
+
+        // Ensure required country entities exist (independent of sample data)
+        ensureCountryExists("DE", "Germany");
+        ensureCountryExists("AT", "Austria");
+    }
+
+    @AfterEach
+    public void tearDown() {
+        cleanupTestTaxClasses();
+        countryRepository.deleteById("DE");
+        countryRepository.deleteById("AT");
+    }
+
+    private void cleanupTestTaxClasses() {
         taxClassRepository.findAll().stream()
             .filter(tc -> tc.getTaxClassId().startsWith("TEST-"))
             .forEach(tc -> {
@@ -41,6 +66,17 @@ public class TaxClassCreateOrUpdateAllIntegrationTest {
                     // Ignore
                 }
             });
+    }
+
+    private void ensureCountryExists(String isoKey, String englishName) {
+        countryRepository.findById(isoKey).orElseGet(() -> {
+            CountryEntity country = new CountryEntity();
+            country.setIsoKey(isoKey);
+            country.setName(Map.of("en", englishName));
+            country.setCreatedAt(OffsetDateTime.now());
+            country.setLastModifiedAt(OffsetDateTime.now());
+            return countryRepository.save(country);
+        });
     }
 
     @Test
