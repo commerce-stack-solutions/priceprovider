@@ -73,6 +73,7 @@ services:
     environment:
       PPS_BASEURL: ${PPS_BASEURL:-http://localhost:8080/}
       PPS_OIDC_ISSUER_URI: ${PPS_OIDC_ISSUER_URI:-http://localhost:8081/realms/priceprovider}
+      PPS_OIDC_REQUIRE_HTTPS: ${PPS_OIDC_REQUIRE_HTTPS:-false}
     ports:
       - "80:80"
     networks:
