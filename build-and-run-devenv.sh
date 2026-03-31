@@ -88,13 +88,13 @@ echo ""
 # ---------------------------------------------------------------------------
 # Start the stack
 # ---------------------------------------------------------------------------
-echo "Starting the full stack with docker-compose..."
+echo "Starting the full stack with docker compose..."
 echo "  (postgres, keycloak, service, app)"
 echo ""
 
 export VERSION
 cd "${SCRIPT_DIR}"
-docker-compose up -d
+docker compose up -d
 
 # ---------------------------------------------------------------------------
 # Start example frontends (only when Node.js / npm are available)
