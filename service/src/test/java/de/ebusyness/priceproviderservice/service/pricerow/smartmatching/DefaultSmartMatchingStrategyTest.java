@@ -1,20 +1,15 @@
 package de.ebusyness.priceproviderservice.service.pricerow.smartmatching;
 
-import de.ebusyness.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import de.ebusyness.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import de.ebusyness.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import de.ebusyness.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import de.ebusyness.priceproviderservice.dataaccess.pricerow.enums.PriceType;
-import de.ebusyness.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import de.ebusyness.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import de.ebusyness.priceproviderservice.service.currency.CurrencyService;
-import de.ebusyness.priceproviderservice.service.taxclass.TaxClassService;
-import de.ebusyness.priceproviderservice.service.unit.UnitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -24,7 +19,6 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
@@ -35,169 +29,105 @@ class DefaultSmartMatchingStrategyTest {
 
     @Mock
     private PriceRowEntityRepository priceRowEntityRepository;
-    @Mock
-    private UnitService unitService;
-    @Mock
-    private CurrencyService currencyService;
-    @Mock
-    private TaxClassService taxClassService;
 
     private DefaultSmartMatchingStrategy strategy;
 
-    private UnitEntity testUnit;
-    private CurrencyEntity testCurrency;
-    private TaxClassEntity testTaxClass;
-
     @BeforeEach
     void setUp() {
-        strategy = new DefaultSmartMatchingStrategy(
-                priceRowEntityRepository, unitService, currencyService, taxClassService);
+        strategy = new DefaultSmartMatchingStrategy(priceRowEntityRepository);
+    }
 
-        testUnit = new UnitEntity();
-        testUnit.setSymbol("kg");
+    // --- Helper to build a fully-populated context ---
 
-        testCurrency = new CurrencyEntity();
-        testCurrency.setCurrencyKey("EUR");
-
-        testTaxClass = new TaxClassEntity();
-        testTaxClass.setTaxClassId("STANDARD");
+    private PriceRowMatchingContext fullContext() {
+        PriceRowMatchingContext ctx = new PriceRowMatchingContext();
+        ctx.setPricedResourceId("PROD-1");
+        ctx.setMinQuantity(BigDecimal.ONE);
+        ctx.setUnitRef("kg");
+        ctx.setCurrencyRef("EUR");
+        ctx.setTaxClassRef("STANDARD");
+        ctx.setTaxIncluded(false);
+        ctx.setPriceType(PriceType.SALES_PRICE);
+        return ctx;
     }
 
     // --- Required-field guard ---
 
     @Test
     void findMatch_nullPricedResourceId_returnsEmpty() {
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                null, BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setPricedResourceId(null);
+        assertTrue(strategy.findMatch(ctx).isEmpty());
     }
 
     @Test
     void findMatch_nullMinQuantity_returnsEmpty() {
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", null, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setMinQuantity(null);
+        assertTrue(strategy.findMatch(ctx).isEmpty());
     }
 
     @Test
     void findMatch_nullUnitRef_returnsEmpty() {
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, null, "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setUnitRef(null);
+        assertTrue(strategy.findMatch(ctx).isEmpty());
     }
 
     @Test
     void findMatch_nullCurrencyRef_returnsEmpty() {
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", null, "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setCurrencyRef(null);
+        assertTrue(strategy.findMatch(ctx).isEmpty());
     }
 
     @Test
     void findMatch_nullTaxClassRef_returnsEmpty() {
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", null, false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
-    }
-
-    // --- Referenced-entity not found ---
-
-    @Test
-    void findMatch_unitNotFound_returnsEmpty() {
-        when(unitService.findBySymbol("kg")).thenReturn(null);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void findMatch_currencyNotFound_returnsEmpty() {
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(null);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void findMatch_taxClassNotFound_returnsEmpty() {
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(null);
-
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setTaxClassRef(null);
+        assertTrue(strategy.findMatch(ctx).isEmpty());
     }
 
     // --- No repository candidates ---
 
     @Test
+    @SuppressWarnings("unchecked")
     void findMatch_noCandidatesFound_returnsEmpty() {
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-        when(priceRowEntityRepository.findByMatchingFields(
-                any(), any(), any(), any(), any(), eq(false), any(), any(), any()))
-                .thenReturn(List.of());
+        when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of());
 
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
-        assertTrue(result.isEmpty());
+        assertTrue(strategy.findMatch(fullContext()).isEmpty());
     }
 
     // --- Successful match without groups ---
 
     @Test
+    @SuppressWarnings("unchecked")
     void findMatch_candidateWithNoGroups_matchesNullGroupRefs() {
         PriceRowEntity candidate = new PriceRowEntity();
         candidate.setId(42L);
 
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-        when(priceRowEntityRepository.findByMatchingFields(
-                any(), any(), any(), any(), any(), eq(false), any(), any(), any()))
-                .thenReturn(List.of(candidate));
+        when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, null);
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setGroupRefs(null);
 
+        Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
         assertEquals(42L, result.get().getId());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void findMatch_candidateWithNoGroups_matchesEmptyGroupRefs() {
         PriceRowEntity candidate = new PriceRowEntity();
         candidate.setId(42L);
 
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-        when(priceRowEntityRepository.findByMatchingFields(
-                any(), any(), any(), any(), any(), eq(false), any(), any(), any()))
-                .thenReturn(List.of(candidate));
+        when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, Set.of());
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setGroupRefs(Set.of());
 
+        Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
         assertEquals(42L, result.get().getId());
     }
@@ -205,6 +135,7 @@ class DefaultSmartMatchingStrategyTest {
     // --- Successful match with groups ---
 
     @Test
+    @SuppressWarnings("unchecked")
     void findMatch_candidateGroupsMatchExactly_returnsCandidate() {
         GroupEntity g1 = new GroupEntity("GROUP-A");
         GroupEntity g2 = new GroupEntity("GROUP-B");
@@ -213,17 +144,12 @@ class DefaultSmartMatchingStrategyTest {
         candidate.setId(10L);
         candidate.setGroups(Set.of(g1, g2));
 
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-        when(priceRowEntityRepository.findByMatchingFields(
-                any(), any(), any(), any(), any(), eq(false), any(), any(), any()))
-                .thenReturn(List.of(candidate));
+        when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, Set.of("GROUP-A", "GROUP-B"));
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setGroupRefs(Set.of("GROUP-A", "GROUP-B"));
 
+        Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
         assertEquals(10L, result.get().getId());
     }
@@ -231,6 +157,7 @@ class DefaultSmartMatchingStrategyTest {
     // --- Group mismatch ---
 
     @Test
+    @SuppressWarnings("unchecked")
     void findMatch_candidateGroupsDiffer_returnsEmpty() {
         GroupEntity g1 = new GroupEntity("GROUP-A");
 
@@ -238,43 +165,30 @@ class DefaultSmartMatchingStrategyTest {
         candidate.setId(10L);
         candidate.setGroups(Set.of(g1));
 
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-        when(priceRowEntityRepository.findByMatchingFields(
-                any(), any(), any(), any(), any(), eq(false), any(), any(), any()))
-                .thenReturn(List.of(candidate));
+        when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
+        PriceRowMatchingContext ctx = fullContext();
         // Request specifies GROUP-B but candidate only has GROUP-A
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                null, null, Set.of("GROUP-B"));
+        ctx.setGroupRefs(Set.of("GROUP-B"));
 
-        assertTrue(result.isEmpty());
+        assertTrue(strategy.findMatch(ctx).isEmpty());
     }
 
-    // --- Date fields are forwarded to the repository ---
+    // --- Date fields in context ---
 
     @Test
+    @SuppressWarnings("unchecked")
     void findMatch_withValidFromAndTo_matchesCandidateWithNoGroups() {
-        OffsetDateTime validFrom = OffsetDateTime.now().minusDays(1);
-        OffsetDateTime validTo = OffsetDateTime.now().plusDays(1);
-
         PriceRowEntity candidate = new PriceRowEntity();
         candidate.setId(99L);
 
-        when(unitService.findBySymbol("kg")).thenReturn(testUnit);
-        when(currencyService.getCurrency("EUR")).thenReturn(testCurrency);
-        when(taxClassService.getTaxClass("STANDARD")).thenReturn(testTaxClass);
-        when(priceRowEntityRepository.findByMatchingFields(
-                eq("PROD-1"), any(), eq(testUnit), eq(testCurrency), eq(testTaxClass),
-                eq(false), eq(PriceType.SALES_PRICE), eq(validFrom), eq(validTo)))
-                .thenReturn(List.of(candidate));
+        when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
-        Optional<PriceRowEntity> result = strategy.findMatch(
-                "PROD-1", BigDecimal.ONE, "kg", "EUR", "STANDARD", false, PriceType.SALES_PRICE,
-                validFrom, validTo, null);
+        PriceRowMatchingContext ctx = fullContext();
+        ctx.setValidFrom(OffsetDateTime.now().minusDays(1));
+        ctx.setValidTo(OffsetDateTime.now().plusDays(1));
 
+        Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
         assertEquals(99L, result.get().getId());
     }

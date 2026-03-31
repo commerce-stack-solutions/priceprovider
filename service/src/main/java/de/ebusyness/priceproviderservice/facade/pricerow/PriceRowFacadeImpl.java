@@ -22,6 +22,7 @@ import de.ebusyness.priceproviderservice.facade.pricerow.mapper.PriceRowRestEnti
 import de.ebusyness.priceproviderservice.facade.pricerow.restentity.PriceRowListRestEntity;
 import de.ebusyness.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
 import de.ebusyness.priceproviderservice.service.pricerow.PriceRowService;
+import de.ebusyness.priceproviderservice.service.pricerow.smartmatching.PriceRowMatchingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,18 +255,19 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
                     }
                 } else {
                     // No ID provided - try to find by matching fields
-                    Optional<PriceRowEntity> existingByFields = priceRowService.findByMatchingFields(
-                        restEntity.getPricedResourceId(),
-                        restEntity.getMinQuantity(),
-                        restEntity.getUnitRef(),
-                        restEntity.getCurrencyRef(),
-                        restEntity.getTaxClassRef(),
-                        restEntity.isTaxIncluded(),
-                        restEntity.getPriceType(),
-                        restEntity.getValidFrom(),
-                        restEntity.getValidTo(),
-                        restEntity.getGroupRefs()
-                    );
+                    PriceRowMatchingContext context = new PriceRowMatchingContext();
+                    context.setPricedResourceId(restEntity.getPricedResourceId());
+                    context.setMinQuantity(restEntity.getMinQuantity());
+                    context.setUnitRef(restEntity.getUnitRef());
+                    context.setCurrencyRef(restEntity.getCurrencyRef());
+                    context.setTaxClassRef(restEntity.getTaxClassRef());
+                    context.setTaxIncluded(restEntity.isTaxIncluded());
+                    context.setPriceType(restEntity.getPriceType());
+                    context.setValidFrom(restEntity.getValidFrom());
+                    context.setValidTo(restEntity.getValidTo());
+                    context.setGroupRefs(restEntity.getGroupRefs());
+
+                    Optional<PriceRowEntity> existingByFields = priceRowService.findByMatchingFields(context);
                     if (existingByFields.isPresent()) {
                         priceRowEntity = existingByFields.get();
                     }

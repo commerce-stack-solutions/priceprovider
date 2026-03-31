@@ -10,8 +10,8 @@ import de.ebusyness.commons.service.entity.validation.ValidationRule;
 import de.ebusyness.commons.service.entity.validation.exception.EntityValidationException;
 import de.ebusyness.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import de.ebusyness.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import de.ebusyness.priceproviderservice.dataaccess.pricerow.enums.PriceType;
 import de.ebusyness.priceproviderservice.service.channel.ChannelService;
+import de.ebusyness.priceproviderservice.service.pricerow.smartmatching.PriceRowMatchingContext;
 import de.ebusyness.priceproviderservice.service.pricerow.smartmatching.SmartMatchingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +22,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Implementation of PriceRowService interface.
@@ -113,29 +110,7 @@ public class PriceRowServiceImpl implements PriceRowService {
     }
 
     @Override
-    public Optional<PriceRowEntity> findByMatchingFields(
-            String pricedResourceId,
-            BigDecimal minQuantity,
-            String unitRef,
-            String currencyRef,
-            String taxClassRef,
-            boolean taxIncluded,
-            PriceType priceType,
-            OffsetDateTime validFrom,
-            OffsetDateTime validTo,
-            Set<String> groupRefs) {
-
-        return smartMatchingStrategy.findMatch(
-                pricedResourceId,
-                minQuantity,
-                unitRef,
-                currencyRef,
-                taxClassRef,
-                taxIncluded,
-                priceType,
-                validFrom,
-                validTo,
-                groupRefs
-        );
+    public Optional<PriceRowEntity> findByMatchingFields(PriceRowMatchingContext context) {
+        return smartMatchingStrategy.findMatch(context);
     }
 }

@@ -3614,3 +3614,45 @@ java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceed
 20:47:31.153 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 20:47:31.157 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 20:47:31.162 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+07:39:15.576 [Test worker] INFO  d.e.p.f.p.PriceRowBulkCreateOrUpdateIntegrationTest - Starting PriceRowBulkCreateOrUpdateIntegrationTest using Java 17.0.18 with PID 4304 (started by runner in /home/runner/work/priceprovider/priceprovider/service)
+07:39:15.577 [Test worker] DEBUG d.e.p.f.p.PriceRowBulkCreateOrUpdateIntegrationTest - Running with Spring Boot v3.2.2, Spring v6.1.3
+07:39:15.578 [Test worker] INFO  d.e.p.f.p.PriceRowBulkCreateOrUpdateIntegrationTest - No active profile set, falling back to 1 default profile: "default"
+07:39:16.840 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+07:39:16.971 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 122 ms. Found 11 JPA repository interfaces.
+07:39:17.766 [Test worker] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+07:39:17.818 [Test worker] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.1.Final
+07:39:17.851 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+07:39:18.072 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+07:39:18.099 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+07:39:18.273 [Test worker] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:priceProviderService user=SA
+07:39:18.275 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+07:39:18.294 [Test worker] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+07:39:19.284 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+07:39:19.401 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+07:39:19.985 [Test worker] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+07:39:21.270 [Test worker] INFO  d.e.c.s.setup.SetupDataImportManager - Database is empty. Creating bootstrap permission and role for service initialization.
+07:39:21.305 [Test worker] INFO  d.e.c.s.setup.SetupDataImportManager - Created permission: priceprovider.admin:ServiceInitialization:write
+07:39:21.307 [Test worker] INFO  d.e.c.s.setup.SetupDataImportManager - Created permission: priceprovider.admin:AppRole:read
+07:39:21.328 [Test worker] INFO  d.e.c.s.setup.SetupDataImportManager - Created role: priceprovider.admin:Admin with bootstrap permissions
+07:39:21.328 [Test worker] INFO  d.e.c.s.setup.SetupDataImportManager - Bootstrap complete. Admin users can now access the service initialization page.
+07:39:21.354 [Test worker] INFO  d.e.c.d.dbupdate.DBUpdateTaskManager - Starting runDbUpdateTasks - found 2 updater(s)
+07:39:21.355 [Test worker] INFO  d.e.c.d.dbupdate.DBUpdateTaskManager - Executing db update task with [Priority 101]: Update organization_type enum constraint for organization_entity table
+07:39:21.356 [Test worker] DEBUG d.e.c.d.d.AbstractEnumConstraintUpdater - Database: H2
+07:39:21.357 [Test worker] DEBUG d.e.c.d.d.AbstractEnumConstraintUpdater - Dropped existing constraint (if any): organization_entity_organization_type_check
+07:39:21.359 [Test worker] DEBUG d.e.c.d.d.AbstractEnumConstraintUpdater - Created enum constraint: organization_entity_organization_type_check
+07:39:21.359 [Test worker] INFO  d.e.c.d.d.AbstractEnumConstraintUpdater - Successfully updated enum constraint organization_entity_organization_type_check with 6 values: HOST_ORGANIZATION, COMPANY, BUSINESS_UNIT, PUBLIC_INSTITUTION, NON_PROFIT_ORGANIZATION, DEPARTMENT
+07:39:21.359 [Test worker] INFO  d.e.c.d.dbupdate.DBUpdateTaskManager - Successfully completed db update task: Update organization_type enum constraint for organization_entity table
+07:39:21.359 [Test worker] INFO  d.e.c.d.dbupdate.DBUpdateTaskManager - Executing db update task with [Priority 102]: Update price_type enum constraint for price_row_entity table
+07:39:21.359 [Test worker] DEBUG d.e.c.d.d.AbstractEnumConstraintUpdater - Database: H2
+07:39:21.360 [Test worker] DEBUG d.e.c.d.d.AbstractEnumConstraintUpdater - Dropped existing constraint (if any): price_row_entity_price_type_check
+07:39:21.360 [Test worker] DEBUG d.e.c.d.d.AbstractEnumConstraintUpdater - Created enum constraint: price_row_entity_price_type_check
+07:39:21.361 [Test worker] INFO  d.e.c.d.d.AbstractEnumConstraintUpdater - Successfully updated enum constraint price_row_entity_price_type_check with 5 values: SALES_PRICE, PURCHASE_PRICE, MATERIAL_COST, RENTAL_BASE_PRICE, RENTAL_DAILY_RATE
+07:39:21.361 [Test worker] INFO  d.e.c.d.dbupdate.DBUpdateTaskManager - Successfully completed db update task: Update price_type enum constraint for price_row_entity table
+07:39:21.361 [Test worker] INFO  d.e.c.d.dbupdate.DBUpdateTaskManager - runDbUpdateTasks completed
+07:39:21.946 [Test worker] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+07:39:22.059 [Test worker] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@392b9329, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6f2d77e9, org.springframework.security.web.context.SecurityContextHolderFilter@234635cc, org.springframework.security.web.header.HeaderWriterFilter@605ba15f, org.springframework.web.filter.CorsFilter@22801099, org.springframework.security.web.authentication.logout.LogoutFilter@2db2b708, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@7e58471, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@79eade07, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@f4903ac, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@23ea17e, org.springframework.security.web.session.SessionManagementFilter@12329d37, org.springframework.security.web.access.ExceptionTranslationFilter@b95e63a, org.springframework.security.web.access.intercept.AuthorizationFilter@3b8bbfab]
+07:39:22.609 [Test worker] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:priceProviderService'
+07:39:22.736 [Test worker] INFO  d.e.p.f.p.PriceRowBulkCreateOrUpdateIntegrationTest - Started PriceRowBulkCreateOrUpdateIntegrationTest in 7.516 seconds (process running for 8.652)
+07:39:24.203 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+07:39:24.207 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+07:39:24.214 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
