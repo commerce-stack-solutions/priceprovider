@@ -68,8 +68,8 @@
                   "pm.test('response contains access_token', function () { pm.response.to.have.jsonBody('access_token'); });",
                   "var jsonData = pm.response.json();",
                   "var token = jsonData.access_token;",
-                  "pm.collectionVariables.set('accessToken', token);",
-                  "pm.environment.set('accessToken', token);"
+                  "pm.environment.set('accessToken', token);",
+                  "if (typeof pm.collectionVariables !== 'undefined') { pm.collectionVariables.set('accessToken', token); }"
                 ]
               }
             }
@@ -134,8 +134,8 @@
                   "pm.test(\"response contains access_token\", function () { pm.response.to.have.jsonBody(\"access_token\"); });",
                   "var jsonData = pm.response.json();",
                   "var token = jsonData.access_token;",
-                  "pm.collectionVariables.set(\"customerAccessToken\", token);",
-                  "pm.environment.set(\"customerAccessToken\", token);"
+                  "pm.environment.set(\"customerAccessToken\", token);",
+                  "if (typeof pm.collectionVariables !== \"undefined\") { pm.collectionVariables.set(\"customerAccessToken\", token); }"
                 ]
               }
             }
@@ -2697,7 +2697,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testwährung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testw\u00e4hrung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/create",
@@ -2740,7 +2740,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte Währung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte W\u00e4hrung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/XXX",
@@ -2783,7 +2783,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"€€\" }\n]"
+              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"\u20ac\u20ac\" }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/EUR",
@@ -3177,7 +3177,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"£\"\n  }\n]"
+              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"\u00a3\"\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/bulk-create-or-update",
@@ -5957,7 +5957,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 ≈ 158.88 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 \u2248 158.88 USD."
           },
           "event": [
             {
@@ -6071,7 +6071,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 ≈ 35.32 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 \u2248 35.32 USD."
           },
           "event": [
             {
@@ -6479,6 +6479,258 @@
                   "pm.test('Status 404 - country not in channel', () => pm.response.to.have.status(404));"
                 ]
               }
+            }
+          ]
+        },
+        {
+          "name": "Rental (Example)",
+          "item": [
+            {
+              "name": "Get rental-builder-pro Access Token",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "url": {
+                  "raw": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
+                  "host": [
+                    "{{keycloakUrl}}"
+                  ],
+                  "path": [
+                    "realms",
+                    "{{oidcRealm}}",
+                    "protocol",
+                    "openid-connect",
+                    "token"
+                  ]
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "grant_type",
+                      "value": "password",
+                      "type": "text"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "rentalfrontend",
+                      "type": "text"
+                    },
+                    {
+                      "key": "username",
+                      "value": "rental-builder-pro",
+                      "type": "text"
+                    },
+                    {
+                      "key": "password",
+                      "value": "rental123",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                      "var jsonData = pm.response.json();",
+                      "var token = jsonData.access_token;",
+                      "pm.environment.set('rentalAccessToken', token);",
+                      "if (typeof pm.collectionVariables !== 'undefined') { pm.collectionVariables.set('rentalAccessToken', token); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get rental-green-land Access Token",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "url": {
+                  "raw": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
+                  "host": [
+                    "{{keycloakUrl}}"
+                  ],
+                  "path": [
+                    "realms",
+                    "{{oidcRealm}}",
+                    "protocol",
+                    "openid-connect",
+                    "token"
+                  ]
+                },
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "grant_type",
+                      "value": "password",
+                      "type": "text"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "rentalfrontend",
+                      "type": "text"
+                    },
+                    {
+                      "key": "username",
+                      "value": "rental-green-land",
+                      "type": "text"
+                    },
+                    {
+                      "key": "password",
+                      "value": "rental123",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                      "var jsonData = pm.response.json();",
+                      "var token = jsonData.access_token;",
+                      "pm.environment.set('rentalAccessToken', token);",
+                      "if (typeof pm.collectionVariables !== 'undefined') { pm.collectionVariables.set('rentalAccessToken', token); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "RENTAL: Get Best Prices for priced resource ids)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{rentalAccessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=RENT-DRILL,RENT-SAW",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "public",
+                    "api",
+                    "channels",
+                    "rental-channel",
+                    "countries",
+                    "DE",
+                    "pricerows",
+                    "RENTAL_BASE_PRICE"
+                  ],
+                  "query": [
+                    {
+                      "key": "pricedresourceIds",
+                      "value": "RENT-DRILL,RENT-SAW"
+                    },
+                    {
+                      "key": "quantity",
+                      "value": "1"
+                    },
+                    {
+                      "key": "unit",
+                      "value": "piece"
+                    },
+                    {
+                      "key": "currency",
+                      "value": "EUR"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                      "var jsonData = pm.response.json();",
+                      "pm.test('Has items', function() { pm.expect(jsonData.items).to.be.an('array'); });",
+                      "pm.test('Correct number of items', function() { pm.expect(jsonData.items.length).to.equal(2); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "RENTAL: Get All-Quantities Best Prices",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{rentalAccessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricedresource/RENT-DRILL/RENTAL_BASE_PRICE/all-quantities?currency=EUR&unit=piece",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "public",
+                    "api",
+                    "channels",
+                    "rental-channel",
+                    "countries",
+                    "DE",
+                    "pricedresource",
+                    "RENT-DRILL",
+                    "RENTAL_BASE_PRICE",
+                    "all-quantities"
+                  ],
+                  "query": [
+                    {
+                      "key": "currency",
+                      "value": "EUR"
+                    },
+                    {
+                      "key": "unit",
+                      "value": "piece"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                      "var jsonData = pm.response.json();",
+                      "pm.test('Has items', function() { pm.expect(jsonData.items).to.be.an('array'); });",
+                      "pm.test('Includes bulk tiers', function() { ",
+                      "  var quantities = jsonData.items.map(i => i.minQuantity);",
+                      "  pm.expect(quantities).to.include(1);",
+                      "  pm.expect(quantities).to.include(3);",
+                      "  pm.expect(quantities).to.include(5);",
+                      "});"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         }
@@ -10001,254 +10253,6 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 400', function () { pm.response.to.have.status(400); });"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Rental (Example)",
-      "item": [
-        {
-          "name": "Get rental-builder-pro Access Token",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "auth": {
-              "type": "noauth"
-            },
-            "url": {
-              "raw": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
-              "host": [
-                "{{keycloakUrl}}"
-              ],
-              "path": [
-                "realms",
-                "{{oidcRealm}}",
-                "protocol",
-                "openid-connect",
-                "token"
-              ]
-            },
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                {
-                  "key": "grant_type",
-                  "value": "password",
-                  "type": "text"
-                },
-                {
-                  "key": "client_id",
-                  "value": "rentalfrontend",
-                  "type": "text"
-                },
-                {
-                  "key": "username",
-                  "value": "rental-builder-pro",
-                  "type": "text"
-                },
-                {
-                  "key": "password",
-                  "value": "rental123",
-                  "type": "text"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "var jsonData = pm.response.json();",
-                  "pm.collectionVariables.set('rentalAccessToken', jsonData.access_token);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Get rental-green-land Access Token",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "auth": {
-              "type": "noauth"
-            },
-            "url": {
-              "raw": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
-              "host": [
-                "{{keycloakUrl}}"
-              ],
-              "path": [
-                "realms",
-                "{{oidcRealm}}",
-                "protocol",
-                "openid-connect",
-                "token"
-              ]
-            },
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                {
-                  "key": "grant_type",
-                  "value": "password",
-                  "type": "text"
-                },
-                {
-                  "key": "client_id",
-                  "value": "rentalfrontend",
-                  "type": "text"
-                },
-                {
-                  "key": "username",
-                  "value": "rental-green-land",
-                  "type": "text"
-                },
-                {
-                  "key": "password",
-                  "value": "rental123",
-                  "type": "text"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "var jsonData = pm.response.json();",
-                  "pm.collectionVariables.set('rentalAccessToken', jsonData.access_token);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "RENTAL: Get Best Prices for priced resource ids)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{rentalAccessToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=RENT-DRILL,RENT-SAW",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "public",
-                "api",
-                "channels",
-                "rental-channel",
-                "countries",
-                "DE",
-                "pricerows",
-                "RENTAL_BASE_PRICE"
-              ],
-              "query": [
-                {
-                  "key": "pricedresourceIds",
-                  "value": "RENT-DRILL,RENT-SAW"
-                },
-                {
-                  "key": "quantity",
-                  "value": "1"
-                },
-                {
-                  "key": "unit",
-                  "value": "piece"
-                },
-                {
-                  "key": "currency",
-                  "value": "EUR"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "var jsonData = pm.response.json();",
-                  "pm.test('Has items', function() { pm.expect(jsonData.items).to.be.an('array'); });",
-                  "pm.test('Correct number of items', function() { pm.expect(jsonData.items.length).to.equal(2); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "RENTAL: Get All-Quantities Best Prices",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{rentalAccessToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricedresource/RENT-DRILL/RENTAL_BASE_PRICE/all-quantities?currency=EUR&unit=piece",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "public",
-                "api",
-                "channels",
-                "rental-channel",
-                "countries",
-                "DE",
-                "pricedresource",
-                "RENT-DRILL",
-                "RENTAL_BASE_PRICE",
-                "all-quantities"
-              ],
-              "query": [
-                {
-                  "key": "currency",
-                  "value": "EUR"
-                },
-                {
-                  "key": "unit",
-                  "value": "piece"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "var jsonData = pm.response.json();",
-                  "pm.test('Has items', function() { pm.expect(jsonData.items).to.be.an('array'); });",
-                  "pm.test('Includes bulk tiers', function() { ",
-                  "  var quantities = jsonData.items.map(i => i.minQuantity);",
-                  "  pm.expect(quantities).to.include(1);",
-                  "  pm.expect(quantities).to.include(3);",
-                  "  pm.expect(quantities).to.include(5);",
-                  "});"
                 ]
               }
             }

@@ -23,6 +23,8 @@ The primary tool. Download from [postman.com](https://www.postman.com/).
 
 [Hoppscotch](https://hoppscotch.io/) is a lightweight, open-source alternative to Postman that runs in the browser. It can import and execute Postman collections and is useful when a full Postman installation is not desired.
 
+> **Note:** Hoppscotch does not support `pm.collectionVariables`. The collection's authentication scripts use `pm.environment.set()` as the primary mechanism for storing tokens, with `pm.collectionVariables.set()` called conditionally (guarded by an existence check). This ensures that token variables are stored correctly in both Postman/Newman and Hoppscotch. When using Hoppscotch, make sure you have an active environment selected so that `pm.environment.set()` has a target to write to.
+
 ## Importing the Collection into Postman
 
 1. **Open Postman** (download from [postman.com](https://www.postman.com/) if needed)
@@ -194,7 +196,7 @@ Available folders:
 - `Authentication` ← always run first when testing Admin API endpoints
 - `Health`
 - `Units (Admin API)`, `Languages (Admin API)`, `Currencies (Admin API)`, `Price Rows (Admin API)`
-- `Public Price API`
+- `Public Price API` (includes the `Rental (Example)` subfolder)
 - `Tax Classes (Admin API)`, `Groups (Admin API)`, `Organizations (Admin API)`, `Countries (Admin API)`, `Channels (Admin API)`
 
 ### With Timeouts (for slow environments)
