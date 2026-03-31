@@ -63,6 +63,14 @@ When you **omit the `id` field**, the system performs smart matching based on al
    - `validTo` - Price validity end date
    - `groupRefs` - Set of group IDs this price applies to (exact match required)
 
+> **Important – Group Matching:** The smart matching algorithm performs an **exact set match** on `groupRefs`.
+> This means you must supply **all** groups that the existing price row is assigned to — omitting even one group will cause the system to treat the request as a new price row and create a duplicate instead of updating the existing one.
+> For example, if a price row is assigned to `["vip-customers", "newsletter-subscribers"]`, you must provide both IDs in `groupRefs`; providing only `["vip-customers"]` will create a new price row.
+
+> **What Smart Matching Updates:** The smart matching mechanism is designed to update the **price value** (`priceValue`) and/or the **channel assignment** (`channelRefs`) of an existing price row.
+> All other identifying fields (unit, currency, tax class, groups, validity dates, etc.) are the matching key and are **not changed** by a smart-match update.
+> If you need to change any of the identifying fields, use an ID-based update instead, or create a new price row.
+
 2. If **all fields match** an existing price row:
    - **UPDATE** the existing entity (changes only `priceValue`)
    - Returns the updated entity with its existing ID
@@ -315,6 +323,28 @@ Content-Type: application/json
 - Simply omit the `id` field
 - Provide all identifying fields
 - System creates a new price if no match is found
+
+### Price Immutability and Legal Compliance
+
+In many business and legal contexts, **price rows should never be modified or deleted after creation**.  Regulatory requirements (e.g. audit trails, bookkeeping rules) may demand a complete, immutable history of every price that was ever in effect.
+
+In such scenarios:
+
+- **Never update or delete existing price rows.**  Treat every price row as an immutable record once it has been applied to an order or invoice.
+- **Use `validFrom` / `validTo` to control which price is currently active.**  When a price changes, set the `validTo` of the old price row to the moment the new price takes effect, and create a new price row with the corresponding `validFrom`.
+- This pattern ensures a full audit trail: every price that was ever valid can be reconstructed by querying price rows for a given point in time.
+
+**Example – replacing a price without deleting the old one:**
+
+```json
+// Step 1: close the existing price row (set validTo via ID-based update)
+{ "id": 456, "pricedResourceId": "PRODUCT-001", "priceValue": 99.99, ..., "validTo": "2024-06-30T23:59:59Z" }
+
+// Step 2: create the new price row with validFrom matching the cutover moment
+{ "pricedResourceId": "PRODUCT-001", "priceValue": 109.99, ..., "validFrom": "2024-07-01T00:00:00Z", "validTo": null }
+```
+
+When immutability is a requirement, **do not use the bulk create-or-update smart matching** to change a price value — use `validFrom`/`validTo` date management instead and rely on smart matching only to keep channel assignments up to date.
 
 ## Limitations
 
