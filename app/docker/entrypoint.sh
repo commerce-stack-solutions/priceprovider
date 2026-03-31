@@ -11,5 +11,15 @@ find /usr/local/apache2/htdocs -type f -name "*.js" -exec sed -i "s|https://api.
 
 echo "API base URL replacement complete"
 
+# Replace the OIDC issuer URI in the JavaScript files with the value of PPS_OIDC_ISSUER_URI
+# The production build has the issuer URI set to 'https://auth.example.com/realms/priceprovider'
+# We need to replace this with the actual issuer URI from the environment variable
+
+echo "Replacing OIDC issuer URI with: ${PPS_OIDC_ISSUER_URI}"
+
+find /usr/local/apache2/htdocs -type f -name "*.js" -exec sed -i "s|https://auth.example.com/realms/priceprovider|${PPS_OIDC_ISSUER_URI}|g" {} \;
+
+echo "OIDC issuer URI replacement complete"
+
 # Start Apache in the foreground
 exec httpd-foreground
