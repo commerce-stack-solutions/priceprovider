@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   db:
@@ -52,7 +50,7 @@ services:
       PPS_OIDC_ISSUER_URI: ${PPS_OIDC_ISSUER_URI:-http://keycloak:8080/realms/priceprovider}
       PPS_OIDC_CLIENT_ID: ${PPS_OIDC_CLIENT_ID:-priceprovider-service}
       PPS_CORS_ALLOWED_ORIGINS: ${PPS_CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:4200}
-      SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON: ${SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON:-true}
+      SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON: ${SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON:-false}
     ports:
       - "8080:8080"
     networks:
