@@ -47,7 +47,8 @@ services:
       PPS_DB_PASSWORD: ${PPS_DB_PASSWORD:-postgres}
       PPS_DB_DRIVER: ${PPS_DB_DRIVER:-org.postgresql.Driver}
       PPS_JPA_DB_PLATFORM: ${PPS_JPA_DB_PLATFORM:-org.hibernate.dialect.PostgreSQLDialect}
-      PPS_OIDC_ISSUER_URI: ${PPS_OIDC_ISSUER_URI:-http://keycloak:8080/realms/priceprovider}
+      PPS_OIDC_ISSUER_URI: ${PPS_OIDC_ISSUER_URI:-http://localhost:8081/realms/priceprovider}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: ${PPS_OIDC_JWK_SET_URI:-http://keycloak:8080/realms/priceprovider/protocol/openid-connect/certs}
       PPS_OIDC_CLIENT_ID: ${PPS_OIDC_CLIENT_ID:-priceprovider-service}
       PPS_CORS_ALLOWED_ORIGINS: ${PPS_CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:4200}
       SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON: ${SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON:-false}
