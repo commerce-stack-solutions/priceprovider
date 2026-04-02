@@ -509,18 +509,26 @@ public class SpecificationBuilder {
      * Resolves a (possibly dotted) field path to a Join on the collection attribute.
      * For a simple path like "groupRefs" this returns root.join("groupRefs").
      * For a dotted path like "a.groupRefs" this navigates intermediate joins first.
+     * Wraps any JPA exceptions in a QueryFilterRuntimeException for consistent error reporting.
      */
     @SuppressWarnings("unchecked")
     private static <T> Join<T, Object> resolveCollectionJoin(Root<T> root, String fieldPath) {
-        String[] parts = fieldPath.split("\\.");
-        if (parts.length == 1) {
-            return (Join<T, Object>) root.join(parts[0], JoinType.INNER);
+        try {
+            String[] parts = fieldPath.split("\\.");
+            if (parts.length == 1) {
+                return (Join<T, Object>) root.join(parts[0], JoinType.INNER);
+            }
+            // Navigate intermediate segments and join the final collection
+            Join<?, Object> current = (Join<?, Object>) root.join(parts[0], JoinType.INNER);
+            for (int i = 1; i < parts.length; i++) {
+                current = (Join<?, Object>) current.join(parts[i], JoinType.INNER);
+            }
+            return (Join<T, Object>) current;
+        } catch (IllegalArgumentException e) {
+            List<String> fields = new ArrayList<>();
+            fields.add(fieldPath);
+            throw new QueryFilterRuntimeException(
+                new InvalidParameterException("common.errors.query.fieldUnknown", fields));
         }
-        // Navigate intermediate segments and join the final collection
-        Join<?, Object> current = (Join<?, Object>) root.join(parts[0], JoinType.INNER);
-        for (int i = 1; i < parts.length; i++) {
-            current = (Join<?, Object>) current.join(parts[i], JoinType.INNER);
-        }
-        return (Join<T, Object>) current;
     }
 }

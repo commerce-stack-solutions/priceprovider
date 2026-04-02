@@ -218,6 +218,7 @@ export function parseQueryString(queryString: string): FilterDefinition[] {
 /**
  * Split a query string by ' AND ' while ignoring occurrences inside parentheses.
  * Required so that hasAny/hasAll value lists like (A,B AND C) are not split.
+ * Handles unbalanced parentheses gracefully by clamping depth at zero.
  */
 function splitByAndOutsideParens(query: string): string[] {
   const parts: string[] = [];
@@ -226,7 +227,7 @@ function splitByAndOutsideParens(query: string): string[] {
 
   for (let i = 0; i < query.length; i++) {
     if (query[i] === '(') { depth++; continue; }
-    if (query[i] === ')') { depth--; continue; }
+    if (query[i] === ')') { depth = Math.max(0, depth - 1); continue; }
     if (depth === 0 && query.slice(i, i + 5) === ' AND ') {
       parts.push(query.slice(start, i));
       i += 4; // skip ' AND '
