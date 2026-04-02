@@ -173,6 +173,12 @@ if "!NODE_AVAILABLE!"=="true" (
     echo   Rental Frontend (demo^) -^>  http://localhost:3001
 )
 echo.
+echo   Default Users (Keycloak realm: priceprovider^):
+echo     super-user       / superuser123   (Superuser - all permissions^)
+echo     admin-user       / admin123       (Admin    - read/write/delete^)
+echo     contributor-user / contributor123 (Contributor - read/write^)
+echo     reader-user      / reader123      (Reader   - read-only^)
+echo.
 echo   Documentation:
 echo   Project README         -^>  %SCRIPT_DIR%\README.md
 echo   Service README         -^>  %SCRIPT_DIR%\service\README.md
