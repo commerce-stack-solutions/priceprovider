@@ -1,0 +1,60 @@
+{
+  "name": "Price Provider Service - Local",
+  "_postman_variable_scope": "environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "keycloakUrl",
+      "value": "http://localhost:8081",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "oidcRealm",
+      "value": "priceprovider",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "oidcClientId",
+      "value": "priceprovider-app",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "oidcUsername",
+      "value": "admin-user",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "oidcPassword",
+      "value": "admin123",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "customerAccessToken",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "rentalAccessToken",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    }
+  ]
+}
