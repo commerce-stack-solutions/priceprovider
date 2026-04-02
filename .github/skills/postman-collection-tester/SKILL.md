@@ -108,7 +108,8 @@ When adding new features (e.g., channel-country pricing), update the sample data
 
 ## Collection File Location
 ```
-service/postman/pps-postmancollection.json
+service/postman/pps-postmancollection.json   ← collection with all requests and test scripts
+service/postman/pps-environment.json         ← environment file with all pre-configured variables
 ```
 
 # Updating the Collection

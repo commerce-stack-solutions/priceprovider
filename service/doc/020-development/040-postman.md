@@ -10,7 +10,8 @@ The Postman collection serves two purposes:
 ## Collection Location
 
 ```
-service/postman/pps-postmancollection.json
+service/postman/pps-postmancollection.json   ← collection with all requests and test scripts
+service/postman/pps-environment.json         ← environment file with all pre-configured variables
 ```
 
 ## Tools
@@ -28,7 +29,17 @@ The primary tool. Download from [postman.com](https://www.postman.com/).
 1. **Open Postman** (download from [postman.com](https://www.postman.com/) if needed)
 2. Click **Import** in the top left
 3. Select **File** and choose `service/postman/pps-postmancollection.json`
-4. The collection is imported with all endpoints pre-configured
+4. Import the environment: **Import** → **File** → `service/postman/pps-environment.json`
+5. Select **Price Provider Service - Local** as the active environment
+6. The collection is imported with all endpoints pre-configured
+
+## Importing the Collection into Hoppscotch
+
+1. Open [hoppscotch.io](https://hoppscotch.io/) in your browser
+2. Go to **Collections** → **Import** → choose `service/postman/pps-postmancollection.json`
+3. Go to **Environments** → **Import** → choose `service/postman/pps-environment.json`
+4. Select **Price Provider Service - Local** as the active environment (top-right environment picker)
+5. All variables are pre-configured — run the `Authentication / Get Admin Access Token` request first to populate `{{accessToken}}`
 
 ## Configuration
 
@@ -47,9 +58,7 @@ The collection uses the following variables (all set to local defaults):
 | `rentalAccessToken`   | *(empty)*                 | Rental JWT token — populated by the rental login requests |
 
 In **Postman**, these are collection variables (set on the **Variables** tab of the collection).  
-In **Hoppscotch**, these must be set as **environment variables** before running, or they are populated automatically by the login requests into the active environment.
-
-To customize in Postman, click on the collection name and go to the **Variables** tab.
+In **Hoppscotch**, import `pps-environment.json` and select it as the active environment — the login requests will then populate the token variables automatically into that environment.
 
 ## Authentication (Keycloak OIDC)
 
