@@ -41,13 +41,28 @@ RUN dos2unix /usr/local/bin/entrypoint.sh && \
 # ---------------------------------------------------------------------------
 # Environment variables (configure at runtime via docker-compose or -e flags)
 # ---------------------------------------------------------------------------
-# PPS_BASEURL – Base URL of the Price Provider Service backend that the Angular
-#               application calls for API requests.
-#               (default: http://localhost:8080/, set by the ENV statement below)
+# PPS_BASEURL         – Base URL of the Price Provider Service backend that the
+#                       Angular application calls for API requests.
+#                       (default: http://localhost:8080/)
+# PPS_OIDC_ISSUER_URI    – OIDC issuer URI of the Keycloak realm used for
+#                         authentication.  The entrypoint script replaces the
+#                         production placeholder at container start-up so the app
+#                         can reach the correct Keycloak instance without a
+#                         rebuild.
+#                         (default: https://auth.example.com/realms/priceprovider)
+# PPS_OIDC_REQUIRE_HTTPS – Whether the OIDC library enforces HTTPS for the
+#                         issuer URI.  Set to "false" when using a plain HTTP
+#                         Keycloak endpoint (e.g. local dev with
+#                         http://localhost:8081).
+#                         (default: true – matches the production build)
 # ---------------------------------------------------------------------------
 
-# Set environment variable for the API base URL (default value)
+# Set environment variables for runtime replacement (defaults match the values
+# compiled into the production build so that a standalone container works
+# without any configuration)
 ENV PPS_BASEURL=http://localhost:8080/
+ENV PPS_OIDC_ISSUER_URI=https://auth.example.com/realms/priceprovider
+ENV PPS_OIDC_REQUIRE_HTTPS=true
 
 # Expose port 80
 EXPOSE 80
