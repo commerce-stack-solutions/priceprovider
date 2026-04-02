@@ -289,7 +289,9 @@
     "gte": "Suurem või võrdne",
     "lte": "Väiksem või võrdne",
     "range": "Vahemik",
-    "exists": "Olemas"
+    "exists": "Olemas",
+    "hasAny": "Sisaldab vähemalt ühte",
+    "hasAll": "Sisaldab kõiki"
   },
   "filterLabels": {
     "operator": "Tehtemärk",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Jätke tühjaks ülemise piiri puudumiseks",
     "valuePlaceholder": "Sisesta väärtus",
     "hasValue": "On väärtus (mitte tühi)",
-    "noValue": "Puudub väärtus (tühi)"
+    "noValue": "Puudub väärtus (tühi)",
+    "values": "Väärtused",
+    "multiValuePlaceholder": "nt. ID1,ID2,ID3",
+    "multiValueHint": "Komaga eraldatud ID-de loend"
   }
 }

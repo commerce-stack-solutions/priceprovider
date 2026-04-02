@@ -48,6 +48,18 @@
                 (ngModelChange)="filterValueTo.set($event)"
                 [placeholder]="'common.filterLabels.toPlaceholder' | transloco">
             </div>
+          } @else if (isMultiValueOperator()) {
+            <!-- Multi-value input for hasAny / hasAll -->
+            <div class="mb-3">
+              <label class="form-label">{{ 'common.filterLabels.values' | transloco }}</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [(ngModel)]="filterValue"
+                (ngModelChange)="filterValue.set($event)"
+                [placeholder]="'common.filterLabels.multiValuePlaceholder' | transloco">
+              <div class="form-text">{{ 'common.filterLabels.multiValueHint' | transloco }}</div>
+            </div>
           } @else {
             <!-- Single value input -->
             <div class="mb-3">

@@ -198,4 +198,54 @@ public class SpecificationBuilderTest {
         assertEquals("common.errors.query.fieldInvalid", messageKey,
                     "Expected fieldInvalid for TerminalPathException, got: " + messageKey);
     }
+
+    @Test
+    public void testHasAnyOnCollection() throws QueryParseException, InvalidParameterException {
+        // Test that hasAny operator works on a collection field (subRefs is Set<GroupEntity>)
+        QueryExpression expr = parser.parse("subRefs.hasAny:(child-a)");
+        Specification<GroupEntity> spec = SpecificationBuilder.build(expr);
+
+        assertNotNull(spec);
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GroupEntity> query = cb.createQuery(GroupEntity.class);
+        Root<GroupEntity> root = query.from(GroupEntity.class);
+        query.where(spec.toPredicate(root, query, cb));
+
+        TypedQuery<GroupEntity> typedQuery = entityManager.createQuery(query);
+        assertNotNull(typedQuery);
+    }
+
+    @Test
+    public void testHasAllOnCollection() throws QueryParseException, InvalidParameterException {
+        // Test that hasAll operator works on a collection field
+        QueryExpression expr = parser.parse("subRefs.hasAll:(child-a,child-b)");
+        Specification<GroupEntity> spec = SpecificationBuilder.build(expr);
+
+        assertNotNull(spec);
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GroupEntity> query = cb.createQuery(GroupEntity.class);
+        Root<GroupEntity> root = query.from(GroupEntity.class);
+        query.where(spec.toPredicate(root, query, cb));
+
+        TypedQuery<GroupEntity> typedQuery = entityManager.createQuery(query);
+        assertNotNull(typedQuery);
+    }
+
+    @Test
+    public void testHasAnyOnNonCollectionThrowsException() throws QueryParseException, InvalidParameterException {
+        // Test that hasAny on a non-collection field throws QueryFilterRuntimeException
+        // 'name' on GroupEntity is a String, not a collection
+        QueryExpression expr = parser.parse("name.hasAny:(val1,val2)");
+        Specification<GroupEntity> spec = SpecificationBuilder.build(expr);
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<GroupEntity> query = cb.createQuery(GroupEntity.class);
+        Root<GroupEntity> root = query.from(GroupEntity.class);
+
+        assertThrows(QueryFilterRuntimeException.class, () -> {
+            spec.toPredicate(root, query, cb);
+        });
+    }
 }

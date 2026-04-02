@@ -289,7 +289,9 @@
     "gte": "Groter dan of gelijk aan",
     "lte": "Kleiner dan of gelijk aan",
     "range": "Bereik",
-    "exists": "Bestaat"
+    "exists": "Bestaat",
+    "hasAny": "Heeft minstens één van",
+    "hasAll": "Heeft alle van"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Leeg laten voor geen bovengrens",
     "valuePlaceholder": "Voer waarde in",
     "hasValue": "Heeft waarde (niet leeg)",
-    "noValue": "Geen waarde (leeg)"
+    "noValue": "Geen waarde (leeg)",
+    "values": "Waarden",
+    "multiValuePlaceholder": "bijv. ID1,ID2,ID3",
+    "multiValueHint": "Door komma gescheiden lijst van ID's"
   }
 }

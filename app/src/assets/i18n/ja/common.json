@@ -289,7 +289,9 @@
     "gte": "以上",
     "lte": "以下",
     "range": "範囲",
-    "exists": "存在する"
+    "exists": "存在する",
+    "hasAny": "いずれかを含む",
+    "hasAll": "すべてを含む"
   },
   "filterLabels": {
     "operator": "演算子",
@@ -300,6 +302,9 @@
     "toPlaceholder": "上限なしの場合は空欄のままにしてください",
     "valuePlaceholder": "値を入力してください",
     "hasValue": "値あり（空でない）",
-    "noValue": "値なし（空）"
+    "noValue": "値なし（空）",
+    "values": "値",
+    "multiValuePlaceholder": "例: ID1,ID2,ID3",
+    "multiValueHint": "IDをカンマ区切りで入力"
   }
 }

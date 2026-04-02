@@ -10,7 +10,9 @@ export type FilterOperator =
   | 'gte' 
   | 'lte' 
   | 'range' 
-  | 'exists';
+  | 'exists'
+  | 'hasAny'
+  | 'hasAll';
 
 export type FieldType = 
   | 'string' 
@@ -52,7 +54,7 @@ export function getAllowedOperators(type: FieldType): FilterOperator[] {
     case 'reference':
       return ['equals', 'exists'];
     case 'collection':
-      return ['exists'];
+      return ['hasAny', 'hasAll', 'exists'];
     default:
       return ['equals', 'exists'];
   }
@@ -82,18 +84,36 @@ export function buildQueryString(filters: FilterDefinition[]): string {
         return `${field}:>=${filter.value}`;
       case 'lte':
         return `${field}:<=${filter.value}`;
-      case 'range':
+      case 'range': {
         const from = filter.valueFrom !== undefined && filter.valueFrom !== '' ? filter.valueFrom : '*';
         const to = filter.valueTo !== undefined && filter.valueTo !== '' ? filter.valueTo : '*';
         return `${field}:[${from} TO ${to}]`;
+      }
       case 'exists':
         return `${field}.exists:${filter.value}`;
+      case 'hasAny': {
+        const ids = normalizeMultiValue(filter.value);
+        return ids.length > 0 ? `${field}.hasAny:(${ids.join(',')})` : '';
+      }
+      case 'hasAll': {
+        const ids = normalizeMultiValue(filter.value);
+        return ids.length > 0 ? `${field}.hasAll:(${ids.join(',')})` : '';
+      }
       default:
         return '';
     }
   }).filter(part => part !== '');
 
   return queryParts.join(' AND ');
+}
+
+/**
+ * Normalise a multi-value input (comma-separated string or array) into a trimmed, non-empty string array.
+ */
+function normalizeMultiValue(value: any): string[] {
+  if (!value) return [];
+  const raw: string = Array.isArray(value) ? value.join(',') : String(value);
+  return raw.split(',').map(v => v.trim()).filter(v => v.length > 0);
 }
 
 /**
@@ -106,11 +126,25 @@ export function parseQueryString(queryString: string): FilterDefinition[] {
 
   const filters: FilterDefinition[] = [];
   
-  // Split by AND (simple implementation, doesn't handle parentheses)
-  const parts = queryString.split(' AND ');
+  // Split by AND – but skip splits that are inside parentheses (hasAny/hasAll values)
+  const parts = splitByAndOutsideParens(queryString);
   
   for (const part of parts) {
     const trimmed = part.trim();
+
+    // Check for hasAny operator: field.hasAny:(val1,val2)
+    const hasAnyMatch = trimmed.match(/^(.+)\.hasAny:\((.+)\)$/);
+    if (hasAnyMatch) {
+      filters.push({ field: hasAnyMatch[1], operator: 'hasAny', value: hasAnyMatch[2] });
+      continue;
+    }
+
+    // Check for hasAll operator: field.hasAll:(val1,val2)
+    const hasAllMatch = trimmed.match(/^(.+)\.hasAll:\((.+)\)$/);
+    if (hasAllMatch) {
+      filters.push({ field: hasAllMatch[1], operator: 'hasAll', value: hasAllMatch[2] });
+      continue;
+    }
     
     // Check for exists operator
     if (trimmed.includes('.exists:')) {
@@ -179,4 +213,26 @@ export function parseQueryString(queryString: string): FilterDefinition[] {
   }
   
   return filters;
+}
+
+/**
+ * Split a query string by ' AND ' while ignoring occurrences inside parentheses.
+ * Required so that hasAny/hasAll value lists like (A,B AND C) are not split.
+ */
+function splitByAndOutsideParens(query: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+
+  for (let i = 0; i < query.length; i++) {
+    if (query[i] === '(') { depth++; continue; }
+    if (query[i] === ')') { depth--; continue; }
+    if (depth === 0 && query.slice(i, i + 5) === ' AND ') {
+      parts.push(query.slice(start, i));
+      i += 4; // skip ' AND '
+      start = i + 1;
+    }
+  }
+  parts.push(query.slice(start));
+  return parts;
 }

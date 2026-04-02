@@ -289,7 +289,9 @@
     "gte": "Mayor o igual que",
     "lte": "Menor o igual que",
     "range": "Rango",
-    "exists": "Existe"
+    "exists": "Existe",
+    "hasAny": "Tiene alguno de",
+    "hasAll": "Tiene todos de"
   },
   "filterLabels": {
     "operator": "Operador",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Dejar vacío para sin límite superior",
     "valuePlaceholder": "Introducir valor",
     "hasValue": "Tiene valor (no vacío)",
-    "noValue": "Sin valor (vacío)"
+    "noValue": "Sin valor (vacío)",
+    "values": "Valores",
+    "multiValuePlaceholder": "ej. ID1,ID2,ID3",
+    "multiValueHint": "Lista de IDs separados por coma"
   }
 }

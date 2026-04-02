@@ -55,6 +55,10 @@ public class QueryFilter {
         
         // Existence checks (all types)
         EXISTS,           // field.exists:true
-        NOT_EXISTS        // field.exists:false
+        NOT_EXISTS,       // field.exists:false
+
+        // Collection membership operators (Many-to-Many / One-to-Many)
+        HAS_ANY,          // field.hasAny:(val1,val2)  – at least one match
+        HAS_ALL           // field.hasAll:(val1,val2)  – all must match
     }
 }

@@ -34,6 +34,10 @@ export class ColumnFilterComponent {
   
   isRangeOperator = computed(() => this.selectedOperator() === 'range');
   isExistsOperator = computed(() => this.selectedOperator() === 'exists');
+  isMultiValueOperator = computed(() => {
+    const op = this.selectedOperator();
+    return op === 'hasAny' || op === 'hasAll';
+  });
   needsValue = computed(() => {
     const op = this.selectedOperator();
     return op !== null && op !== 'exists';

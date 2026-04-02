@@ -289,7 +289,9 @@
     "gte": "Lielāks vai vienāds",
     "lte": "Mazāks vai vienāds",
     "range": "Diapazons",
-    "exists": "Eksistē"
+    "exists": "Eksistē",
+    "hasAny": "Satur vismaz vienu no",
+    "hasAll": "Satur visus no"
   },
   "filterLabels": {
     "operator": "Operators",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Atstājiet tukšu, ja nav augšējā ierobežojuma",
     "valuePlaceholder": "Ievadiet vērtību",
     "hasValue": "Ir vērtība (nav tukšs)",
-    "noValue": "Nav vērtības (tukšs)"
+    "noValue": "Nav vērtības (tukšs)",
+    "values": "Vērtības",
+    "multiValuePlaceholder": "piem. ID1,ID2,ID3",
+    "multiValueHint": "Ar komatiem atdalīts ID saraksts"
   }
 }

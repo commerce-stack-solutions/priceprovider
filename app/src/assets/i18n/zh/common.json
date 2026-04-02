@@ -289,7 +289,9 @@
     "gte": "大于或等于",
     "lte": "小于或等于",
     "range": "范围",
-    "exists": "存在"
+    "exists": "存在",
+    "hasAny": "包含任意一个",
+    "hasAll": "包含所有"
   },
   "filterLabels": {
     "operator": "运算符",
@@ -300,6 +302,9 @@
     "toPlaceholder": "留空表示无上限",
     "valuePlaceholder": "请输入值",
     "hasValue": "有值（非空）",
-    "noValue": "无值（空）"
+    "noValue": "无值（空）",
+    "values": "值",
+    "multiValuePlaceholder": "例如 ID1,ID2,ID3",
+    "multiValueHint": "逗号分隔的ID列表"
   }
 }

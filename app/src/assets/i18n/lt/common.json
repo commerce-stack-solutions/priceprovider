@@ -289,7 +289,9 @@
     "gte": "Daugiau arba lygu",
     "lte": "Mažiau arba lygu",
     "range": "Diapazonas",
-    "exists": "Egzistuoja"
+    "exists": "Egzistuoja",
+    "hasAny": "Turi bent vieną iš",
+    "hasAll": "Turi visus iš"
   },
   "filterLabels": {
     "operator": "Operatorius",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Palikite tuščią, jei nėra viršutinės ribos",
     "valuePlaceholder": "Įveskite reikšmę",
     "hasValue": "Turi reikšmę (ne tuščia)",
-    "noValue": "Nėra reikšmės (tuščia)"
+    "noValue": "Nėra reikšmės (tuščia)",
+    "values": "Reikšmės",
+    "multiValuePlaceholder": "pvz. ID1,ID2,ID3",
+    "multiValueHint": "Kableliais atskirtas ID sąrašas"
   }
 }

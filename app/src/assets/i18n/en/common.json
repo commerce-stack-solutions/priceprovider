@@ -291,7 +291,9 @@
     "gte": "Greater than or equal",
     "lte": "Less than or equal",
     "range": "Range",
-    "exists": "Exists"
+    "exists": "Exists",
+    "hasAny": "Has any of",
+    "hasAll": "Has all of"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -302,6 +304,9 @@
     "toPlaceholder": "Leave empty for no upper limit",
     "valuePlaceholder": "Enter value",
     "hasValue": "Has value (not empty)",
-    "noValue": "No value (empty)"
+    "noValue": "No value (empty)",
+    "values": "Values",
+    "multiValuePlaceholder": "e.g. ID1,ID2,ID3",
+    "multiValueHint": "Comma-separated list of IDs"
   }
 }

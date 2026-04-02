@@ -289,7 +289,9 @@
     "gte": "Větší nebo rovno",
     "lte": "Menší nebo rovno",
     "range": "Rozsah",
-    "exists": "Existuje"
+    "exists": "Existuje",
+    "hasAny": "Obsahuje alespoň jeden z",
+    "hasAll": "Obsahuje všechny z"
   },
   "filterLabels": {
     "operator": "Operátor",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Nechte prázdné pro žádnou horní hranici",
     "valuePlaceholder": "Zadejte hodnotu",
     "hasValue": "Má hodnotu (není prázdné)",
-    "noValue": "Žádná hodnota (prázdné)"
+    "noValue": "Žádná hodnota (prázdné)",
+    "values": "Hodnoty",
+    "multiValuePlaceholder": "např. ID1,ID2,ID3",
+    "multiValueHint": "Čárkami oddělený seznam ID"
   }
 }

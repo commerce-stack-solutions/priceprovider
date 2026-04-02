@@ -12,6 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Builds JPA Specifications from QueryExpression objects.
@@ -55,7 +56,7 @@ public class SpecificationBuilder {
             CriteriaBuilder criteriaBuilder) {
 
         if (expression.isLeaf()) {
-            Predicate predicate = buildFilterPredicate(expression.getFilter(), root, criteriaBuilder);
+            Predicate predicate = buildFilterPredicate(expression.getFilter(), root, query, criteriaBuilder);
             return expression.isNegated() ? criteriaBuilder.not(predicate) : predicate;
         }
 
@@ -89,6 +90,7 @@ public class SpecificationBuilder {
     private static <T> Predicate buildFilterPredicate(
             QueryFilter filter,
             Root<T> root,
+            CriteriaQuery<?> query,
             CriteriaBuilder criteriaBuilder) {
 
         String fieldPath = filter.getField();
@@ -153,6 +155,20 @@ public class SpecificationBuilder {
 
             case NOT_EXISTS:
                 return buildExistsPredicate(path, criteriaBuilder, true);
+
+            case HAS_ANY: {
+                validateIsCollection(path, fieldPath, "hasAny");
+                @SuppressWarnings("unchecked")
+                List<String> ids = (List<String>) filter.getValue();
+                return buildHasAnyPredicate(fieldPath, ids, root, query, criteriaBuilder);
+            }
+
+            case HAS_ALL: {
+                validateIsCollection(path, fieldPath, "hasAll");
+                @SuppressWarnings("unchecked")
+                List<String> ids = (List<String>) filter.getValue();
+                return buildHasAllPredicate(fieldPath, ids, root, query, criteriaBuilder);
+            }
 
             default:
                 throw new IllegalArgumentException("Unsupported operator: " + filter.getOperator());
@@ -399,5 +415,112 @@ public class SpecificationBuilder {
             List<String> fields = List.of(fieldPath + " (operator: " + operator + ", valid: .exists:true or .exists:false)");
             throw new QueryFilterRuntimeException(new InvalidParameterException(MessageKeys.ERROR_QUERY_INVALID_COLLECTION_OPERATOR, fields));
         }
+    }
+
+    /**
+     * Validates that the given path IS a collection field.
+     * Throws QueryFilterRuntimeException if the path is not a collection.
+     *
+     * @param path the path to validate
+     * @param fieldPath the field path string for error reporting
+     * @param operator the operator being applied (for error message)
+     * @throws QueryFilterRuntimeException if the path is not a collection
+     */
+    private static void validateIsCollection(Path<?> path, String fieldPath, String operator) {
+        if (!(path.getModel() instanceof PluralAttribute)) {
+            List<String> fields = List.of(fieldPath + " (operator: " + operator + ", requires a collection field)");
+            throw new QueryFilterRuntimeException(new InvalidParameterException(MessageKeys.ERROR_QUERY_INVALID_COLLECTION_OPERATOR, fields));
+        }
+    }
+
+    /**
+     * Builds a HAS_ANY predicate using a correlated EXISTS subquery.
+     * The entity matches if its collection contains at least one of the provided IDs.
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> Predicate buildHasAnyPredicate(
+            String fieldPath,
+            List<String> ids,
+            Root<T> root,
+            CriteriaQuery<?> query,
+            CriteriaBuilder criteriaBuilder) {
+
+        Subquery<Integer> subquery = query.subquery(Integer.class);
+        Root<T> subRoot = subquery.correlate(root);
+        Join<T, Object> collJoin = resolveCollectionJoin(subRoot, fieldPath);
+
+        String idAttr = QueryReflectionUtil.findIdAttributeName(collJoin.getJavaType());
+        subquery.select(criteriaBuilder.literal(1));
+
+        if (idAttr != null) {
+            Path<Object> idPath = (Path<Object>) collJoin.get(idAttr);
+            List<Object> convertedIds = ids.stream()
+                .map(id -> QueryReflectionUtil.convertValueToType(id, idPath.getJavaType()))
+                .collect(Collectors.toList());
+            subquery.where(idPath.in(convertedIds));
+        } else {
+            subquery.where(collJoin.in(ids));
+        }
+
+        return criteriaBuilder.exists(subquery);
+    }
+
+    /**
+     * Builds a HAS_ALL predicate using one correlated EXISTS subquery per ID.
+     * The entity matches only if its collection contains all of the provided IDs.
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> Predicate buildHasAllPredicate(
+            String fieldPath,
+            List<String> ids,
+            Root<T> root,
+            CriteriaQuery<?> query,
+            CriteriaBuilder criteriaBuilder) {
+
+        List<Predicate> allPredicates = new ArrayList<>();
+
+        for (String id : ids) {
+            Subquery<Integer> subquery = query.subquery(Integer.class);
+            Root<T> subRoot = subquery.correlate(root);
+            Join<T, Object> collJoin = resolveCollectionJoin(subRoot, fieldPath);
+
+            String idAttr = QueryReflectionUtil.findIdAttributeName(collJoin.getJavaType());
+            subquery.select(criteriaBuilder.literal(1));
+
+            if (idAttr != null) {
+                Path<Object> idPath = (Path<Object>) collJoin.get(idAttr);
+                Object convertedId = QueryReflectionUtil.convertValueToType(id, idPath.getJavaType());
+                subquery.where(criteriaBuilder.equal(idPath, convertedId));
+            } else {
+                subquery.where(criteriaBuilder.equal(collJoin, id));
+            }
+
+            allPredicates.add(criteriaBuilder.exists(subquery));
+        }
+
+        if (allPredicates.isEmpty()) {
+            return criteriaBuilder.conjunction();
+        }
+
+        return criteriaBuilder.and(allPredicates.toArray(new Predicate[0]));
+    }
+
+    /**
+     * Resolves a (possibly dotted) field path to a Join on the collection attribute.
+     * For a simple path like "groupRefs" this returns root.join("groupRefs").
+     * For a dotted path like "a.groupRefs" this navigates intermediate joins first.
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> Join<T, Object> resolveCollectionJoin(Root<T> root, String fieldPath) {
+        String[] parts = fieldPath.split("\\.");
+        if (parts.length == 1) {
+            return (Join<T, Object>) root.join(parts[0], JoinType.INNER);
+        }
+        // Navigate intermediate segments and join the final collection
+        Join<?, Object> current = (Join<?, Object>) root.join(parts[0], JoinType.INNER);
+        for (int i = 1; i < parts.length; i++) {
+            current = (Join<?, Object>) current.join(parts[i], JoinType.INNER);
+        }
+        return (Join<T, Object>) current;
     }
 }
