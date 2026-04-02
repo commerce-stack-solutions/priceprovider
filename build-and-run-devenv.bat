@@ -174,10 +174,17 @@ if "!NODE_AVAILABLE!"=="true" (
 )
 echo.
 echo   Default Users (Keycloak realm: priceprovider^):
-echo     super-user       / superuser123   (Superuser - all permissions^)
+echo   Admin users:
 echo     admin-user       / admin123       (Admin    - read/write/delete^)
 echo     contributor-user / contributor123 (Contributor - read/write^)
 echo     reader-user      / reader123      (Reader   - read-only^)
+echo   Shop frontend customers:
+echo     customer-city-council / customer123 (Org: City Council^)
+echo     customer-city-health  / customer123 (Org: City Health^)
+echo     customer-techcorp     / customer123 (Org: TechCorp EU^)
+echo   Rental frontend customers:
+echo     rental-builder-pro / rental123 (Org: Builder Pro^)
+echo     rental-green-land  / rental123 (Org: Green Land^)
 echo.
 echo   Documentation:
 echo   Project README         -^>  %SCRIPT_DIR%\README.md
