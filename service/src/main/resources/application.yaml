@@ -1,18 +1,15 @@
 spring:
   datasource:
-    url: ${PPS_DB_JDBCURL:jdbc:h2:mem:priceProviderService}
-    driverClassName: ${PPS_DB_DRIVER:org.h2.Driver}
-    username: ${PPS_DB_USERNAME:sa}
-    password: ${PPS_DB_PASSWORD:password}
+    url: ${PPS_DB_JDBCURL:jdbc:postgresql://localhost:5432/priceProviderService}
+    driverClassName: ${PPS_DB_DRIVER:org.postgresql.Driver}
+    username: ${PPS_DB_USERNAME:postgres}
+    password: ${PPS_DB_PASSWORD:postgres}
   jpa:
-    database-platform: ${PPS_JPA_DB_PLATFORM:org.hibernate.dialect.H2Dialect}
+    database-platform: ${PPS_JPA_DB_PLATFORM:org.hibernate.dialect.PostgreSQLDialect}
     open-in-view: false
     show-sql: false
     hibernate:
       ddl-auto: update
-  h2:
-    console:
-      enabled: true
   security:
     oauth2:
       resourceserver:

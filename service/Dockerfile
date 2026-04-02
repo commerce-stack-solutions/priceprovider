@@ -49,16 +49,17 @@ COPY src/main/resources/initialize /app/initialize/
 # PPS_JPA_DB_PLATFORM – Hibernate dialect class (default: org.hibernate.dialect.H2Dialect)
 #
 # Initialization
-# PRICE_PROVIDER_SERVICE_INITIALIZE_DATA_FOLDER – Path to the data folder that contains
+# SERVICE_CONFIG_INITIALIZE_DATA_FOLDER – Path to the data folder that contains
 #   the initialization JSON files. Must end with a trailing slash.
 #   (default: /app/initialize/, set by the ENV statement below)
 # ---------------------------------------------------------------------------
 
 # Set the environment variable to inform the application where to find the data files.
+# Spring relaxed binding maps SERVICE_CONFIG_INITIALIZE_DATA_FOLDER to the
+# service-config.initialize.data-folder property in application.yaml.
 # Ensure the value ends with a trailing slash so code that concatenates subfolders produces
 # paths like /app/initialize/essential/... (instead of /app/initializeessential/...)
-# ENV PRICE_PROVIDER_SERVICE_INITIALIZE_DATA_FOLDER=/app/initialize
-ENV PRICE_PROVIDER_SERVICE_INITIALIZE_DATA_FOLDER=/app/initialize/
+ENV SERVICE_CONFIG_INITIALIZE_DATA_FOLDER=/app/initialize/
 
 # Copy the built JAR from the builder stage to the final image
 # The JAR is located in the build/libs directory in the builder stage.
