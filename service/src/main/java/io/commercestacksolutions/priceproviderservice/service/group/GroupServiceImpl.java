@@ -19,8 +19,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -54,9 +56,32 @@ public class GroupServiceImpl implements GroupService {
     }
 
     public GroupEntity save(GroupEntity groupEntity) throws EntityValidationException {
+        resolvePathBasedRefs(groupEntity);
         validateEntity(groupEntity);
         updateAuditTimestamps(groupEntity);
         return groupEntityRepository.save(groupEntity);
+    }
+
+    /**
+     * Resolves parentRefs and subRefs that only have a path set (no UUID id)
+     * by looking up the full entity from the database.
+     * This is required when importing JSON data where refs are given as path strings.
+     */
+    private void resolvePathBasedRefs(GroupEntity groupEntity) {
+        if (groupEntity.getParentRefs() != null && !groupEntity.getParentRefs().isEmpty()) {
+            Set<GroupEntity> resolvedParents = new HashSet<>();
+            for (GroupEntity parent : groupEntity.getParentRefs()) {
+                if (parent.getId() != null) {
+                    resolvedParents.add(parent);
+                } else if (parent.getPath() != null) {
+                    GroupEntity found = groupEntityRepository.findByPath(parent.getPath()).orElse(null);
+                    if (found != null) {
+                        resolvedParents.add(found);
+                    }
+                }
+            }
+            groupEntity.setParentRefs(resolvedParents);
+        }
     }
 
     public List<GroupEntity> getAllGroups() {

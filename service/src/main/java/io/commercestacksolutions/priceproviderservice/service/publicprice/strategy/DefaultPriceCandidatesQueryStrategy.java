@@ -105,7 +105,7 @@ public class DefaultPriceCandidatesQueryStrategy implements PriceCandidatesQuery
             Join<Object, Object> groupJoin = priceRow.join("groupRefs", JoinType.LEFT);
             predicates.add(cb.or(
                 cb.isEmpty(priceRow.get("groupRefs")),
-                groupJoin.get("id").in(groupIds)
+                groupJoin.get("path").in(groupIds)
             ));
         }
 
