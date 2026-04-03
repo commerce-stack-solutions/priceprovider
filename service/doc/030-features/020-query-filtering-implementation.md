@@ -11,8 +11,8 @@ The query filtering infrastructure provides a reusable, generic approach for add
 ### Core Components
 
 1. **QueryParser** (`io.commercestacksolutions.commons.query.QueryParser`)
-   - Parses Lucene-like query syntax into AST (Abstract Syntax Tree)
-   - Handles operators: `:`, `>`, `<`, `>=`, `<=`, `[TO]`, `.exists`
+   - Parses Lucene-inspired query syntax into AST (Abstract Syntax Tree)
+   - Handles operators: `:`, `>`, `<`, `>=`, `<=`, `[TO]`, `.exists`, `.hasAny`, `.hasAll`
    - Supports logical operators: `AND`, `OR`, `NOT`
    - Supports parenthesized grouping
 
@@ -263,15 +263,16 @@ The implementation includes several security measures:
 
 ### Input Sanitization: handling of special / Unicode characters in query values
 The sanitization regex allows Unicode letters, numbers and currency symbols while still restricting other potentially dangerous characters. 
-The allowed character set preserves necessary query syntax characters (colon, brackets, parentheses, comparison and wildcard characters).
+The allowed character set preserves necessary query syntax characters (colon, brackets, parentheses, comparison and wildcard characters, comma for `hasAny`/`hasAll` value lists).
 
 Technical details (for implementers):
 - regex (current implementation):
-  [^\p{L}\p{N}\s:\*\[\]\(\)\-_.TZ<>=\p{Sc}]
+  [^\p{L}\p{N}\s:\*\[\]\(\)\-_.TZ<>=\p{Sc},]
 
   - `\p{L}` permits Unicode letters
   - `\p{N}` permits Unicode numbers
   - `\p{Sc}` permits currency symbols (€, $, ¥, etc.)
+  - `,` permits comma as separator in `hasAny`/`hasAll` value lists
   - explicit `[` `]` `(` `)` preserved for range/group syntax
 
 Security notes & recommendations:
@@ -331,7 +332,7 @@ The specification builder handles various field types automatically:
 - **Boolean**: Exact match
 - **Date/DateTime**: Comparisons and ranges
 - **References (Single)**: Null/not-null checks, exact ID match
-- **References (Collection)**: Empty/not-empty checks
+- **References (Collection)**: Empty/not-empty checks (`.exists`), membership checks (`.hasAny`, `.hasAll`)
 
 ## Additional Resources
 

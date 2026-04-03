@@ -34,7 +34,12 @@
             <app-column-filter [config]="config" [activeFilter]="getActiveFilter('id')" (filterApplied)="onFilterApplied($event)" (filterRemoved)="onFilterRemoved($event)"></app-column-filter>
           }
         </th>
-        <th>{{ 'common.fields.allowedCountryRefs' | transloco }}</th>
+        <th>
+          {{ 'common.fields.allowedCountryRefs' | transloco }}
+          @if (getFilterConfig('allowedCountryRefs'); as config) {
+            <app-column-filter [config]="config" [activeFilter]="getActiveFilter('allowedCountryRefs')" (filterApplied)="onFilterApplied($event)" (filterRemoved)="onFilterRemoved($event)"></app-column-filter>
+          }
+        </th>
         <th class="sortable">
           <span (click)="sortByField('priceRepresentationMode')">{{ 'common.fields.priceRepresentationMode' | transloco }}{{ getSortIndicator('priceRepresentationMode') }}</span>
           @if (getFilterConfig('priceRepresentationMode'); as config) {

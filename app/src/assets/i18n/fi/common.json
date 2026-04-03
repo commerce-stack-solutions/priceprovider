@@ -289,7 +289,9 @@
     "gte": "Suurempi tai yhtä suuri",
     "lte": "Pienempi tai yhtä suuri",
     "range": "Alue",
-    "exists": "On olemassa"
+    "exists": "On olemassa",
+    "hasAny": "Sisältää vähintään yhden",
+    "hasAll": "Sisältää kaikki"
   },
   "filterLabels": {
     "operator": "Operaattori",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Jätä tyhjäksi, jos ei ylärajaa",
     "valuePlaceholder": "Syötä arvo",
     "hasValue": "On arvo (ei tyhjä)",
-    "noValue": "Ei arvoa (tyhjä)"
+    "noValue": "Ei arvoa (tyhjä)",
+    "values": "Arvot",
+    "multiValuePlaceholder": "esim. ID1,ID2,ID3",
+    "multiValueHint": "Pilkuilla erotettu ID-luettelo"
   }
 }

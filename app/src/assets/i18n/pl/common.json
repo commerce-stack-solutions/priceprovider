@@ -289,7 +289,9 @@
     "gte": "Większy lub równy",
     "lte": "Mniejszy lub równy",
     "range": "Zakres",
-    "exists": "Istnieje"
+    "exists": "Istnieje",
+    "hasAny": "Ma przynajmniej jeden z",
+    "hasAll": "Ma wszystkie z"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Pozostaw puste, aby nie ustawiać górnego limitu",
     "valuePlaceholder": "Wprowadź wartość",
     "hasValue": "Ma wartość (niepuste)",
-    "noValue": "Brak wartości (puste)"
+    "noValue": "Brak wartości (puste)",
+    "values": "Wartości",
+    "multiValuePlaceholder": "np. ID1,ID2,ID3",
+    "multiValueHint": "Lista ID oddzielona przecinkami"
   }
 }

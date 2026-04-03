@@ -289,7 +289,9 @@
     "gte": "Større end eller lig med",
     "lte": "Mindre end eller lig med",
     "range": "Interval",
-    "exists": "Findes"
+    "exists": "Findes",
+    "hasAny": "Har mindst ét af",
+    "hasAll": "Har alle af"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Lad stå tomt for ingen øvre grænse",
     "valuePlaceholder": "Indtast værdi",
     "hasValue": "Har værdi (ikke tom)",
-    "noValue": "Ingen værdi (tom)"
+    "noValue": "Ingen værdi (tom)",
+    "values": "Værdier",
+    "multiValuePlaceholder": "f.eks. ID1,ID2,ID3",
+    "multiValueHint": "Kommasepareret liste af ID'er"
   }
 }

@@ -289,7 +289,9 @@
     "gte": "Supérieur ou égal à",
     "lte": "Inférieur ou égal à",
     "range": "Plage",
-    "exists": "Existe"
+    "exists": "Existe",
+    "hasAny": "A au moins un de",
+    "hasAll": "A tous les"
   },
   "filterLabels": {
     "operator": "Opérateur",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Laisser vide pour aucune limite supérieure",
     "valuePlaceholder": "Saisir une valeur",
     "hasValue": "A une valeur (non vide)",
-    "noValue": "Aucune valeur (vide)"
+    "noValue": "Aucune valeur (vide)",
+    "values": "Valeurs",
+    "multiValuePlaceholder": "ex. ID1,ID2,ID3",
+    "multiValueHint": "Liste d'IDs séparés par des virgules"
   }
 }

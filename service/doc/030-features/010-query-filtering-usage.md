@@ -4,7 +4,7 @@ This document explains how to use the query filtering feature in the Price Provi
 
 ## Overview
 
-All list API endpoints support advanced filtering using a Lucene-like query syntax via the `q` parameter. This allows you to filter results by any entity field using simple or complex queries.
+All list API endpoints support advanced filtering using a **Lucene-inspired** query syntax via the `q` parameter. The notation is deliberately optimized for **readable URL queries**: it avoids characters that require URI-percent-encoding as much as possible (no `+`, `%`, `"`, `{}` etc.), so filters remain legible in browser address bars, server logs, and Postman.
 
 ## Basic Syntax
 
@@ -69,6 +69,46 @@ GET /api/organizations?q=parentRefs.exists:false
 GET /api/pricerows?q=groupRefs.exists:true
 ```
 
+## Collection Membership Operators
+
+For collection-valued reference fields (Many-to-Many / One-to-Many associations), two membership operators allow filtering by specific referenced IDs.
+
+### `hasAny` – at least one match (OR semantics)
+
+Returns entities whose collection contains **at least one** of the listed IDs:
+
+```
+GET /api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP)
+GET /api/channels?q=allowedCountryRefs.hasAny:(DE,AT,CH)
+```
+
+### `hasAll` – all must match (AND semantics)
+
+Returns entities whose collection contains **all** of the listed IDs:
+
+```
+GET /api/pricerows?q=groupRefs.hasAll:(PREMIUM,VIP)
+GET /api/channels?q=allowedCountryRefs.hasAll:(DE,AT)
+```
+
+### Syntax rules
+
+- Values are wrapped in parentheses and separated by commas: `field.hasAny:(ID1,ID2,ID3)`
+- Whitespace around commas is trimmed: `(ID1, ID2)` is equivalent to `(ID1,ID2)`
+- Values are case-sensitive
+- The list must contain at least one non-empty value; an empty list `()` returns HTTP 400
+
+### Combining with other operators
+
+These operators compose freely with `AND`, `OR`, `NOT` and parenthesised groupings:
+
+```
+GET /api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP) AND taxIncluded:true
+GET /api/pricerows?q=groupRefs.hasAll:(PREMIUM,VIP) AND priceValue:<100
+GET /api/pricerows?q=NOT groupRefs.hasAll:(PREMIUM,VIP)
+GET /api/channels?q=allowedCountryRefs.hasAny:(DE,AT,CH) AND priceRepresentationMode:FORCE_GROSS
+```
+
 ## Logical Operators
 
 ### AND Operator
@@ -119,7 +159,7 @@ GET /api/groups?q=(subRefs.exists:true OR parentRefs.exists:true) AND name.exist
 | **Number** | equals, >, <, >=, <=, range, exists | `price:100`, `price:>50`, `price:[10 TO 100]` |
 | **Date/DateTime** | equals, >, <, >=, <=, range, exists | `validFrom:[2024-01-01T00:00:00Z TO 2024-12-31T23:59:59Z]` |
 | **Reference (Single)** | equals, exists | `baseUnit:kg`, `baseUnit.exists:true` |
-| **Reference (Collection)** | contains, exists | `groups.exists:true`, `subs.exists:false` |
+| **Reference (Collection)** | hasAny, hasAll, exists | `groupRefs.hasAny:(A,B)`, `groupRefs.hasAll:(A,B)`, `groupRefs.exists:true` |
 
 
 ## Combining with Other Parameters
@@ -182,6 +222,19 @@ GET /api/pricerows?q=currency:EUR AND taxIncluded:true
 GET /api/pricerows?q=priceValue:>50 AND currency:EUR AND taxIncluded:true
 GET /api/pricerows?q=unitRef.exists:true AND currencyRef.exists:true
 GET /api/pricerows?q=groupRefs.exists:true AND priceValue:<100
+GET /api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP)
+GET /api/pricerows?q=groupRefs.hasAll:(PREMIUM,VIP)
+GET /api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP) AND taxIncluded:true
+GET /api/pricerows?q=NOT groupRefs.hasAll:(PREMIUM,VIP)
+```
+
+### Channels
+
+```
+GET /api/channels?q=allowedCountryRefs.exists:true
+GET /api/channels?q=allowedCountryRefs.hasAny:(DE,AT,CH)
+GET /api/channels?q=allowedCountryRefs.hasAll:(DE,AT)
+GET /api/channels?q=allowedCountryRefs.hasAny:(DE,AT) AND priceRepresentationMode:FORCE_GROSS
 ```
 
 ### Groups
@@ -205,18 +258,24 @@ GET /api/organizations?q=parentRefs.exists:false
 
 ## URL Encoding
 
-Special characters in query strings must be URL-encoded:
+The query syntax is designed to minimise the need for percent-encoding. Most queries can be used directly in a browser address bar or as a plain URL parameter value.  Characters that *do* require encoding in strict RFC 3986 compliance:
 
-- Space: `%20`
-- Colon: `%3A`
-- Plus: `%2B`
-- Parenthesis: `(` = `%28`, `)` = `%29`
-- Brackets: `[` = `%5B`, `]` = `%5D`
+- Space: `%20` (required in AND/OR/range expressions with spaces)
+- Brackets: `[` = `%5B`, `]` = `%5D` (required in range expressions)
 
-Example:
+Characters that do **not** require encoding and can be used literally:
+
+- Colon `:`, parentheses `()`, comma `,`, asterisk `*`, comparison operators `<>>=<=`, dot `.`, hyphen `-`, underscore `_`
+
+Example – raw vs encoded:
 ```
-Raw query: active:true AND name:*test*
-Encoded:   active%3Atrue%20AND%20name%3A*test*
+Raw query: priceValue:[10 TO 100] AND taxIncluded:true
+Encoded:   priceValue:%5B10%20TO%20100%5D%20AND%20taxIncluded:true
+```
+
+Spaces inside `hasAny`/`hasAll` value lists are not needed; use compact comma-separated IDs to avoid encoding:
+```
+Raw (compact, no encoding needed): groupRefs.hasAny:(PREMIUM,VIP)
 ```
 
 ## Error Handling
@@ -238,13 +297,15 @@ Common errors:
 - Invalid syntax
 - Malformed range expression
 - Unclosed parentheses
+- Empty value list in `hasAny`/`hasAll`
+- `hasAny`/`hasAll` applied to a non-collection field
 
 ## Best Practices
 
 1. **Start simple**: Test with basic queries before building complex ones
 2. **Use parentheses**: Group conditions clearly to avoid ambiguity
 3. **Check field names**: Refer to API documentation for exact field names
-4. **URL encode**: Always encode special characters in query parameters
+4. **Avoid unnecessary encoding**: Use compact IDs in `hasAny`/`hasAll` lists to keep URLs readable
 5. **Test in Postman**: Use the provided Postman collection for examples
 6. **Combine wisely**: Use with pagination and sorting for optimal results
 
@@ -257,11 +318,13 @@ Common errors:
 
 ### Collections and operator limitations
 
-The query filtering implementation differentiates between single-valued references (e.g. `unitRef`, `currencyRef`, `baseUnitRef`) and collection-valued references (e.g. `subRefs`, `parentRefs`, `groupRefs`). Collection-valued paths have a constrained, deliberate operator set to avoid ambiguous semantics and to keep predicates efficient.
+The query filtering implementation differentiates between single-valued references (e.g. `unitRef`, `currencyRef`, `baseUnitRef`) and collection-valued references (e.g. `subRefs`, `parentRefs`, `groupRefs`, `allowedCountryRefs`). Collection-valued paths have a constrained, deliberate operator set to avoid ambiguous semantics and to keep predicates efficient.
 
 - Supported operators on collection-valued fields:
   - `.exists:true` — matches entities where the collection is not empty
   - `.exists:false` — matches entities where the collection is empty
+  - `.hasAny:(id1,id2,...)` — matches entities whose collection contains **at least one** of the listed IDs
+  - `.hasAll:(id1,id2,...)` — matches entities whose collection contains **all** of the listed IDs
 
 - Operators not supported on collections (these will produce an error):
   - Comparison operators: `>`, `<`, `>=`, `<=`

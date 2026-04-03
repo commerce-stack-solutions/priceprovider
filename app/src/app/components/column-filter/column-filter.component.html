@@ -1,5 +1,6 @@
 <div class="column-filter-wrapper">
   <button 
+    #filterToggleBtn
     type="button" 
     class="btn btn-sm filter-toggle"
     [class.active]="hasActiveFilter()"
@@ -9,7 +10,10 @@
   </button>
   
   @if (isOpen()) {
-    <div class="filter-popover" (click)="$event.stopPropagation()">
+    <div class="filter-popover"
+         [style.top.px]="popoverTop()"
+         [style.left.px]="popoverLeft()"
+         (click)="$event.stopPropagation()">
       <div class="filter-popover-header">
         <h6 class="mb-0">{{ config().label }}</h6>
         <button type="button" class="btn-close btn-sm" (click)="closePopover()" [attr.aria-label]="'common.actions.close' | transloco"></button>
@@ -47,6 +51,18 @@
                 [(ngModel)]="filterValueTo"
                 (ngModelChange)="filterValueTo.set($event)"
                 [placeholder]="'common.filterLabels.toPlaceholder' | transloco">
+            </div>
+          } @else if (isMultiValueOperator()) {
+            <!-- Multi-value input for hasAny / hasAll -->
+            <div class="mb-3">
+              <label class="form-label">{{ 'common.filterLabels.values' | transloco }}</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                [(ngModel)]="filterValue"
+                (ngModelChange)="filterValue.set($event)"
+                [placeholder]="'common.filterLabels.multiValuePlaceholder' | transloco">
+              <div class="form-text">{{ 'common.filterLabels.multiValueHint' | transloco }}</div>
             </div>
           } @else {
             <!-- Single value input -->

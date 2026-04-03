@@ -87,8 +87,10 @@ public class QueryParser {
     private String sanitize(String input) {
         // Remove potentially dangerous characters while keeping query syntax
         // Allow: Unicode letters/numbers, spaces, :, *, [, ], (, ), -, _, ., T, Z (for ISO dates), <, >, = and currency symbols
+        // Also allow , (comma) for hasAny/hasAll value lists like (A,B,C)
+        // Also allow / (forward slash) as it is a valid character in entity IDs (e.g. DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)
         // \p{L} = any letter, \p{N} = any number, \p{Sc} = currency symbols
-        return input.replaceAll("[^\\p{L}\\p{N}\\s:\\*\\[\\]\\(\\)\\-_.TZ<>=\\p{Sc}]", "");
+        return input.replaceAll("[^\\p{L}\\p{N}\\s:\\*\\[\\]\\(\\)\\-_.TZ<>=\\p{Sc},/]", "");
     }
     
     /**
@@ -168,9 +170,30 @@ public class QueryParser {
         
         // Extract the field:value portion
         int start = position;
+        int parenDepth = 0;    // tracks open parens that appear after ':' (value lists)
+        boolean seenColon = false;
+
         while (position < query.length()) {
             char c = query.charAt(position);
-            if (c == ' ' && !isInsideRange()) {
+
+            if (c == ':') {
+                seenColon = true;
+            } else if (c == '(' && seenColon) {
+                // Opening paren after colon = start of a value list like (A,B,C)
+                parenDepth++;
+            } else if (c == ')') {
+                if (parenDepth > 0) {
+                    // Closing paren of a value list – consume it and continue
+                    parenDepth--;
+                    position++;
+                    continue;
+                } else if (!isInsideRange()) {
+                    // Closing paren of a grouping expression – stop here
+                    break;
+                }
+            }
+
+            if (c == ' ' && !isInsideRange() && parenDepth == 0) {
                 // Check if next word is AND or OR
                 int lookahead = position + 1;
                 while (lookahead < query.length() && query.charAt(lookahead) == ' ') {
@@ -180,9 +203,6 @@ public class QueryParser {
                 if ("AND".equals(nextWord) || "OR".equals(nextWord) || ")".equals(nextWord)) {
                     break;
                 }
-            }
-            if (c == ')' && !isInsideRange()) {
-                break;
             }
             position++;
         }
@@ -237,6 +257,34 @@ public class QueryParser {
             return new QueryFilter(actualField, 
                 exists ? QueryFilter.FilterOperator.EXISTS : QueryFilter.FilterOperator.NOT_EXISTS, 
                 null);
+        }
+
+        // Check for collection membership queries (field.hasAny:(v1,v2) / field.hasAll:(v1,v2))
+        if (field.endsWith(".hasAny") || field.endsWith(".hasAll")) {
+            boolean isHasAll = field.endsWith(".hasAll");
+            String actualField = field.substring(0, field.length() - 7); // ".hasAny" and ".hasAll" are both 7 chars
+
+            if (!valueStr.startsWith("(") || !valueStr.endsWith(")")) {
+                throw new QueryParseException(MessageKeys.ERROR_QUERY_SYNTAX, Collections.singletonMap("filter", filterStr));
+            }
+            String inner = valueStr.substring(1, valueStr.length() - 1).trim();
+            if (inner.isEmpty()) {
+                throw new QueryParseException(MessageKeys.ERROR_QUERY_SYNTAX, Collections.singletonMap("filter", filterStr));
+            }
+            String[] parts = inner.split(",");
+            java.util.List<String> valueList = new java.util.ArrayList<>();
+            for (String part : parts) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty()) {
+                    valueList.add(trimmed);
+                }
+            }
+            if (valueList.isEmpty()) {
+                throw new QueryParseException(MessageKeys.ERROR_QUERY_SYNTAX, Collections.singletonMap("filter", filterStr));
+            }
+            return new QueryFilter(actualField,
+                isHasAll ? QueryFilter.FilterOperator.HAS_ALL : QueryFilter.FilterOperator.HAS_ANY,
+                valueList);
         }
         
         // Check for range query [min TO max]

@@ -291,7 +291,9 @@
     "gte": "Größer oder gleich",
     "lte": "Kleiner oder gleich",
     "range": "Bereich",
-    "exists": "Vorhanden"
+    "exists": "Vorhanden",
+    "hasAny": "Hat mindestens eines von",
+    "hasAll": "Hat alle von"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -302,6 +304,9 @@
     "toPlaceholder": "Leer lassen für keine Obergrenze",
     "valuePlaceholder": "Wert eingeben",
     "hasValue": "Hat Wert (nicht leer)",
-    "noValue": "Kein Wert (leer)"
+    "noValue": "Kein Wert (leer)",
+    "values": "Werte",
+    "multiValuePlaceholder": "z.B. ID1,ID2,ID3",
+    "multiValueHint": "Kommagetrennte Liste von IDs"
   }
 }

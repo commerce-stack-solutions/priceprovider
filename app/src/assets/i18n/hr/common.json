@@ -289,7 +289,9 @@
     "gte": "Veće ili jednako",
     "lte": "Manje ili jednako",
     "range": "Raspon",
-    "exists": "Postoji"
+    "exists": "Postoji",
+    "hasAny": "Ima barem jedan od",
+    "hasAll": "Ima sve od"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Ostavite prazno za bez gornje granice",
     "valuePlaceholder": "Unesite vrijednost",
     "hasValue": "Ima vrijednost (nije prazno)",
-    "noValue": "Nema vrijednosti (prazno)"
+    "noValue": "Nema vrijednosti (prazno)",
+    "values": "Vrijednosti",
+    "multiValuePlaceholder": "npr. ID1,ID2,ID3",
+    "multiValueHint": "Zarezom odvojena lista ID-ova"
   }
 }

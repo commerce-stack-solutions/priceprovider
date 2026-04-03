@@ -289,7 +289,9 @@
     "gte": "Større enn eller lik",
     "lte": "Mindre enn eller lik",
     "range": "Område",
-    "exists": "Eksisterer"
+    "exists": "Eksisterer",
+    "hasAny": "Har minst én av",
+    "hasAll": "Har alle av"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -300,6 +302,9 @@
     "toPlaceholder": "La stå tom for ingen øvre grense",
     "valuePlaceholder": "Skriv inn verdi",
     "hasValue": "Har verdi (ikke tom)",
-    "noValue": "Ingen verdi (tom)"
+    "noValue": "Ingen verdi (tom)",
+    "values": "Verdier",
+    "multiValuePlaceholder": "f.eks. ID1,ID2,ID3",
+    "multiValueHint": "Kommaseparert liste med IDer"
   }
 }

@@ -289,7 +289,9 @@
     "gte": "Större än eller lika med",
     "lte": "Mindre än eller lika med",
     "range": "Intervall",
-    "exists": "Finns"
+    "exists": "Finns",
+    "hasAny": "Har minst en av",
+    "hasAll": "Har alla av"
   },
   "filterLabels": {
     "operator": "Operator",
@@ -300,6 +302,9 @@
     "toPlaceholder": "Lämna tomt för ingen övre gräns",
     "valuePlaceholder": "Ange värde",
     "hasValue": "Har värde (inte tomt)",
-    "noValue": "Inget värde (tomt)"
+    "noValue": "Inget värde (tomt)",
+    "values": "Värden",
+    "multiValuePlaceholder": "t.ex. ID1,ID2,ID3",
+    "multiValueHint": "Kommaseparerad lista med ID:n"
   }
 }
