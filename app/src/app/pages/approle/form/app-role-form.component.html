@@ -29,21 +29,21 @@
       <div class="card">
         <div class="card-body">
           <div class="mb-3">
-            <label class="form-label">{{ 'common.fields.id' | transloco }} @if ('id' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <label class="form-label">{{ 'common.fields.name' | transloco }} @if ('name' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
             <input
               type="text"
               class="form-control"
-              id="id"
-              formControlName="id"
-              [class.is-invalid]="form.get('id')?.invalid && form.get('id')?.touched || hasFieldError('id')"
+              id="name"
+              formControlName="name"
+              [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched || hasFieldError('name')"
             >
-            @if (form.get('id')?.invalid && form.get('id')?.touched) {
+            @if (form.get('name')?.invalid && form.get('name')?.touched) {
               <div class="invalid-feedback d-block">
                 {{ 'common.messages.idRequired' | transloco }}
               </div>
             }
-            @if (hasFieldError('id')) {
-              @for (error of getFieldErrors('id'); track error) {
+            @if (hasFieldError('name')) {
+              @for (error of getFieldErrors('name'); track error) {
                 <div class="invalid-feedback d-block">{{ error }}</div>
               }
             }

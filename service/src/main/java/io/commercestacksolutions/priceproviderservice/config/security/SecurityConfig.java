@@ -109,25 +109,28 @@ public class SecurityConfig {
         // Register both roles AND their permissions as Spring Security authorities
         return roles.stream()
                 .flatMap(role -> {
-                    // The role id itself (e.g., "priceprovider.admin:Admin")
-                    String roleId = role.getId();
-                    String normalizedRoleId = normalizeId(roleId);
+                    // The role name (e.g., "priceprovider.admin:Admin") is used as authority
+                    String roleName = role.getName();
+                    String normalizedRoleName = normalizeId(roleName);
                     java.util.stream.Stream<SimpleGrantedAuthority> roleAuthorities;
-                    if (!normalizedRoleId.equals(roleId)) {
+                    if (roleName != null && !normalizedRoleName.equals(roleName)) {
                         // register both original and normalized authority for compatibility
                         roleAuthorities = java.util.stream.Stream.of(
-                                new SimpleGrantedAuthority(roleId),
-                                new SimpleGrantedAuthority(normalizedRoleId)
+                                new SimpleGrantedAuthority(roleName),
+                                new SimpleGrantedAuthority(normalizedRoleName)
                         );
+                    } else if (roleName != null) {
+                        roleAuthorities = java.util.stream.Stream.of(new SimpleGrantedAuthority(roleName));
                     } else {
-                        roleAuthorities = java.util.stream.Stream.of(new SimpleGrantedAuthority(roleId));
+                        roleAuthorities = java.util.stream.Stream.empty();
                     }
 
                     // All permissions granted by this role
                     java.util.stream.Stream<SimpleGrantedAuthority> permissionAuthorities =
                             role.getPermissionRefs().stream()
                                     .flatMap(p -> {
-                                        String pid = p.getId();
+                                        String pid = p.getName();
+                                        if (pid == null) return java.util.stream.Stream.empty();
                                         String npid = normalizeId(pid);
                                         if (!npid.equals(pid)) {
                                             return java.util.stream.Stream.of(

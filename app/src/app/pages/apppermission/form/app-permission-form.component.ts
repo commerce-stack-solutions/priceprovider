@@ -51,7 +51,7 @@ export class AppPermissionFormComponent implements OnInit {
   loading = signal(true);
   saving = signal(false);
   error = signal<string | null>(null);
-  id = signal<string | null>(null);
+  id = signal<number | null>(null);
   fieldErrors = signal<Map<string, string[]>>(new Map());
   originalValues = signal<any>({});
   showSaveKeyHint = signal(false);
@@ -64,28 +64,29 @@ export class AppPermissionFormComponent implements OnInit {
       this.initForm();
       this.loading.set(false);
       if (this.config?.initialValue) {
-        this.form.patchValue({ id: this.config.initialValue });
+        this.form.patchValue({ name: this.config.initialValue });
       }
       return;
     }
 
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.isEditMode.set(!!idParam);
-    this.id.set(idParam);
+    const numericId = idParam ? parseInt(idParam, 10) : null;
+    this.isEditMode.set(!!numericId);
+    this.id.set(numericId);
 
     if (!this.permissionService.hasWritePermission('AppPermission')) {
-      if (idParam) {
-        this.router.navigate(['/' + this.lang(), 'app-permissions', idParam]);
+      if (numericId) {
+        this.router.navigate(['/' + this.lang(), 'app-permissions', numericId]);
       } else {
         this.router.navigate(['/' + this.lang(), 'app-permissions']);
       }
       return;
     }
 
-    this.initFormAndLoadData(idParam);
+    this.initFormAndLoadData(numericId);
   }
 
-  private initFormAndLoadData(id: string | null): void {
+  private initFormAndLoadData(id: number | null): void {
     this.initForm();
     if (this.isEditMode()) {
       this.loadPermission(id!);
@@ -102,18 +103,18 @@ export class AppPermissionFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      id: [{ value: '', disabled: this.isEditMode() }, [Validators.required]],
+      name: [{ value: '', disabled: this.isEditMode() }, [Validators.required]],
       description: ['']
     });
   }
 
-  loadPermission(id: string): void {
+  loadPermission(id: number): void {
     this.loading.set(true);
     this.error.set(null);
     this.appPermissionsService.getAppPermission(id).subscribe({
       next: (permission: AppPermission) => {
         const patchData: any = {
-          id: permission.id,
+          name: permission.name,
           description: permission.description || ''
         };
         this.form.patchValue(patchData);
@@ -192,8 +193,8 @@ export class AppPermissionFormComponent implements OnInit {
         }
       });
     } else {
-      const permission: AppPermission = {
-        id: formValue.id,
+      const permission: Partial<AppPermission> = {
+        name: formValue.name,
         description: formValue.description
       };
 

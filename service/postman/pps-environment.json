@@ -55,6 +55,18 @@
       "value": "",
       "type": "secret",
       "enabled": true
+    },
+    {
+      "key": "appRoleId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "appPermissionId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
     }
   ]
 }

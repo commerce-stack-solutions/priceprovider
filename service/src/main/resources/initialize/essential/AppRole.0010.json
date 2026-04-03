@@ -1,6 +1,6 @@
 [
   {
-    "id": "priceprovider.admin:Superuser",
+    "name": "priceprovider.admin:Superuser",
     "description": "All permissions including AppPermission management",
     "permissionRefs": [
       "priceprovider.admin:AppPermission:read", "priceprovider.admin:AppPermission:write", "priceprovider.admin:AppPermission:delete",
@@ -19,7 +19,7 @@
     ]
   },
   {
-    "id": "priceprovider.admin:Admin",
+    "name": "priceprovider.admin:Admin",
     "description": "Full admin access",
     "permissionRefs": [
       "priceprovider.admin:AppPermission:read",
@@ -37,7 +37,7 @@
     ]
   },
   {
-    "id": "priceprovider.admin:Contributor",
+    "name": "priceprovider.admin:Contributor",
     "description": "Read and write access to all admin data",
     "permissionRefs": [
       "priceprovider.admin:AppPermission:read","priceprovider.admin:AppRole:read",
@@ -53,7 +53,7 @@
     ]
   },
   {
-    "id": "priceprovider.admin:Reader",
+    "name": "priceprovider.admin:Reader",
     "description": "Read-only access to all admin data",
     "permissionRefs": [
       "priceprovider.admin:AppPermission:read","priceprovider.admin:AppRole:read",
@@ -69,7 +69,7 @@
     ]
   },
   {
-    "id": "priceprovider.admin:ChannelContributor",
+    "name": "priceprovider.admin:ChannelContributor",
     "description": "Read, write, and delete access to channels only",
     "permissionRefs": [
       "priceprovider.admin:AppPermission:read","priceprovider.admin:AppRole:read",
@@ -87,7 +87,7 @@
     ]
   },
   {
-    "id": "priceprovider.public:PriceRowReader",
+    "name": "priceprovider.public:PriceRowReader",
     "description": "Public price row reader - organization-scoped price access",
     "permissionRefs": [
       "priceprovider.public:PriceRow:read"

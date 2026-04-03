@@ -4,6 +4,8 @@ import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaInfoBuilder;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
@@ -47,6 +49,8 @@ public class MetaInfoRegistryConfig {
 
     @PostConstruct
     public void registerEntityMetaInfos() {
+        entityMetaInfoRegistry.register(AppPermissionEntity.class, build(AppPermissionEntity.class));
+        entityMetaInfoRegistry.register(AppRoleEntity.class,       build(AppRoleEntity.class));
         entityMetaInfoRegistry.register(GroupEntity.class,        build(GroupEntity.class));
         entityMetaInfoRegistry.register(OrganizationEntity.class, build(OrganizationEntity.class));
         entityMetaInfoRegistry.register(UnitEntity.class,         build(UnitEntity.class));

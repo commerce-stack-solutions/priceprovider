@@ -66,8 +66,8 @@ export class PermissionService {
     }
 
     this.loading.set(true);
-    const roleRequests = roles.map(roleId =>
-      this.appRolesService.getAppRole(roleId).pipe(
+    const roleRequests = roles.map(roleName =>
+      this.appRolesService.getAppRoleByName(roleName).pipe(
         map(role => role.permissionRefs ?? []),
         catchError(() => of([] as string[]))
       )

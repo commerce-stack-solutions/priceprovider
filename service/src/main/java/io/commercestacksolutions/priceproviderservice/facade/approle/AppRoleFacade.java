@@ -17,12 +17,13 @@ import java.util.Set;
 
 public interface AppRoleFacade {
     AppRoleListRestEntity getAppRoles(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException;
-    AppRoleRestEntity getAppRole(String id, Set<String> expand) throws NotFoundException, DataMappingException;
+    AppRoleRestEntity getAppRole(Long id, Set<String> expand) throws NotFoundException, DataMappingException;
+    AppRoleRestEntity getAppRoleByName(String name, Set<String> expand) throws NotFoundException, DataMappingException;
     MetaInfo getMeta();
-    AppRoleRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
-    AppRoleRestEntity createOrRecreate(String id, AppRoleRestEntity restEntity) throws DataMappingException, EntityValidationException;
+    AppRoleRestEntity patch(Long id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
+    AppRoleRestEntity createOrRecreate(Long id, AppRoleRestEntity restEntity) throws DataMappingException, EntityValidationException, NotFoundException;
     AppRoleRestEntity create(AppRoleRestEntity restEntity) throws DataMappingException, EntityValidationException, EntityAlreadyExistsException;
-    void delete(String id) throws NotFoundException;
-    void bulkDeleteAppRoles(List<String> ids) throws DataIntegrityException;
+    void delete(Long id) throws NotFoundException;
+    void bulkDeleteAppRoles(List<Long> ids) throws DataIntegrityException;
     AppRoleListRestEntity createOrUpdateAllAppRoles(List<AppRoleRestEntity> restEntities);
 }

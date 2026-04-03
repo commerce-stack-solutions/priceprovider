@@ -18,6 +18,7 @@ public class AppPermissionRestEntityMapper extends AbstractMapper<AppPermissionE
     @Override
     public void convert(AppPermissionEntity source, AppPermissionRestEntity target, RestResponseMappingContext context) {
         target.setId(source.getId());
+        target.setName(source.getName());
         target.setDescription(source.getDescription());
 
         if (context.shouldExpand("$info")) {

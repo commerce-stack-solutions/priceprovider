@@ -50,22 +50,22 @@ export class AppRoleFormComponent implements OnInit {
   saving = signal(false);
   error = signal<string | null>(null);
   successMessage = signal<string | null>(null);
-  id = signal<string | null>(null);
+  id = signal<number | null>(null);
   fieldErrors = signal<Map<string, string[]>>(new Map());
   originalValues = signal<any>({});
   showSaveKeyHint = signal(false);
   meta = signal<MetaInfo | null>(null);
 
-  // Data source for app permissions reference-list-edit
+  // Data source for app permissions reference-list-edit (uses permission name as value)
   permissionsDataSource = (searchTerm: string, page: number): Observable<ReferenceDataSourceResult> => {
     const pageSize = 10;
-    const query = searchTerm ? `id:*${searchTerm}* OR description:*${searchTerm}*` : undefined;
+    const query = searchTerm ? `name:*${searchTerm}* OR description:*${searchTerm}*` : undefined;
 
     return this.appPermissionsService.getAppPermissions(page, pageSize, undefined, undefined, undefined, query).pipe(
       map(response => {
         const filtered = response.items.map((p: AppPermission) => ({
-          value: p.id,
-          label: p.description ? `${p.id} - ${p.description}` : p.id
+          value: p.name,
+          label: p.description ? `${p.name} - ${p.description}` : p.name
         }));
 
         const paging = response.$info && typeof response.$info === 'object' && 'paging' in response.$info
@@ -85,25 +85,26 @@ export class AppRoleFormComponent implements OnInit {
       this.initForm();
       this.loading.set(false);
       if (this.config?.initialValue) {
-        this.form.patchValue({ id: this.config.initialValue });
+        this.form.patchValue({ name: this.config.initialValue });
       }
     } else {
       const idParam = this.route.snapshot.paramMap.get('id');
-      this.isEditMode.set(!!idParam);
-      this.id.set(idParam);
+      const numericId = idParam ? parseInt(idParam, 10) : null;
+      this.isEditMode.set(!!numericId);
+      this.id.set(numericId);
       if (!this.permissionService.hasWritePermission('AppRole')) {
-        if (idParam) {
-          this.router.navigate(['/' + this.lang(), 'app-roles', idParam]);
+        if (numericId) {
+          this.router.navigate(['/' + this.lang(), 'app-roles', numericId]);
         } else {
           this.router.navigate(['/' + this.lang(), 'app-roles']);
         }
         return;
       }
-      this.initFormAndLoadData(idParam);
+      this.initFormAndLoadData(numericId);
     }
   }
 
-  private initFormAndLoadData(id: string | null): void {
+  private initFormAndLoadData(id: number | null): void {
     this.initForm();
     if (this.isEditMode()) {
       this.loadRole(id!);
@@ -120,13 +121,13 @@ export class AppRoleFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      id: [{ value: '', disabled: this.isEditMode() }, Validators.required],
+      name: [{ value: '', disabled: this.isEditMode() }, Validators.required],
       description: [''],
       permissionRefs: [[]]
     });
   }
 
-  loadRole(id: string): void {
+  loadRole(id: number): void {
     this.loading.set(true);
     this.error.set(null);
     this.appRolesService.getAppRole(id).subscribe({
@@ -135,7 +136,7 @@ export class AppRoleFormComponent implements OnInit {
           this.meta.set(role.$meta);
         }
         const patchData: any = {
-          id: role.id,
+          name: role.name,
           description: role.description || '',
           permissionRefs: role.permissionRefs || []
         };
@@ -218,8 +219,8 @@ export class AppRoleFormComponent implements OnInit {
         }
       });
     } else {
-      const role: AppRole = {
-        id: formValue.id,
+      const role: Partial<AppRole> = {
+        name: formValue.name,
         description: formValue.description,
         permissionRefs: formValue.permissionRefs || []
       };

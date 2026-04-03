@@ -1,7 +1,8 @@
 import { MetaInfo } from '../meta-info.model';
 
 export interface AppPermission {
-  id: string;
+  id: number;
+  name: string;
   description?: string;
   $info?: { [key: string]: any };
   $meta?: MetaInfo;

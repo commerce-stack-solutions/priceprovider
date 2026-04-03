@@ -13,8 +13,9 @@ import java.util.Optional;
 public interface AppPermissionService extends EntityService<AppPermissionEntity> {
     List<AppPermissionEntity> getAllAppPermissions();
     Page<AppPermissionEntity> getAppPermissions(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
-    Optional<AppPermissionEntity> getAppPermissionById(String id);
-    AppPermissionEntity getAppPermission(String id);
+    Optional<AppPermissionEntity> getAppPermissionById(Long id);
+    AppPermissionEntity getAppPermission(Long id);
+    Optional<AppPermissionEntity> getAppPermissionByName(String name);
     AppPermissionEntity updateAppPermission(AppPermissionEntity entity) throws EntityValidationException;
-    void deleteAppPermission(String id);
+    void deleteAppPermission(Long id);
 }

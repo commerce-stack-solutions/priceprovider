@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
+import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -18,7 +19,12 @@ import java.util.Set;
 public class AppRoleEntity implements AuditableEntity {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @MetaMandatoryField
+    @Column(unique = true, nullable = false)
+    private String name;
 
     private String description;
 
@@ -38,16 +44,20 @@ public class AppRoleEntity implements AuditableEntity {
     public AppRoleEntity() {
     }
 
-    public AppRoleEntity(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -89,7 +99,8 @@ public class AppRoleEntity implements AuditableEntity {
     @Override
     public String toString() {
         return "AppRoleEntity{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 ", lastModifiedAt=" + lastModifiedAt +

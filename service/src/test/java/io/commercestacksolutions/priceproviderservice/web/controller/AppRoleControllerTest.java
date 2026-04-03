@@ -37,13 +37,13 @@ public class AppRoleControllerTest {
     public void testBulkDeleteAppRoles_Success() throws Exception {
         mockMvc.perform(post("/admin/api/app-roles/bulk-delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("[\"priceprovider.admin:Admin\", \"priceprovider.admin:Reader\"]"))
+                        .content("[1, 2]"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    public void testCreate_MissingId_Returns400() throws Exception {
-        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "id"), List.of("id"));
+    public void testCreate_MissingName_Returns400() throws Exception {
+        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "name"), List.of("name"));
         when(appRoleFacade.create(any()))
                 .thenThrow(new EntityValidationException("common.errors.validation.idRequired", validationMessage));
 
@@ -54,22 +54,22 @@ public class AppRoleControllerTest {
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.idRequired"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("name"));
     }
 
     @Test
     public void testCreate_AlreadyExists_Returns409() throws Exception {
         when(appRoleFacade.create(any()))
-                .thenThrow(new EntityAlreadyExistsException("common.errors.appRole.alreadyExists", Map.of("id", "priceprovider.admin:Admin"), List.of("id")));
+                .thenThrow(new EntityAlreadyExistsException("common.errors.appRole.alreadyExists", Map.of("name", "priceprovider.admin:Admin"), List.of("name")));
 
         mockMvc.perform(post("/admin/api/app-roles/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"priceprovider.admin:Admin\",\"description\":\"Full admin access\"}"))
+                        .content("{\"name\":\"priceprovider.admin:Admin\",\"description\":\"Full admin access\"}"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.appRole.alreadyExists"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("name"));
     }
 }
 

@@ -13,8 +13,10 @@ import java.util.Optional;
 public interface AppRoleService extends EntityService<AppRoleEntity> {
     List<AppRoleEntity> getAllAppRoles();
     Page<AppRoleEntity> getAppRoles(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
-    Optional<AppRoleEntity> getAppRoleById(String id);
-    AppRoleEntity getAppRole(String id);
+    Optional<AppRoleEntity> getAppRoleById(Long id);
+    AppRoleEntity getAppRole(Long id);
+    Optional<AppRoleEntity> getAppRoleByName(String name);
+    AppRoleEntity getAppRoleWithPermissionsByName(String name);
     AppRoleEntity updateAppRole(AppRoleEntity entity) throws EntityValidationException;
-    void deleteAppRole(String id);
+    void deleteAppRole(Long id);
 }

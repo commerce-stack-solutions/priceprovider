@@ -4,5 +4,9 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface AppPermissionEntityRepository extends JpaRepository<AppPermissionEntity, String>, JpaSpecificationExecutor<AppPermissionEntity> {
+import java.util.Optional;
+
+public interface AppPermissionEntityRepository extends JpaRepository<AppPermissionEntity, Long>, JpaSpecificationExecutor<AppPermissionEntity> {
+
+    Optional<AppPermissionEntity> findByName(String name);
 }

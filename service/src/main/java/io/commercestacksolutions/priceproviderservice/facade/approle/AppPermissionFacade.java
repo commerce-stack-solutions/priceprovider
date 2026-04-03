@@ -17,12 +17,12 @@ import java.util.Set;
 
 public interface AppPermissionFacade {
     AppPermissionListRestEntity getAppPermissions(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException;
-    AppPermissionRestEntity getAppPermission(String id, Set<String> expand) throws NotFoundException, DataMappingException;
+    AppPermissionRestEntity getAppPermission(Long id, Set<String> expand) throws NotFoundException, DataMappingException;
     MetaInfo getMeta();
-    AppPermissionRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
-    AppPermissionRestEntity createOrRecreate(String id, AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException;
+    AppPermissionRestEntity patch(Long id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
+    AppPermissionRestEntity createOrRecreate(Long id, AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException, NotFoundException;
     AppPermissionRestEntity create(AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException, EntityAlreadyExistsException;
-    void delete(String id) throws NotFoundException;
-    void bulkDeleteAppPermissions(List<String> ids) throws DataIntegrityException;
+    void delete(Long id) throws NotFoundException;
+    void bulkDeleteAppPermissions(List<Long> ids) throws DataIntegrityException;
     AppPermissionListRestEntity createOrUpdateAllAppPermissions(List<AppPermissionRestEntity> restEntities);
 }

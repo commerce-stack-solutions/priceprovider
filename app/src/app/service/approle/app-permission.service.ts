@@ -37,8 +37,8 @@ export class AppPermissionsService {
     return this.http.get<AppPermissionList>(url, { params });
   }
 
-  getAppPermission(id: string, expand?: string): Observable<AppPermission> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  getAppPermission(id: number, expand?: string): Observable<AppPermission> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${id}`;
     let params = new HttpParams();
     if (expand) {
       params = params.set('$expand', expand);
@@ -53,34 +53,34 @@ export class AppPermissionsService {
     return this.http.get<MetaInfo>(url);
   }
 
-  createAppPermission(permission: AppPermission): Observable<AppPermission> {
+  createAppPermission(permission: Partial<AppPermission>): Observable<AppPermission> {
     const url = `${environment.apiBaseUrl}admin/api/app-permissions/create`;
     return this.http.post<AppPermission>(url, permission);
   }
 
-  updateAppPermission(id: string, permission: AppPermission): Observable<AppPermission> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  updateAppPermission(id: number, permission: Partial<AppPermission>): Observable<AppPermission> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${id}`;
     return this.http.put<AppPermission>(url, permission);
   }
 
-  patchAppPermission(id: string, patch: JsonPatchOperation[]): Observable<AppPermission> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  patchAppPermission(id: number, patch: JsonPatchOperation[]): Observable<AppPermission> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${id}`;
     return this.http.patch<AppPermission>(url, patch, {
       headers: { 'Content-Type': 'application/json-patch+json' }
     });
   }
 
-  deleteAppPermission(id: string): Observable<void> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  deleteAppPermission(id: number): Observable<void> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${id}`;
     return this.http.delete<void>(url);
   }
 
-  bulkDeleteAppPermissions(ids: string[]): Observable<void> {
+  bulkDeleteAppPermissions(ids: number[]): Observable<void> {
     const url = `${environment.apiBaseUrl}admin/api/app-permissions/bulk-delete`;
     return this.http.post<void>(url, ids);
   }
 
-  bulkCreateOrUpdateAppPermissions(permissions: AppPermission[]): Observable<AppPermission[]> {
+  bulkCreateOrUpdateAppPermissions(permissions: Partial<AppPermission>[]): Observable<AppPermission[]> {
     const url = `${environment.apiBaseUrl}admin/api/app-permissions/bulk-create-or-update`;
     return this.http.post<AppPermission[]>(url, permissions);
   }

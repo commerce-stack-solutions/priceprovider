@@ -38,12 +38,12 @@ export class AppPermissionsComponent {
   totalPages = signal(0);
   sortBy = signal<string[]>([]);
   sortDirection = signal<string>('asc');
-  selectedPermissions = signal<Set<string>>(new Set());
+  selectedPermissions = signal<Set<number>>(new Set());
   deleteError = signal<string | null>(null);
   activeFilters = signal<Map<string, FilterDefinition>>(new Map());
 
   filterConfigs: ColumnFilterConfig[] = [
-    { field: 'id', type: 'string', label: 'ID' },
+    { field: 'name', type: 'string', label: 'Name' },
     { field: 'description', type: 'string', label: 'Description' }
   ];
 
@@ -166,7 +166,7 @@ export class AppPermissionsComponent {
     return this.filterConfigs.find(c => c.field === field);
   }
 
-  toggleSelection(id: string): void {
+  toggleSelection(id: number): void {
     const selected = new Set(this.selectedPermissions());
     if (selected.has(id)) {
       selected.delete(id);
@@ -177,7 +177,7 @@ export class AppPermissionsComponent {
   }
 
   toggleAllSelection(checked: boolean): void {
-    const selected = new Set<string>();
+    const selected = new Set<number>();
     if (checked) {
       this.permissions().forEach(permission => selected.add(permission.id));
     }
@@ -204,7 +204,7 @@ export class AppPermissionsComponent {
       });
   }
 
-  deletePermission(id: string): void {
+  deletePermission(id: number): void {
     if (!this.canDelete()) return;
     const warning = this.transloco.translate('pages.appPermissions.deleteWarning', { id });
     if (!confirm(warning)) return;

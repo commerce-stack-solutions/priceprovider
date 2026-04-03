@@ -1,9 +1,9 @@
 package io.commercestacksolutions.priceproviderservice.service.approle.setup;
 
 import io.commercestacksolutions.commons.service.setup.AbstractSetupDataImporter;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.service.approle.AppRoleService;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,9 +43,8 @@ public class AppRoleDataImporter extends AbstractSetupDataImporter<AppRoleEntity
     }
 
     /**
-     * Custom import to avoid Jackson unresolved forward references for referenced permissions.
-     * Reads JSON array and constructs AppRoleEntity instances manually, creating placeholder
-     * AppPermissionEntity objects that only carry the id so JPA can persist the relation.
+     * Custom import that performs name-based upsert and resolves permission refs by name.
+     * Reads JSON array and constructs AppRoleEntity instances manually.
      */
     @Override
     protected void importFile(String filePath) {
@@ -68,13 +67,16 @@ public class AppRoleDataImporter extends AbstractSetupDataImporter<AppRoleEntity
             }
 
             for (JsonNode node : root) {
-                String id = node.hasNonNull("id") ? node.get("id").asText() : null;
-                if (id == null) {
-                    LOGGER.error("Skipping entity without id in file {}", filePath);
+                String name = node.hasNonNull("name") ? node.get("name").asText() : null;
+                if (name == null) {
+                    LOGGER.error("Skipping entity without name in file {}", filePath);
                     continue;
                 }
 
-                AppRoleEntity role = new AppRoleEntity(id);
+                AppRoleEntity role = appRoleService.getAppRoleByName(name)
+                        .orElseGet(AppRoleEntity::new);
+
+                role.setName(name);
                 if (node.hasNonNull("description")) {
                     role.setDescription(node.get("description").asText());
                 }
@@ -83,7 +85,9 @@ public class AppRoleDataImporter extends AbstractSetupDataImporter<AppRoleEntity
                     Set<AppPermissionEntity> perms = new HashSet<>();
                     for (JsonNode pref : node.get("permissionRefs")) {
                         if (pref.isTextual()) {
-                            perms.add(new AppPermissionEntity(pref.asText()));
+                            AppPermissionEntity perm = new AppPermissionEntity();
+                            perm.setName(pref.asText());
+                            perms.add(perm);
                         }
                     }
                     role.setPermissionRefs(perms);
@@ -102,5 +106,3 @@ public class AppRoleDataImporter extends AbstractSetupDataImporter<AppRoleEntity
         }
     }
 }
-
-

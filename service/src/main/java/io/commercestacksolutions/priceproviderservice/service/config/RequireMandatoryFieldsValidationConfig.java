@@ -3,6 +3,8 @@ package io.commercestacksolutions.priceproviderservice.service.config;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.rules.RequireMandatoryFieldsRule;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
@@ -29,6 +31,16 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RequireMandatoryFieldsValidationConfig {
+
+    @Bean
+    public ValidationRule<AppPermissionEntity> appPermissionRequireMandatoryFieldsRule(EntityMetaInfoRegistry registry) {
+        return new RequireMandatoryFieldsRule<>(AppPermissionEntity.class, registry);
+    }
+
+    @Bean
+    public ValidationRule<AppRoleEntity> appRoleRequireMandatoryFieldsRule(EntityMetaInfoRegistry registry) {
+        return new RequireMandatoryFieldsRule<>(AppRoleEntity.class, registry);
+    }
 
     @Bean
     public ValidationRule<GroupEntity> groupRequireMandatoryFieldsRule(EntityMetaInfoRegistry registry) {
