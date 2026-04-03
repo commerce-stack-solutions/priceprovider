@@ -165,7 +165,9 @@
     "isoKey": "小文字2文字のISOキー（例：en、de、fr）。",
     "activeLanguages": "アクティブな言語のみがセッション設定およびREST APIに表示されます。",
     "mandatoryLanguages": "必須言語はすべての言語入力フィールドで指定する必要があります。",
-    "mandatoryLanguagesAndInactiveLanguages": "必須言語は入力が必要です。無効な言語（グレー表示）は表示されますが編集できません。"
+    "mandatoryLanguagesAndInactiveLanguages": "必須言語は入力が必要です。無効な言語（グレー表示）は表示されますが編集できません。",
+    "noWritePermission": "このアイテムを編集する権限がありません。",
+    "noDeletePermission": "このアイテムを削除する権限がありません。"
   },
   "navigation": {
     "home": "ホーム",

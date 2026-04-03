@@ -6,9 +6,9 @@
       @if (permissionService.loading()) {
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 60vh;">
           <div class="spinner-border text-primary mb-3" role="status">
-            <span class="visually-hidden">{{ 'statuses.loading' | transloco }}</span>
+            <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
           </div>
-          <p class="text-muted">{{ 'statuses.loading' | transloco }}</p>
+          <p class="text-muted">{{ 'common.statuses.loading' | transloco }}</p>
         </div>
       } @else if (permissionService.hasAdminPermission()) {
         <router-outlet></router-outlet>

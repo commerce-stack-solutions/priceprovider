@@ -165,7 +165,9 @@
     "groupRefs": "Neobvezno. Reference na skupine za cene specifične za skupino.",
     "groupRefsPlaceholder": "Izberite ali poiščite skupino...",
     "channelRefs": "Neobvezno. Reference na kanale za cene, specifične za kanal.",
-    "channelRefsPlaceholder": "Izberite ali poiščite kanale..."
+    "channelRefsPlaceholder": "Izberite ali poiščite kanale...",
+    "noWritePermission": "Nimate dovoljenja za urejanje tega elementa.",
+    "noDeletePermission": "Nimate dovoljenja za brisanje tega elementa."
   },
   "errors": {
     "entity": {

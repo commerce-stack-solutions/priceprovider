@@ -160,6 +160,8 @@
     "groupRefsPlaceholder": "Välj eller sök efter en grupp...",
     "channelRefs": "Valfritt. Referenser till kanaler för kanalspecifika priser.",
     "channelRefsPlaceholder": "Välj eller sök efter kanaler...",
+    "noWritePermission": "Du har inte behörighet att redigera detta objekt.",
+    "noDeletePermission": "Du har inte behörighet att ta bort detta objekt.",
     "parentOrganizationId": "ID för överordnad organisation",
     "subOrganizationId": "ID för underordnad organisation",
     "isoKey": "ISO-nyckel bestående av 2 små bokstäver (t.ex. en, de, fr).",

@@ -165,7 +165,9 @@
     "groupRefs": "Opcjonalnie. Odniesienia do grup dla cen specyficznych dla grup.",
     "groupRefsPlaceholder": "Wybierz lub wyszukaj grupy...",
     "channelRefs": "Opcjonalne. Referencje do kanałów dla cen specyficznych dla kanałów.",
-    "channelRefsPlaceholder": "Wybierz lub wyszukaj kanały..."
+    "channelRefsPlaceholder": "Wybierz lub wyszukaj kanały...",
+    "noWritePermission": "Nie masz uprawnień do edytowania tego elementu.",
+    "noDeletePermission": "Nie masz uprawnień do usunięcia tego elementu."
   },
   "errors": {
     "entity": {

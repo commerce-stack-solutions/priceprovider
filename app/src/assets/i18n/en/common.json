@@ -167,7 +167,9 @@
     "groupRefs": "Optional. References to groups for group-specific pricing.",
     "groupRefsPlaceholder": "Select or search for groups...",
     "channelRefs": "Optional. References to channels for channel-specific pricing.",
-    "channelRefsPlaceholder": "Select or search for channels..."
+    "channelRefsPlaceholder": "Select or search for channels...",
+    "noWritePermission": "You do not have permission to edit this item.",
+    "noDeletePermission": "You do not have permission to delete this item."
   },
   "errors": {
     "entity": {

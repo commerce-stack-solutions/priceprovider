@@ -160,6 +160,8 @@
     "groupRefsPlaceholder": "Velg eller søk etter en gruppe...",
     "channelRefs": "Valgfritt. Referanser til kanaler for kanalspesifikke priser.",
     "channelRefsPlaceholder": "Velg eller søk etter kanaler...",
+    "noWritePermission": "Du har ikke tillatelse til å redigere dette elementet.",
+    "noDeletePermission": "Du har ikke tillatelse til å slette dette elementet.",
     "parentOrganizationId": "Overordnet organisasjons-ID",
     "subOrganizationId": "Underorganisasjons-ID",
     "isoKey": "ISO-nøkkel bestående av 2 små bokstaver (f.eks. en, de, fr).",

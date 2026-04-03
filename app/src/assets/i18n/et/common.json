@@ -165,7 +165,9 @@
     "isoKey": "ISO-võti, mis koosneb 2 väiketähest (nt en, de, fr).",
     "activeLanguages": "Seansi seadistuses ja REST API-s kuvatakse ainult aktiivsed keeled.",
     "mandatoryLanguages": "Kõikides keeleväljade sisendites peavad olema kohustuslikud keeled.",
-    "mandatoryLanguagesAndInactiveLanguages": "Kohustuslikud keeled on nõutud. Mitteaktiivseid keeli (hallid) näidatakse, kuid neid ei saa muuta."
+    "mandatoryLanguagesAndInactiveLanguages": "Kohustuslikud keeled on nõutud. Mitteaktiivseid keeli (hallid) näidatakse, kuid neid ei saa muuta.",
+    "noWritePermission": "Teil pole selle üksuse muutmiseks õigust.",
+    "noDeletePermission": "Teil pole selle üksuse kustutamiseks õigust."
   },
   "navigation": {
     "home": "Avaleht",
