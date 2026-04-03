@@ -172,5 +172,33 @@ public class QueryParserAdditionalTests {
         List<String> values = (List<String>) filter.getValue();
         assertEquals(List.of("CH1", "CH2", "CH3"), values);
     }
+
+    @Test
+    public void parse_hasAnyWithSlashInId_parsesCorrectly() throws Exception {
+        QueryParser parser = new QueryParser();
+        QueryExpression expr = parser.parse("groupRefs.hasAny:(DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)");
+        assertNotNull(expr);
+        assertTrue(expr.isLeaf());
+        QueryFilter filter = expr.getFilter();
+        assertEquals("groupRefs", filter.getField());
+        assertEquals(QueryFilter.FilterOperator.HAS_ANY, filter.getOperator());
+        @SuppressWarnings("unchecked")
+        List<String> values = (List<String>) filter.getValue();
+        assertEquals(List.of("DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"), values);
+    }
+
+    @Test
+    public void parse_hasAnyWithSlashInMultipleIds_parsesCorrectly() throws Exception {
+        QueryParser parser = new QueryParser();
+        QueryExpression expr = parser.parse("groupRefs.hasAny:(ORG/GROUP-A,ORG/GROUP-B)");
+        assertNotNull(expr);
+        assertTrue(expr.isLeaf());
+        QueryFilter filter = expr.getFilter();
+        assertEquals("groupRefs", filter.getField());
+        assertEquals(QueryFilter.FilterOperator.HAS_ANY, filter.getOperator());
+        @SuppressWarnings("unchecked")
+        List<String> values = (List<String>) filter.getValue();
+        assertEquals(List.of("ORG/GROUP-A", "ORG/GROUP-B"), values);
+    }
 }
 

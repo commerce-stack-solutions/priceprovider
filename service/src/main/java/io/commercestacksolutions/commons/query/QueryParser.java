@@ -88,8 +88,9 @@ public class QueryParser {
         // Remove potentially dangerous characters while keeping query syntax
         // Allow: Unicode letters/numbers, spaces, :, *, [, ], (, ), -, _, ., T, Z (for ISO dates), <, >, = and currency symbols
         // Also allow , (comma) for hasAny/hasAll value lists like (A,B,C)
+        // Also allow / (forward slash) as it is a valid character in entity IDs (e.g. DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)
         // \p{L} = any letter, \p{N} = any number, \p{Sc} = currency symbols
-        return input.replaceAll("[^\\p{L}\\p{N}\\s:\\*\\[\\]\\(\\)\\-_.TZ<>=\\p{Sc},]", "");
+        return input.replaceAll("[^\\p{L}\\p{N}\\s:\\*\\[\\]\\(\\)\\-_.TZ<>=\\p{Sc},/]", "");
     }
     
     /**
