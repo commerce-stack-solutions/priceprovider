@@ -1,5 +1,6 @@
 <div class="column-filter-wrapper">
   <button 
+    #filterToggleBtn
     type="button" 
     class="btn btn-sm filter-toggle"
     [class.active]="hasActiveFilter()"
@@ -9,7 +10,10 @@
   </button>
   
   @if (isOpen()) {
-    <div class="filter-popover" (click)="$event.stopPropagation()">
+    <div class="filter-popover"
+         [style.top.px]="popoverTop()"
+         [style.left.px]="popoverLeft()"
+         (click)="$event.stopPropagation()">
       <div class="filter-popover-header">
         <h6 class="mb-0">{{ config().label }}</h6>
         <button type="button" class="btn-close btn-sm" (click)="closePopover()" [attr.aria-label]="'common.actions.close' | transloco"></button>

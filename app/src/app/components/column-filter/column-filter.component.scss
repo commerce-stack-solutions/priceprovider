@@ -25,10 +25,8 @@
 }
 
 .filter-popover {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  z-index: 1050;
+  position: fixed;
+  z-index: 9999;
   width: 280px;
   background: white;
   border: 1px solid #dee2e6;

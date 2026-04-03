@@ -1,4 +1,4 @@
-import { Component, input, output, signal, computed, inject, effect } from '@angular/core';
+import { Component, input, output, signal, computed, effect, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -19,12 +19,22 @@ export class ColumnFilterComponent {
   filterApplied = output<FilterDefinition>();
   filterRemoved = output<string>();
   
+  // Must match the width defined in column-filter.component.scss
+  private readonly POPOVER_WIDTH = 280;
+
+  // Template reference for position calculation
+  @ViewChild('filterToggleBtn', { static: false }) filterToggleBtn!: ElementRef<HTMLButtonElement>;
+
   // Component state
   isOpen = signal(false);
   selectedOperator = signal<FilterOperator | null>(null);
   filterValue = signal<any>('');
   filterValueFrom = signal<any>('');
   filterValueTo = signal<any>('');
+  
+  // Popover position (fixed positioning, set from button's getBoundingClientRect when opening)
+  popoverTop = signal<number>(0);
+  popoverLeft = signal<number>(0);
   
   // Computed values
   allowedOperators = computed(() => {
@@ -64,6 +74,19 @@ export class ColumnFilterComponent {
   }
   
   togglePopover(): void {
+    if (!this.isOpen()) {
+      // Calculate fixed position from the button's viewport coordinates so the
+      // popover is never clipped by overflow:auto containers or buried under the sidebar.
+      const btn = this.filterToggleBtn?.nativeElement;
+      if (btn) {
+        const rect = btn.getBoundingClientRect();
+        const gap = 6;
+        let left = rect.right - this.POPOVER_WIDTH;
+        if (left < 8) left = 8; // clamp to viewport left edge
+        this.popoverTop.set(rect.bottom + gap);
+        this.popoverLeft.set(left);
+      }
+    }
     this.isOpen.update(open => !open);
     
     // Initialize operator if not set
