@@ -80,10 +80,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 if (parent.getId() != null) {
                     resolvedParents.add(parent);
                 } else if (parent.getPath() != null) {
-                    GroupEntity found = groupEntityRepository.findByPath(parent.getPath()).orElse(null);
-                    if (found != null) {
-                        resolvedParents.add(found);
-                    }
+                    groupEntityRepository.findByPath(parent.getPath()).ifPresent(resolvedParents::add);
                 }
             }
             organizationEntity.setParentRefs(resolvedParents);
