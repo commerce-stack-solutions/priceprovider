@@ -10,6 +10,7 @@ import io.commercestacksolutions.priceproviderservice.facade.group.restentity.Gr
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests that createdAt and lastModifiedAt are correctly set during create and update operations via facades.
  */
 @SpringBootTest
+@ActiveProfiles("test")
 @TestPropertySource(properties = {
     "service-config.initialize.essential-data-on=false",
     "service-config.initialize.sample-data-on=false"
