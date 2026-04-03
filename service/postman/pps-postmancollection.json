@@ -5354,6 +5354,165 @@
                   }
                 }
               ]
+            },
+            {
+              "name": "Get Price Rows - hasAny groupRefs (OR semantics)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP)",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "pricerows"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "groupRefs.hasAny:(PREMIUM,VIP)",
+                      "description": "Returns price rows assigned to at least one of the groups PREMIUM or VIP"
+                    }
+                  ]
+                },
+                "description": "Returns price rows assigned to at least one of the groups PREMIUM or VIP"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                      "pm.test('items array present', function () { pm.expect(pm.response.json()).to.have.property('items'); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Price Rows - hasAll groupRefs (AND semantics)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAll:(PREMIUM,VIP)",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "pricerows"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "groupRefs.hasAll:(PREMIUM,VIP)",
+                      "description": "Returns price rows assigned to BOTH the PREMIUM and VIP groups"
+                    }
+                  ]
+                },
+                "description": "Returns price rows assigned to BOTH the PREMIUM and VIP groups"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                      "pm.test('items array present', function () { pm.expect(pm.response.json()).to.have.property('items'); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Price Rows - hasAny groupRefs combined with scalar filter",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP) AND taxIncluded:true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "pricerows"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "groupRefs.hasAny:(PREMIUM,VIP) AND taxIncluded:true",
+                      "description": "Returns price rows in group PREMIUM or VIP that also have tax included"
+                    }
+                  ]
+                },
+                "description": "Returns price rows in group PREMIUM or VIP that also have tax included"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                      "pm.test('items array present', function () { pm.expect(pm.response.json()).to.have.property('items'); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Price Rows - NOT hasAll groupRefs",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=NOT groupRefs.hasAll:(PREMIUM,VIP)",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "pricerows"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "NOT groupRefs.hasAll:(PREMIUM,VIP)",
+                      "description": "Returns price rows that do NOT belong to both PREMIUM and VIP simultaneously"
+                    }
+                  ]
+                },
+                "description": "Returns price rows that do NOT belong to both PREMIUM and VIP simultaneously"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         },
@@ -5554,6 +5713,122 @@
                 }
               ],
               "response": []
+            },
+            {
+              "name": "hasAny - Empty Value List (400)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:()",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "pricerows"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "groupRefs.hasAny:()",
+                      "description": "Empty value list is invalid - should return 400"
+                    }
+                  ]
+                },
+                "description": "Empty value list is invalid - should return 400"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });",
+                      "pm.test('Error message present', function () { var json = pm.response.json(); pm.expect(json).to.have.property('$messages'); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "hasAny - Missing Parentheses (400)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:PREMIUM,VIP",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "pricerows"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "groupRefs.hasAny:PREMIUM,VIP",
+                      "description": "Missing parentheses around value list - should return 400"
+                    }
+                  ]
+                },
+                "description": "Missing parentheses around value list - should return 400"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "hasAny on Non-Collection Field (400)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=priceValue.hasAny:(10,20)",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "pricerows"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "priceValue.hasAny:(10,20)",
+                      "description": "hasAny on a non-collection field - should return 400"
+                    }
+                  ]
+                },
+                "description": "hasAny on a non-collection field - should return 400"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });",
+                      "pm.test('Error message present', function () { var json = pm.response.json(); pm.expect(json).to.have.property('$messages'); });"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         }
@@ -9680,6 +9955,290 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Filtering Examples",
+          "item": [
+            {
+              "name": "Get Channels - allowedCountryRefs exists",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/channels?q=allowedCountryRefs.exists:true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "channels"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "allowedCountryRefs.exists:true",
+                      "description": "Returns channels that have at least one allowed country"
+                    }
+                  ]
+                },
+                "description": "Returns channels that have at least one allowed country"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                      "pm.test('items array present', function () { pm.expect(pm.response.json()).to.have.property('items'); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Channels - hasAny allowedCountryRefs (OR semantics)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/channels?q=allowedCountryRefs.hasAny:(DE,AT,CH)",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "channels"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "allowedCountryRefs.hasAny:(DE,AT,CH)",
+                      "description": "Returns channels that allow at least one of the countries DE, AT, or CH"
+                    }
+                  ]
+                },
+                "description": "Returns channels that allow at least one of the countries DE, AT, or CH"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                      "pm.test('items array present', function () { pm.expect(pm.response.json()).to.have.property('items'); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Channels - hasAll allowedCountryRefs (AND semantics)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/channels?q=allowedCountryRefs.hasAll:(DE,AT)",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "channels"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "allowedCountryRefs.hasAll:(DE,AT)",
+                      "description": "Returns channels that allow BOTH DE and AT"
+                    }
+                  ]
+                },
+                "description": "Returns channels that allow BOTH DE and AT"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                      "pm.test('items array present', function () { pm.expect(pm.response.json()).to.have.property('items'); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Channels - hasAny combined with priceRepresentationMode",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/channels?q=allowedCountryRefs.hasAny:(DE,AT,CH) AND priceRepresentationMode:FORCE_GROSS",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "channels"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "allowedCountryRefs.hasAny:(DE,AT,CH) AND priceRepresentationMode:FORCE_GROSS",
+                      "description": "Returns FORCE_GROSS channels that allow at least one of DE, AT, CH"
+                    }
+                  ]
+                },
+                "description": "Returns FORCE_GROSS channels that allow at least one of DE, AT, CH"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "pm.test('Response is JSON', function () { pm.response.to.be.json; });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Error Scenarios",
+          "item": [
+            {
+              "name": "hasAny - Empty Value List (400)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/channels?q=allowedCountryRefs.hasAny:()",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "channels"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "allowedCountryRefs.hasAny:()",
+                      "description": "Empty value list is invalid - should return 400"
+                    }
+                  ]
+                },
+                "description": "Empty value list is invalid - should return 400"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "hasAny - Missing Parentheses (400)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/channels?q=allowedCountryRefs.hasAny:DE,AT",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "channels"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "allowedCountryRefs.hasAny:DE,AT",
+                      "description": "Missing parentheses around value list - should return 400"
+                    }
+                  ]
+                },
+                "description": "Missing parentheses around value list - should return 400"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Invalid Field Name (400)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/api/channels?q=unknownField:value",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "api",
+                    "channels"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "unknownField:value",
+                      "description": "Unknown field name - should return 400"
+                    }
+                  ]
+                },
+                "description": "Unknown field name - should return 400"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });",
+                      "pm.test('Error message present', function () { var json = pm.response.json(); pm.expect(json).to.have.property('$messages'); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         }
       ]
     },

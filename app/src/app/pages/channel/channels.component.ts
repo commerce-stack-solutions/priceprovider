@@ -41,6 +41,7 @@ export class ChannelsComponent {
 
   filterConfigs: ColumnFilterConfig[] = [
     { field: 'id', type: 'string', label: 'ID' },
+    { field: 'allowedCountryRefs', type: 'collection', label: 'Allowed Countries' },
     { field: 'priceRepresentationMode', type: 'string', label: 'Price Representation Mode' }
   ];
 
