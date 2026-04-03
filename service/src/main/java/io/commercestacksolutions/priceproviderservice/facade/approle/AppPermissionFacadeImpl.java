@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
-import java.util.Optional;
 
 @Service
 public class AppPermissionFacadeImpl implements AppPermissionFacade {
