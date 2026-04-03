@@ -5361,7 +5361,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP)",
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -5373,12 +5373,12 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "groupRefs.hasAny:(PREMIUM,VIP)",
-                      "description": "Returns price rows assigned to at least one of the groups PREMIUM or VIP"
+                      "value": "groupRefs.hasAny:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)",
+                      "description": "Returns price rows assigned to at least one of the groups DEMO-GROUP-STANDARD or DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
                     }
                   ]
                 },
-                "description": "Returns price rows assigned to at least one of the groups PREMIUM or VIP"
+                "description": "Returns price rows assigned to at least one of the groups DEMO-GROUP-STANDARD or DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
               },
               "response": [],
               "event": [
@@ -5401,7 +5401,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAll:(PREMIUM,VIP)",
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAll:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -5413,12 +5413,12 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "groupRefs.hasAll:(PREMIUM,VIP)",
-                      "description": "Returns price rows assigned to BOTH the PREMIUM and VIP groups"
+                      "value": "groupRefs.hasAll:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)",
+                      "description": "Returns price rows assigned to BOTH the DEMO-GROUP-STANDARD and DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM groups"
                     }
                   ]
                 },
-                "description": "Returns price rows assigned to BOTH the PREMIUM and VIP groups"
+                "description": "Returns price rows assigned to BOTH the DEMO-GROUP-STANDARD and DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM groups"
               },
               "response": [],
               "event": [
@@ -5441,7 +5441,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:(PREMIUM,VIP) AND taxIncluded:true",
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=groupRefs.hasAny:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM) AND taxIncluded:true",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -5453,12 +5453,12 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "groupRefs.hasAny:(PREMIUM,VIP) AND taxIncluded:true",
-                      "description": "Returns price rows in group PREMIUM or VIP that also have tax included"
+                      "value": "groupRefs.hasAny:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM) AND taxIncluded:true",
+                      "description": "Returns price rows in DEMO-GROUP-STANDARD or DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM that also have tax included"
                     }
                   ]
                 },
-                "description": "Returns price rows in group PREMIUM or VIP that also have tax included"
+                "description": "Returns price rows in DEMO-GROUP-STANDARD or DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM that also have tax included"
               },
               "response": [],
               "event": [
@@ -5481,7 +5481,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/pricerows?q=NOT groupRefs.hasAll:(PREMIUM,VIP)",
+                  "raw": "{{baseUrl}}/admin/api/pricerows?q=NOT groupRefs.hasAll:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -5493,12 +5493,12 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "NOT groupRefs.hasAll:(PREMIUM,VIP)",
-                      "description": "Returns price rows that do NOT belong to both PREMIUM and VIP simultaneously"
+                      "value": "NOT groupRefs.hasAll:(DEMO-GROUP-STANDARD,DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM)",
+                      "description": "Returns price rows that do NOT belong to both DEMO-GROUP-STANDARD and DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM simultaneously"
                     }
                   ]
                 },
-                "description": "Returns price rows that do NOT belong to both PREMIUM and VIP simultaneously"
+                "description": "Returns price rows that do NOT belong to both DEMO-GROUP-STANDARD and DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM simultaneously"
               },
               "response": [],
               "event": [
