@@ -34,12 +34,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for hasAny / hasAll collection membership operators on PriceRow.
  *
  * Setup:
- *   GROUP_A, GROUP_B
+ *   GROUP_A, GROUP_B, ORG/GROUP-SLASH (IDs with forward slash)
  *   priceRow1 → no groups
  *   priceRow2 → GROUP_A
  *   priceRow3 → GROUP_B
  *   priceRow4 → GROUP_A + GROUP_B
  *   priceRow5 → no groups
+ *   priceRow6 → ORG/GROUP-SLASH (slash-containing ID)
+ *   priceRow7 → ORG/GROUP-SLASH + GROUP_A (slash ID combined with plain ID)
  */
 @Import(TestSecurityConfig.class)
 @SpringBootTest
@@ -101,6 +103,12 @@ public class PriceRowControllerHasAnyHasAllTest {
         groupB.setId("GROUP_B");
         groupB.setName("Group B");
         groupRepository.save(groupB);
+
+        // Group with a forward-slash in its ID (e.g., hierarchical/path-style IDs)
+        GroupEntity groupSlash = new GroupEntity();
+        groupSlash.setId("ORG/GROUP-SLASH");
+        groupSlash.setName("Org Group Slash");
+        groupRepository.save(groupSlash);
 
         // priceRow1: no groups
         PriceRowEntity priceRow1 = new PriceRowEntity();
@@ -171,6 +179,37 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow5.setPriceType(PriceType.SALES_PRICE);
         priceRow5.setTaxIncluded(false);
         priceRowRepository.save(priceRow5);
+
+        // priceRow6: ORG/GROUP-SLASH only (slash-containing ID)
+        PriceRowEntity priceRow6 = new PriceRowEntity();
+        priceRow6.setPricedResourceId("PRODUCT_006");
+        priceRow6.setPriceValue(new BigDecimal("60.00"));
+        priceRow6.setMinQuantity(BigDecimal.ONE);
+        priceRow6.setUnit(piece);
+        priceRow6.setCurrency(eur);
+        priceRow6.setTaxClass(taxClass);
+        priceRow6.setPriceType(PriceType.SALES_PRICE);
+        priceRow6.setTaxIncluded(true);
+        Set<GroupEntity> groupsSlash = new HashSet<>();
+        groupsSlash.add(groupSlash);
+        priceRow6.setGroups(groupsSlash);
+        priceRowRepository.save(priceRow6);
+
+        // priceRow7: ORG/GROUP-SLASH + GROUP_A (slash ID combined with plain ID)
+        PriceRowEntity priceRow7 = new PriceRowEntity();
+        priceRow7.setPricedResourceId("PRODUCT_007");
+        priceRow7.setPriceValue(new BigDecimal("70.00"));
+        priceRow7.setMinQuantity(BigDecimal.ONE);
+        priceRow7.setUnit(piece);
+        priceRow7.setCurrency(eur);
+        priceRow7.setTaxClass(taxClass);
+        priceRow7.setPriceType(PriceType.SALES_PRICE);
+        priceRow7.setTaxIncluded(true);
+        Set<GroupEntity> groupsSlashA = new HashSet<>();
+        groupsSlashA.add(groupSlash);
+        groupsSlashA.add(groupA);
+        priceRow7.setGroups(groupsSlashA);
+        priceRowRepository.save(priceRow7);
     }
 
     // ====== hasAny HAPPY PATH ======
@@ -178,25 +217,25 @@ public class PriceRowControllerHasAnyHasAllTest {
     @Test
     @Order(1)
     public void testHasAnySingleGroup_returnsMatchingRows() throws Exception {
-        // groupRefs.hasAny:(GROUP_A) → priceRow2, priceRow4
+        // groupRefs.hasAny:(GROUP_A) → priceRow2, priceRow4, priceRow7
         mockMvc.perform(get("/admin/api/pricerows")
                         .param("q", "groupRefs.hasAny:(GROUP_A)"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items", hasSize(2)))
+                .andExpect(jsonPath("$.items", hasSize(3)))
                 .andExpect(jsonPath("$.items[*].pricedResourceId",
-                        containsInAnyOrder("PRODUCT_002", "PRODUCT_004")));
+                        containsInAnyOrder("PRODUCT_002", "PRODUCT_004", "PRODUCT_007")));
     }
 
     @Test
     @Order(2)
     public void testHasAnyTwoGroups_returnsAllWithEitherGroup() throws Exception {
-        // groupRefs.hasAny:(GROUP_A,GROUP_B) → priceRow2, priceRow3, priceRow4
+        // groupRefs.hasAny:(GROUP_A,GROUP_B) → priceRow2, priceRow3, priceRow4, priceRow7
         mockMvc.perform(get("/admin/api/pricerows")
                         .param("q", "groupRefs.hasAny:(GROUP_A,GROUP_B)"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items", hasSize(3)))
+                .andExpect(jsonPath("$.items", hasSize(4)))
                 .andExpect(jsonPath("$.items[*].pricedResourceId",
-                        containsInAnyOrder("PRODUCT_002", "PRODUCT_003", "PRODUCT_004")));
+                        containsInAnyOrder("PRODUCT_002", "PRODUCT_003", "PRODUCT_004", "PRODUCT_007")));
     }
 
     @Test
@@ -214,13 +253,13 @@ public class PriceRowControllerHasAnyHasAllTest {
     @Test
     @Order(10)
     public void testHasAllSingleGroup_returnsRowsContainingThatGroup() throws Exception {
-        // groupRefs.hasAll:(GROUP_A) → priceRow2, priceRow4
+        // groupRefs.hasAll:(GROUP_A) → priceRow2, priceRow4, priceRow7
         mockMvc.perform(get("/admin/api/pricerows")
                         .param("q", "groupRefs.hasAll:(GROUP_A)"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items", hasSize(2)))
+                .andExpect(jsonPath("$.items", hasSize(3)))
                 .andExpect(jsonPath("$.items[*].pricedResourceId",
-                        containsInAnyOrder("PRODUCT_002", "PRODUCT_004")));
+                        containsInAnyOrder("PRODUCT_002", "PRODUCT_004", "PRODUCT_007")));
     }
 
     @Test
@@ -249,23 +288,23 @@ public class PriceRowControllerHasAnyHasAllTest {
     @Test
     @Order(20)
     public void testHasAnyCombinedWithScalarFilter() throws Exception {
-        // groupRefs.hasAny:(GROUP_A,GROUP_B) AND taxIncluded:true → priceRow2, priceRow4
+        // groupRefs.hasAny:(GROUP_A,GROUP_B) AND taxIncluded:true → priceRow2, priceRow4, priceRow7
         mockMvc.perform(get("/admin/api/pricerows")
                         .param("q", "groupRefs.hasAny:(GROUP_A,GROUP_B) AND taxIncluded:true"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items", hasSize(2)))
+                .andExpect(jsonPath("$.items", hasSize(3)))
                 .andExpect(jsonPath("$.items[*].pricedResourceId",
-                        containsInAnyOrder("PRODUCT_002", "PRODUCT_004")));
+                        containsInAnyOrder("PRODUCT_002", "PRODUCT_004", "PRODUCT_007")));
     }
 
     @Test
     @Order(21)
     public void testNotHasAll_returnsAllExceptBothGroupRow() throws Exception {
-        // NOT groupRefs.hasAll:(GROUP_A,GROUP_B) → all except priceRow4
+        // NOT groupRefs.hasAll:(GROUP_A,GROUP_B) → all except priceRow4 (7 total - 1 = 6)
         mockMvc.perform(get("/admin/api/pricerows")
                         .param("q", "NOT groupRefs.hasAll:(GROUP_A,GROUP_B)"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items", hasSize(4)))
+                .andExpect(jsonPath("$.items", hasSize(6)))
                 .andExpect(jsonPath("$.items[*].pricedResourceId",
                         not(hasItem("PRODUCT_004"))));
     }
@@ -305,5 +344,52 @@ public class PriceRowControllerHasAnyHasAllTest {
                         .param("q", "taxIncluded.hasAll:(true,false)"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.$messages[0].message-key", notNullValue()));
+    }
+
+    // ====== Forward slash in group ID (regression tests for sanitizer stripping /) ======
+
+    @Test
+    @Order(200)
+    public void testHasAnyWithSlashId_returnsMatchingRows() throws Exception {
+        // groupRefs.hasAny:(ORG/GROUP-SLASH) → priceRow6, priceRow7
+        mockMvc.perform(get("/admin/api/pricerows")
+                        .param("q", "groupRefs.hasAny:(ORG/GROUP-SLASH)"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items", hasSize(2)))
+                .andExpect(jsonPath("$.items[*].pricedResourceId",
+                        containsInAnyOrder("PRODUCT_006", "PRODUCT_007")));
+    }
+
+    @Test
+    @Order(201)
+    public void testHasAnyWithSlashIdAndPlainId_returnsMatchingRows() throws Exception {
+        // groupRefs.hasAny:(ORG/GROUP-SLASH,GROUP_B) → priceRow3, priceRow4, priceRow6, priceRow7
+        mockMvc.perform(get("/admin/api/pricerows")
+                        .param("q", "groupRefs.hasAny:(ORG/GROUP-SLASH,GROUP_B)"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items", hasSize(4)))
+                .andExpect(jsonPath("$.items[*].pricedResourceId",
+                        containsInAnyOrder("PRODUCT_003", "PRODUCT_004", "PRODUCT_006", "PRODUCT_007")));
+    }
+
+    @Test
+    @Order(202)
+    public void testHasAllWithSlashIdAndPlainId_returnsOnlyRowWithBoth() throws Exception {
+        // groupRefs.hasAll:(ORG/GROUP-SLASH,GROUP_A) → only priceRow7
+        mockMvc.perform(get("/admin/api/pricerows")
+                        .param("q", "groupRefs.hasAll:(ORG/GROUP-SLASH,GROUP_A)"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items", hasSize(1)))
+                .andExpect(jsonPath("$.items[0].pricedResourceId", is("PRODUCT_007")));
+    }
+
+    @Test
+    @Order(203)
+    public void testHasAnyWithUnknownSlashId_returnsEmpty() throws Exception {
+        // A slash-ID that does not exist should return zero results, not an error
+        mockMvc.perform(get("/admin/api/pricerows")
+                        .param("q", "groupRefs.hasAny:(ORG/NONEXISTENT)"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items", hasSize(0)));
     }
 }
