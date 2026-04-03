@@ -16,7 +16,7 @@
         <a [routerLink]="['/' + lang(), 'app-permissions']" class="btn btn-outline-secondary">
           <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
         </a>
-        <a [routerLink]="canWrite() ? ['/' + lang(), 'app-permissions', permission.id, 'edit'] : null"
+        <a [routerLink]="canWrite() ? ['/' + lang(), 'app-permissions', permission.name, 'edit'] : null"
            class="btn btn-primary me-2"
            [class.disabled]="!canWrite()"
            [attr.aria-disabled]="!canWrite()"
@@ -39,8 +39,8 @@
         <div class="card">
           <div class="card-body">
             <div class="mb-3">
-              <label class="form-label fw-bold">{{ 'common.fields.id' | transloco }}</label>
-              <div>{{ permission.id }}</div>
+              <label class="form-label fw-bold">{{ 'common.fields.name' | transloco }}</label>
+              <div>{{ permission.name }}</div>
             </div>
 
             @if (permission.description) {

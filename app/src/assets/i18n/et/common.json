@@ -107,7 +107,8 @@
     "country": "Riik",
     "countryRef": "Riik",
     "priceRepresentationMode": "Hinna esitusrežiim",
-    "priceRepresentationModePlaceholder": "Valige hinna esitusrežiim..."
+    "priceRepresentationModePlaceholder": "Valige hinna esitusrežiim...",
+    "path": "Tee"
   },
   "sections": {
     "auditInformation": "Audititeave",

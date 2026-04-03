@@ -60,12 +60,12 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "404", description = "App permission not found")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:read')")
-    @GetMapping("/{id}")
+    @GetMapping("/{name}")
     public AppPermissionRestEntity getAppPermission(
-            @PathVariable("id") String id,
+            @PathVariable("name") String name,
             @RequestParam(value = "$expand", required = false) Set<String> expand
     ) throws NotFoundException, DataMappingException {
-        return appPermissionFacade.getAppPermission(id, expand);
+        return appPermissionFacade.getAppPermission(name, expand);
     }
 
     @Operation(summary = "Get meta information for app permissions")
@@ -81,12 +81,12 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "404", description = "App permission not found")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{name}")
     public AppPermissionRestEntity patch(
-            @PathVariable("id") String id,
+            @PathVariable("name") String name,
             @RequestBody JsonNode patch
     ) throws DataMappingException, NotFoundException, EntityValidationException {
-        return appPermissionFacade.patch(id, patch);
+        return appPermissionFacade.patch(name, patch);
     }
 
     @Operation(summary = "Create or update app permission", responses = {
@@ -94,12 +94,12 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "400", description = "Validation error")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
-    @PutMapping("/{id}")
+    @PutMapping("/{name}")
     public AppPermissionRestEntity createOrRecreate(
-            @PathVariable("id") String id,
+            @PathVariable("name") String name,
             @RequestBody AppPermissionRestEntity restEntity
     ) throws DataMappingException, EntityValidationException {
-        return appPermissionFacade.createOrRecreate(id, restEntity);
+        return appPermissionFacade.createOrRecreate(name, restEntity);
     }
 
     @Operation(summary = "Create new app permission", responses = {
@@ -120,10 +120,10 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "404", description = "App permission not found")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:delete')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+    @DeleteMapping("/{name}")
+    public ResponseEntity<Void> delete(@PathVariable("name") String name) {
         try {
-            appPermissionFacade.delete(id);
+            appPermissionFacade.delete(name);
             return ResponseEntity.noContent().build();
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();

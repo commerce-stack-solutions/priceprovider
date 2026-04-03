@@ -87,9 +87,9 @@ export class AppPermissionDetailComponent {
     const p = this.permission();
     if (!p) return;
 
-    const warning = this.transloco.translate('pages.appPermissions.deleteWarning', { id: p.id });
+    const warning = this.transloco.translate('pages.appPermissions.deleteWarning', { name: p.name });
     if (confirm(warning)) {
-      this.appPermissionsService.deleteAppPermission(p.id).subscribe({
+      this.appPermissionsService.deleteAppPermission(p.name).subscribe({
         next: () => this.router.navigate(['/' + this.lang(), 'app-permissions']),
         error: () => this.error.set(this.transloco.translate('common.errors.appPermission.deleteError'))
       });

@@ -54,11 +54,11 @@ public class AppRoleServiceImpl implements AppRoleService {
 
     @Override
     public AppRoleEntity save(AppRoleEntity roleEntity) throws EntityValidationException {
-        // Fetch managed permission entities to avoid detached entity issues
+        // Fetch managed permission entities by name to avoid detached entity issues
         if (roleEntity.getPermissionRefs() != null && !roleEntity.getPermissionRefs().isEmpty()) {
             Set<AppPermissionEntity> managedPermissions = new HashSet<>();
             for (AppPermissionEntity permRef : roleEntity.getPermissionRefs()) {
-                appPermissionEntityRepository.findById(permRef.getId())
+                appPermissionEntityRepository.findByName(permRef.getName())
                     .ifPresent(managedPermissions::add);
             }
             roleEntity.setPermissionRefs(managedPermissions);
@@ -97,15 +97,15 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
-    public Optional<AppRoleEntity> getAppRoleById(String id) {
-        return appRoleEntityRepository.findById(id);
+    public Optional<AppRoleEntity> getAppRoleByPath(String path) {
+        return appRoleEntityRepository.findByPath(path);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AppRoleEntity getAppRole(String id) {
+    public AppRoleEntity getAppRole(String path) {
         // Use repository-level fetch join to load permissions eagerly for this lookup
-        AppRoleEntity role = appRoleEntityRepository.findByIdWithPermissions(id).orElse(null);
+        AppRoleEntity role = appRoleEntityRepository.findByPathWithPermissions(path).orElse(null);
         // Ensure the permissionRefs collection is initialized while still in transaction
         if (role != null && role.getPermissionRefs() != null) {
             role.getPermissionRefs().size();
@@ -119,8 +119,9 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
-    public void deleteAppRole(String id) {
-        appRoleEntityRepository.deleteById(id);
+    public void deleteAppRole(String path) {
+        appRoleEntityRepository.findByPath(path).ifPresent(entity ->
+                appRoleEntityRepository.deleteById(entity.getId()));
     }
 }
 

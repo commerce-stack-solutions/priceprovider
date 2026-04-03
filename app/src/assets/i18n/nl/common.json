@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prijsweergavemodus",
-    "priceRepresentationModePlaceholder": "Selecteer prijsweergavemodus..."
+    "priceRepresentationModePlaceholder": "Selecteer prijsweergavemodus...",
+    "path": "Pad"
   },
   "sections": {
     "auditInformation": "Auditinformatie",

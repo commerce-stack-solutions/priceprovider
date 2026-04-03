@@ -107,7 +107,8 @@
     "country": "Pays",
     "countryRef": "Pays",
     "priceRepresentationMode": "Mode de représentation des prix",
-    "priceRepresentationModePlaceholder": "Sélectionner le mode de représentation des prix..."
+    "priceRepresentationModePlaceholder": "Sélectionner le mode de représentation des prix...",
+    "path": "Chemin"
   },
   "sections": {
     "auditInformation": "Informations d'audit",

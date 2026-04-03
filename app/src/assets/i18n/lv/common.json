@@ -107,7 +107,8 @@
     "country": "Valsts",
     "countryRef": "Valsts",
     "priceRepresentationMode": "Cenas attēlošanas režīms",
-    "priceRepresentationModePlaceholder": "Atlasīt cenas attēlošanas režīmu..."
+    "priceRepresentationModePlaceholder": "Atlasīt cenas attēlošanas režīmu...",
+    "path": "Ceļš"
   },
   "sections": {
     "auditInformation": "Audita informācija",

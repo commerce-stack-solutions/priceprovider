@@ -64,7 +64,7 @@ export class AppPermissionFormComponent implements OnInit {
       this.initForm();
       this.loading.set(false);
       if (this.config?.initialValue) {
-        this.form.patchValue({ id: this.config.initialValue });
+        this.form.patchValue({ name: this.config.initialValue });
       }
       return;
     }
@@ -102,7 +102,7 @@ export class AppPermissionFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      id: [{ value: '', disabled: this.isEditMode() }, [Validators.required]],
+      name: [{ value: '', disabled: this.isEditMode() }, [Validators.required]],
       description: ['']
     });
   }
@@ -113,7 +113,7 @@ export class AppPermissionFormComponent implements OnInit {
     this.appPermissionsService.getAppPermission(id).subscribe({
       next: (permission: AppPermission) => {
         const patchData: any = {
-          id: permission.id,
+          name: permission.name,
           description: permission.description || ''
         };
         this.form.patchValue(patchData);
@@ -193,7 +193,7 @@ export class AppPermissionFormComponent implements OnInit {
       });
     } else {
       const permission: AppPermission = {
-        id: formValue.id,
+        name: formValue.name,
         description: formValue.description
       };
 
@@ -207,7 +207,7 @@ export class AppPermissionFormComponent implements OnInit {
             if (this.isModalMode()) {
               this.saved.emit(response);
             } else {
-              this.router.navigate(['/' + this.lang(), 'app-permissions', response.id]);
+              this.router.navigate(['/' + this.lang(), 'app-permissions', response.name]);
             }
           }
         },

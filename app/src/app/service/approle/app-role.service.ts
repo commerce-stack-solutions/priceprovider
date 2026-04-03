@@ -37,8 +37,8 @@ export class AppRolesService {
     return this.http.get<AppRoleList>(url, { params });
   }
 
-  getAppRole(id: string, expand?: string): Observable<AppRole> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  getAppRole(path: string, expand?: string): Observable<AppRole> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(path).replace(/%3A/gi, ":")}`;
     let params = new HttpParams();
     if (expand) {
       params = params.set('$expand', expand);
@@ -58,20 +58,20 @@ export class AppRolesService {
     return this.http.post<AppRole>(url, role);
   }
 
-  updateAppRole(id: string, role: AppRole): Observable<AppRole> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  updateAppRole(path: string, role: AppRole): Observable<AppRole> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(path).replace(/%3A/gi, ":")}`;
     return this.http.put<AppRole>(url, role);
   }
 
-  patchAppRole(id: string, patch: JsonPatchOperation[]): Observable<AppRole> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  patchAppRole(path: string, patch: JsonPatchOperation[]): Observable<AppRole> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(path).replace(/%3A/gi, ":")}`;
     return this.http.patch<AppRole>(url, patch, {
       headers: { 'Content-Type': 'application/json-patch+json' }
     });
   }
 
-  deleteAppRole(id: string): Observable<void> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  deleteAppRole(path: string): Observable<void> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(path).replace(/%3A/gi, ":")}`;
     return this.http.delete<void>(url);
   }
 

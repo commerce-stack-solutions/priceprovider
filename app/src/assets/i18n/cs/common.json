@@ -107,7 +107,8 @@
     "country": "Země",
     "countryRef": "Země",
     "priceRepresentationMode": "Režim zobrazení ceny",
-    "priceRepresentationModePlaceholder": "Vyberte režim zobrazení ceny..."
+    "priceRepresentationModePlaceholder": "Vyberte režim zobrazení ceny...",
+    "path": "Cesta"
   },
   "sections": {
     "auditInformation": "Auditní informace",

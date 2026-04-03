@@ -68,13 +68,13 @@ public class AppRoleDataImporter extends AbstractSetupDataImporter<AppRoleEntity
             }
 
             for (JsonNode node : root) {
-                String id = node.hasNonNull("id") ? node.get("id").asText() : null;
-                if (id == null) {
-                    LOGGER.error("Skipping entity without id in file {}", filePath);
+                String rolePath = node.hasNonNull("path") ? node.get("path").asText() : null;
+                if (rolePath == null) {
+                    LOGGER.error("Skipping entity without path in file {}", filePath);
                     continue;
                 }
 
-                AppRoleEntity role = new AppRoleEntity(id);
+                AppRoleEntity role = new AppRoleEntity(rolePath);
                 if (node.hasNonNull("description")) {
                     role.setDescription(node.get("description").asText());
                 }

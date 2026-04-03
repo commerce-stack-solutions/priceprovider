@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prisrepresentasjonsmodus",
-    "priceRepresentationModePlaceholder": "Velg prisrepresentasjonsmodus..."
+    "priceRepresentationModePlaceholder": "Velg prisrepresentasjonsmodus...",
+    "path": "Sti"
   },
   "sections": {
     "auditInformation": "Revisjonsinformasjon",

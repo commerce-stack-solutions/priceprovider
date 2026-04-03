@@ -63,12 +63,12 @@ public class AppRoleController {
             @ApiResponse(responseCode = "404", description = "App role not found")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:read')")
-    @GetMapping("/{id}")
+    @GetMapping("/{path}")
     public AppRoleRestEntity getAppRole(
-            @PathVariable("id") String id,
+            @PathVariable("path") String path,
             @RequestParam(value = "$expand", required = false) Set<String> expand
     ) throws NotFoundException, DataMappingException {
-        return appRoleFacade.getAppRole(id, expand);
+        return appRoleFacade.getAppRole(path, expand);
     }
 
     @Operation(summary = "Get meta information for app roles")
@@ -84,12 +84,12 @@ public class AppRoleController {
             @ApiResponse(responseCode = "404", description = "App role not found")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{path}")
     public AppRoleRestEntity patch(
-            @PathVariable("id") String id,
+            @PathVariable("path") String path,
             @RequestBody JsonNode patch
     ) throws DataMappingException, NotFoundException, EntityValidationException {
-        return appRoleFacade.patch(id, patch);
+        return appRoleFacade.patch(path, patch);
     }
 
     @Operation(summary = "Create or update app role", responses = {
@@ -97,12 +97,12 @@ public class AppRoleController {
             @ApiResponse(responseCode = "400", description = "Validation error")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
-    @PutMapping("/{id}")
+    @PutMapping("/{path}")
     public AppRoleRestEntity createOrRecreate(
-            @PathVariable("id") String id,
+            @PathVariable("path") String path,
             @RequestBody AppRoleRestEntity restEntity
     ) throws DataMappingException, EntityValidationException {
-        return appRoleFacade.createOrRecreate(id, restEntity);
+        return appRoleFacade.createOrRecreate(path, restEntity);
     }
 
     @Operation(summary = "Create new app role", responses = {
@@ -123,10 +123,10 @@ public class AppRoleController {
             @ApiResponse(responseCode = "404", description = "App role not found")
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:delete')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+    @DeleteMapping("/{path}")
+    public ResponseEntity<Void> delete(@PathVariable("path") String path) {
         try {
-            appRoleFacade.delete(id);
+            appRoleFacade.delete(path);
             return ResponseEntity.noContent().build();
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();

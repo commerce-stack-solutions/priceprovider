@@ -13,12 +13,16 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = AppRoleEntity.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "path", scope = AppRoleEntity.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AppRoleEntity implements AuditableEntity {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private String path;
 
     private String description;
 
@@ -38,16 +42,24 @@ public class AppRoleEntity implements AuditableEntity {
     public AppRoleEntity() {
     }
 
-    public AppRoleEntity(String id) {
-        this.id = id;
+    public AppRoleEntity(String path) {
+        this.path = path;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getDescription() {
@@ -89,7 +101,8 @@ public class AppRoleEntity implements AuditableEntity {
     @Override
     public String toString() {
         return "AppRoleEntity{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", path='" + path + '\'' +
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 ", lastModifiedAt=" + lastModifiedAt +

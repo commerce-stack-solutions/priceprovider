@@ -107,7 +107,8 @@
     "country": "Šalis",
     "countryRef": "Šalis",
     "priceRepresentationMode": "Kainos atvaizdavimo režimas",
-    "priceRepresentationModePlaceholder": "Pasirinkite kainos atvaizdavimo režimą..."
+    "priceRepresentationModePlaceholder": "Pasirinkite kainos atvaizdavimo režimą...",
+    "path": "Kelias"
   },
   "sections": {
     "auditInformation": "Audito informacija",

@@ -109,7 +109,8 @@
     "country": "Country",
     "countryRef": "Country",
     "priceRepresentationMode": "Price Representation Mode",
-    "priceRepresentationModePlaceholder": "Select price representation mode..."
+    "priceRepresentationModePlaceholder": "Select price representation mode...",
+    "path": "Path"
   },
   "sections": {
     "auditInformation": "Audit Information",

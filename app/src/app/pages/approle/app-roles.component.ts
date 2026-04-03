@@ -43,7 +43,7 @@ export class AppRolesComponent {
   activeFilters = signal<Map<string, FilterDefinition>>(new Map());
 
   filterConfigs: ColumnFilterConfig[] = [
-    { field: 'id', type: 'string', label: 'ID' },
+    { field: 'path', type: 'string', label: 'Path' },
     { field: 'description', type: 'string', label: 'Description' }
   ];
 
@@ -177,8 +177,8 @@ export class AppRolesComponent {
 
   toggleAllSelection(checked: boolean): void {
     if (checked) {
-      const allIds = this.roles().map(r => r.id);
-      this.selectedRoles.set(new Set(allIds));
+      const allPaths = this.roles().map(r => r.path);
+      this.selectedRoles.set(new Set(allPaths));
     } else {
       this.selectedRoles.set(new Set());
     }

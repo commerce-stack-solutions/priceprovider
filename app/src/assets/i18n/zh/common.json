@@ -107,7 +107,8 @@
     "country": "国家",
     "countryRef": "国家",
     "priceRepresentationMode": "价格表示模式",
-    "priceRepresentationModePlaceholder": "选择价格表示模式..."
+    "priceRepresentationModePlaceholder": "选择价格表示模式...",
+    "path": "路径"
   },
   "sections": {
     "auditInformation": "审计信息",

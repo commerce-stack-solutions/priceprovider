@@ -86,28 +86,28 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
 
                 // Create the ServiceInitialization permission
                 AppPermissionEntity initPermission = new AppPermissionEntity();
-                initPermission.setId("priceprovider.admin:ServiceInitialization:write");
+                initPermission.setName("priceprovider.admin:ServiceInitialization:write");
                 initPermission.setDescription("Initialize service data");
                 appPermissionService.save(initPermission);
-                logger.info("Created permission: {}", initPermission.getId());
+                logger.info("Created permission: {}", initPermission.getName());
 
                 // Create the AppRole:read permission (needed to load roles)
                 AppPermissionEntity roleReadPermission = new AppPermissionEntity();
-                roleReadPermission.setId("priceprovider.admin:AppRole:read");
+                roleReadPermission.setName("priceprovider.admin:AppRole:read");
                 roleReadPermission.setDescription("Read app roles");
                 appPermissionService.save(roleReadPermission);
-                logger.info("Created permission: {}", roleReadPermission.getId());
+                logger.info("Created permission: {}", roleReadPermission.getName());
 
                 // Create the Admin role with both permissions
                 AppRoleEntity adminRole = new AppRoleEntity();
-                adminRole.setId("priceprovider.admin:Admin");
+                adminRole.setPath("priceprovider.admin:Admin");
                 adminRole.setDescription("Full admin access");
                 Set<AppPermissionEntity> permissions = new HashSet<>();
                 permissions.add(initPermission);
                 permissions.add(roleReadPermission);
                 adminRole.setPermissionRefs(permissions);
                 appRoleService.save(adminRole);
-                logger.info("Created role: {} with bootstrap permissions", adminRole.getId());
+                logger.info("Created role: {} with bootstrap permissions", adminRole.getPath());
 
                 logger.info("Bootstrap complete. Admin users can now access the service initialization page.");
             }

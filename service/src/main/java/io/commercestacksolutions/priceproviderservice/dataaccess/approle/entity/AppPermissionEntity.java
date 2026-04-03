@@ -10,12 +10,16 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = AppPermissionEntity.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name", scope = AppPermissionEntity.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AppPermissionEntity implements AuditableEntity {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private String name;
 
     private String description;
 
@@ -26,16 +30,24 @@ public class AppPermissionEntity implements AuditableEntity {
     public AppPermissionEntity() {
     }
 
-    public AppPermissionEntity(String id) {
-        this.id = id;
+    public AppPermissionEntity(String name) {
+        this.name = name;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -69,7 +81,8 @@ public class AppPermissionEntity implements AuditableEntity {
     @Override
     public String toString() {
         return "AppPermissionEntity{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 ", lastModifiedAt=" + lastModifiedAt +

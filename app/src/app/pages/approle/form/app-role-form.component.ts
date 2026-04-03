@@ -59,13 +59,13 @@ export class AppRoleFormComponent implements OnInit {
   // Data source for app permissions reference-list-edit
   permissionsDataSource = (searchTerm: string, page: number): Observable<ReferenceDataSourceResult> => {
     const pageSize = 10;
-    const query = searchTerm ? `id:*${searchTerm}* OR description:*${searchTerm}*` : undefined;
+    const query = searchTerm ? `name:*${searchTerm}* OR description:*${searchTerm}*` : undefined;
 
     return this.appPermissionsService.getAppPermissions(page, pageSize, undefined, undefined, undefined, query).pipe(
       map(response => {
         const filtered = response.items.map((p: AppPermission) => ({
-          value: p.id,
-          label: p.description ? `${p.id} - ${p.description}` : p.id
+          value: p.name,
+          label: p.description ? `${p.name} - ${p.description}` : p.name
         }));
 
         const paging = response.$info && typeof response.$info === 'object' && 'paging' in response.$info
@@ -85,7 +85,7 @@ export class AppRoleFormComponent implements OnInit {
       this.initForm();
       this.loading.set(false);
       if (this.config?.initialValue) {
-        this.form.patchValue({ id: this.config.initialValue });
+        this.form.patchValue({ path: this.config.initialValue });
       }
     } else {
       const idParam = this.route.snapshot.paramMap.get('id');
@@ -120,7 +120,7 @@ export class AppRoleFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      id: [{ value: '', disabled: this.isEditMode() }, Validators.required],
+      path: [{ value: '', disabled: this.isEditMode() }, Validators.required],
       description: [''],
       permissionRefs: [[]]
     });
@@ -135,7 +135,7 @@ export class AppRoleFormComponent implements OnInit {
           this.meta.set(role.$meta);
         }
         const patchData: any = {
-          id: role.id,
+          path: role.path,
           description: role.description || '',
           permissionRefs: role.permissionRefs || []
         };
@@ -219,7 +219,7 @@ export class AppRoleFormComponent implements OnInit {
       });
     } else {
       const role: AppRole = {
-        id: formValue.id,
+        path: formValue.path,
         description: formValue.description,
         permissionRefs: formValue.permissionRefs || []
       };
@@ -234,7 +234,7 @@ export class AppRoleFormComponent implements OnInit {
             if (this.isModalMode()) {
               this.saved.emit(response);
             } else {
-              this.router.navigate(['/' + this.lang(), 'app-roles', response.id]);
+              this.router.navigate(['/' + this.lang(), 'app-roles', response.path]);
             }
           }
         },

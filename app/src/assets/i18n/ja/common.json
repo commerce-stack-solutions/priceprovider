@@ -107,7 +107,8 @@
     "country": "国",
     "countryRef": "国",
     "priceRepresentationMode": "価格表示モード",
-    "priceRepresentationModePlaceholder": "価格表示モードを選択してください..."
+    "priceRepresentationModePlaceholder": "価格表示モードを選択してください...",
+    "path": "パス"
   },
   "sections": {
     "auditInformation": "監査情報",

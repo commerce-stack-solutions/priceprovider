@@ -43,7 +43,7 @@ public class AppRoleControllerTest {
 
     @Test
     public void testCreate_MissingId_Returns400() throws Exception {
-        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "id"), List.of("id"));
+        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "path"), List.of("path"));
         when(appRoleFacade.create(any()))
                 .thenThrow(new EntityValidationException("common.errors.validation.idRequired", validationMessage));
 
@@ -54,22 +54,22 @@ public class AppRoleControllerTest {
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.idRequired"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
     }
 
     @Test
     public void testCreate_AlreadyExists_Returns409() throws Exception {
         when(appRoleFacade.create(any()))
-                .thenThrow(new EntityAlreadyExistsException("common.errors.appRole.alreadyExists", Map.of("id", "priceprovider.admin:Admin"), List.of("id")));
+                .thenThrow(new EntityAlreadyExistsException("common.errors.appRole.alreadyExists", Map.of("path", "priceprovider.admin:Admin"), List.of("path")));
 
         mockMvc.perform(post("/admin/api/app-roles/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"priceprovider.admin:Admin\",\"description\":\"Full admin access\"}"))
+                        .content("{\"path\":\"priceprovider.admin:Admin\",\"description\":\"Full admin access\"}"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.appRole.alreadyExists"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
     }
 }
 

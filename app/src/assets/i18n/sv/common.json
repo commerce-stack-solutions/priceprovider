@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prisrepresentationsläge",
-    "priceRepresentationModePlaceholder": "Välj prisrepresentationsläge..."
+    "priceRepresentationModePlaceholder": "Välj prisrepresentationsläge...",
+    "path": "Sökväg"
   },
   "sections": {
     "auditInformation": "Revisionsinformation",

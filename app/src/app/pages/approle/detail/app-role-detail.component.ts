@@ -94,7 +94,7 @@ export class AppRoleDetailComponent {
     if (!role) return;
 
     if (confirm(this.transloco.translate('common.messages.confirmDelete'))) {
-      this.appRolesService.deleteAppRole(role.id).subscribe({
+      this.appRolesService.deleteAppRole(role.path).subscribe({
         next: () => {
           this.router.navigate(['/' + this.lang(), 'app-roles']);
         },
@@ -114,7 +114,7 @@ export class AppRoleDetailComponent {
     this.showEditKeyHint.set(true);
     const role = this.role();
     if (role) {
-      this.router.navigate(['/' + this.lang(), 'app-roles', role.id, 'edit']);
+      this.router.navigate(['/' + this.lang(), 'app-roles', role.path, 'edit']);
     }
   }
 }

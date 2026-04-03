@@ -21,16 +21,16 @@ public class AppRoleEntityMapper extends AbstractMapper<AppRoleRestEntity, AppRo
 
     @Override
     public void convert(AppRoleRestEntity source, AppRoleEntity target, RestRequestMappingContext<String> context) throws DataMappingException {
-        target.setId(context.getId());
+        target.setPath(context.getId());
         target.setDescription(source.getDescription());
 
-        // Convert permission ID strings to stub AppPermissionEntity objects
+        // Convert permission name strings to stub AppPermissionEntity objects
         // The actual managed entities will be resolved in AppRoleServiceImpl.save()
         if (source.getPermissionRefs() != null) {
             Set<AppPermissionEntity> permissionRefs = new HashSet<>();
-            for (String permissionId : source.getPermissionRefs()) {
+            for (String permissionName : source.getPermissionRefs()) {
                 AppPermissionEntity permission = new AppPermissionEntity();
-                permission.setId(permissionId);
+                permission.setName(permissionName);
                 permissionRefs.add(permission);
             }
             target.setPermissionRefs(permissionRefs);

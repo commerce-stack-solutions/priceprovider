@@ -22,13 +22,14 @@ public class AppRoleRestEntityMapper extends AbstractMapper<AppRoleEntity, AppRo
     @Override
     public void convert(AppRoleEntity source, AppRoleRestEntity target, RestResponseMappingContext context) {
         target.setId(source.getId());
+        target.setPath(source.getPath());
         target.setDescription(source.getDescription());
 
-        // Convert permission entities to ID strings
+        // Convert permission entities to name strings
         if (source.getPermissionRefs() != null) {
             Set<String> permissionRefs = source.getPermissionRefs().stream()
-                    .filter(p -> p != null && p.getId() != null)
-                    .map(AppPermissionEntity::getId)
+                    .filter(p -> p != null && p.getName() != null)
+                    .map(AppPermissionEntity::getName)
                     .collect(Collectors.toSet());
             target.setPermissionRefs(permissionRefs);
         }

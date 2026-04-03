@@ -44,11 +44,11 @@
                  (change)="toggleAllSelection($event.target.checked)">
         </th>
         <th class="sortable">
-          <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
-          @if (getFilterConfig('id'); as config) {
+          <span (click)="sortByField('name')">{{ 'common.fields.name' | transloco }}{{ getSortIndicator('name') }}</span>
+          @if (getFilterConfig('name'); as config) {
             <app-column-filter
               [config]="config"
-              [activeFilter]="getActiveFilter('id')"
+              [activeFilter]="getActiveFilter('name')"
               (filterApplied)="onFilterApplied($event)"
               (filterRemoved)="onFilterRemoved($event)">
             </app-column-filter>
@@ -72,16 +72,16 @@
       <tr *ngFor="let permission of permissions()">
         <td>
           <input type="checkbox" class="form-check-input"
-                 [checked]="selectedPermissions().has(permission.id)"
-                 (change)="toggleSelection(permission.id)">
+                 [checked]="selectedPermissions().has(permission.name)"
+                 (change)="toggleSelection(permission.name)">
         </td>
-        <td><a [routerLink]="['/' + lang(), 'app-permissions', permission.id]" class="ref-badge">{{ permission.id }}</a></td>
+        <td><a [routerLink]="['/' + lang(), 'app-permissions', permission.name]" class="ref-badge">{{ permission.name }}</a></td>
         <td>{{ permission.description }}</td>
         <td>
-          <a [routerLink]="['/' + lang(), 'app-permissions', permission.id]" class="btn btn-sm btn-outline-secondary me-1">
+          <a [routerLink]="['/' + lang(), 'app-permissions', permission.name]" class="btn btn-sm btn-outline-secondary me-1">
             <i class="bi bi-eye"></i> {{ 'common.actions.view' | transloco }}
           </a>
-          <a [routerLink]="canWrite() ? ['/' + lang(), 'app-permissions', permission.id, 'edit'] : null"
+          <a [routerLink]="canWrite() ? ['/' + lang(), 'app-permissions', permission.name, 'edit'] : null"
              class="btn btn-sm btn-outline-primary me-1"
              [class.disabled]="!canWrite()"
              [attr.aria-disabled]="!canWrite()"
@@ -90,7 +90,7 @@
           </a>
           <button type="button"
                   class="btn btn-sm btn-outline-danger"
-                  (click)="deletePermission(permission.id)"
+                  (click)="deletePermission(permission.name)"
                   [disabled]="!canDelete()"
                   [attr.aria-disabled]="!canDelete()"
                   [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : ( 'pages.appPermissions.deleteWarning' | transloco )">

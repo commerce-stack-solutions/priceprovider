@@ -107,7 +107,8 @@
     "country": "Zemlja",
     "countryRef": "Zemlja",
     "priceRepresentationMode": "Način prikaza cijene",
-    "priceRepresentationModePlaceholder": "Odaberite način prikaza cijene..."
+    "priceRepresentationModePlaceholder": "Odaberite način prikaza cijene...",
+    "path": "Putanja"
   },
   "sections": {
     "auditInformation": "Revizijske informacije",

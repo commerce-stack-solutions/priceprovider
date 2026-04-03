@@ -37,8 +37,8 @@ export class AppPermissionsService {
     return this.http.get<AppPermissionList>(url, { params });
   }
 
-  getAppPermission(id: string, expand?: string): Observable<AppPermission> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  getAppPermission(name: string, expand?: string): Observable<AppPermission> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(name).replace(/%3A/gi, ":")}`;
     let params = new HttpParams();
     if (expand) {
       params = params.set('$expand', expand);
@@ -58,20 +58,20 @@ export class AppPermissionsService {
     return this.http.post<AppPermission>(url, permission);
   }
 
-  updateAppPermission(id: string, permission: AppPermission): Observable<AppPermission> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  updateAppPermission(name: string, permission: AppPermission): Observable<AppPermission> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(name).replace(/%3A/gi, ":")}`;
     return this.http.put<AppPermission>(url, permission);
   }
 
-  patchAppPermission(id: string, patch: JsonPatchOperation[]): Observable<AppPermission> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  patchAppPermission(name: string, patch: JsonPatchOperation[]): Observable<AppPermission> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(name).replace(/%3A/gi, ":")}`;
     return this.http.patch<AppPermission>(url, patch, {
       headers: { 'Content-Type': 'application/json-patch+json' }
     });
   }
 
-  deleteAppPermission(id: string): Observable<void> {
-    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  deleteAppPermission(name: string): Observable<void> {
+    const url = `${environment.apiBaseUrl}admin/api/app-permissions/${encodeURIComponent(name).replace(/%3A/gi, ":")}`;
     return this.http.delete<void>(url);
   }
 

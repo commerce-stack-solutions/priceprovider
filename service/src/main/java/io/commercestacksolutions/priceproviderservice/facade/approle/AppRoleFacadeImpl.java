@@ -60,7 +60,7 @@ public class AppRoleFacadeImpl implements AppRoleFacade {
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
 
         this.patchValidator = new PatchValidator(List.of(
-                new ImmutableFieldsRule(Set.of("id"))
+                new ImmutableFieldsRule(Set.of("id", "path"))
         ));
     }
 
@@ -151,17 +151,17 @@ public class AppRoleFacadeImpl implements AppRoleFacade {
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class, EntityAlreadyExistsException.class})
     @Override
     public AppRoleRestEntity create(AppRoleRestEntity restEntity) throws DataMappingException, EntityValidationException, EntityAlreadyExistsException {
-        if (restEntity.getId() == null || restEntity.getId().isEmpty()) {
-            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id"));
+        if (restEntity.getPath() == null || restEntity.getPath().isEmpty()) {
+            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "path", List.of("path"));
             throw new EntityValidationException(MessageKeys.ERROR_VALIDATION_ID_REQUIRED, message);
         }
 
-        AppRoleEntity existing = appRoleService.getAppRole(restEntity.getId());
+        AppRoleEntity existing = appRoleService.getAppRole(restEntity.getPath());
         if (existing != null) {
-            throw new EntityAlreadyExistsException(MessageKeys.ERROR_APPROLE_ALREADY_EXISTS, Map.of("id", restEntity.getId()), List.of("id"));
+            throw new EntityAlreadyExistsException(MessageKeys.ERROR_APPROLE_ALREADY_EXISTS, Map.of("path", restEntity.getPath()), List.of("path"));
         }
 
-        AppRoleEntity newEntity = appRoleEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getId()));
+        AppRoleEntity newEntity = appRoleEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getPath()));
         AppRoleEntity saved = appRoleService.save(newEntity);
         return appRoleRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
@@ -236,41 +236,41 @@ public class AppRoleFacadeImpl implements AppRoleFacade {
 
         for (AppRoleRestEntity restEntity : restEntities) {
             try {
-                if (restEntity.getId() == null || restEntity.getId().isEmpty()) {
+                if (restEntity.getPath() == null || restEntity.getPath().isEmpty()) {
                     AppRoleRestEntity errorEntity = new AppRoleRestEntity();
-                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id")));
+                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "path", List.of("path")));
                     results.add(errorEntity);
                     continue;
                 }
 
-                AppRoleEntity existing = appRoleService.getAppRole(restEntity.getId());
+                AppRoleEntity existing = appRoleService.getAppRole(restEntity.getPath());
                 if (existing != null) {
-                    appRoleEntityMapper.convert(restEntity, existing, new RestRequestMappingContext<>(restEntity.getId()));
+                    appRoleEntityMapper.convert(restEntity, existing, new RestRequestMappingContext<>(restEntity.getPath()));
                     AppRoleEntity saved = appRoleService.save(existing);
                     results.add(appRoleRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 } else {
-                    AppRoleEntity newEntity = appRoleEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getId()));
+                    AppRoleEntity newEntity = appRoleEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getPath()));
                     AppRoleEntity saved = appRoleService.save(newEntity);
                     results.add(appRoleRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 }
             } catch (EntityValidationException e) {
                 AppRoleRestEntity errorEntity = new AppRoleRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setPath(restEntity.getPath());
                 for (Message message : e.getMessages()) {
                     errorEntity.addMessage(message);
                 }
                 results.add(errorEntity);
             } catch (DataMappingException e) {
                 AppRoleRestEntity errorEntity = new AppRoleRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setPath(restEntity.getPath());
                 for (Message message : e.getMessages()) {
                     errorEntity.addMessage(message);
                 }
                 results.add(errorEntity);
             } catch (Exception e) {
-                logger.debug("Error processing AppRole with id {}: {}", restEntity.getId(), e.getMessage(), e);
+                logger.debug("Error processing AppRole with path {}: {}", restEntity.getPath(), e.getMessage(), e);
                 AppRoleRestEntity errorEntity = new AppRoleRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setPath(restEntity.getPath());
                 errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_PROCESSING, "entity", "AppRole"));
                 results.add(errorEntity);
             }

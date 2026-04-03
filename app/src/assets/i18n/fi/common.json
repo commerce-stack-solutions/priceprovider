@@ -107,7 +107,8 @@
     "country": "Maa",
     "countryRef": "Maa",
     "priceRepresentationMode": "Hinnan esitystapa",
-    "priceRepresentationModePlaceholder": "Valitse hinnan esitystapa..."
+    "priceRepresentationModePlaceholder": "Valitse hinnan esitystapa...",
+    "path": "Polku"
   },
   "sections": {
     "auditInformation": "Auditointitiedot",

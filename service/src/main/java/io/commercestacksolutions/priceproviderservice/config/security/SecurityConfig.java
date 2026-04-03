@@ -109,8 +109,8 @@ public class SecurityConfig {
         // Register both roles AND their permissions as Spring Security authorities
         return roles.stream()
                 .flatMap(role -> {
-                    // The role id itself (e.g., "priceprovider.admin:Admin")
-                    String roleId = role.getId();
+                    // The role path itself (e.g., "priceprovider.admin:Admin")
+                    String roleId = role.getPath();
                     String normalizedRoleId = normalizeId(roleId);
                     java.util.stream.Stream<SimpleGrantedAuthority> roleAuthorities;
                     if (!normalizedRoleId.equals(roleId)) {
@@ -127,7 +127,7 @@ public class SecurityConfig {
                     java.util.stream.Stream<SimpleGrantedAuthority> permissionAuthorities =
                             role.getPermissionRefs().stream()
                                     .flatMap(p -> {
-                                        String pid = p.getId();
+                                        String pid = p.getName();
                                         String npid = normalizeId(pid);
                                         if (!npid.equals(pid)) {
                                             return java.util.stream.Stream.of(

@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prisrepræsentationstilstand",
-    "priceRepresentationModePlaceholder": "Vælg prisrepræsentationstilstand..."
+    "priceRepresentationModePlaceholder": "Vælg prisrepræsentationstilstand...",
+    "path": "Sti"
   },
   "sections": {
     "auditInformation": "Revisionsoplysninger",

@@ -60,7 +60,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
 
         this.patchValidator = new PatchValidator(List.of(
-                new ImmutableFieldsRule(Set.of("id"))
+                new ImmutableFieldsRule(Set.of("id", "name"))
         ));
     }
 
@@ -151,17 +151,17 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class, EntityAlreadyExistsException.class})
     @Override
     public AppPermissionRestEntity create(AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException, EntityAlreadyExistsException {
-        if (restEntity.getId() == null || restEntity.getId().isEmpty()) {
-            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id"));
+        if (restEntity.getName() == null || restEntity.getName().isEmpty()) {
+            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "name", List.of("name"));
             throw new EntityValidationException(MessageKeys.ERROR_VALIDATION_ID_REQUIRED, message);
         }
 
-        AppPermissionEntity existing = appPermissionService.getAppPermission(restEntity.getId());
+        AppPermissionEntity existing = appPermissionService.getAppPermission(restEntity.getName());
         if (existing != null) {
-            throw new EntityAlreadyExistsException(MessageKeys.ERROR_APPPERMISSION_ALREADY_EXISTS, Map.of("id", restEntity.getId()), List.of("id"));
+            throw new EntityAlreadyExistsException(MessageKeys.ERROR_APPPERMISSION_ALREADY_EXISTS, Map.of("name", restEntity.getName()), List.of("name"));
         }
 
-        AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getId()));
+        AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getName()));
         AppPermissionEntity saved = appPermissionService.save(newEntity);
         return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
@@ -236,41 +236,41 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
 
         for (AppPermissionRestEntity restEntity : restEntities) {
             try {
-                if (restEntity.getId() == null || restEntity.getId().isEmpty()) {
+                if (restEntity.getName() == null || restEntity.getName().isEmpty()) {
                     AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id")));
+                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "name", List.of("name")));
                     results.add(errorEntity);
                     continue;
                 }
 
-                AppPermissionEntity existing = appPermissionService.getAppPermission(restEntity.getId());
+                AppPermissionEntity existing = appPermissionService.getAppPermission(restEntity.getName());
                 if (existing != null) {
-                    appPermissionEntityMapper.convert(restEntity, existing, new RestRequestMappingContext<>(restEntity.getId()));
+                    appPermissionEntityMapper.convert(restEntity, existing, new RestRequestMappingContext<>(restEntity.getName()));
                     AppPermissionEntity saved = appPermissionService.save(existing);
                     results.add(appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 } else {
-                    AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getId()));
+                    AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getName()));
                     AppPermissionEntity saved = appPermissionService.save(newEntity);
                     results.add(appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 }
             } catch (EntityValidationException e) {
                 AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setName(restEntity.getName());
                 for (Message message : e.getMessages()) {
                     errorEntity.addMessage(message);
                 }
                 results.add(errorEntity);
             } catch (DataMappingException e) {
                 AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setName(restEntity.getName());
                 for (Message message : e.getMessages()) {
                     errorEntity.addMessage(message);
                 }
                 results.add(errorEntity);
             } catch (Exception e) {
-                logger.debug("Error processing AppPermission with id {}: {}", restEntity.getId(), e.getMessage(), e);
+                logger.debug("Error processing AppPermission with name {}: {}", restEntity.getName(), e.getMessage(), e);
                 AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setName(restEntity.getName());
                 errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_PROCESSING, "entity", "AppPermission"));
                 results.add(errorEntity);
             }

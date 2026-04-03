@@ -107,7 +107,8 @@
     "country": "Država",
     "countryRef": "Država",
     "priceRepresentationMode": "Način prikaza cene",
-    "priceRepresentationModePlaceholder": "Izberite način prikaza cene..."
+    "priceRepresentationModePlaceholder": "Izberite način prikaza cene...",
+    "path": "Pot"
   },
   "sections": {
     "auditInformation": "Revizijski podatki",

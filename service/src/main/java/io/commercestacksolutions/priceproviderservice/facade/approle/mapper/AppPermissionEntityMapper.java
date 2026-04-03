@@ -17,7 +17,7 @@ public class AppPermissionEntityMapper extends AbstractMapper<AppPermissionRestE
 
     @Override
     public void convert(AppPermissionRestEntity source, AppPermissionEntity target, RestRequestMappingContext<String> context) throws DataMappingException {
-        target.setId(context.getId());
+        target.setName(context.getId());
         target.setDescription(source.getDescription());
     }
 }

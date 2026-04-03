@@ -84,13 +84,13 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
-    public Optional<AppPermissionEntity> getAppPermissionById(String id) {
-        return appPermissionEntityRepository.findById(id);
+    public Optional<AppPermissionEntity> getAppPermissionByName(String name) {
+        return appPermissionEntityRepository.findByName(name);
     }
 
     @Override
-    public AppPermissionEntity getAppPermission(String id) {
-        return appPermissionEntityRepository.findById(id).orElse(null);
+    public AppPermissionEntity getAppPermission(String name) {
+        return appPermissionEntityRepository.findByName(name).orElse(null);
     }
 
     @Override
@@ -99,7 +99,8 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
-    public void deleteAppPermission(String id) {
-        appPermissionEntityRepository.deleteById(id);
+    public void deleteAppPermission(String name) {
+        appPermissionEntityRepository.findByName(name).ifPresent(entity ->
+                appPermissionEntityRepository.deleteById(entity.getId()));
     }
 }
