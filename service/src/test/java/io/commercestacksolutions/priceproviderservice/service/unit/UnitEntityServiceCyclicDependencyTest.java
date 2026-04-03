@@ -5,6 +5,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.Uni
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Integration test for UnitService cyclic dependency validation.
  */
 @SpringBootTest
+@ActiveProfiles("test")
 @TestPropertySource(properties = {
     "service-config.initialize.essential-data-on=false",
     "service-config.initialize.sample-data-on=false"
