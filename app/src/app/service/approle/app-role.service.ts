@@ -37,8 +37,8 @@ export class AppRolesService {
     return this.http.get<AppRoleList>(url, { params });
   }
 
-  getAppRole(id: string, expand?: string): Observable<AppRole> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  getAppRole(id: number, expand?: string): Observable<AppRole> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${id}`;
     let params = new HttpParams();
     if (expand) {
       params = params.set('$expand', expand);
@@ -48,39 +48,50 @@ export class AppRolesService {
     return this.http.get<AppRole>(url, { params });
   }
 
+  getAppRoleByName(name: string, expand?: string): Observable<AppRole> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/by-name/${encodeURIComponent(name)}`;
+    let params = new HttpParams();
+    if (expand) {
+      params = params.set('$expand', expand);
+    } else {
+      params = params.set('$expand', '$includes,$info');
+    }
+    return this.http.get<AppRole>(url, { params });
+  }
+
   getMeta(): Observable<MetaInfo> {
     const url = `${environment.apiBaseUrl}admin/api/app-roles/$meta`;
     return this.http.get<MetaInfo>(url);
   }
 
-  createAppRole(role: AppRole): Observable<AppRole> {
+  createAppRole(role: Partial<AppRole>): Observable<AppRole> {
     const url = `${environment.apiBaseUrl}admin/api/app-roles/create`;
     return this.http.post<AppRole>(url, role);
   }
 
-  updateAppRole(id: string, role: AppRole): Observable<AppRole> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  updateAppRole(id: number, role: Partial<AppRole>): Observable<AppRole> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${id}`;
     return this.http.put<AppRole>(url, role);
   }
 
-  patchAppRole(id: string, patch: JsonPatchOperation[]): Observable<AppRole> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  patchAppRole(id: number, patch: JsonPatchOperation[]): Observable<AppRole> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${id}`;
     return this.http.patch<AppRole>(url, patch, {
       headers: { 'Content-Type': 'application/json-patch+json' }
     });
   }
 
-  deleteAppRole(id: string): Observable<void> {
-    const url = `${environment.apiBaseUrl}admin/api/app-roles/${encodeURIComponent(id).replace(/%3A/gi, ":")}`;
+  deleteAppRole(id: number): Observable<void> {
+    const url = `${environment.apiBaseUrl}admin/api/app-roles/${id}`;
     return this.http.delete<void>(url);
   }
 
-  bulkDeleteAppRoles(ids: string[]): Observable<void> {
+  bulkDeleteAppRoles(ids: number[]): Observable<void> {
     const url = `${environment.apiBaseUrl}admin/api/app-roles/bulk-delete`;
     return this.http.post<void>(url, ids);
   }
 
-  bulkCreateOrUpdateAppRoles(roles: AppRole[]): Observable<AppRole[]> {
+  bulkCreateOrUpdateAppRoles(roles: Partial<AppRole>[]): Observable<AppRole[]> {
     const url = `${environment.apiBaseUrl}admin/api/app-roles/bulk-create-or-update`;
     return this.http.post<AppRole[]>(url, roles);
   }

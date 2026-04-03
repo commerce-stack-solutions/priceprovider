@@ -1,7 +1,8 @@
 import { MetaInfo } from '../meta-info.model';
 
 export interface AppRole {
-  id: string;
+  id: number;
+  name: string;
   description?: string;
   permissionRefs?: string[];
   $info?: { [key: string]: any };

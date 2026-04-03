@@ -43,6 +43,11 @@
               <div>{{ permission.id }}</div>
             </div>
 
+            <div class="mb-3">
+              <label class="form-label fw-bold">{{ 'common.fields.name' | transloco }}</label>
+              <div>{{ permission.name }}</div>
+            </div>
+
             @if (permission.description) {
               <div class="mb-3">
                 <label class="form-label fw-bold">{{ 'common.fields.description' | transloco }}</label>

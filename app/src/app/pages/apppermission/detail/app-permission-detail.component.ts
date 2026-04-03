@@ -71,12 +71,13 @@ export class AppPermissionDetailComponent {
 
   constructor() {
     this.route.params.subscribe(params => {
-      const id = params['id'];
+      const idParam = params['id'];
+      const id = parseInt(idParam, 10);
       this.loadPermission(id);
     });
   }
 
-  private loadPermission(id: string): void {
+  private loadPermission(id: number): void {
     this.appPermissionsService.getAppPermission(id).subscribe({
       next: (permission) => this.permission.set(permission),
       error: () => this.error.set('App Permission not found')
@@ -87,7 +88,7 @@ export class AppPermissionDetailComponent {
     const p = this.permission();
     if (!p) return;
 
-    const warning = this.transloco.translate('pages.appPermissions.deleteWarning', { id: p.id });
+    const warning = this.transloco.translate('pages.appPermissions.deleteWarning', { id: p.name });
     if (confirm(warning)) {
       this.appPermissionsService.deleteAppPermission(p.id).subscribe({
         next: () => this.router.navigate(['/' + this.lang(), 'app-permissions']),

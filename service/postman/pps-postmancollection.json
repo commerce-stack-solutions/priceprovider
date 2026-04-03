@@ -9753,7 +9753,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-permissions/priceprovider.admin:Group:read?$expand=$includes,$info,$meta",
+              "raw": "{{baseUrl}}/admin/api/app-permissions/{{appPermissionId}}?$expand=$includes,$info,$meta",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -9761,7 +9761,7 @@
                 "admin",
                 "api",
                 "app-permissions",
-                "priceprovider.admin:Group:read"
+                "{{appPermissionId}}"
               ],
               "query": [
                 {
@@ -9859,7 +9859,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/priceprovider.admin:Admin?$expand=$includes,$info,$meta",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}?$expand=$includes,$info,$meta",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -9867,7 +9867,54 @@
                 "admin",
                 "api",
                 "app-roles",
-                "priceprovider.admin:Admin"
+                "{{appRoleId}}"
+              ],
+              "query": [
+                {
+                  "key": "$expand",
+                  "value": "$includes,$info,$meta",
+                  "disabled": false
+                }
+              ]
+            },
+            "description": "Retrieves an app role by ID (Happy Path)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('role has id', function () { pm.expect(pm.response.json().id).to.exist; });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get App Role by Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/app-roles/by-name/priceprovider.admin%3AAdmin?$expand=$includes,$info,$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "app-roles",
+                "by-name",
+                "priceprovider.admin%3AAdmin"
               ],
               "query": [
                 {
@@ -9911,7 +9958,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"priceprovider.admin:TestRole\",\n  \"description\": \"Test role for Postman testing\",\n  \"permissionRefs\": [\n    \"priceprovider.admin:Group:read\"\n  ]\n}"
+              "raw": "{\n  \"name\": \"priceprovider.admin:TestRole\",\n  \"description\": \"Test role for Postman testing\",\n  \"permissionRefs\": [\n    \"priceprovider.admin:Group:read\"\n  ]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/app-roles/create",
@@ -9959,10 +10006,10 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"description\": \"Updated test role\",\n  \"permissionRefs\": [\n    \"priceprovider.admin:Group:read\",\n    \"priceprovider.admin:Group:write\"\n  ]\n}"
+              "raw": "{\n  \"name\": \"priceprovider.admin:TestRole\",\n  \"description\": \"Updated test role\",\n  \"permissionRefs\": [\n    \"priceprovider.admin:Group:read\",\n    \"priceprovider.admin:Group:write\"\n  ]\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/priceprovider.admin:TestRole",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -9970,7 +10017,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "priceprovider.admin:TestRole"
+                "{{appRoleId}}"
               ]
             },
             "description": "Creates or updates an app role (idempotent PUT - Happy Path)"
@@ -10009,7 +10056,7 @@
               "raw": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/description\",\n    \"value\": \"Patched test role description\"\n  }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/priceprovider.admin:TestRole",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10017,7 +10064,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "priceprovider.admin:TestRole"
+                "{{appRoleId}}"
               ]
             },
             "description": "Partially updates an app role using JSON Patch (Happy Path)"
@@ -10047,7 +10094,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/priceprovider.admin:TestRole",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10055,7 +10102,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "priceprovider.admin:TestRole"
+                "{{appRoleId}}"
               ]
             },
             "description": "Deletes an app role (Happy Path)"
@@ -10091,7 +10138,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  \"priceprovider.admin:TestRole1\",\n  \"priceprovider.admin:TestRole2\"\n]"
+              "raw": "[\n  1,\n  2\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/app-roles/bulk-delete",
@@ -10138,7 +10185,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"id\": \"priceprovider.admin:TestRole1\",\n    \"description\": \"Bulk test role 1\",\n    \"permissionRefs\": [\n      \"priceprovider.admin:Group:read\"\n    ]\n  },\n  {\n    \"id\": \"priceprovider.admin:TestRole2\",\n    \"description\": \"Bulk test role 2\",\n    \"permissionRefs\": [\n      \"priceprovider.admin:Channel:read\"\n    ]\n  }\n]"
+              "raw": "[\n  {\n    \"name\": \"priceprovider.admin:TestRole1\",\n    \"description\": \"Bulk test role 1\",\n    \"permissionRefs\": [\n      \"priceprovider.admin:Group:read\"\n    ]\n  },\n  {\n    \"name\": \"priceprovider.admin:TestRole2\",\n    \"description\": \"Bulk test role 2\",\n    \"permissionRefs\": [\n      \"priceprovider.admin:Group:read\",\n      \"priceprovider.admin:Group:write\"\n    ]\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/app-roles/bulk-create-or-update",
@@ -10179,7 +10226,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/priceprovider.admin:NonExistingRole",
+              "raw": "{{baseUrl}}/admin/api/app-roles/99999",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10187,7 +10234,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "priceprovider.admin:NonExistingRole"
+                "99999"
               ]
             },
             "description": "Attempts to get a non-existing app role - expects 404 (Angry Path)"
@@ -10206,7 +10253,7 @@
           ]
         },
         {
-          "name": "Create App Role Without ID (400 Angry Path)",
+          "name": "Create App Role Without Name (400 Angry Path)",
           "request": {
             "method": "POST",
             "header": [

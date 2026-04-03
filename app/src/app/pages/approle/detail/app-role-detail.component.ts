@@ -75,12 +75,13 @@ export class AppRoleDetailComponent {
 
   constructor() {
     this.route.params.subscribe(params => {
-      const id = params['id'];
+      const idParam = params['id'];
+      const id = parseInt(idParam, 10);
       this.loadRole(id);
     });
   }
 
-  private loadRole(id: string): void {
+  private loadRole(id: number): void {
     this.appRolesService.getAppRole(id).subscribe({
       next: (role) => this.role.set(role),
       error: () => {

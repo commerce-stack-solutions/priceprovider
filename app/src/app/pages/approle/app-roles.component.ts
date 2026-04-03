@@ -38,12 +38,12 @@ export class AppRolesComponent {
   totalPages = signal(0);
   sortBy = signal<string[]>([]);
   sortDirection = signal<string>('asc');
-  selectedRoles = signal<Set<string>>(new Set());
+  selectedRoles = signal<Set<number>>(new Set());
   deleteError = signal<string | null>(null);
   activeFilters = signal<Map<string, FilterDefinition>>(new Map());
 
   filterConfigs: ColumnFilterConfig[] = [
-    { field: 'id', type: 'string', label: 'ID' },
+    { field: 'name', type: 'string', label: 'Name' },
     { field: 'description', type: 'string', label: 'Description' }
   ];
 
@@ -165,7 +165,7 @@ export class AppRolesComponent {
     return this.filterConfigs.find(c => c.field === field);
   }
 
-  toggleSelection(id: string): void {
+  toggleSelection(id: number): void {
     const selected = new Set(this.selectedRoles());
     if (selected.has(id)) {
       selected.delete(id);
