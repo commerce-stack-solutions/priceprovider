@@ -167,7 +167,9 @@
     "groupRefs": "Optional. Referenzen auf Gruppen für gruppenspezifische Preise.",
     "groupRefsPlaceholder": "Gruppen auswählen oder suchen...",
     "channelRefs": "Optional. Referenzen auf Kanäle für kanalspezifische Preise.",
-    "channelRefsPlaceholder": "Kanal auswählen oder suchen..."
+    "channelRefsPlaceholder": "Kanal auswählen oder suchen...",
+    "noWritePermission": "Sie haben keine Berechtigung, dieses Element zu bearbeiten.",
+    "noDeletePermission": "Sie haben keine Berechtigung, dieses Element zu löschen."
   },
   "errors": {
     "entity": {

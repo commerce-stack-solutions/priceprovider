@@ -165,7 +165,9 @@
     "isoKey": "ISO-nøgle bestående af 2 små bogstaver (f.eks. en, de, fr).",
     "activeLanguages": "Kun aktive sprog vises i sessionskonfigurationen og REST API'et.",
     "mandatoryLanguages": "Obligatoriske sprog skal angives i alle sprogfelter.",
-    "mandatoryLanguagesAndInactiveLanguages": "Obligatoriske sprog er påkrævet. Inaktive sprog (gråtonede) vises, men kan ikke redigeres."
+    "mandatoryLanguagesAndInactiveLanguages": "Obligatoriske sprog er påkrævet. Inaktive sprog (gråtonede) vises, men kan ikke redigeres.",
+    "noWritePermission": "Du har ikke tilladelse til at redigere dette element.",
+    "noDeletePermission": "Du har ikke tilladelse til at slette dette element."
   },
   "navigation": {
     "home": "Hjem",

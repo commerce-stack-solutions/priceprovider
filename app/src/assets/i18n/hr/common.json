@@ -165,7 +165,9 @@
     "groupRefs": "Neobavezno. Reference na grupe za cijene specifične za grupu.",
     "groupRefsPlaceholder": "Odaberite ili pretražite grupe...",
     "channelRefs": "Neobavezno. Reference na kanale za cijene specifične za kanal.",
-    "channelRefsPlaceholder": "Odaberite ili pretražite kanale..."
+    "channelRefsPlaceholder": "Odaberite ili pretražite kanale...",
+    "noWritePermission": "Nemate dopuštenje za uređivanje ove stavke.",
+    "noDeletePermission": "Nemate dopuštenje za brisanje ove stavke."
   },
   "navigation": {
     "home": "Početna",

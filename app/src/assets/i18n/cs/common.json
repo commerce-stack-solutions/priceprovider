@@ -165,7 +165,9 @@
     "groupRefs": "Volitelné. Odkazy na skupiny pro ceny specifické pro skupinu.",
     "groupRefsPlaceholder": "Vyberte nebo vyhledejte skupiny...",
     "channelRefs": "Nepovinné. Reference na kanály pro ceny specifické pro kanál.",
-    "channelRefsPlaceholder": "Vyberte nebo vyhledejte kanály..."
+    "channelRefsPlaceholder": "Vyberte nebo vyhledejte kanály...",
+    "noWritePermission": "Nemáte oprávnění upravovat tuto položku.",
+    "noDeletePermission": "Nemáte oprávnění odstranit tuto položku."
   },
   "navigation": {
     "home": "Domů",

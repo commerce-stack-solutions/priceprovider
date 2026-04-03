@@ -160,6 +160,8 @@
     "groupRefsPlaceholder": "选择或搜索组...",
     "channelRefs": "可选。对渠道的引用，用于特定渠道定价。",
     "channelRefsPlaceholder": "选择或搜索渠道...",
+    "noWritePermission": "您没有权限编辑此项目。",
+    "noDeletePermission": "您没有权限删除此项目。",
     "parentOrganizationId": "父组织 ID",
     "subOrganizationId": "子组织 ID",
     "isoKey": "由 2 个小写字母组成的 ISO 键（例如：en、de、fr）。",

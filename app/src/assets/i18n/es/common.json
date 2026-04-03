@@ -165,7 +165,9 @@
     "groupRefs": "Opcional. Referencias a grupos para precios específicos del grupo.",
     "groupRefsPlaceholder": "Seleccionar o buscar grupos...",
     "channelRefs": "Opcional. Referencias a canales para precios específicos por canal.",
-    "channelRefsPlaceholder": "Seleccionar o buscar canales..."
+    "channelRefsPlaceholder": "Seleccionar o buscar canales...",
+    "noWritePermission": "No tiene permiso para editar este elemento.",
+    "noDeletePermission": "No tiene permiso para eliminar este elemento."
   },
   "navigation": {
     "home": "Inicio",

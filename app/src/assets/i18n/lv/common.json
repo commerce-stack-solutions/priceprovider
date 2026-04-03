@@ -165,7 +165,9 @@
     "isoKey": "ISO atslēga no 2 mazajiem burtiem (piem., en, de, fr).",
     "activeLanguages": "Aktīvās valodas tiek rādītas tikai sesijas konfigurācijā un REST API.",
     "mandatoryLanguages": "Obligātās valodas jānorāda visos valodu ievades laukos.",
-    "mandatoryLanguagesAndInactiveLanguages": "Obligātās valodas ir nepieciešamas. Neaktīvās valodas (pelēkā krāsā) tiek rādītas, bet nav rediģējamas."
+    "mandatoryLanguagesAndInactiveLanguages": "Obligātās valodas ir nepieciešamas. Neaktīvās valodas (pelēkā krāsā) tiek rādītas, bet nav rediģējamas.",
+    "noWritePermission": "Jums nav atļaujas rediģēt šo vienumu.",
+    "noDeletePermission": "Jums nav atļaujas dzēst šo vienumu."
   },
   "errors": {
     "entity": {

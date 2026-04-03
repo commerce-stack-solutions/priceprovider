@@ -165,7 +165,9 @@
     "isoKey": "Kahden pienen kirjaimen ISO-avain (esim. en, de, fr).",
     "activeLanguages": "Vain aktiiviset kielet näytetään istunnon asetuksissa ja REST-rajapinnassa.",
     "mandatoryLanguages": "Pakolliset kielet on annettava kaikissa kielikentissä.",
-    "mandatoryLanguagesAndInactiveLanguages": "Pakolliset kielet vaaditaan. Passiiviset kielet (harmaana) näytetään, mutta niitä ei voi muokata."
+    "mandatoryLanguagesAndInactiveLanguages": "Pakolliset kielet vaaditaan. Passiiviset kielet (harmaana) näytetään, mutta niitä ei voi muokata.",
+    "noWritePermission": "Sinulla ei ole oikeutta muokata tätä kohdetta.",
+    "noDeletePermission": "Sinulla ei ole oikeutta poistaa tätä kohdetta."
   },
   "navigation": {
     "home": "Koti",

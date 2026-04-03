@@ -165,7 +165,9 @@
     "isoKey": "ISO raktas iš 2 mažųjų raidžių (pvz., en, de, fr).",
     "activeLanguages": "Sesijos konfigūracijoje ir REST API rodomos tik aktyvios kalbos.",
     "mandatoryLanguages": "Privalomos kalbos turi būti pateiktos visuose kalbos įvesties laukuose.",
-    "mandatoryLanguagesAndInactiveLanguages": "Privalomos kalbos būtinos. Neaktyvios kalbos (papilkintos) rodomos, bet negalima jų redaguoti."
+    "mandatoryLanguagesAndInactiveLanguages": "Privalomos kalbos būtinos. Neaktyvios kalbos (papilkintos) rodomos, bet negalima jų redaguoti.",
+    "noWritePermission": "Neturite leidimo redaguoti šio elemento.",
+    "noDeletePermission": "Neturite leidimo ištrinti šio elemento."
   },
   "navigation": {
     "home": "Pradžia",

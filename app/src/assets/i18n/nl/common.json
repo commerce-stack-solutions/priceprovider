@@ -165,7 +165,9 @@
     "groupRefs": "Optioneel. Verwijzingen naar groepen voor groepsspecifieke prijzen.",
     "groupRefsPlaceholder": "Selecteer of zoek groepen...",
     "channelRefs": "Optioneel. Verwijzingen naar kanalen voor kanaalspecifieke prijzen.",
-    "channelRefsPlaceholder": "Kanaal selecteren of zoeken..."
+    "channelRefsPlaceholder": "Kanaal selecteren of zoeken...",
+    "noWritePermission": "U heeft geen toestemming om dit item te bewerken.",
+    "noDeletePermission": "U heeft geen toestemming om dit item te verwijderen."
   },
   "errors": {
     "entity": {
