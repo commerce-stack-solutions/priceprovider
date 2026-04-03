@@ -65,10 +65,24 @@ public class AppRoleController {
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:read')")
     @GetMapping("/{id}")
     public AppRoleRestEntity getAppRole(
-            @PathVariable("id") String id,
+            @PathVariable("id") Long id,
             @RequestParam(value = "$expand", required = false) Set<String> expand
     ) throws NotFoundException, DataMappingException {
         return appRoleFacade.getAppRole(id, expand);
+    }
+
+    @Operation(summary = "Get app role by name", responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved app role"),
+            @ApiResponse(responseCode = "404", description = "App role not found")
+    })
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/by-name/{name}")
+    public AppRoleRestEntity getAppRoleByName(
+            @PathVariable("name") String name,
+            @RequestParam(value = "$expand", required = false) Set<String> expand
+    ) throws NotFoundException, DataMappingException {
+        String decodedName = URLDecoder.decode(name, StandardCharsets.UTF_8);
+        return appRoleFacade.getAppRoleByName(decodedName, expand);
     }
 
     @Operation(summary = "Get meta information for app roles")
@@ -86,7 +100,7 @@ public class AppRoleController {
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
     @PatchMapping("/{id}")
     public AppRoleRestEntity patch(
-            @PathVariable("id") String id,
+            @PathVariable("id") Long id,
             @RequestBody JsonNode patch
     ) throws DataMappingException, NotFoundException, EntityValidationException {
         return appRoleFacade.patch(id, patch);
@@ -99,9 +113,9 @@ public class AppRoleController {
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
     @PutMapping("/{id}")
     public AppRoleRestEntity createOrRecreate(
-            @PathVariable("id") String id,
+            @PathVariable("id") Long id,
             @RequestBody AppRoleRestEntity restEntity
-    ) throws DataMappingException, EntityValidationException {
+    ) throws DataMappingException, EntityValidationException, NotFoundException {
         return appRoleFacade.createOrRecreate(id, restEntity);
     }
 
@@ -124,7 +138,7 @@ public class AppRoleController {
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:delete')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         try {
             appRoleFacade.delete(id);
             return ResponseEntity.noContent().build();
@@ -141,7 +155,7 @@ public class AppRoleController {
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:delete')")
     @PostMapping("/bulk-delete")
-    public ResponseEntity<Void> bulkDeleteAppRoles(@RequestBody List<String> ids) throws DataIntegrityException {
+    public ResponseEntity<Void> bulkDeleteAppRoles(@RequestBody List<Long> ids) throws DataIntegrityException {
         appRoleFacade.bulkDeleteAppRoles(ids);
         return ResponseEntity.noContent().build();
     }

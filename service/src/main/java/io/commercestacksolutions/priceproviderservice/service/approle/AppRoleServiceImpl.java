@@ -54,12 +54,17 @@ public class AppRoleServiceImpl implements AppRoleService {
 
     @Override
     public AppRoleEntity save(AppRoleEntity roleEntity) throws EntityValidationException {
-        // Fetch managed permission entities to avoid detached entity issues
+        // Resolve permission entities by name to avoid detached entity issues
         if (roleEntity.getPermissionRefs() != null && !roleEntity.getPermissionRefs().isEmpty()) {
             Set<AppPermissionEntity> managedPermissions = new HashSet<>();
             for (AppPermissionEntity permRef : roleEntity.getPermissionRefs()) {
-                appPermissionEntityRepository.findById(permRef.getId())
-                    .ifPresent(managedPermissions::add);
+                if (permRef.getName() != null) {
+                    appPermissionEntityRepository.findByName(permRef.getName())
+                        .ifPresent(managedPermissions::add);
+                } else if (permRef.getId() != null) {
+                    appPermissionEntityRepository.findById(permRef.getId())
+                        .ifPresent(managedPermissions::add);
+                }
             }
             roleEntity.setPermissionRefs(managedPermissions);
         }
@@ -97,16 +102,31 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
-    public Optional<AppRoleEntity> getAppRoleById(String id) {
+    public Optional<AppRoleEntity> getAppRoleById(Long id) {
         return appRoleEntityRepository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AppRoleEntity getAppRole(String id) {
+    public AppRoleEntity getAppRole(Long id) {
         // Use repository-level fetch join to load permissions eagerly for this lookup
         AppRoleEntity role = appRoleEntityRepository.findByIdWithPermissions(id).orElse(null);
         // Ensure the permissionRefs collection is initialized while still in transaction
+        if (role != null && role.getPermissionRefs() != null) {
+            role.getPermissionRefs().size();
+        }
+        return role;
+    }
+
+    @Override
+    public Optional<AppRoleEntity> getAppRoleByName(String name) {
+        return appRoleEntityRepository.findByName(name);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AppRoleEntity getAppRoleWithPermissionsByName(String name) {
+        AppRoleEntity role = appRoleEntityRepository.findByNameWithPermissions(name).orElse(null);
         if (role != null && role.getPermissionRefs() != null) {
             role.getPermissionRefs().size();
         }
@@ -119,7 +139,7 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
-    public void deleteAppRole(String id) {
+    public void deleteAppRole(Long id) {
         appRoleEntityRepository.deleteById(id);
     }
 }

@@ -62,7 +62,7 @@ public class JwtClaimsExtractor {
         Set<AppRoleEntity> roles = new HashSet<>();
         for (String roleName : roleNames) {
             try {
-                AppRoleEntity role = appRoleService.getAppRole(roleName);
+                AppRoleEntity role = appRoleService.getAppRoleWithPermissionsByName(roleName);
                 if (role != null) {
                     roles.add(role);
                 }

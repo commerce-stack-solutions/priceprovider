@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
+import java.util.Optional;
 
 @Service
 public class AppPermissionFacadeImpl implements AppPermissionFacade {
@@ -60,7 +61,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
 
         this.patchValidator = new PatchValidator(List.of(
-                new ImmutableFieldsRule(Set.of("id"))
+                new ImmutableFieldsRule(Set.of("id", "name"))
         ));
     }
 
@@ -89,12 +90,12 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
 
     @Transactional
     @Override
-    public AppPermissionRestEntity getAppPermission(String id, Set<String> expand) throws NotFoundException, DataMappingException {
+    public AppPermissionRestEntity getAppPermission(Long id, Set<String> expand) throws NotFoundException, DataMappingException {
         AppPermissionEntity entity = appPermissionService.getAppPermission(id);
         if (entity == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "AppPermission");
-            params.put("id", id);
+            params.put("id", String.valueOf(id));
             throw new NotFoundException(MessageKeys.ERROR_APPPERMISSION_NOT_FOUND, params);
         }
         RestResponseMappingContext context = new RestResponseMappingContext();
@@ -111,8 +112,8 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class})
     @Override
-    public AppPermissionRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException {
-        List<Message> patchValidationErrors = patchValidator.validate(patch, id);
+    public AppPermissionRestEntity patch(Long id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException {
+        List<Message> patchValidationErrors = patchValidator.validate(patch, String.valueOf(id));
         if (!patchValidationErrors.isEmpty()) {
             ErrorResponse errorResponse = new ErrorResponse(patchValidationErrors);
             throw new DataMappingException(MessageKeys.ERROR_MAPPING_PATCH_OPERATION, null, errorResponse);
@@ -125,7 +126,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         if (existingEntity == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "AppPermission");
-            params.put("id", id);
+            params.put("id", String.valueOf(id));
             throw new NotFoundException(MessageKeys.ERROR_APPPERMISSION_NOT_FOUND, params);
         }
         appPermissionEntityMapper.convert(restEntity, existingEntity, new RestRequestMappingContext<>(id));
@@ -133,68 +134,69 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
 
-    @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class})
+    @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class, NotFoundException.class})
     @Override
-    public AppPermissionRestEntity createOrRecreate(String id, AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException {
+    public AppPermissionRestEntity createOrRecreate(Long id, AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException, NotFoundException {
         AppPermissionEntity entity = appPermissionService.getAppPermission(id);
         if (entity != null) {
             appPermissionEntityMapper.convert(restEntity, entity, new RestRequestMappingContext<>(id));
             AppPermissionEntity saved = appPermissionService.save(entity);
             return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
-            AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(id));
-            AppPermissionEntity saved = appPermissionService.save(newEntity);
-            return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
+            Map<String, String> params = new HashMap<>();
+            params.put("entityType", "AppPermission");
+            params.put("id", String.valueOf(id));
+            throw new NotFoundException(MessageKeys.ERROR_APPPERMISSION_NOT_FOUND, params);
         }
     }
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class, EntityAlreadyExistsException.class})
     @Override
     public AppPermissionRestEntity create(AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException, EntityAlreadyExistsException {
-        if (restEntity.getId() == null || restEntity.getId().isEmpty()) {
-            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id"));
+        if (restEntity.getName() == null || restEntity.getName().isEmpty()) {
+            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "name", List.of("name"));
             throw new EntityValidationException(MessageKeys.ERROR_VALIDATION_ID_REQUIRED, message);
         }
 
-        AppPermissionEntity existing = appPermissionService.getAppPermission(restEntity.getId());
-        if (existing != null) {
-            throw new EntityAlreadyExistsException(MessageKeys.ERROR_APPPERMISSION_ALREADY_EXISTS, Map.of("id", restEntity.getId()), List.of("id"));
+        Optional<AppPermissionEntity> existingPermission = appPermissionService.getAppPermissionByName(restEntity.getName());
+        if (existingPermission.isPresent()) {
+            throw new EntityAlreadyExistsException(MessageKeys.ERROR_APPPERMISSION_ALREADY_EXISTS, Map.of("name", restEntity.getName()), List.of("name"));
         }
 
-        AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getId()));
+        AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
         AppPermissionEntity saved = appPermissionService.save(newEntity);
         return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
 
     @Transactional
     @Override
-    public void delete(String id) throws NotFoundException {
+    public void delete(Long id) throws NotFoundException {
         AppPermissionEntity entity = appPermissionService.getAppPermission(id);
         if (entity == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "AppPermission");
-            params.put("id", id);
+            params.put("id", String.valueOf(id));
             throw new NotFoundException(MessageKeys.ERROR_APPPERMISSION_NOT_FOUND, params);
         }
         appPermissionService.deleteAppPermission(id);
     }
 
     @Override
-    public void bulkDeleteAppPermissions(List<String> ids) throws DataIntegrityException {
+    public void bulkDeleteAppPermissions(List<Long> ids) throws DataIntegrityException {
         List<String> failedDeletes = new ArrayList<>();
 
-        for (String id : ids) {
+        for (Long id : ids) {
             AppPermissionEntity entity = appPermissionService.getAppPermission(id);
             if (entity != null) {
                 try {
                     appPermissionService.deleteAppPermission(id);
                 } catch (DataIntegrityViolationException ex) {
-                    failedDeletes.add(id);
+                    failedDeletes.add(String.valueOf(id));
                 } catch (Exception ex) {
                     Throwable cause = ex.getCause();
                     while (cause != null) {
                         if (cause instanceof DataIntegrityViolationException || cause instanceof SQLIntegrityConstraintViolationException) {
-                            failedDeletes.add(id);
+                            failedDeletes.add(String.valueOf(id));
                             break;
                         }
                         cause = cause.getCause();
@@ -236,41 +238,42 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
 
         for (AppPermissionRestEntity restEntity : restEntities) {
             try {
-                if (restEntity.getId() == null || restEntity.getId().isEmpty()) {
+                if (restEntity.getName() == null || restEntity.getName().isEmpty()) {
                     AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id")));
+                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "name", List.of("name")));
                     results.add(errorEntity);
                     continue;
                 }
 
-                AppPermissionEntity existing = appPermissionService.getAppPermission(restEntity.getId());
-                if (existing != null) {
-                    appPermissionEntityMapper.convert(restEntity, existing, new RestRequestMappingContext<>(restEntity.getId()));
+                Optional<AppPermissionEntity> existingOpt = appPermissionService.getAppPermissionByName(restEntity.getName());
+                if (existingOpt.isPresent()) {
+                    AppPermissionEntity existing = existingOpt.get();
+                    appPermissionEntityMapper.convert(restEntity, existing, new RestRequestMappingContext<>(existing.getId()));
                     AppPermissionEntity saved = appPermissionService.save(existing);
                     results.add(appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 } else {
-                    AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getId()));
+                    AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
                     AppPermissionEntity saved = appPermissionService.save(newEntity);
                     results.add(appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 }
             } catch (EntityValidationException e) {
                 AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setName(restEntity.getName());
                 for (Message message : e.getMessages()) {
                     errorEntity.addMessage(message);
                 }
                 results.add(errorEntity);
             } catch (DataMappingException e) {
                 AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setName(restEntity.getName());
                 for (Message message : e.getMessages()) {
                     errorEntity.addMessage(message);
                 }
                 results.add(errorEntity);
             } catch (Exception e) {
-                logger.debug("Error processing AppPermission with id {}: {}", restEntity.getId(), e.getMessage(), e);
+                logger.debug("Error processing AppPermission with name {}: {}", restEntity.getName(), e.getMessage(), e);
                 AppPermissionRestEntity errorEntity = new AppPermissionRestEntity();
-                errorEntity.setId(restEntity.getId());
+                errorEntity.setName(restEntity.getName());
                 errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_PROCESSING, "entity", "AppPermission"));
                 results.add(errorEntity);
             }

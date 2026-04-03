@@ -8,7 +8,7 @@ import io.commercestacksolutions.priceproviderservice.facade.approle.restentity.
 import org.springframework.stereotype.Component;
 
 @Component
-public class AppPermissionEntityMapper extends AbstractMapper<AppPermissionRestEntity, AppPermissionEntity, RestRequestMappingContext<String>> {
+public class AppPermissionEntityMapper extends AbstractMapper<AppPermissionRestEntity, AppPermissionEntity, RestRequestMappingContext<Long>> {
 
     @Override
     public AppPermissionEntity createTarget() {
@@ -16,8 +16,10 @@ public class AppPermissionEntityMapper extends AbstractMapper<AppPermissionRestE
     }
 
     @Override
-    public void convert(AppPermissionRestEntity source, AppPermissionEntity target, RestRequestMappingContext<String> context) throws DataMappingException {
-        target.setId(context.getId());
+    public void convert(AppPermissionRestEntity source, AppPermissionEntity target, RestRequestMappingContext<Long> context) throws DataMappingException {
+        if (source.getName() != null) {
+            target.setName(source.getName());
+        }
         target.setDescription(source.getDescription());
     }
 }

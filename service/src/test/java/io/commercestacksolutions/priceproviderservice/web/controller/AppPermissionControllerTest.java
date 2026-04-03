@@ -39,7 +39,7 @@ public class AppPermissionControllerTest {
     public void testBulkDeleteAppPermissions_Success() throws Exception {
         mockMvc.perform(post("/admin/api/app-permissions/bulk-delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("[\"priceprovider.admin:Group:read\", \"priceprovider.admin:Group:write\"]"))
+                        .content("[1, 2]"))
                 .andExpect(status().isNoContent());
     }
 
@@ -51,7 +51,7 @@ public class AppPermissionControllerTest {
 
         mockMvc.perform(post("/admin/api/app-permissions/bulk-delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("[\"priceprovider.admin:Group:read\"]"))
+                        .content("[1]"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
@@ -60,8 +60,8 @@ public class AppPermissionControllerTest {
     }
 
     @Test
-    public void testCreate_MissingId_Returns400() throws Exception {
-        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "id"), List.of("id"));
+    public void testCreate_MissingName_Returns400() throws Exception {
+        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "name"), List.of("name"));
         when(appPermissionFacade.create(any()))
                 .thenThrow(new EntityValidationException("common.errors.validation.idRequired", validationMessage));
 
@@ -72,22 +72,22 @@ public class AppPermissionControllerTest {
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.idRequired"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("name"));
     }
 
     @Test
     public void testCreate_AlreadyExists_Returns409() throws Exception {
         when(appPermissionFacade.create(any()))
-                .thenThrow(new EntityAlreadyExistsException("common.errors.appPermission.alreadyExists", Map.of("id", "priceprovider.admin:Group:read"), List.of("id")));
+                .thenThrow(new EntityAlreadyExistsException("common.errors.appPermission.alreadyExists", Map.of("name", "priceprovider.admin:Group:read"), List.of("name")));
 
         mockMvc.perform(post("/admin/api/app-permissions/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"priceprovider.admin:Group:read\",\"description\":\"Read groups\"}"))
+                        .content("{\"name\":\"priceprovider.admin:Group:read\",\"description\":\"Read groups\"}"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.appPermission.alreadyExists"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("name"));
     }
 }
 

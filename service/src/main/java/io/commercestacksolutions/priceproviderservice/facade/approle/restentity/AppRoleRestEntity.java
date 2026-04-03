@@ -6,16 +6,25 @@ import io.commercestacksolutions.commons.web.rest.RestEntity;
 import java.util.Set;
 
 public class AppRoleRestEntity extends RestEntity<InfoAuditableRestEntity, IncludesAppRole> {
-    private String id;
+    private Long id;
+    private String name;
     private String description;
     private Set<String> permissionRefs;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

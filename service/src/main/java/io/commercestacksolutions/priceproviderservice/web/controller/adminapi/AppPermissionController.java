@@ -62,7 +62,7 @@ public class AppPermissionController {
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:read')")
     @GetMapping("/{id}")
     public AppPermissionRestEntity getAppPermission(
-            @PathVariable("id") String id,
+            @PathVariable("id") Long id,
             @RequestParam(value = "$expand", required = false) Set<String> expand
     ) throws NotFoundException, DataMappingException {
         return appPermissionFacade.getAppPermission(id, expand);
@@ -83,7 +83,7 @@ public class AppPermissionController {
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
     @PatchMapping("/{id}")
     public AppPermissionRestEntity patch(
-            @PathVariable("id") String id,
+            @PathVariable("id") Long id,
             @RequestBody JsonNode patch
     ) throws DataMappingException, NotFoundException, EntityValidationException {
         return appPermissionFacade.patch(id, patch);
@@ -96,9 +96,9 @@ public class AppPermissionController {
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
     @PutMapping("/{id}")
     public AppPermissionRestEntity createOrRecreate(
-            @PathVariable("id") String id,
+            @PathVariable("id") Long id,
             @RequestBody AppPermissionRestEntity restEntity
-    ) throws DataMappingException, EntityValidationException {
+    ) throws DataMappingException, EntityValidationException, NotFoundException {
         return appPermissionFacade.createOrRecreate(id, restEntity);
     }
 
@@ -121,7 +121,7 @@ public class AppPermissionController {
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:delete')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         try {
             appPermissionFacade.delete(id);
             return ResponseEntity.noContent().build();
@@ -138,7 +138,7 @@ public class AppPermissionController {
     })
     @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:delete')")
     @PostMapping("/bulk-delete")
-    public ResponseEntity<Void> bulkDeleteAppPermissions(@RequestBody List<String> ids) throws DataIntegrityException {
+    public ResponseEntity<Void> bulkDeleteAppPermissions(@RequestBody List<Long> ids) throws DataIntegrityException {
         appPermissionFacade.bulkDeleteAppPermissions(ids);
         return ResponseEntity.noContent().build();
     }
