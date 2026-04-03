@@ -107,7 +107,8 @@
     "country": "Země",
     "countryRef": "Země",
     "priceRepresentationMode": "Režim zobrazení ceny",
-    "priceRepresentationModePlaceholder": "Vyberte režim zobrazení ceny..."
+    "priceRepresentationModePlaceholder": "Vyberte režim zobrazení ceny...",
+    "path": "Cesta"
   },
   "sections": {
     "auditInformation": "Auditní informace",
@@ -167,7 +168,8 @@
     "channelRefs": "Nepovinné. Reference na kanály pro ceny specifické pro kanál.",
     "channelRefsPlaceholder": "Vyberte nebo vyhledejte kanály...",
     "noWritePermission": "Nemáte oprávnění upravovat tuto položku.",
-    "noDeletePermission": "Nemáte oprávnění odstranit tuto položku."
+    "noDeletePermission": "Nemáte oprávnění odstranit tuto položku.",
+    "pathRequired": "Cesta je povinná"
   },
   "navigation": {
     "home": "Domů",

@@ -45,13 +45,13 @@ export class GroupOrganizationCreateComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     if (this.config?.initialValue) {
-      this.form.patchValue({ id: this.config.initialValue });
+      this.form.patchValue({ path: this.config.initialValue });
     }
   }
 
   initForm(): void {
     this.form = this.fb.group({
-      id: ['', Validators.required],
+      path: ['', Validators.required],
       name: ['', Validators.required],
       organizationType: ['']
     });
@@ -81,7 +81,7 @@ export class GroupOrganizationCreateComponent implements OnInit {
       
       // Show error message for missing required fields
       const missingFields = [];
-      if (this.form.get('id')?.invalid) missingFields.push('ID');
+      if (this.form.get('path')?.invalid) missingFields.push('Path');
       if (this.form.get('name')?.invalid) missingFields.push('Name');
       if (this.entityType() === 'organization' && this.form.get('organizationType')?.invalid) {
         missingFields.push('Organization Type');
@@ -103,7 +103,7 @@ export class GroupOrganizationCreateComponent implements OnInit {
 
     if (this.entityType() === 'group') {
       const group: Group = {
-        id: formValue.id,
+        path: formValue.path,
         name: formValue.name,
         parentRefs: [],
         subRefs: []
@@ -130,7 +130,7 @@ export class GroupOrganizationCreateComponent implements OnInit {
       });
     } else {
       const organization: Organization = {
-        id: formValue.id,
+        path: formValue.path,
         name: formValue.name,
         organizationType: formValue.organizationType,
         parentRefs: [],

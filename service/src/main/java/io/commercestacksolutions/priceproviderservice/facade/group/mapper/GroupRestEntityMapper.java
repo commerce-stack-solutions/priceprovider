@@ -21,22 +21,23 @@ public class GroupRestEntityMapper extends AbstractMapper<GroupEntity, GroupRest
     @Override
     public void convert(GroupEntity source, GroupRestEntity target, RestResponseMappingContext context) {
         target.setId(source.getId());
+        target.setPath(source.getPath());
         target.setName(source.getName());
 
-        // Convert parent entities to IDs
+        // Convert parent entities to paths
         if (source.getParentRefs() != null) {
             Set<String> parentRefs = source.getParentRefs().stream()
-                    .filter(parent -> parent != null && parent.getId() != null)
-                    .map(GroupEntity::getId)
+                    .filter(parent -> parent != null && parent.getPath() != null)
+                    .map(GroupEntity::getPath)
                     .collect(Collectors.toSet());
             target.setParentRefs(parentRefs);
         }
 
-        // Convert sub entities to IDs
+        // Convert sub entities to paths
         if (source.getSubRefs() != null) {
             Set<String> subRefs = source.getSubRefs().stream()
-                    .filter(sub -> sub != null && sub.getId() != null)
-                    .map(GroupEntity::getId)
+                    .filter(sub -> sub != null && sub.getPath() != null)
+                    .map(GroupEntity::getPath)
                     .collect(Collectors.toSet());
             target.setSubRefs(subRefs);
         }

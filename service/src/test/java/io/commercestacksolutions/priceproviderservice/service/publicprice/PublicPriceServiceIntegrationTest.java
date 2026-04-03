@@ -167,20 +167,20 @@ public class PublicPriceServiceIntegrationTest {
         testChannelGlobal = channelRepository.save(testChannelGlobal);
         
         testGroupGrandparent = new GroupEntity();
-        testGroupGrandparent.setId("GROUP-GRANDPARENT");
+        testGroupGrandparent.setPath("GROUP-GRANDPARENT");
         testGroupGrandparent.setCreatedAt(OffsetDateTime.now());
         testGroupGrandparent.setLastModifiedAt(OffsetDateTime.now());
         testGroupGrandparent = groupRepository.save(testGroupGrandparent);
         
         testGroupParent = new GroupEntity();
-        testGroupParent.setId("GROUP-PARENT");
+        testGroupParent.setPath("GROUP-PARENT");
         testGroupParent.setParentRefs(Set.of(testGroupGrandparent));
         testGroupParent.setCreatedAt(OffsetDateTime.now());
         testGroupParent.setLastModifiedAt(OffsetDateTime.now());
         testGroupParent = groupRepository.save(testGroupParent);
         
         testGroupChild = new GroupEntity();
-        testGroupChild.setId("GROUP-CHILD");
+        testGroupChild.setPath("GROUP-CHILD");
         testGroupChild.setParentRefs(Set.of(testGroupParent));
         testGroupChild.setCreatedAt(OffsetDateTime.now());
         testGroupChild.setLastModifiedAt(OffsetDateTime.now());

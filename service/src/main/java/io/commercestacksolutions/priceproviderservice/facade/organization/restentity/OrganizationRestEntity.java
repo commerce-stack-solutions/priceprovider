@@ -5,20 +5,30 @@ import io.commercestacksolutions.commons.web.rest.RestEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class OrganizationRestEntity extends RestEntity<InfoAuditableRestEntity, IncludesOrganization> {
-    private String id;
+    private UUID id;
+    private String path;
     private String name;
     private OrganizationType organizationType;
     private Set<String> parentRefs;
     private Set<String> subRefs;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {

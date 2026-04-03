@@ -31,7 +31,8 @@ public class OrganizationEntity extends GroupEntity {
     @Override
     public String toString() {
         return "OrganizationEntity{" +
-                "id='" + getId() + '\'' +
+                "id=" + getId() +
+                ", path='" + getPath() + '\'' +
                 ", name='" + getName() + '\'' +
                 ", organizationType=" + organizationType +
                 ", createdAt=" + getCreatedAt() +

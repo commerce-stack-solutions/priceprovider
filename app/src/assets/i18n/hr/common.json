@@ -107,7 +107,8 @@
     "country": "Zemlja",
     "countryRef": "Zemlja",
     "priceRepresentationMode": "Način prikaza cijene",
-    "priceRepresentationModePlaceholder": "Odaberite način prikaza cijene..."
+    "priceRepresentationModePlaceholder": "Odaberite način prikaza cijene...",
+    "path": "Putanja"
   },
   "sections": {
     "auditInformation": "Revizijske informacije",
@@ -167,7 +168,8 @@
     "channelRefs": "Neobavezno. Reference na kanale za cijene specifične za kanal.",
     "channelRefsPlaceholder": "Odaberite ili pretražite kanale...",
     "noWritePermission": "Nemate dopuštenje za uređivanje ove stavke.",
-    "noDeletePermission": "Nemate dopuštenje za brisanje ove stavke."
+    "noDeletePermission": "Nemate dopuštenje za brisanje ove stavke.",
+    "pathRequired": "Putanja je obavezna"
   },
   "navigation": {
     "home": "Početna",

@@ -107,7 +107,8 @@
     "country": "Maa",
     "countryRef": "Maa",
     "priceRepresentationMode": "Hinnan esitystapa",
-    "priceRepresentationModePlaceholder": "Valitse hinnan esitystapa..."
+    "priceRepresentationModePlaceholder": "Valitse hinnan esitystapa...",
+    "path": "Polku"
   },
   "sections": {
     "auditInformation": "Auditointitiedot",
@@ -167,7 +168,8 @@
     "mandatoryLanguages": "Pakolliset kielet on annettava kaikissa kielikentissä.",
     "mandatoryLanguagesAndInactiveLanguages": "Pakolliset kielet vaaditaan. Passiiviset kielet (harmaana) näytetään, mutta niitä ei voi muokata.",
     "noWritePermission": "Sinulla ei ole oikeutta muokata tätä kohdetta.",
-    "noDeletePermission": "Sinulla ei ole oikeutta poistaa tätä kohdetta."
+    "noDeletePermission": "Sinulla ei ole oikeutta poistaa tätä kohdetta.",
+    "pathRequired": "Polku on pakollinen"
   },
   "navigation": {
     "home": "Koti",

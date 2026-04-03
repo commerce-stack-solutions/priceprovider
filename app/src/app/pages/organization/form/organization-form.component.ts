@@ -66,14 +66,14 @@ export class OrganizationFormComponent implements OnInit {
   groupsDataSource = (searchTerm: string, page: number): Observable<ReferenceDataSourceResult> => {
     const pageSize = 10;
     // Build query for backend filtering - search in id OR name
-    const query = searchTerm ? `id:*${searchTerm}* OR name:*${searchTerm}*` : undefined;
+    const query = searchTerm ? `path:*${searchTerm}* OR name:*${searchTerm}*` : undefined;
 
     return this.groupsService.getGroups(page, pageSize, undefined, undefined, undefined, query).pipe(
       catchError(() => of({ items: [], $info: {} })),
       map(response => {
-        const options = (response.items || []).map(g => ({
-          value: g.id,
-          label: g.name ? `${g.id} - ${g.name}` : g.id
+        const options = (response.items || []).filter(g => g.path).map(g => ({
+          value: g.path as string,
+          label: g.name ? `${g.path} - ${g.name}` : (g.path as string)
         }));
 
         // Check if there are more items
@@ -98,7 +98,7 @@ export class OrganizationFormComponent implements OnInit {
       this.loading.set(false);
 
       if (this.config?.initialValue) {
-        this.form.patchValue({ id: this.config.initialValue });
+        this.form.patchValue({ path: this.config.initialValue });
       }
     } else {
       const idParam = this.route.snapshot.paramMap.get('id');
@@ -138,7 +138,7 @@ export class OrganizationFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      id: [{ value: '', disabled: this.isEditMode() }, Validators.required],
+      path: [{ value: '', disabled: this.isEditMode() }, Validators.required],
       name: ['', Validators.required],
       organizationType: ['', Validators.required],
       parentRefs: [[]],
@@ -158,7 +158,7 @@ export class OrganizationFormComponent implements OnInit {
           }
         }
         const patchData: any = {
-          id: org.id,
+          path: org.path,
           name: org.name,
           organizationType: org.organizationType,
           parentRefs: org.parentRefs || [],
@@ -269,7 +269,7 @@ export class OrganizationFormComponent implements OnInit {
       });
     } else {
       const org: Organization = {
-        id: formValue.id,
+        path: formValue.path,
         name: formValue.name,
         organizationType: formValue.organizationType,
         parentRefs: formValue.parentRefs || [],
@@ -384,8 +384,8 @@ export class OrganizationFormComponent implements OnInit {
 
     if (result.success && result.data) {
       const currentParents = this.form.get('parentRefs')?.value || [];
-      if (!currentParents.includes(result.data.id)) {
-        this.form.get('parentRefs')?.setValue([...currentParents, result.data.id]);
+      if (!currentParents.includes(result.data.path)) {
+        this.form.get('parentRefs')?.setValue([...currentParents, result.data.path]);
       }
     }
   }
@@ -399,8 +399,8 @@ export class OrganizationFormComponent implements OnInit {
 
     if (result.success && result.data) {
       const currentSubs = this.form.get('subRefs')?.value || [];
-      if (!currentSubs.includes(result.data.id)) {
-        this.form.get('subRefs')?.setValue([...currentSubs, result.data.id]);
+      if (!currentSubs.includes(result.data.path)) {
+        this.form.get('subRefs')?.setValue([...currentSubs, result.data.path]);
       }
     }
   }

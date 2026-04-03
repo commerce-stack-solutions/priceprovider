@@ -43,18 +43,18 @@ public class GroupControllerQueryFilterTest {
 
         // Create parent groups (no parent)
         GroupEntity groupA = new GroupEntity();
-        groupA.setId("GROUP_A");
+        groupA.setPath("GROUP_A");
         groupA.setName("Group A");
-        groupRepository.save(groupA);
+        groupA = groupRepository.save(groupA);
 
         GroupEntity groupB = new GroupEntity();
-        groupB.setId("GROUP_B");
+        groupB.setPath("GROUP_B");
         groupB.setName("Group B");
-        groupRepository.save(groupB);
+        groupB = groupRepository.save(groupB);
 
         // Create child groups
         GroupEntity groupA1 = new GroupEntity();
-        groupA1.setId("GROUP_A1");
+        groupA1.setPath("GROUP_A1");
         groupA1.setName("Group A1");
         Set<GroupEntity> parentsA1 = new HashSet<>();
         parentsA1.add(groupA);
@@ -62,7 +62,7 @@ public class GroupControllerQueryFilterTest {
         groupRepository.save(groupA1);
 
         GroupEntity groupA2 = new GroupEntity();
-        groupA2.setId("GROUP_A2");
+        groupA2.setPath("GROUP_A2");
         groupA2.setName("Group A2");
         Set<GroupEntity> parentsA2 = new HashSet<>();
         parentsA2.add(groupA);
@@ -71,13 +71,13 @@ public class GroupControllerQueryFilterTest {
 
         // Update groupA with subs
         Set<GroupEntity> subsA = new HashSet<>();
-        subsA.add(groupA1);
-        subsA.add(groupA2);
+        subsA.add(groupRepository.findByPath("GROUP_A1").orElseThrow());
+        subsA.add(groupRepository.findByPath("GROUP_A2").orElseThrow());
         groupA.setSubRefs(subsA);
         groupRepository.save(groupA);
 
         GroupEntity groupB1 = new GroupEntity();
-        groupB1.setId("GROUP_B1");
+        groupB1.setPath("GROUP_B1");
         groupB1.setName("Group B1");
         Set<GroupEntity> parentsB1 = new HashSet<>();
         parentsB1.add(groupB);
@@ -86,13 +86,13 @@ public class GroupControllerQueryFilterTest {
 
         // Update groupB with subs
         Set<GroupEntity> subsB = new HashSet<>();
-        subsB.add(groupB1);
+        subsB.add(groupRepository.findByPath("GROUP_B1").orElseThrow());
         groupB.setSubRefs(subsB);
         groupRepository.save(groupB);
 
         // Standalone group (no parent, no children)
         GroupEntity groupC = new GroupEntity();
-        groupC.setId("GROUP_C");
+        groupC.setPath("GROUP_C");
         groupC.setName("Group C");
         groupRepository.save(groupC);
     }
@@ -111,10 +111,10 @@ public class GroupControllerQueryFilterTest {
     @Order(2)
     public void testFilterById() throws Exception {
         mockMvc.perform(get("/admin/api/groups")
-                        .param("q", "id:GROUP_A"))
+                        .param("q", "path:GROUP_A"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(1)))
-                .andExpect(jsonPath("$.items[0].id", is("GROUP_A")));
+                .andExpect(jsonPath("$.items[0].path", is("GROUP_A")));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "subRefs.exists:true"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(2)))
-                .andExpect(jsonPath("$.items[*].id", hasItems("GROUP_A", "GROUP_B")));
+                .andExpect(jsonPath("$.items[*].path", hasItems("GROUP_A", "GROUP_B")));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "subRefs.exists:false"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(4)))
-                .andExpect(jsonPath("$.items[*].id", hasItems("GROUP_A1", "GROUP_A2", "GROUP_B1", "GROUP_C")));
+                .andExpect(jsonPath("$.items[*].path", hasItems("GROUP_A1", "GROUP_A2", "GROUP_B1", "GROUP_C")));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "parentRefs.exists:true"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(3)))
-                .andExpect(jsonPath("$.items[*].id", hasItems("GROUP_A1", "GROUP_A2", "GROUP_B1")));
+                .andExpect(jsonPath("$.items[*].path", hasItems("GROUP_A1", "GROUP_A2", "GROUP_B1")));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "parentRefs.exists:false"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(3)))
-                .andExpect(jsonPath("$.items[*].id", hasItems("GROUP_A", "GROUP_B", "GROUP_C")));
+                .andExpect(jsonPath("$.items[*].path", hasItems("GROUP_A", "GROUP_B", "GROUP_C")));
     }
 
     @Test
@@ -181,7 +181,7 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "parentRefs.exists:true AND subRefs.exists:false"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(3)))
-                .andExpect(jsonPath("$.items[*].id", hasItems("GROUP_A1", "GROUP_A2", "GROUP_B1")));
+                .andExpect(jsonPath("$.items[*].path", hasItems("GROUP_A1", "GROUP_A2", "GROUP_B1")));
     }
 
     @Test
@@ -192,21 +192,21 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "parentRefs.exists:false AND subRefs.exists:false"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(1)))
-                .andExpect(jsonPath("$.items[0].id", is("GROUP_C")));
+                .andExpect(jsonPath("$.items[0].path", is("GROUP_C")));
     }
 
     @Test
     @Order(10)
     public void testSortById() throws Exception {
         mockMvc.perform(get("/admin/api/groups")
-                        .param("sort-by", "id")
+                        .param("sort-by", "path")
                         .param("sort-direction", "asc")
                         .param("page-size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(6)))
-                .andExpect(jsonPath("$.items[0].id", is("GROUP_A")))
-                .andExpect(jsonPath("$.items[1].id", is("GROUP_A1")))
-                .andExpect(jsonPath("$.items[2].id", is("GROUP_A2")));
+                .andExpect(jsonPath("$.items[0].path", is("GROUP_A")))
+                .andExpect(jsonPath("$.items[1].path", is("GROUP_A1")))
+                .andExpect(jsonPath("$.items[2].path", is("GROUP_A2")));
     }
 
     @Test
@@ -217,7 +217,7 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "name:*Group A*"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(3)))
-                .andExpect(jsonPath("$.items[*].id", hasItems("GROUP_A", "GROUP_A1", "GROUP_A2")));
+                .andExpect(jsonPath("$.items[*].path", hasItems("GROUP_A", "GROUP_A1", "GROUP_A2")));
     }
 
     @Test
@@ -238,7 +238,7 @@ public class GroupControllerQueryFilterTest {
                         .param("q", "name:*B*"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items", hasSize(2)))
-                .andExpect(jsonPath("$.items[*].id", hasItems("GROUP_B", "GROUP_B1")));
+                .andExpect(jsonPath("$.items[*].path", hasItems("GROUP_B", "GROUP_B1")));
     }
 
 

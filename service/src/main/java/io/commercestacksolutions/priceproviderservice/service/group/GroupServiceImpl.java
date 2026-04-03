@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Implementation of GroupService interface.
@@ -86,19 +87,23 @@ public class GroupServiceImpl implements GroupService {
         return groupEntityRepository.findAll(pageRequest);
     }
 
-    public Optional<GroupEntity> getGroupById(String id) {
+    public Optional<GroupEntity> getGroupById(UUID id) {
         return groupEntityRepository.findById(id);
     }
 
-    public GroupEntity getGroup(String id) {
+    public GroupEntity getGroup(UUID id) {
         return groupEntityRepository.findById(id).orElse(null);
+    }
+
+    public GroupEntity getGroupByPath(String path) {
+        return groupEntityRepository.findByPath(path).orElse(null);
     }
 
     public GroupEntity updateGroup(GroupEntity updatedGroup) throws EntityValidationException {
         return save(updatedGroup);
     }
 
-    public void deleteGroup(String id) {
+    public void deleteGroup(UUID id) {
         groupEntityRepository.deleteById(id);
     }
 }

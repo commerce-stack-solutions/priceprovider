@@ -11,16 +11,23 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = GroupEntity.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "path", scope = GroupEntity.class)
 // Scope auf die konkrete Entity setzen, damit verschiedene Entity-Typen nicht dieselben Object-IDs im globalen Object-Scope teilen
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GroupEntity implements AuditableEntity {
+
     @Id
-        private String id;
-    
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @MetaMandatoryField
+    @Column(unique = true, nullable = false)
+    private String path;
+
     @MetaMandatoryField
     private String name;
 
@@ -30,12 +37,12 @@ public class GroupEntity implements AuditableEntity {
         joinColumns = @JoinColumn(name = "group_id"),
         inverseJoinColumns = @JoinColumn(name = "parent_id")
     )
-    // Parents nur als ID-Referenzen (z.B. { "id": "GRP-SAMPLE-001" }) lesen/schreiben
+    // Parents als Path-Referenzen (z.B. { "path": "GRP-SAMPLE-001" }) lesen/schreiben
     @JsonIdentityReference(alwaysAsId = true)
     private Set<GroupEntity> parentRefs = new HashSet<>();
     
     @ManyToMany(mappedBy = "parentRefs")
-    // Subs ebenfalls als ID-Referenzen serialisieren
+    // Subs ebenfalls als Path-Referenzen serialisieren
     @JsonIdentityReference(alwaysAsId = true)
     private Set<GroupEntity> subRefs = new HashSet<>();
 
@@ -46,16 +53,24 @@ public class GroupEntity implements AuditableEntity {
     public GroupEntity() {
     }
 
-    public GroupEntity(String id) {
-        this.id = id;
+    public GroupEntity(String path) {
+        this.path = path;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {
@@ -105,7 +120,8 @@ public class GroupEntity implements AuditableEntity {
     @Override
     public String toString() {
         return "GroupEntity{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", path='" + path + '\'' +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
                 ", lastModifiedAt=" + lastModifiedAt +

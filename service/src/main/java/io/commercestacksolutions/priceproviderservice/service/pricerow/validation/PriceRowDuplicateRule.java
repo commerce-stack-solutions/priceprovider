@@ -93,10 +93,10 @@ public class PriceRowDuplicateRule implements ValidationRule<PriceRowEntity> {
 
         // Compare groups
         Set<String> groups1 = pr1.getGroups() != null ? 
-            pr1.getGroups().stream().map(g -> g.getId()).collect(java.util.stream.Collectors.toSet()) : 
+            pr1.getGroups().stream().filter(g -> g != null && g.getPath() != null).map(g -> g.getPath()).collect(java.util.stream.Collectors.toSet()) : 
             new java.util.HashSet<>();
         Set<String> groups2 = pr2.getGroups() != null ? 
-            pr2.getGroups().stream().map(g -> g.getId()).collect(java.util.stream.Collectors.toSet()) : 
+            pr2.getGroups().stream().filter(g -> g != null && g.getPath() != null).map(g -> g.getPath()).collect(java.util.stream.Collectors.toSet()) : 
             new java.util.HashSet<>();
         if (!equals(groups1, groups2)) {
             return false;

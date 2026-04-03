@@ -4,19 +4,29 @@ import io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity;
 import io.commercestacksolutions.commons.web.rest.RestEntity;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class GroupRestEntity extends RestEntity<InfoAuditableRestEntity, IncludesGroup> {
-    private String id;
+    private UUID id;
+    private String path;
     private String name;
     private Set<String> parentRefs;
     private Set<String> subRefs;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {

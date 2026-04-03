@@ -41,8 +41,8 @@ public class OrganizationAvoidCyclicDependencyRule implements ValidationRule<Org
     public List<Message> validate(OrganizationEntity entity) {
         List<Message> errors = new ArrayList<>();
         
-        if (entity == null || entity.getId() == null) {
-            return errors; // Can't validate without entity or id
+        if (entity == null || entity.getPath() == null) {
+            return errors; // Can't validate without entity or path
         }
         
         Set<GroupEntity> parentRefs = entity.getParentRefs();
@@ -52,15 +52,15 @@ public class OrganizationAvoidCyclicDependencyRule implements ValidationRule<Org
         
         // Check each parent for potential cycles
         for (GroupEntity parent : parentRefs) {
-            if (parent == null || parent.getId() == null) {
+            if (parent == null || parent.getPath() == null) {
                 continue;
             }
             
             // Check if setting this parent would create a cycle
-            if (wouldCreateCycle(entity.getId(), parent.getId())) {
+            if (wouldCreateCycle(entity.getPath(), parent.getPath())) {
                 Map<String, String> params = new HashMap<>();
-                params.put("parentId", parent.getId());
-                params.put("organizationId", entity.getId());
+                params.put("parentId", parent.getPath());
+                params.put("organizationId", entity.getPath());
                 
                 errors.add(new Message(
                     Message.MessageType.ERROR,
@@ -78,20 +78,20 @@ public class OrganizationAvoidCyclicDependencyRule implements ValidationRule<Org
      * Checks if adding a parent would create a cycle in the hierarchy.
      * 
      * This method builds the complete group hierarchy from the database and checks
-     * if adding entityId → parentId would create a cycle.
+     * if adding entityPath → parentPath would create a cycle.
      * 
      * Algorithm:
      * 1. Build a map of the current hierarchy from the database
      * 2. Simulate adding the new relationship
      * 3. Check if a cycle exists using DFS traversal
      * 
-     * @param entityId the id of the organization being validated
-     * @param parentId the id of the proposed parent
+     * @param entityPath the path of the organization being validated
+     * @param parentPath the path of the proposed parent
      * @return true if a cycle would be created, false otherwise
      */
-    private boolean wouldCreateCycle(String entityId, String parentId) {
+    private boolean wouldCreateCycle(String entityPath, String parentPath) {
         // Direct self-reference
-        if (entityId.equals(parentId)) {
+        if (entityPath.equals(parentPath)) {
             return true;
         }
         
@@ -99,17 +99,17 @@ public class OrganizationAvoidCyclicDependencyRule implements ValidationRule<Org
         Map<String, Set<String>> hierarchy = buildHierarchyMap();
         
         // Simulate the new relationship
-        hierarchy.computeIfAbsent(entityId, k -> new HashSet<>()).add(parentId);
+        hierarchy.computeIfAbsent(entityPath, k -> new HashSet<>()).add(parentPath);
         
-        // Check if this creates a cycle starting from entityId
-        return detectCycleInHierarchy(entityId, hierarchy);
+        // Check if this creates a cycle starting from entityPath
+        return detectCycleInHierarchy(entityPath, hierarchy);
     }
     
     /**
      * Builds a map of the current group hierarchy from the database.
-     * The map contains: groupId → Set of parent groupIds
+     * The map contains: groupPath → Set of parent groupPaths
      * 
-     * @return map of group ids to their parent group ids
+     * @return map of group paths to their parent group paths
      */
     private Map<String, Set<String>> buildHierarchyMap() {
         Map<String, Set<String>> hierarchy = new HashMap<>();
@@ -117,15 +117,15 @@ public class OrganizationAvoidCyclicDependencyRule implements ValidationRule<Org
         try {
             List<GroupEntity> allGroups = groupEntityRepository.findAll();
             for (GroupEntity group : allGroups) {
-                if (group.getId() != null && group.getParentRefs() != null) {
-                    Set<String> parentIds = new HashSet<>();
+                if (group.getPath() != null && group.getParentRefs() != null) {
+                    Set<String> parentPaths = new HashSet<>();
                     for (GroupEntity parent : group.getParentRefs()) {
-                        if (parent != null && parent.getId() != null) {
-                            parentIds.add(parent.getId());
+                        if (parent != null && parent.getPath() != null) {
+                            parentPaths.add(parent.getPath());
                         }
                     }
-                    if (!parentIds.isEmpty()) {
-                        hierarchy.put(group.getId(), parentIds);
+                    if (!parentPaths.isEmpty()) {
+                        hierarchy.put(group.getPath(), parentPaths);
                     }
                 }
             }

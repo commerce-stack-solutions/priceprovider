@@ -109,11 +109,11 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testCreate_MissingId_Returns400() throws Exception {
+    public void testCreate_MissingPath_Returns400() throws Exception {
         // Simulate EntityValidationException when ID is missing
-        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "id"), List.of("id"));
+        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.pathRequired", Map.of("field", "path"), List.of("path"));
         when(groupFacade.create(any()))
-                .thenThrow(new EntityValidationException("common.errors.validation.idRequired", validationMessage));
+                .thenThrow(new EntityValidationException("common.errors.validation.pathRequired", validationMessage));
 
         mockMvc.perform(post("/admin/api/groups/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -121,23 +121,23 @@ public class GroupControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
-                .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.idRequired"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.pathRequired"))
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
     }
 
     @Test
     public void testCreate_GroupAlreadyExists_Returns409() throws Exception {
         // Simulate EntityAlreadyExistsException when group already exists
         when(groupFacade.create(any()))
-                .thenThrow(new EntityAlreadyExistsException("common.errors.group.alreadyExists", Map.of("id", "GRP-001"), List.of("id")));
+                .thenThrow(new EntityAlreadyExistsException("common.errors.group.alreadyExists", Map.of("path", "GRP-001"), List.of("path")));
 
         mockMvc.perform(post("/admin/api/groups/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"GRP-001\",\"name\":\"Test Group\"}"))
+                        .content("{\"path\":\"GRP-001\",\"name\":\"Test Group\"}"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.group.alreadyExists"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
     }
 }

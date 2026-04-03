@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Implementation of OrganizationService interface.
@@ -86,19 +87,23 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationEntityRepository.findAll(pageRequest);
     }
 
-    public Optional<OrganizationEntity> getOrganizationById(String id) {
+    public Optional<OrganizationEntity> getOrganizationById(UUID id) {
         return organizationEntityRepository.findById(id);
     }
 
-    public OrganizationEntity getOrganization(String id) {
+    public OrganizationEntity getOrganization(UUID id) {
         return organizationEntityRepository.findById(id).orElse(null);
+    }
+
+    public OrganizationEntity getOrganizationByPath(String path) {
+        return organizationEntityRepository.findByPath(path).orElse(null);
     }
 
     public OrganizationEntity updateOrganization(OrganizationEntity updatedOrganization) throws EntityValidationException {
         return save(updatedOrganization);
     }
 
-    public void deleteOrganization(String id) {
+    public void deleteOrganization(UUID id) {
         organizationEntityRepository.deleteById(id);
     }
 }

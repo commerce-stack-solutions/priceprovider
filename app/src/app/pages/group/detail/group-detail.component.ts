@@ -106,7 +106,7 @@ export class GroupDetailComponent {
     if (!group) return;
 
     if (confirm(this.transloco.translate('common.messages.confirmDelete'))) {
-      this.groupsService.deleteGroup(group.id).subscribe({
+      this.groupsService.deleteGroup(group.id!).subscribe({
         next: () => {
           this.router.navigate(['/groups']);
         },

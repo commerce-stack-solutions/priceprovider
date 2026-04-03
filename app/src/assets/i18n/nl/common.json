@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prijsweergavemodus",
-    "priceRepresentationModePlaceholder": "Selecteer prijsweergavemodus..."
+    "priceRepresentationModePlaceholder": "Selecteer prijsweergavemodus...",
+    "path": "Pad"
   },
   "sections": {
     "auditInformation": "Auditinformatie",
@@ -167,7 +168,8 @@
     "channelRefs": "Optioneel. Verwijzingen naar kanalen voor kanaalspecifieke prijzen.",
     "channelRefsPlaceholder": "Kanaal selecteren of zoeken...",
     "noWritePermission": "U heeft geen toestemming om dit item te bewerken.",
-    "noDeletePermission": "U heeft geen toestemming om dit item te verwijderen."
+    "noDeletePermission": "U heeft geen toestemming om dit item te verwijderen.",
+    "pathRequired": "Pad is vereist"
   },
   "errors": {
     "entity": {

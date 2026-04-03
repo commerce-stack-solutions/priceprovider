@@ -44,11 +44,11 @@
                    (change)="toggleSelectAll()">
           </th>
           <th class="sortable">
-            <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
-            @if (getFilterConfig('id'); as config) {
+            <span (click)="sortByField('path')">{{ 'common.fields.path' | transloco }}{{ getSortIndicator('path') }}</span>
+            @if (getFilterConfig('path'); as config) {
               <app-column-filter 
                 [config]="config"
-                [activeFilter]="getActiveFilter('id')"
+                [activeFilter]="getActiveFilter('path')"
                 (filterApplied)="onFilterApplied($event)"
                 (filterRemoved)="onFilterRemoved($event)">
               </app-column-filter>
@@ -106,12 +106,12 @@
           <tr>
             <td>
               <input type="checkbox" class="form-check-input" 
-                     [checked]="selectedIds().has(org.id)"
-                     (change)="toggleSelection(org.id)">
+                     [checked]="org.id !== undefined && selectedIds().has(org.id)"
+                     (change)="org.id && toggleSelection(org.id)">
             </td>
             <td>
               <a [routerLink]="['/' + lang(), 'organizations', org.id]" class="ref-badge">
-                {{ org.id }}
+                {{ org.path }}
               </a>
             </td>
             <td>{{ org.name }}</td>

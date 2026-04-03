@@ -107,7 +107,8 @@
     "country": "国",
     "countryRef": "国",
     "priceRepresentationMode": "価格表示モード",
-    "priceRepresentationModePlaceholder": "価格表示モードを選択してください..."
+    "priceRepresentationModePlaceholder": "価格表示モードを選択してください...",
+    "path": "パス"
   },
   "sections": {
     "auditInformation": "監査情報",
@@ -167,7 +168,8 @@
     "mandatoryLanguages": "必須言語はすべての言語入力フィールドで指定する必要があります。",
     "mandatoryLanguagesAndInactiveLanguages": "必須言語は入力が必要です。無効な言語（グレー表示）は表示されますが編集できません。",
     "noWritePermission": "このアイテムを編集する権限がありません。",
-    "noDeletePermission": "このアイテムを削除する権限がありません。"
+    "noDeletePermission": "このアイテムを削除する権限がありません。",
+    "pathRequired": "パスは必須です"
   },
   "navigation": {
     "home": "ホーム",

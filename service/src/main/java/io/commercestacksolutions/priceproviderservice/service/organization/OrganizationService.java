@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service interface for Organization entity operations.
@@ -38,20 +39,28 @@ public interface OrganizationService extends EntityService<OrganizationEntity> {
     Page<OrganizationEntity> getOrganizations(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
     
     /**
-     * Retrieves an organization by its ID.
+     * Retrieves an organization by its UUID.
      * 
-     * @param id the organization ID
+     * @param id the organization UUID
      * @return optional containing the organization entity if found
      */
-    Optional<OrganizationEntity> getOrganizationById(String id);
+    Optional<OrganizationEntity> getOrganizationById(UUID id);
     
     /**
-     * Retrieves an organization by its ID.
+     * Retrieves an organization by its UUID.
      * 
-     * @param id the organization ID
+     * @param id the organization UUID
      * @return the organization entity, or null if not found
      */
-    OrganizationEntity getOrganization(String id);
+    OrganizationEntity getOrganization(UUID id);
+
+    /**
+     * Retrieves an organization by its path (unique human-readable identifier).
+     *
+     * @param path the organization path
+     * @return the organization entity, or null if not found
+     */
+    OrganizationEntity getOrganizationByPath(String path);
     
     /**
      * Updates an organization entity.
@@ -62,9 +71,9 @@ public interface OrganizationService extends EntityService<OrganizationEntity> {
     OrganizationEntity updateOrganization(OrganizationEntity updatedOrganization) throws EntityValidationException;
     
     /**
-     * Deletes an organization by its ID.
+     * Deletes an organization by its UUID.
      * 
-     * @param id the organization ID
+     * @param id the organization UUID
      */
-    void deleteOrganization(String id);
+    void deleteOrganization(UUID id);
 }

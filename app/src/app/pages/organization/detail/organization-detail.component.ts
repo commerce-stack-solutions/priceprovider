@@ -109,7 +109,7 @@ export class OrganizationDetailComponent {
     if (!org) return;
 
     if (confirm(this.transloco.translate('common.messages.confirmDelete'))) {
-      this.organizationsService.deleteOrganization(org.id).subscribe({
+      this.organizationsService.deleteOrganization(org.id!).subscribe({
         next: () => {
           this.router.navigate(['/organizations']);
         },

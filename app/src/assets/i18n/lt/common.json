@@ -107,7 +107,8 @@
     "country": "Šalis",
     "countryRef": "Šalis",
     "priceRepresentationMode": "Kainos atvaizdavimo režimas",
-    "priceRepresentationModePlaceholder": "Pasirinkite kainos atvaizdavimo režimą..."
+    "priceRepresentationModePlaceholder": "Pasirinkite kainos atvaizdavimo režimą...",
+    "path": "Kelias"
   },
   "sections": {
     "auditInformation": "Audito informacija",
@@ -167,7 +168,8 @@
     "mandatoryLanguages": "Privalomos kalbos turi būti pateiktos visuose kalbos įvesties laukuose.",
     "mandatoryLanguagesAndInactiveLanguages": "Privalomos kalbos būtinos. Neaktyvios kalbos (papilkintos) rodomos, bet negalima jų redaguoti.",
     "noWritePermission": "Neturite leidimo redaguoti šio elemento.",
-    "noDeletePermission": "Neturite leidimo ištrinti šio elemento."
+    "noDeletePermission": "Neturite leidimo ištrinti šio elemento.",
+    "pathRequired": "Kelias yra privalomas"
   },
   "navigation": {
     "home": "Pradžia",

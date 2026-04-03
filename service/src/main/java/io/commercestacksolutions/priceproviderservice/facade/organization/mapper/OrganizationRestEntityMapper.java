@@ -22,23 +22,24 @@ public class OrganizationRestEntityMapper extends AbstractMapper<OrganizationEnt
     @Override
     public void convert(OrganizationEntity source, OrganizationRestEntity target, RestResponseMappingContext context) {
         target.setId(source.getId());
+        target.setPath(source.getPath());
         target.setName(source.getName());
         target.setOrganizationType(source.getOrganizationType());
 
-        // Convert parent entities to IDs
+        // Convert parent entities to paths
         if (source.getParentRefs() != null) {
             Set<String> parentRefs = source.getParentRefs().stream()
-                    .filter(parent -> parent != null && parent.getId() != null)
-                    .map(GroupEntity::getId)
+                    .filter(parent -> parent != null && parent.getPath() != null)
+                    .map(GroupEntity::getPath)
                     .collect(Collectors.toSet());
             target.setParentRefs(parentRefs);
         }
 
-        // Convert sub entities to IDs
+        // Convert sub entities to paths
         if (source.getSubRefs() != null) {
             Set<String> subRefs = source.getSubRefs().stream()
-                    .filter(sub -> sub != null && sub.getId() != null)
-                    .map(GroupEntity::getId)
+                    .filter(sub -> sub != null && sub.getPath() != null)
+                    .map(GroupEntity::getPath)
                     .collect(Collectors.toSet());
             target.setSubRefs(subRefs);
         }

@@ -107,7 +107,8 @@
     "country": "Država",
     "countryRef": "Država",
     "priceRepresentationMode": "Način prikaza cene",
-    "priceRepresentationModePlaceholder": "Izberite način prikaza cene..."
+    "priceRepresentationModePlaceholder": "Izberite način prikaza cene...",
+    "path": "Pot"
   },
   "sections": {
     "auditInformation": "Revizijski podatki",
@@ -167,7 +168,8 @@
     "channelRefs": "Neobvezno. Reference na kanale za cene, specifične za kanal.",
     "channelRefsPlaceholder": "Izberite ali poiščite kanale...",
     "noWritePermission": "Nimate dovoljenja za urejanje tega elementa.",
-    "noDeletePermission": "Nimate dovoljenja za brisanje tega elementa."
+    "noDeletePermission": "Nimate dovoljenja za brisanje tega elementa.",
+    "pathRequired": "Pot je obvezna"
   },
   "errors": {
     "entity": {
