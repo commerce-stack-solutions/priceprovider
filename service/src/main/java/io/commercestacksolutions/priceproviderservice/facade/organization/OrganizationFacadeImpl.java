@@ -122,6 +122,27 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
         return result;
     }
 
+    @Transactional(readOnly = true)
+    public OrganizationRestEntity getOrganizationByPath(String path, Set<String> expand) throws NotFoundException, DataMappingException {
+        OrganizationEntity organization = organizationEntityService.getOrganizationByPath(path);
+        if (organization == null) {
+            Map<String, String> params = new HashMap<>();
+            params.put("id", path);
+            throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
+        }
+        RestResponseMappingContext context = new RestResponseMappingContext();
+        context.addExpandPaths(expand);
+
+        OrganizationRestEntity result = organizationRestEntityMapper.convert(organization, context);
+
+        // Add metadata if requested
+        if (expand != null && expand.contains("$meta")) {
+            result.setMeta(entityMetaInfoRegistry.getMetaInfo(OrganizationEntity.class));
+        }
+
+        return result;
+    }
+
     @Override
     public MetaInfo getMeta() {
         return entityMetaInfoRegistry.getMetaInfo(OrganizationEntity.class);

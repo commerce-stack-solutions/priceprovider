@@ -134,6 +134,28 @@ public class GroupFacadeImpl implements GroupFacade {
         return result;
     }
 
+    @Transactional(readOnly = true)
+    public GroupRestEntity getGroupByPath(String path, Set<String> expand) throws NotFoundException, DataMappingException {
+        GroupEntity group = groupEntityService.getGroupByPath(path);
+        if (group == null) {
+            Map<String, String> params = new HashMap<>();
+            params.put("entityType", "Group");
+            params.put("id", path);
+            throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
+        }
+        RestResponseMappingContext context = new RestResponseMappingContext();
+        context.addExpandPaths(expand);
+
+        GroupRestEntity result = groupRestEntityMapper.convert(group, context);
+
+        // Add metadata if requested
+        if (expand != null && expand.contains("$meta")) {
+            result.setMeta(entityMetaInfoRegistry.getMetaInfo(GroupEntity.class));
+        }
+
+        return result;
+    }
+
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class})
     public GroupRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException {

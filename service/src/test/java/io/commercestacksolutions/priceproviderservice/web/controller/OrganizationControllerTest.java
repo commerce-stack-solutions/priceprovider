@@ -2,8 +2,10 @@ package io.commercestacksolutions.priceproviderservice.web.controller.adminapi;
 
 import io.commercestacksolutions.commons.exception.DataIntegrityException;
 import io.commercestacksolutions.commons.exception.EntityAlreadyExistsException;
+import io.commercestacksolutions.commons.exception.NotFoundException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.facade.organization.restentity.OrganizationRestEntity;
 import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.OrganizationController;
 import io.commercestacksolutions.priceproviderservice.facade.organization.OrganizationFacade;
 import org.junit.jupiter.api.Test;
@@ -17,8 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,5 +95,25 @@ public class OrganizationControllerTest {
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.organization.alreadyExists"))
                 .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
+    }
+
+    @Test
+    public void testGetOrganizationByPath_Success() throws Exception {
+        OrganizationRestEntity org = new OrganizationRestEntity();
+        org.setPath("ORG-MY-COMPANY");
+        when(organizationFacade.getOrganizationByPath(eq("ORG-MY-COMPANY"), any())).thenReturn(org);
+
+        mockMvc.perform(get("/admin/api/organizations/by-path/ORG-MY-COMPANY"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.path").value("ORG-MY-COMPANY"));
+    }
+
+    @Test
+    public void testGetOrganizationByPath_NotFound() throws Exception {
+        when(organizationFacade.getOrganizationByPath(eq("NONEXISTENT"), any()))
+                .thenThrow(new NotFoundException("common.errors.organization.notFound", Map.of("id", "NONEXISTENT")));
+
+        mockMvc.perform(get("/admin/api/organizations/by-path/NONEXISTENT"))
+                .andExpect(status().isNotFound());
     }
 }

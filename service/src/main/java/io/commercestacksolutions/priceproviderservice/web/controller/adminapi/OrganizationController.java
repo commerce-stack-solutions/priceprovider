@@ -105,6 +105,28 @@ public class OrganizationController {
     }
 
     @Operation(
+            summary = "Get organization by path",
+            description = "Retrieves a single organization by its human-readable path identifier",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully retrieved organization",
+                            content = @Content(schema = @Schema(implementation = OrganizationRestEntity.class))),
+                    @ApiResponse(responseCode = "404", description = "Organization not found")
+            }
+    )
+    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:read')")
+
+    @GetMapping("/by-path/{path}")
+    public OrganizationRestEntity getOrganizationByPath(
+            @Parameter(description = "Organization path (human-readable identifier)", example = "ORG-MY-COMPANY")
+            @PathVariable("path") String path,
+
+            @Parameter(description = "Optional related data to include in response")
+            @RequestParam(value = "$expand", required = false) Set<String> expand
+    ) throws NotFoundException, DataMappingException {
+        return organizationFacade.getOrganizationByPath(path, expand);
+    }
+
+    @Operation(
             summary = "Get meta information for organizations",
             description = "Returns identity fields, mandatory fields and enum values for the Organization entity",
             responses = {

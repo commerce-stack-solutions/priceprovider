@@ -105,6 +105,28 @@ public class GroupController {
     }
 
     @Operation(
+            summary = "Get group by path",
+            description = "Retrieves a single group by its human-readable path identifier",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully retrieved group",
+                            content = @Content(schema = @Schema(implementation = GroupRestEntity.class))),
+                    @ApiResponse(responseCode = "404", description = "Group not found")
+            }
+    )
+    @PreAuthorize("hasAuthority('priceprovider.admin:Group:read')")
+
+    @GetMapping("/by-path/{path}")
+    public GroupRestEntity getGroupByPath(
+            @Parameter(description = "Group path (human-readable identifier)", example = "GRP-26-SALE-PROMOTION-SUMMER")
+            @PathVariable("path") String path,
+
+            @Parameter(description = "Optional related data to include in response")
+            @RequestParam(value = "$expand", required = false) Set<String> expand
+    ) throws NotFoundException, DataMappingException {
+        return groupFacade.getGroupByPath(path, expand);
+    }
+
+    @Operation(
             summary = "Get meta information for groups",
             description = "Returns identity fields, mandatory fields and enum values for the Group entity",
             responses = {

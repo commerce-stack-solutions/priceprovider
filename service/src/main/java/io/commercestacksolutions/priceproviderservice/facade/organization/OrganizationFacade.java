@@ -18,6 +18,7 @@ import java.util.Set;
 public interface OrganizationFacade {
     OrganizationListRestEntity getOrganizations(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException;
     OrganizationRestEntity getOrganization(String id, Set<String> expand) throws NotFoundException, DataMappingException;
+    OrganizationRestEntity getOrganizationByPath(String path, Set<String> expand) throws NotFoundException, DataMappingException;
     MetaInfo getMeta();
     OrganizationRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
     OrganizationRestEntity createOrRecreate(String id, OrganizationRestEntity organizationRestEntity) throws DataMappingException, EntityValidationException;

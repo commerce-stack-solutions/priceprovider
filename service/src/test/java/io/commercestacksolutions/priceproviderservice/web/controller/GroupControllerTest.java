@@ -3,9 +3,11 @@ package io.commercestacksolutions.priceproviderservice.web.controller.adminapi;
 import io.commercestacksolutions.commons.exception.DataIntegrityException;
 import io.commercestacksolutions.commons.exception.EntityAlreadyExistsException;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.exception.NotFoundException;
 import io.commercestacksolutions.commons.query.QueryFilterRuntimeException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.facade.group.restentity.GroupRestEntity;
 import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.GroupController;
 import io.commercestacksolutions.priceproviderservice.facade.group.GroupFacade;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
@@ -139,5 +141,26 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.group.alreadyExists"))
                 .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
+    }
+
+    @Test
+    public void testGetGroupByPath_Success() throws Exception {
+        GroupRestEntity group = new GroupRestEntity();
+        group.setPath("GRP-SALE-PROMO");
+        when(groupFacade.getGroupByPath(eq("GRP-SALE-PROMO"), any())).thenReturn(group);
+
+        mockMvc.perform(get("/admin/api/groups/by-path/GRP-SALE-PROMO"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.path").value("GRP-SALE-PROMO"));
+    }
+
+    @Test
+    public void testGetGroupByPath_NotFound() throws Exception {
+        when(groupFacade.getGroupByPath(eq("NONEXISTENT"), any()))
+                .thenThrow(new NotFoundException(
+                        "common.errors.group.notFound", Map.of("id", "NONEXISTENT")));
+
+        mockMvc.perform(get("/admin/api/groups/by-path/NONEXISTENT"))
+                .andExpect(status().isNotFound());
     }
 }
