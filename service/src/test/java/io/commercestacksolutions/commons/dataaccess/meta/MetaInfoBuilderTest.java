@@ -1,5 +1,6 @@
 package io.commercestacksolutions.commons.dataaccess.meta;
 
+import io.commercestacksolutions.commons.idgenerator.GeneratedId;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,6 +42,14 @@ public class MetaInfoBuilderTest {
         private String name;
     }
 
+    static class GeneratedIdAnnotationEntity {
+        @Id
+        @GeneratedId
+        private String id;          // @GeneratedId → auto-generated UUID, NOT mandatory
+        @MetaMandatoryField
+        private String name;
+    }
+
     // ---------- tests ----------
 
     @Test
@@ -66,6 +75,17 @@ public class MetaInfoBuilderTest {
                 "@Id @GeneratedValue field must still appear in identityFields");
         assertFalse(meta.getMandatoryFields().contains("id"),
                 "@Id field with @GeneratedValue must NOT appear in mandatoryFields (DB assigns the value)");
+    }
+
+    @Test
+    void build_idWithGeneratedIdAnnotationIsNotMandatory() {
+        MetaInfo meta = MetaInfoBuilder.build(GeneratedIdAnnotationEntity.class);
+        assertTrue(meta.getIdentityFields().contains("id"),
+                "@Id @GeneratedId field must still appear in identityFields");
+        assertFalse(meta.getMandatoryFields().contains("id"),
+                "@Id field with @GeneratedId must NOT appear in mandatoryFields (auto-generated via IdGenerator)");
+        assertTrue(meta.getMandatoryFields().contains("name"),
+                "@MetaMandatoryField 'name' must still be mandatory");
     }
 
     @Test

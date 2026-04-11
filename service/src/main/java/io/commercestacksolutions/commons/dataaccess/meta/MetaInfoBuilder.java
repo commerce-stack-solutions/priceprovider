@@ -1,5 +1,6 @@
 package io.commercestacksolutions.commons.dataaccess.meta;
 
+import io.commercestacksolutions.commons.idgenerator.GeneratedId;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -66,6 +67,7 @@ public class MetaInfoBuilder {
                 if (field.isAnnotationPresent(Id.class)) {
                     identityFields.add(field.getName());
                     if (!field.isAnnotationPresent(GeneratedValue.class)
+                            && !field.isAnnotationPresent(GeneratedId.class)
                             && !mandatoryFields.contains(field.getName())) {
                         mandatoryFields.add(field.getName());
                     }

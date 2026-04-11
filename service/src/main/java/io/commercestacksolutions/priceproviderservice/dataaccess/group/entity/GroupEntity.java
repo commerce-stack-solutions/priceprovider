@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.idgenerator.GeneratedId;
 import io.commercestacksolutions.commons.idgenerator.IdGeneratorProvider;
 import io.commercestacksolutions.commons.query.FilterKey;
 import jakarta.persistence.*;
@@ -22,6 +23,7 @@ import java.util.Set;
 public class GroupEntity implements AuditableEntity {
 
     @Id
+    @GeneratedId
     @Column(length = 36)
     private String id;
 
