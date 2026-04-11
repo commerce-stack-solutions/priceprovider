@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.idgenerator.IdGeneratorProvider;
+import io.commercestacksolutions.commons.query.FilterKey;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -21,9 +22,10 @@ import java.util.UUID;
 public class GroupEntity implements AuditableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @Column(length = 36)
+    private String id;
 
+    @FilterKey
     @MetaMandatoryField
     @Column(unique = true, nullable = false)
     private String path;
@@ -57,11 +59,18 @@ public class GroupEntity implements AuditableEntity {
         this.path = path;
     }
 
-    public UUID getId() {
+    @PrePersist
+    protected void prePersist() {
+        if (this.id == null) {
+            this.id = IdGeneratorProvider.generate();
+        }
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

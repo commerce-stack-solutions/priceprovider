@@ -35,7 +35,7 @@ public class GroupRestEntityMapper extends AbstractMapper<GroupEntity, GroupRest
 
             Map<String, String> parentRefIds = source.getParentRefs().stream()
                     .filter(parent -> parent != null && parent.getPath() != null && parent.getId() != null)
-                    .collect(Collectors.toMap(GroupEntity::getPath, p -> p.getId().toString()));
+                    .collect(Collectors.toMap(GroupEntity::getPath, GroupEntity::getId));
             target.setParentRefIds(parentRefIds);
         }
 
@@ -49,7 +49,7 @@ public class GroupRestEntityMapper extends AbstractMapper<GroupEntity, GroupRest
 
             Map<String, String> subRefIds = source.getSubRefs().stream()
                     .filter(sub -> sub != null && sub.getPath() != null && sub.getId() != null)
-                    .collect(Collectors.toMap(GroupEntity::getPath, s -> s.getId().toString()));
+                    .collect(Collectors.toMap(GroupEntity::getPath, GroupEntity::getId));
             target.setSubRefIds(subRefIds);
         }
 

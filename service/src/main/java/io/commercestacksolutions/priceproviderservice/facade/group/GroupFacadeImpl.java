@@ -42,7 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class GroupFacadeImpl implements GroupFacade {
@@ -75,18 +74,6 @@ public class GroupFacadeImpl implements GroupFacade {
         ));
     }
 
-    /**
-     * Parse a String UUID from the URL path parameter.
-     * Returns null if the string is not a valid UUID (treated as not-found).
-     */
-    private UUID parseUUID(String id) {
-        try {
-            return UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
     @Transactional(readOnly = true)
     @Override
     public GroupListRestEntity getGroups(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException {
@@ -113,8 +100,7 @@ public class GroupFacadeImpl implements GroupFacade {
 
     @Transactional
     public GroupRestEntity getGroup(String id, Set<String> expand) throws NotFoundException, DataMappingException {
-        UUID uuid = parseUUID(id);
-        GroupEntity group = uuid != null ? groupEntityService.getGroup(uuid) : null;
+        GroupEntity group = groupEntityService.getGroup(id);
         if (group == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "Group");
@@ -149,31 +135,29 @@ public class GroupFacadeImpl implements GroupFacade {
         group = groupRestEntityPatchMapper.applyPatch(patch, group);
         
         // Fetch existing entity to preserve timestamps and update in place
-        UUID uuid = parseUUID(id);
-        GroupEntity existingGroup = uuid != null ? groupEntityService.getGroup(uuid) : null;
+        GroupEntity existingGroup = groupEntityService.getGroup(id);
         if (existingGroup == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "Group");
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
         }
-        groupEntityMapper.convert(group, existingGroup, new RestRequestMappingContext<>(uuid));
+        groupEntityMapper.convert(group, existingGroup, new RestRequestMappingContext<>(id));
         GroupEntity saved = groupEntityService.save(existingGroup);
         return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class})
     public GroupRestEntity createOrRecreate(String id, GroupRestEntity groupRestEntity) throws DataMappingException, EntityValidationException {
-        UUID uuid = parseUUID(id);
-        GroupEntity group = uuid != null ? groupEntityService.getGroup(uuid) : null;
+        GroupEntity group = groupEntityService.getGroup(id);
         if (group != null) {
             // Update existing group
-            groupEntityMapper.convert(groupRestEntity, group, new RestRequestMappingContext<>(uuid));
+            groupEntityMapper.convert(groupRestEntity, group, new RestRequestMappingContext<>(id));
             GroupEntity saved = groupEntityService.save(group);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
-            // Create new group with the UUID from the path (or auto-generated if invalid)
-            GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(uuid));
+            // Create new group with the provided id (or auto-generated if null)
+            GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(null));
             GroupEntity saved = groupEntityService.save(newGroup);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -200,8 +184,7 @@ public class GroupFacadeImpl implements GroupFacade {
 
     @Transactional
     public void delete(String id) throws NotFoundException {
-        UUID uuid = parseUUID(id);
-        GroupEntity group = uuid != null ? groupEntityService.getGroup(uuid) : null;
+        GroupEntity group = groupEntityService.getGroup(id);
         if (group == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "Group");
@@ -209,18 +192,17 @@ public class GroupFacadeImpl implements GroupFacade {
             throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
         }
 
-        groupEntityService.deleteGroup(uuid);
+        groupEntityService.deleteGroup(id);
     }
 
     public void bulkDeleteGroups(List<String> ids) throws DataIntegrityException {
         List<String> failedDeletes = new java.util.ArrayList<>();
         
         for (String id : ids) {
-            UUID uuid = parseUUID(id);
-            GroupEntity group = uuid != null ? groupEntityService.getGroup(uuid) : null;
+            GroupEntity group = groupEntityService.getGroup(id);
             if (group != null) {
                 try {
-                    groupEntityService.deleteGroup(uuid);
+                    groupEntityService.deleteGroup(id);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(id);
                 } catch (Exception ex) {
@@ -270,7 +252,7 @@ public class GroupFacadeImpl implements GroupFacade {
 
         for (GroupRestEntity restEntity : groupRestEntities) {
             try {
-                // Determine if an existing entity can be found (by UUID id or by path)
+                // Determine if an existing entity can be found (by String id or by path)
                 GroupEntity existingGroup = null;
                 if (restEntity.getId() != null) {
                     existingGroup = groupEntityService.getGroup(restEntity.getId());

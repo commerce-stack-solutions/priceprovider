@@ -21,7 +21,7 @@ public class PriceRowRestEntity extends RestEntity<InfoPriceRow, IncludesPriceRo
     private OffsetDateTime validFrom;
     private OffsetDateTime validTo;
     private Set<String> groupRefs;
-    /** Read-only map of path → UUID for groupRefs. Used by the UI to build navigation links. */
+    /** Read-only map of path → id for groupRefs. Used by the UI to build navigation links. */
     private java.util.Map<String, String> groupRefIds;
     private Set<String> channelRefs;
     private boolean taxIncluded;   // indicates if this is a net price or a price with tax included

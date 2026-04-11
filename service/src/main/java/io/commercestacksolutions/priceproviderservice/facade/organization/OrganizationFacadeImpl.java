@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,18 +68,6 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
         ));
     }
 
-    /**
-     * Parse a String UUID from the URL path parameter.
-     * Returns null if the string is not a valid UUID (treated as not-found).
-     */
-    private UUID parseUUID(String id) {
-        try {
-            return UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
     @Transactional
     @Override
     public OrganizationListRestEntity getOrganizations(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException {
@@ -102,8 +89,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
 
     @Transactional
     public OrganizationRestEntity getOrganization(String id, Set<String> expand) throws NotFoundException, DataMappingException {
-        UUID uuid = parseUUID(id);
-        OrganizationEntity organization = uuid != null ? organizationEntityService.getOrganization(uuid) : null;
+        OrganizationEntity organization = organizationEntityService.getOrganization(id);
         if (organization == null) {
             Map<String, String> params = new HashMap<>();
             params.put("id", id);
@@ -141,30 +127,28 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
         organization = organizationRestEntityPatchMapper.applyPatch(patch, organization);
         
         // Fetch existing entity to preserve timestamps and update in place
-        UUID uuid = parseUUID(id);
-        OrganizationEntity existingOrganization = uuid != null ? organizationEntityService.getOrganization(uuid) : null;
+        OrganizationEntity existingOrganization = organizationEntityService.getOrganization(id);
         if (existingOrganization == null) {
             Map<String, String> params = new HashMap<>();
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
         }
-        organizationEntityMapper.convert(organization, existingOrganization, new RestRequestMappingContext<>(uuid));
+        organizationEntityMapper.convert(organization, existingOrganization, new RestRequestMappingContext<>(id));
         OrganizationEntity saved = organizationEntityService.save(existingOrganization);
         return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class})
     public OrganizationRestEntity createOrRecreate(String id, OrganizationRestEntity organizationRestEntity) throws DataMappingException, EntityValidationException {
-        UUID uuid = parseUUID(id);
-        OrganizationEntity organization = uuid != null ? organizationEntityService.getOrganization(uuid) : null;
+        OrganizationEntity organization = organizationEntityService.getOrganization(id);
         if (organization != null) {
             // Update existing organization
-            organizationEntityMapper.convert(organizationRestEntity, organization, new RestRequestMappingContext<>(uuid));
+            organizationEntityMapper.convert(organizationRestEntity, organization, new RestRequestMappingContext<>(id));
             OrganizationEntity saved = organizationEntityService.save(organization);
             return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
-            // Create new organization with the UUID from the path (or auto-generated if invalid)
-            OrganizationEntity newOrganization = organizationEntityMapper.convert(organizationRestEntity, new RestRequestMappingContext<>(uuid));
+            // Create new organization (id auto-generated if null)
+            OrganizationEntity newOrganization = organizationEntityMapper.convert(organizationRestEntity, new RestRequestMappingContext<>(null));
             OrganizationEntity saved = organizationEntityService.save(newOrganization);
             return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -191,26 +175,24 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
 
     @Transactional
     public void delete(String id) throws NotFoundException {
-        UUID uuid = parseUUID(id);
-        OrganizationEntity organization = uuid != null ? organizationEntityService.getOrganization(uuid) : null;
+        OrganizationEntity organization = organizationEntityService.getOrganization(id);
         if (organization == null) {
             Map<String, String> params = new HashMap<>();
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
         }
 
-        organizationEntityService.deleteOrganization(uuid);
+        organizationEntityService.deleteOrganization(id);
     }
 
     public void bulkDeleteOrganizations(List<String> ids) throws DataIntegrityException {
         List<String> failedDeletes = new java.util.ArrayList<>();
         
         for (String id : ids) {
-            UUID uuid = parseUUID(id);
-            OrganizationEntity organization = uuid != null ? organizationEntityService.getOrganization(uuid) : null;
+            OrganizationEntity organization = organizationEntityService.getOrganization(id);
             if (organization != null) {
                 try {
-                    organizationEntityService.deleteOrganization(uuid);
+                    organizationEntityService.deleteOrganization(id);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(id);
                 } catch (Exception ex) {
@@ -265,7 +247,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
 
         for (OrganizationRestEntity restEntity : organizationRestEntities) {
             try {
-                // Determine if an existing entity can be found (by UUID id or by path)
+                // Determine if an existing entity can be found (by String id or by path)
                 OrganizationEntity existingOrganization = null;
                 if (restEntity.getId() != null) {
                     existingOrganization = organizationEntityService.getOrganization(restEntity.getId());
@@ -293,7 +275,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
                     OrganizationEntity saved = organizationEntityService.save(existingOrganization);
                     results.add(organizationRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 } else {
-                    // Create new (UUID auto-generated)
+                    // Create new (id auto-generated)
                     OrganizationEntity newOrganization = organizationEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
                     OrganizationEntity saved = organizationEntityService.save(newOrganization);
                     results.add(organizationRestEntityMapper.convert(saved, new RestResponseMappingContext()));

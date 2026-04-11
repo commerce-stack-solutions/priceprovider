@@ -9,10 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface GroupEntityRepository extends JpaRepository<GroupEntity, UUID>, JpaSpecificationExecutor<GroupEntity> {
+public interface GroupEntityRepository extends JpaRepository<GroupEntity, String>, JpaSpecificationExecutor<GroupEntity> {
 
     /**
      * Find a group by its path (unique human-readable identifier).

@@ -63,7 +63,7 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
                 if (group != null && group.getPath() != null) {
                     groupRefPaths.add(group.getPath());
                     if (group.getId() != null) {
-                        groupRefIds.put(group.getPath(), group.getId().toString());
+                        groupRefIds.put(group.getPath(), group.getId());
                     }
                 }
             }

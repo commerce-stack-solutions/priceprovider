@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Implementation of OrganizationService interface.
@@ -114,11 +113,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationEntityRepository.findAll(pageRequest);
     }
 
-    public Optional<OrganizationEntity> getOrganizationById(UUID id) {
+    public Optional<OrganizationEntity> getOrganizationById(String id) {
         return organizationEntityRepository.findById(id);
     }
 
-    public OrganizationEntity getOrganization(UUID id) {
+    public OrganizationEntity getOrganization(String id) {
         return organizationEntityRepository.findById(id).orElse(null);
     }
 
@@ -130,7 +129,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return save(updatedOrganization);
     }
 
-    public void deleteOrganization(UUID id) {
+    public void deleteOrganization(String id) {
         organizationEntityRepository.deleteById(id);
     }
 }

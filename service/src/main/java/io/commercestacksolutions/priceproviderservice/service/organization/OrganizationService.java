@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Service interface for Organization entity operations.
@@ -39,20 +38,20 @@ public interface OrganizationService extends EntityService<OrganizationEntity> {
     Page<OrganizationEntity> getOrganizations(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
     
     /**
-     * Retrieves an organization by its UUID.
+     * Retrieves an organization by its String ID.
      * 
-     * @param id the organization UUID
+     * @param id the organization ID
      * @return optional containing the organization entity if found
      */
-    Optional<OrganizationEntity> getOrganizationById(UUID id);
+    Optional<OrganizationEntity> getOrganizationById(String id);
     
     /**
-     * Retrieves an organization by its UUID.
+     * Retrieves an organization by its String ID.
      * 
-     * @param id the organization UUID
+     * @param id the organization ID
      * @return the organization entity, or null if not found
      */
-    OrganizationEntity getOrganization(UUID id);
+    OrganizationEntity getOrganization(String id);
 
     /**
      * Retrieves an organization by its path (unique human-readable identifier).
@@ -71,9 +70,9 @@ public interface OrganizationService extends EntityService<OrganizationEntity> {
     OrganizationEntity updateOrganization(OrganizationEntity updatedOrganization) throws EntityValidationException;
     
     /**
-     * Deletes an organization by its UUID.
+     * Deletes an organization by its String ID.
      * 
-     * @param id the organization UUID
+     * @param id the organization ID
      */
-    void deleteOrganization(UUID id);
+    void deleteOrganization(String id);
 }

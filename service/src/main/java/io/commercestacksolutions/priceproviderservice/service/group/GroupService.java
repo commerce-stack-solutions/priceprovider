@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Service interface for Group entity operations.
@@ -39,20 +38,20 @@ public interface GroupService extends EntityService<GroupEntity> {
     Page<GroupEntity> getGroups(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
     
     /**
-     * Retrieves a group by its UUID.
+     * Retrieves a group by its String ID.
      * 
-     * @param id the group UUID
+     * @param id the group ID
      * @return optional containing the group entity if found
      */
-    Optional<GroupEntity> getGroupById(UUID id);
+    Optional<GroupEntity> getGroupById(String id);
     
     /**
-     * Retrieves a group by its UUID.
+     * Retrieves a group by its String ID.
      * 
-     * @param id the group UUID
+     * @param id the group ID
      * @return the group entity, or null if not found
      */
-    GroupEntity getGroup(UUID id);
+    GroupEntity getGroup(String id);
 
     /**
      * Retrieves a group by its path (unique human-readable identifier).
@@ -71,9 +70,9 @@ public interface GroupService extends EntityService<GroupEntity> {
     GroupEntity updateGroup(GroupEntity updatedGroup) throws EntityValidationException;
     
     /**
-     * Deletes a group by its UUID.
+     * Deletes a group by its String ID.
      * 
-     * @param id the group UUID
+     * @param id the group ID
      */
-    void deleteGroup(UUID id);
+    void deleteGroup(String id);
 }

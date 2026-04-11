@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Implementation of GroupService interface.
@@ -109,11 +108,11 @@ public class GroupServiceImpl implements GroupService {
         return groupEntityRepository.findAll(pageRequest);
     }
 
-    public Optional<GroupEntity> getGroupById(UUID id) {
+    public Optional<GroupEntity> getGroupById(String id) {
         return groupEntityRepository.findById(id);
     }
 
-    public GroupEntity getGroup(UUID id) {
+    public GroupEntity getGroup(String id) {
         return groupEntityRepository.findById(id).orElse(null);
     }
 
@@ -125,7 +124,7 @@ public class GroupServiceImpl implements GroupService {
         return save(updatedGroup);
     }
 
-    public void deleteGroup(UUID id) {
+    public void deleteGroup(String id) {
         groupEntityRepository.deleteById(id);
     }
 }

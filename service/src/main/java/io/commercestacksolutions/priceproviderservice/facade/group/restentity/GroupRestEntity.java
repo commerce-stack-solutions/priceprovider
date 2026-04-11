@@ -6,28 +6,27 @@ import io.commercestacksolutions.commons.web.rest.RestEntity;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 public class GroupRestEntity extends RestEntity<InfoAuditableRestEntity, IncludesGroup> {
-    private UUID id;
+    private String id;
     private String path;
     private String name;
     private Set<String> parentRefs;
     private Set<String> subRefs;
 
-    /** Read-only map of path → UUID for parentRefs. Used by the UI to build navigation links. */
+    /** Read-only map of path → id for parentRefs. Used by the UI to build navigation links. */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Map<String, String> parentRefIds;
 
-    /** Read-only map of path → UUID for subRefs. Used by the UI to build navigation links. */
+    /** Read-only map of path → id for subRefs. Used by the UI to build navigation links. */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Map<String, String> subRefIds;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
