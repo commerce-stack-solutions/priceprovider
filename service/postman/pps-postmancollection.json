@@ -10891,53 +10891,6 @@
           ]
         },
         {
-          "name": "Bulk Delete App Roles",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminAccessToken}}",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "[\n  1,\n  2\n]"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/bulk-delete",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "api",
-                "app-roles",
-                "bulk-delete"
-              ]
-            },
-            "description": "Bulk deletes app roles by ID (Happy Path)"
-          },
-          "response": [],
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('expected status is 204', function () { pm.response.to.have.status(204); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
           "name": "Bulk Create or Update App Roles",
           "request": {
             "method": "POST",
@@ -10978,7 +10931,77 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('expected status is 207', function () { pm.response.to.have.status(207); });"
+                  "pm.test('expected status is 207', function () { pm.response.to.have.status(207); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store bulk app role IDs for use in bulk-delete",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length >= 2) {",
+                  "    var ids = jsonData.items.filter(function(i) { return i.id; }).map(function(i) { return i.id; });",
+                  "    pm.environment.set('bulkAppRoleId1', ids[0] || '');",
+                  "    pm.environment.set('bulkAppRoleId2', ids[1] || '');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Bulk Delete App Roles",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bulkAppRoleDeleteBody}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/app-roles/bulk-delete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "app-roles",
+                "bulk-delete"
+              ]
+            },
+            "description": "Bulk deletes app roles by ID (Happy Path)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var ids = [];",
+                  "var id1 = pm.environment.get('bulkAppRoleId1');",
+                  "var id2 = pm.environment.get('bulkAppRoleId2');",
+                  "if (id1) ids.push(parseInt(id1));",
+                  "if (id2) ids.push(parseInt(id2));",
+                  "pm.variables.set('bulkAppRoleDeleteBody', JSON.stringify(ids));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 204', function () { pm.response.to.have.status(204); });"
                 ]
               }
             }
