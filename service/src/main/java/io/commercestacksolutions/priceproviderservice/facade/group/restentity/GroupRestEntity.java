@@ -1,8 +1,10 @@
 package io.commercestacksolutions.priceproviderservice.facade.group.restentity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity;
 import io.commercestacksolutions.commons.web.rest.RestEntity;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -12,6 +14,14 @@ public class GroupRestEntity extends RestEntity<InfoAuditableRestEntity, Include
     private String name;
     private Set<String> parentRefs;
     private Set<String> subRefs;
+
+    /** Read-only map of path → UUID for parentRefs. Used by the UI to build navigation links. */
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Map<String, String> parentRefIds;
+
+    /** Read-only map of path → UUID for subRefs. Used by the UI to build navigation links. */
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Map<String, String> subRefIds;
 
     public UUID getId() {
         return id;
@@ -51,5 +61,21 @@ public class GroupRestEntity extends RestEntity<InfoAuditableRestEntity, Include
 
     public void setSubRefs(Set<String> subRefs) {
         this.subRefs = subRefs;
+    }
+
+    public Map<String, String> getParentRefIds() {
+        return parentRefIds;
+    }
+
+    public void setParentRefIds(Map<String, String> parentRefIds) {
+        this.parentRefIds = parentRefIds;
+    }
+
+    public Map<String, String> getSubRefIds() {
+        return subRefIds;
+    }
+
+    public void setSubRefIds(Map<String, String> subRefIds) {
+        this.subRefIds = subRefIds;
     }
 }
