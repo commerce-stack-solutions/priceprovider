@@ -105,8 +105,8 @@
               <dt class="col-sm-4">{{ 'common.fields.groupRefs' | transloco }}</dt>
               <dd class="col-sm-8">
                 @if (priceRow()!.groupRefs && priceRow()!.groupRefs!.length > 0) {
-                  @for (groupRef of priceRow()!.groupRefs; track groupRef) {
-                    <a [routerLink]="['/' + lang(), 'groups', groupRef]" class="ref-badge me-1">{{ groupRef }}</a>
+                  @for (groupRef of priceRow()!.groupRefs!; track groupRef) {
+                    <a [routerLink]="['/' + lang(), 'groups', priceRow()!.groupRefIds?.[groupRef] ?? groupRef]" class="ref-badge me-1">{{ groupRef }}</a>
                   }
                 } @else {
                   -

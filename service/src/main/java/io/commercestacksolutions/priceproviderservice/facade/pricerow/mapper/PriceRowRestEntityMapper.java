@@ -57,13 +57,18 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
         
         // Map group references to string IDs
         if (source.getGroups() != null) {
-            Set<String> groupRefIds = new HashSet<>();
+            Set<String> groupRefPaths = new HashSet<>();
+            java.util.Map<String, String> groupRefIds = new java.util.HashMap<>();
             for (GroupEntity group : source.getGroups()) {
                 if (group != null && group.getPath() != null) {
-                    groupRefIds.add(group.getPath());
+                    groupRefPaths.add(group.getPath());
+                    if (group.getId() != null) {
+                        groupRefIds.put(group.getPath(), group.getId().toString());
+                    }
                 }
             }
-            target.setGroupRefs(groupRefIds);
+            target.setGroupRefs(groupRefPaths);
+            target.setGroupRefIds(groupRefIds);
         }
 
         // Map channel references to string IDs

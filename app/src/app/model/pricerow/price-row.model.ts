@@ -14,6 +14,7 @@ export interface PriceRow {
   validTo?: string;
   channelRefs?: string[];
   groupRefs?: string[];
+  groupRefIds?: { [path: string]: string };  // path → UUID map (read-only, for navigation)
   $info?: {
     taxation?: {
       taxValue: number;

@@ -205,7 +205,7 @@
 <td>
 @if (row.groupRefs && row.groupRefs.length > 0) {
   @for (groupRef of row.groupRefs; track groupRef) {
-    <a [routerLink]="['/' + lang(), 'groups', groupRef]" class="ref-badge me-1">{{ groupRef }}</a>
+    <a [routerLink]="['/' + lang(), 'groups', row.groupRefIds?.[groupRef] ?? groupRef]" class="ref-badge me-1">{{ groupRef }}</a>
   }
 } @else {
   -
