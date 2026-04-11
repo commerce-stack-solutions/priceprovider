@@ -7833,7 +7833,7 @@
           ]
         },
         {
-          "name": "Get Group by Path",
+          "name": "Get Group by Path (via query)",
           "request": {
             "method": "GET",
             "header": [
@@ -7844,18 +7844,20 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/by-path/GRP-26-SALE-PROMOTION-SUMMER?$expand=$includes,$info,$meta",
+              "raw": "{{baseUrl}}/admin/api/groups?q=path:GRP-26-SALE-PROMOTION-SUMMER&$expand=$includes,$info,$meta",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "admin",
                 "api",
-                "groups",
-                "by-path",
-                "GRP-26-SALE-PROMOTION-SUMMER"
+                "groups"
               ],
               "query": [
+                {
+                  "key": "q",
+                  "value": "path:GRP-26-SALE-PROMOTION-SUMMER"
+                },
                 {
                   "key": "$expand",
                   "value": "$includes,$info,$meta"
@@ -7871,12 +7873,72 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response contains items\", function () {",
+                  "    pm.expect(jsonData.items).to.be.an(\"array\").that.is.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"First item has expected path\", function () {",
+                  "    pm.expect(jsonData.items[0].path).to.equal(\"GRP-26-SALE-PROMOTION-SUMMER\");",
+                  "});",
+                  "",
+                  "// Store the UUID for the follow-up Get by ID request",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"sampleGroupId\", jsonData.items[0].id);",
+                  "    pm.environment.set(\"testGroupId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
           ]
+        },
+        {
+          "name": "Get Group by ID (UUID)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response has id and path\", function () {",
+                  "    pm.expect(jsonData.id).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.path).to.equal(\"GRP-26-SALE-PROMOTION-SUMMER\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/groups/{{sampleGroupId}}?$expand=$includes,$info,$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "groups",
+                "{{sampleGroupId}}"
+              ],
+              "query": [
+                {
+                  "key": "$expand",
+                  "value": "$includes,$info,$meta"
+                }
+              ]
+            }
+          }
         },
         {
           "name": "Create Group (POST)",
@@ -9087,23 +9149,25 @@
           ]
         },
         {
-          "name": "Get Organization by Path",
+          "name": "Get Organization by Path (via query)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/organizations/by-path/ORG-MY-COMPANY?$expand=$includes,$info,$meta",
+              "raw": "{{baseUrl}}/admin/api/organizations?q=path:ORG-MY-COMPANY&$expand=$includes,$info,$meta",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "admin",
                 "api",
-                "organizations",
-                "by-path",
-                "ORG-MY-COMPANY"
+                "organizations"
               ],
               "query": [
+                {
+                  "key": "q",
+                  "value": "path:ORG-MY-COMPANY"
+                },
                 {
                   "key": "$expand",
                   "value": "$includes,$info,$meta"
@@ -9119,12 +9183,72 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response contains items\", function () {",
+                  "    pm.expect(jsonData.items).to.be.an(\"array\").that.is.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"First item has expected path\", function () {",
+                  "    pm.expect(jsonData.items[0].path).to.equal(\"ORG-MY-COMPANY\");",
+                  "});",
+                  "",
+                  "// Store the UUID for the follow-up Get by ID request",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"sampleOrgId\", jsonData.items[0].id);",
+                  "    pm.environment.set(\"testOrgId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
           ]
+        },
+        {
+          "name": "Get Organization by ID (UUID)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response has id and path\", function () {",
+                  "    pm.expect(jsonData.id).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.path).to.equal(\"ORG-MY-COMPANY\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/organizations/{{sampleOrgId}}?$expand=$includes,$info,$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "organizations",
+                "{{sampleOrgId}}"
+              ],
+              "query": [
+                {
+                  "key": "$expand",
+                  "value": "$includes,$info,$meta"
+                }
+              ]
+            }
+          }
         },
         {
           "name": "Create Organization (POST)",

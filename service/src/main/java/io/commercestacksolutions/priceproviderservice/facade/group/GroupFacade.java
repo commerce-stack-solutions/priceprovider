@@ -17,7 +17,6 @@ import java.util.Set;
 public interface GroupFacade {
     GroupListRestEntity getGroups(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException;
     GroupRestEntity getGroup(String id, Set<String> expand) throws NotFoundException, DataMappingException;
-    GroupRestEntity getGroupByPath(String path, Set<String> expand) throws NotFoundException, DataMappingException;
     MetaInfo getMeta();
     GroupRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
     GroupRestEntity createOrRecreate(String id, GroupRestEntity groupRestEntity) throws DataMappingException, EntityValidationException;
