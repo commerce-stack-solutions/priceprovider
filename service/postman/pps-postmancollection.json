@@ -8380,9 +8380,9 @@
           ]
         },
         {
-          "name": "Create Group with Cyclic Dependency (400 Angry Path)",
+          "name": "Update Group with Cyclic Dependency (400 Angry Path)",
           "request": {
-            "method": "POST",
+            "method": "PUT",
             "header": [
               {
                 "key": "Content-Type",
@@ -8396,10 +8396,15 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"path\": \"GRP-CYCLIC\",\n  \"name\": \"Cyclic Group\",\n  \"parentRefs\": [\n    \"GRP-CYCLIC\"\n  ]\n}"
+              "raw": "{\n  \"path\": \"GRP-26-SALE-PROMOTION-SUMMER\",\n  \"name\": \"Cyclic Test Group\",\n  \"parentRefs\": [\n    \"GRP-26-SALE-PROMOTION-SUMMER\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/create",
+              "raw": "{{baseUrl}}/admin/api/groups/{{sampleGroupId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -8407,10 +8412,10 @@
                 "admin",
                 "api",
                 "groups",
-                "create"
+                "{{sampleGroupId}}"
               ]
             },
-            "description": "Attempts to create group with self-reference - should fail validation (Angry Path)"
+            "description": "Attempts to update group with self-reference - should fail validation (Angry Path)"
           },
           "response": [],
           "event": [
@@ -10484,7 +10489,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"appPermissionId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
@@ -10590,7 +10600,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"appRoleId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
@@ -10731,7 +10746,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('role id matches', function () { pm.expect(pm.response.json().id).to.equal('priceprovider.admin:TestRole'); });"
+                  "pm.test('role name matches', function () { pm.expect(pm.response.json().name).to.equal('priceprovider.admin:TestRole'); });",
+                  "",
+                  "// Capture the Long id for use in Update/Patch/Delete tests",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set('createdAppRoleId', jsonData.id);",
+                  "}"
                 ]
               }
             }
@@ -10758,7 +10779,7 @@
               "raw": "{\n  \"name\": \"priceprovider.admin:TestRole\",\n  \"description\": \"Updated test role\",\n  \"permissionRefs\": [\n    \"priceprovider.admin:Group:read\",\n    \"priceprovider.admin:Group:write\"\n  ]\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{createdAppRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10766,7 +10787,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "{{appRoleId}}"
+                "{{createdAppRoleId}}"
               ]
             },
             "description": "Creates or updates an app role (idempotent PUT - Happy Path)"
@@ -10805,7 +10826,7 @@
               "raw": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/description\",\n    \"value\": \"Patched test role description\"\n  }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{createdAppRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10813,7 +10834,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "{{appRoleId}}"
+                "{{createdAppRoleId}}"
               ]
             },
             "description": "Partially updates an app role using JSON Patch (Happy Path)"
@@ -10843,7 +10864,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{createdAppRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10851,7 +10872,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "{{appRoleId}}"
+                "{{createdAppRoleId}}"
               ]
             },
             "description": "Deletes an app role (Happy Path)"
