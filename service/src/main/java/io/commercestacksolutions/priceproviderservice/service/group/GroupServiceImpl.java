@@ -78,6 +78,17 @@ public class GroupServiceImpl implements GroupService {
             }
             groupEntity.setParentRefs(resolvedParents);
         }
+        if (groupEntity.getSubRefs() != null && !groupEntity.getSubRefs().isEmpty()) {
+            Set<GroupEntity> resolvedSubs = new HashSet<>();
+            for (GroupEntity sub : groupEntity.getSubRefs()) {
+                if (sub.getId() != null) {
+                    resolvedSubs.add(sub);
+                } else if (sub.getPath() != null) {
+                    groupEntityRepository.findByPath(sub.getPath()).ifPresent(resolvedSubs::add);
+                }
+            }
+            groupEntity.setSubRefs(resolvedSubs);
+        }
     }
 
     public List<GroupEntity> getAllGroups() {

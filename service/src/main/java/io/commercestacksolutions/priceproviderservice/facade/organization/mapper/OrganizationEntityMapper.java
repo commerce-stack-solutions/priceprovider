@@ -3,6 +3,7 @@ package io.commercestacksolutions.priceproviderservice.facade.organization.mappe
 import io.commercestacksolutions.commons.mapper.AbstractMapper;
 import io.commercestacksolutions.commons.mapper.RestRequestMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Component
@@ -41,10 +43,10 @@ public class OrganizationEntityMapper extends AbstractMapper<OrganizationRestEnt
         if (source.getParentRefs() != null) {
             Set<GroupEntity> parentRefs = new HashSet<>();
             for (String parentPath : source.getParentRefs()) {
-                GroupEntity parent = groupEntityRepository.findByPath(parentPath).orElse(null);
-                if (parent != null) {
-                    parentRefs.add(parent);
-                }
+                GroupEntity parent = groupEntityRepository.findByPath(parentPath).orElseThrow(
+                    () -> new DataMappingException(MessageKeys.ERROR_MAPPING_ENTITY_NOT_FOUND,
+                        Map.of("path", parentPath, "entityType", "Group")));
+                parentRefs.add(parent);
             }
             target.setParentRefs(parentRefs);
         }
@@ -79,15 +81,15 @@ public class OrganizationEntityMapper extends AbstractMapper<OrganizationRestEnt
             // Add new relationships
             Set<GroupEntity> subRefs = new HashSet<>();
             for (String subPath : newSubPaths) {
-                GroupEntity sub = groupEntityRepository.findByPath(subPath).orElse(null);
-                if (sub != null) {
-                    subRefs.add(sub);
-                    // Only add if not already present (check by path, not instance)
-                    boolean alreadyExists = sub.getParentRefs().stream()
-                        .anyMatch(p -> target.getPath() != null && target.getPath().equals(p.getPath()));
-                    if (!alreadyExists) {
-                        sub.getParentRefs().add(target);
-                    }
+                GroupEntity sub = groupEntityRepository.findByPath(subPath).orElseThrow(
+                    () -> new DataMappingException(MessageKeys.ERROR_MAPPING_ENTITY_NOT_FOUND,
+                        Map.of("path", subPath, "entityType", "Group")));
+                subRefs.add(sub);
+                // Only add if not already present (check by path, not instance)
+                boolean alreadyExists = sub.getParentRefs().stream()
+                    .anyMatch(p -> target.getPath() != null && target.getPath().equals(p.getPath()));
+                if (!alreadyExists) {
+                    sub.getParentRefs().add(target);
                 }
             }
             target.setSubRefs(subRefs);

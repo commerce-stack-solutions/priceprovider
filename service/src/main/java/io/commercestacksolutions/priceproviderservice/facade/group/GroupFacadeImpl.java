@@ -156,8 +156,8 @@ public class GroupFacadeImpl implements GroupFacade {
             GroupEntity saved = groupEntityService.save(group);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
-            // Create new group with the provided id (or auto-generated if null)
-            GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(null));
+            // Create new group using the id provided by the client in the URL
+            GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(id));
             GroupEntity saved = groupEntityService.save(newGroup);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }

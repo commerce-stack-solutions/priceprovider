@@ -29,7 +29,7 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="mb-3">
-      <label for="id" class="form-label">ID <span class="text-danger">*</span></label>
+      <label for="path" class="form-label">{{ 'common.fields.path' | transloco }} <span class="text-danger">*</span></label>
       <input 
         type="text" 
         class="form-control" 
@@ -39,7 +39,7 @@
       >
       @if (form.get('path')?.invalid && form.get('path')?.touched) {
         <div class="invalid-feedback d-block">
-          ID is required.
+          {{ 'common.messages.pathRequired' | transloco }}
         </div>
       }
       @if (hasFieldError('path')) {

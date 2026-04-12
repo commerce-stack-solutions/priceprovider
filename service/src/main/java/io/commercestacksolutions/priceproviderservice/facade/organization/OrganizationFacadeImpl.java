@@ -147,8 +147,8 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
             OrganizationEntity saved = organizationEntityService.save(organization);
             return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
-            // Create new organization (id auto-generated if null)
-            OrganizationEntity newOrganization = organizationEntityMapper.convert(organizationRestEntity, new RestRequestMappingContext<>(null));
+            // Create new organization using the id provided by the client in the URL
+            OrganizationEntity newOrganization = organizationEntityMapper.convert(organizationRestEntity, new RestRequestMappingContext<>(id));
             OrganizationEntity saved = organizationEntityService.save(newOrganization);
             return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }

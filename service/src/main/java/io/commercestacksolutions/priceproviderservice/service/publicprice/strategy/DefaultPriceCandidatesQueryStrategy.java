@@ -97,15 +97,15 @@ public class DefaultPriceCandidatesQueryStrategy implements PriceCandidatesQuery
             predicates.add(cb.isEmpty(priceRow.get("groupRefs")));
         } else {
             // Group context: prices with no groups OR prices matching group hierarchy
-            // Extract just the group IDs for the IN clause
-            List<String> groupIds = groupHierarchy.stream()
+            // Extract group paths (@ReferenceKey) for the IN clause
+            List<String> groupPaths = groupHierarchy.stream()
                 .map(GroupWithDistance::getGroupId)
                 .collect(Collectors.toList());
             
             Join<Object, Object> groupJoin = priceRow.join("groupRefs", JoinType.LEFT);
             predicates.add(cb.or(
                 cb.isEmpty(priceRow.get("groupRefs")),
-                groupJoin.get("path").in(groupIds)
+                groupJoin.get("path").in(groupPaths)
             ));
         }
 

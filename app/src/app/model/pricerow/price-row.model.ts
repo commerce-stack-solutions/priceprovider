@@ -14,13 +14,13 @@ export interface PriceRow {
   validTo?: string;
   channelRefs?: string[];
   groupRefs?: string[];
-  groupRefIds?: { [path: string]: string };  // path → UUID map (read-only, for navigation)
   $info?: {
     taxation?: {
       taxValue: number;
       taxRate: number;
       taxIncludedInfo: string;
     };
+    groupRefIds?: { [path: string]: string };  // path → id map (read-only, for navigation)
     createdAt?: string;
     lastModifiedAt?: string;
   };
