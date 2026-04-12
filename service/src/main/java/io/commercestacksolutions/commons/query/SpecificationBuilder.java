@@ -436,7 +436,7 @@ public class SpecificationBuilder {
     /**
      * Builds a HAS_ANY predicate using a correlated EXISTS subquery.
      * The entity matches if its collection contains at least one of the provided values.
-     * When the collection element type has a field annotated with {@link FilterKey}, that
+     * When the collection element type has a field annotated with {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey}, that
      * field is used for matching; otherwise the {@code @Id} field is used.
      */
     @SuppressWarnings("unchecked")
@@ -471,7 +471,7 @@ public class SpecificationBuilder {
     /**
      * Builds a HAS_ALL predicate using one correlated EXISTS subquery per value.
      * The entity matches only if its collection contains all of the provided values.
-     * When the collection element type has a field annotated with {@link FilterKey}, that
+     * When the collection element type has a field annotated with {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey}, that
      * field is used for matching; otherwise the {@code @Id} field is used.
      */
     @SuppressWarnings("unchecked")
@@ -512,7 +512,7 @@ public class SpecificationBuilder {
 
     /**
      * Resolves the attribute name to use when matching collection elements.
-     * Prefers a field annotated with {@link FilterKey}; falls back to the {@code @Id} field.
+     * Prefers a field annotated with {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey}; falls back to the {@code @Id} field.
      * Returns {@code null} if neither can be determined.
      */
     private static String resolveMatchAttribute(Class<?> elementType) {

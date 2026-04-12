@@ -1,6 +1,6 @@
 package io.commercestacksolutions.commons.dataaccess.meta;
 
-import io.commercestacksolutions.commons.idgenerator.GeneratedId;
+import io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

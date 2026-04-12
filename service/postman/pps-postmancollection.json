@@ -10595,6 +10595,19 @@
           "response": [],
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Clear stale role IDs at the start of each App Roles test section",
+                  "// to prevent stale values from a previous run from deleting essential roles",
+                  "pm.environment.unset('createdAppRoleId');",
+                  "pm.environment.unset('bulkAppRoleId1');",
+                  "pm.environment.unset('bulkAppRoleId2');"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",

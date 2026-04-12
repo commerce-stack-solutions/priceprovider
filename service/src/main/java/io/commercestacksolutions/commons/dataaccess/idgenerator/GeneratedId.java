@@ -1,4 +1,4 @@
-package io.commercestacksolutions.commons.idgenerator;
+package io.commercestacksolutions.commons.dataaccess.idgenerator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

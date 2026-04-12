@@ -1,5 +1,6 @@
 package io.commercestacksolutions.commons.query;
 
+import io.commercestacksolutions.commons.dataaccess.ReferenceKey;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -16,7 +17,7 @@ public final class QueryReflectionUtil {
     private QueryReflectionUtil() {}
 
     /**
-     * Returns the name of the field annotated with {@link FilterKey} on the given entity class,
+     * Returns the name of the field annotated with {@link ReferenceKey} on the given entity class,
      * or {@code null} if no such field exists.  The search includes declared fields on all
      * superclasses up the hierarchy.
      */
@@ -24,7 +25,7 @@ public final class QueryReflectionUtil {
         Class<?> cls = entityClass;
         while (cls != null && cls != Object.class) {
             for (Field f : cls.getDeclaredFields()) {
-                if (f.isAnnotationPresent(FilterKey.class)) {
+                if (f.isAnnotationPresent(ReferenceKey.class)) {
                     return f.getName();
                 }
             }

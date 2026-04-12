@@ -1,4 +1,4 @@
-package io.commercestacksolutions.commons.idgenerator;
+package io.commercestacksolutions.commons.dataaccess.idgenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package io.commercestacksolutions.commons.idgenerator;
+package io.commercestacksolutions.commons.dataaccess.idgenerator;
 
 /**
  * Strategy interface for generating entity IDs.

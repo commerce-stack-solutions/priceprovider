@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import io.commercestacksolutions.commons.dataaccess.ReferenceKey;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
+import io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId;
+import io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
-import io.commercestacksolutions.commons.idgenerator.GeneratedId;
-import io.commercestacksolutions.commons.idgenerator.IdGeneratorProvider;
-import io.commercestacksolutions.commons.query.FilterKey;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -27,7 +27,7 @@ public class GroupEntity implements AuditableEntity {
     @Column(length = 36)
     private String id;
 
-    @FilterKey
+    @ReferenceKey
     @MetaMandatoryField
     @Column(unique = true, nullable = false)
     private String path;
