@@ -33,7 +33,7 @@ build-and-run-devenv.bat
 ```
 
 The script will:
-1. Show a welcome screen and verify that Docker Desktop is running.
+1. Verify that Docker Desktop is running.
 2. Check whether Node.js / npm is available (optional – used for example frontends).
 3. Build a local dev Docker image for the **Price Provider Service** (`price-provider-service:0.0.0-SNAPSHOT`).
 4. Build a local dev Docker image for the **Price Manager App** (`price-manager-app:0.0.0-SNAPSHOT`).
