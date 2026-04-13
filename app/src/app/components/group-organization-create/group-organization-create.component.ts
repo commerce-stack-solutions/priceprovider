@@ -1,6 +1,7 @@
 import { Component, signal, inject, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslocoModule } from '@jsverse/transloco';
 import { GroupsService } from '../../service/group/groups.service';
 import { OrganizationsService } from '../../service/organization/organizations.service';
 import { Group } from '../../model/group/group.model';
@@ -11,7 +12,7 @@ import { Organization, OrganizationType } from '../../model/organization/organiz
   templateUrl: './group-organization-create.component.html',
   styleUrls: ['./group-organization-create.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslocoModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupOrganizationCreateComponent implements OnInit {
