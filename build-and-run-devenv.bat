@@ -14,12 +14,6 @@ REM ---------------------------------------------------------------------------
 REM Welcome screen
 REM ---------------------------------------------------------------------------
 echo.
-echo              _                           _    __
-echo    ___  ____(_)______ ___  _______ _  __(_)__/ /__ ____
-echo   / _ \/ __/ / __/ -_) _ \/ __/ _ \ ^|/ / / _  / -_) __/
-echo  / .__/_/ /_/\__/\__/ .__/_/  \___/___/_/\_,_/\__/_/
-echo /_/                /_/
-echo.
 echo   build-and-run-devenv  ^|  Fast Setup and Run
 echo   Version: %VERSION%
 echo.
@@ -165,6 +159,12 @@ echo ================================================================
 echo.
 echo   All services are starting up!
 echo.
+echo              _                           _    __
+echo    ___  ____(_)______ ___  _______ _  __(_)__/ /__ ____
+echo   / _ \/ __/ / __/ -_) _ \/ __/ _ \ ^|/ / / _  / -_) __/
+echo  / .__/_/ /_/\__/\__/ .__/_/  \___/___/_/\_,_/\__/_/
+echo /_/                /_/
+echo.
 echo   Price Manager App      -^>  http://localhost
 echo   Price Provider API     -^>  http://localhost:8080
 echo   Keycloak (IdP)         -^>  http://localhost:8081
@@ -174,17 +174,17 @@ if "!NODE_AVAILABLE!"=="true" (
 )
 echo.
 echo   Default Users (Keycloak realm: priceprovider^):
-echo   Admin users:
-echo     admin-user       / admin123       (Admin    - read/write/delete^)
-echo     contributor-user / contributor123 (Contributor - read/write^)
-echo     reader-user      / reader123      (Reader   - read-only^)
-echo   Shop frontend customers:
-echo     customer-city-council / customer123 (Org: City Council^)
-echo     customer-city-health  / customer123 (Org: City Health^)
-echo     customer-techcorp     / customer123 (Org: TechCorp EU^)
-echo   Rental frontend customers:
-echo     rental-builder-pro / rental123 (Org: Builder Pro^)
-echo     rental-green-land  / rental123 (Org: Green Land^)
+echo     Admin users:
+echo       admin-user       / admin123       (Admin    - read/write/delete^)
+echo       contributor-user / contributor123 (Contributor - read/write^)
+echo       reader-user      / reader123      (Reader   - read-only^)
+echo     Shop frontend customers:
+echo       customer-city-council / customer123 (Org: City Council^)
+echo       customer-city-health  / customer123 (Org: City Health^)
+echo       customer-techcorp     / customer123 (Org: TechCorp EU^)
+echo     Rental frontend customers:
+echo       rental-builder-pro / rental123 (Org: Builder Pro^)
+echo       rental-green-land  / rental123 (Org: Green Land^)
 echo.
 echo   Documentation:
 echo   Project README         -^>  %SCRIPT_DIR%\README.md
