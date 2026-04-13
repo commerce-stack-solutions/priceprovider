@@ -65,8 +65,8 @@ export class GroupDetailComponent {
       });
     }
 
-    // Other info fields section (excluding createdAt and lastModifiedAt)
-    const otherInfoKeys = allInfoKeys.filter(k => k !== 'createdAt' && k !== 'lastModifiedAt');
+    // Other info fields section (excluding audit fields and navigation maps already shown as badges)
+    const otherInfoKeys = allInfoKeys.filter(k => k !== 'createdAt' && k !== 'lastModifiedAt' && k !== 'parentRefIds' && k !== 'subRefIds');
     if (otherInfoKeys.length > 0) {
       const fields: InfoField[] = otherInfoKeys.map(key => ({
         label: this.label.formatLabel(key),
