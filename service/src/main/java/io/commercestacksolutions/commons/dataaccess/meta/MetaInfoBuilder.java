@@ -1,5 +1,6 @@
 package io.commercestacksolutions.commons.dataaccess.meta;
 
+import io.commercestacksolutions.commons.dataaccess.ReferenceKey;
 import io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +22,9 @@ import java.util.stream.Collectors;
  *   <li>Mandatory fields — fields annotated with {@link MetaMandatoryField}, <strong>plus</strong>
  *       all {@code @Id} fields that do <em>not</em> also carry {@code @GeneratedValue}
  *       (generated IDs are assigned by the database and must not be supplied by the caller)</li>
+ *   <li>Reference key fields — fields annotated with
+ *       {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey @ReferenceKey};
+ *       if none are found the identity fields are used as fallback</li>
  *   <li>Enum values — ALL enum-typed fields (mandatory or optional) are always included</li>
  * </ul>
  *
@@ -58,6 +62,7 @@ public class MetaInfoBuilder {
     public static MetaInfo build(Class<?> entityClass) {
         List<String> identityFields = new ArrayList<>();
         List<String> mandatoryFields = new ArrayList<>();
+        List<String> referenceKeyFields = new ArrayList<>();
         Map<String, List<String>> enumValues = new HashMap<>();
 
         Class<?> clazz = entityClass;
@@ -77,6 +82,11 @@ public class MetaInfoBuilder {
                         && !mandatoryFields.contains(field.getName())) {
                     mandatoryFields.add(field.getName());
                 }
+                // @ReferenceKey → human-readable alternative key used in JSON refs and queries
+                if (field.isAnnotationPresent(ReferenceKey.class)
+                        && !referenceKeyFields.contains(field.getName())) {
+                    referenceKeyFields.add(field.getName());
+                }
                 // Always include enum values for any enum-typed field (mandatory or optional)
                 if (field.getType().isEnum()) {
                     @SuppressWarnings("unchecked")
@@ -90,7 +100,14 @@ public class MetaInfoBuilder {
             clazz = clazz.getSuperclass();
         }
 
-        return new MetaInfo(identityFields, mandatoryFields, enumValues.isEmpty() ? null : enumValues);
+        // Fall back to identity fields when no @ReferenceKey is declared
+        if (referenceKeyFields.isEmpty()) {
+            referenceKeyFields.addAll(identityFields);
+        }
+
+        MetaInfo meta = new MetaInfo(identityFields, mandatoryFields, enumValues.isEmpty() ? null : enumValues);
+        meta.setReferenceKeyFields(referenceKeyFields.isEmpty() ? null : referenceKeyFields);
+        return meta;
     }
 }
 

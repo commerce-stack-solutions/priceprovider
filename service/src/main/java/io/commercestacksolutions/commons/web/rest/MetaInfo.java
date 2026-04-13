@@ -14,6 +14,7 @@ public class MetaInfo {
     
     private List<String> identityFields;
     private List<String> mandatoryFields;
+    private List<String> referenceKeyFields;
     private Map<String, List<String>> enumValues;
 
     public MetaInfo() {
@@ -44,6 +45,14 @@ public class MetaInfo {
 
     public void setMandatoryFields(List<String> mandatoryFields) {
         this.mandatoryFields = mandatoryFields;
+    }
+
+    public List<String> getReferenceKeyFields() {
+        return referenceKeyFields;
+    }
+
+    public void setReferenceKeyFields(List<String> referenceKeyFields) {
+        this.referenceKeyFields = referenceKeyFields;
     }
 
     public Map<String, List<String>> getEnumValues() {

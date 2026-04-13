@@ -1,5 +1,6 @@
 package io.commercestacksolutions.commons.dataaccess.meta;
 
+import io.commercestacksolutions.commons.dataaccess.ReferenceKey;
 import io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import jakarta.persistence.GeneratedValue;
@@ -46,6 +47,16 @@ public class MetaInfoBuilderTest {
         @Id
         @GeneratedId
         private String id;          // @GeneratedId → auto-generated UUID, NOT mandatory
+        @MetaMandatoryField
+        private String name;
+    }
+
+    static class EntityWithReferenceKey {
+        @Id
+        @GeneratedId
+        private String id;
+        @ReferenceKey
+        private String path;
         @MetaMandatoryField
         private String name;
     }
@@ -162,6 +173,28 @@ public class MetaInfoBuilderTest {
         assertFalse(meta.getMandatoryFields().contains("id"),  "GroupEntity: id must NOT be mandatory (auto-generated UUID)");
         assertTrue(meta.getMandatoryFields().contains("path"), "GroupEntity: path must be mandatory");
         assertTrue(meta.getMandatoryFields().contains("name"), "GroupEntity: name must be mandatory");
+        assertNotNull(meta.getReferenceKeyFields(),             "GroupEntity: referenceKeyFields must not be null");
+        assertTrue(meta.getReferenceKeyFields().contains("path"), "GroupEntity: path must be in referenceKeyFields (@ReferenceKey)");
+        assertFalse(meta.getReferenceKeyFields().contains("id"),  "GroupEntity: id must NOT be in referenceKeyFields");
+    }
+
+    @Test
+    void build_withReferenceKey_populatesReferenceKeyFields() {
+        MetaInfo meta = MetaInfoBuilder.build(EntityWithReferenceKey.class);
+        assertNotNull(meta.getReferenceKeyFields());
+        assertTrue(meta.getReferenceKeyFields().contains("path"),
+                "@ReferenceKey field must appear in referenceKeyFields");
+        assertFalse(meta.getReferenceKeyFields().contains("id"),
+                "Technical @Id must not appear in referenceKeyFields when @ReferenceKey is present");
+    }
+
+    @Test
+    void build_withoutReferenceKey_fallsBackToIdentityFields() {
+        MetaInfo meta = MetaInfoBuilder.build(BaseEntity.class);
+        assertNotNull(meta.getReferenceKeyFields(),
+                "referenceKeyFields must fall back to identityFields when no @ReferenceKey present");
+        assertTrue(meta.getReferenceKeyFields().contains("id"),
+                "Fallback referenceKeyFields must include the @Id field");
     }
 
     @Test

@@ -59,7 +59,7 @@
             <label class="form-label fw-bold">{{ 'common.fields.parent' | transloco }}</label>
             <div>
               @for (ref of org.parentRefs; track ref) {
-              <a [routerLink]="['/' + lang(), 'organizations', org.parentRefIds?.[ref] ?? ref]" class="ref-badge me-1">{{ ref }}</a>
+              <a [routerLink]="['/' + lang(), 'organizations', org.$info?.parentRefIds?.[ref] ?? ref]" class="ref-badge me-1">{{ ref }}</a>
               }
             </div>
           </div>
@@ -70,7 +70,7 @@
             <label class="form-label fw-bold">{{ 'common.fields.children' | transloco }}</label>
             <div>
               @for (ref of org.subRefs; track ref) {
-              <a [routerLink]="['/' + lang(), 'organizations', org.subRefIds?.[ref] ?? ref]" class="ref-badge me-1">{{ ref }}</a>
+              <a [routerLink]="['/' + lang(), 'organizations', org.$info?.subRefIds?.[ref] ?? ref]" class="ref-badge me-1">{{ ref }}</a>
               }
             </div>
           </div>
