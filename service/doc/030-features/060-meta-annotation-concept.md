@@ -13,12 +13,13 @@ GET /api/admin/groups/GRP-001?$expand=$includes,$info,$meta
 
 ```json
 {
-  "id": "GRP-001",
-  "name": "Sample Group",
-  "groupType": "PROMOTION",
+  "id": "78b50c3e-3694-4c8f-8922-cc4dfec87f3a",
+  "path": "ORG-MY-COMPANY/ORG-IT-DEPT",
+  "groupType": "ORGANIZATION",
   "$meta": {
     "identityFields": ["id"],
-    "mandatoryFields": ["id", "name", "groupType"],
+    "mandatoryFields": ["path", "groupType"],
+    "referenceKeyFields": ["path"],
     "enumValues": {
       "groupType": ["ORGANIZATION", "PROMOTION"]
     }
@@ -26,11 +27,12 @@ GET /api/admin/groups/GRP-001?$expand=$includes,$info,$meta
 }
 ```
 
-| Field             | Description |
-|-------------------|-------------|
-| `identityFields`  | Fields that serve as primary keys (detected from `@jakarta.persistence.Id`) |
-| `mandatoryFields` | Fields required for create/update (declared with `@MetaMandatoryField`) |
-| `enumValues`      | All valid string constants for every enum-typed field (mandatory **and** optional) |
+| Field                | Description |
+|----------------------|-------------|
+| `identityFields`     | Fields that serve as primary keys (detected from `@jakarta.persistence.Id`) |
+| `mandatoryFields`    | Fields required for create/update (declared with `@MetaMandatoryField`, plus non-generated `@Id` fields) |
+| `referenceKeyFields` | The human-readable alternative key field(s) used in JSON references and query filters (see `@ReferenceKey` below). Falls back to `identityFields` when no `@ReferenceKey` is declared. |
+| `enumValues`         | All valid string constants for every enum-typed field (mandatory **and** optional) |
 
 ## How It Works (Backend)
 
@@ -41,11 +43,13 @@ Entity fields are annotated directly:
 ```java
 @Entity
 public class GroupEntity {
-    @Id                   // → identityField AND auto-mandatory (no @GeneratedValue)
-    private String id;
+    @Id
+    @GeneratedId          // → identityField ONLY – NOT mandatory (app generates via @PrePersist)
+    private String id;    // auto-generated UUID
 
+    @ReferenceKey         // → listed in referenceKeyFields; used for queries and JSON refs
     @MetaMandatoryField
-    private String name;
+    private String path;  // human-readable key, e.g. "ORG-MY-COMPANY/ORG-IT-DEPT"
 
     @Enumerated(EnumType.STRING)
     @MetaMandatoryField
@@ -68,7 +72,19 @@ public class PriceRowEntity {
 
 #### Auto-mandatory rule for `@Id` fields
 
-A field annotated with `@Id` is **implicitly mandatory** (the caller must supply it) unless it also carries `@GeneratedValue`. When `@GeneratedValue` is present the database assigns the value, so the client must not (and cannot) provide one.
+A field annotated with `@Id` is **implicitly mandatory** (the caller must supply it) unless it also carries `@GeneratedValue` or `@GeneratedId`. When either of these is present the value is assigned automatically and the client must not (and cannot) provide one.
+
+#### `@GeneratedId`
+
+`@GeneratedId` (`commons.dataaccess.idgenerator`) is the equivalent of `@GeneratedValue` for entities that use `@PrePersist`-based ID generation instead of JPA sequence-based generation (e.g. when targeting Cloud Spanner). See [Reference Key and ID Generation](080-reference-key-and-id-generation.md) for full details.
+
+#### `@ReferenceKey` and `referenceKeyFields` {#referenceKeyFields}
+
+`@ReferenceKey` (`commons.dataaccess`) marks a field as the human-readable alternative key used in JSON references and Lucene-style query filters. The field name is exposed under `$meta.referenceKeyFields`.  When no `@ReferenceKey` is declared, `referenceKeyFields` falls back to the `identityFields` list.
+
+`SpecificationBuilder` uses `referenceKeyFields` (via reflection) when building `.hasAny` / `.hasAll` predicates on collection fields, so callers can filter by readable keys (e.g. `groupRefs.hasAny:ORG-MY-COMPANY/ORG-IT-DEPT`) rather than UUID values.
+
+See [Reference Key and ID Generation](080-reference-key-and-id-generation.md) for full details and a guide on adding `@ReferenceKey` to new entities.
 
 ### MetaInfoBuilder
 
@@ -130,13 +146,23 @@ In **create mode** (no entity ID yet), the form fetches the list endpoint with `
 
 1. Annotate entity fields — **do not** add `@MetaMandatoryField` to `@Id` fields:
    ```java
-   @Id private String id;           // auto-mandatory (no @GeneratedValue)
+   @Id private String id;           // auto-mandatory (no @GeneratedValue / @GeneratedId)
    @MetaMandatoryField private String name;
    @Enumerated(EnumType.STRING) private MyEnum status; // enum values auto-included
    ```
-   For entities with a generated primary key:
+   For entities with a JPA-generated primary key:
    ```java
    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id; // identity only, NOT mandatory
+   ```
+   For entities with an app-generated primary key (e.g. UUID via `@PrePersist`):
+   ```java
+   @Id @GeneratedId private String id; // identity only, NOT mandatory
+   ```
+   For entities that have a separate human-readable business key:
+   ```java
+   @ReferenceKey
+   @Column(unique = true, nullable = false)
+   private String path;  // appears in $meta.referenceKeyFields; used in hasAny/hasAll queries
    ```
 
 2. Register in `MetaInfoRegistryConfig`:

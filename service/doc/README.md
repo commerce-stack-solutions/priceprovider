@@ -31,8 +31,9 @@ service/doc/
 │   │   ├── 010-integration-guide.md          Public Price API - Integration guide for consumers
 │   │   └── 020-developer-guide.md            Public Price API - Developer/architecture guide
 │   ├── 050-rbac-and-user-guide.md            RBAC model, sample users, and organization concept
-│   ├── 060-meta-annotation-concept.md        Meta annotation concept
-│   └── 070-service-initialization.md         Service initialization and bootstrap mechanism
+│   ├── 060-meta-annotation-concept.md        $meta expand – entity metadata API
+│   ├── 070-service-initialization.md         Service initialization and bootstrap mechanism
+│   └── 080-reference-key-and-id-generation.md  @ReferenceKey, @GeneratedId, and exchangeable ID generation
 │
 └── 040-api-reference/
     ├── 010-general-concept.md                Typical REST call patterns, GET/PUT/PATCH/POST/DELETE
@@ -67,8 +68,9 @@ service/doc/
 - [Public Price API - Integration Guide](030-features/040-public-price-api/010-integration-guide.md) - API for external consumers (shop, PIM, ERP)
 - [Public Price API - Developer Guide](030-features/040-public-price-api/020-developer-guide.md) - Architecture, strategies, extensibility
 - [RBAC and User Guide](030-features/050-rbac-and-user-guide.md) - RBAC model, sample users, and organization concept
-- [Meta Annotation Concept](030-features/060-meta-annotation-concept.md) - Meta annotation concept
+- [Meta Annotation Concept](030-features/060-meta-annotation-concept.md) - `$meta` expand, `referenceKeyFields`, `@GeneratedId`
 - [Service Initialization](030-features/070-service-initialization.md) - Service initialization and bootstrap mechanism
+- [Reference Key and ID Generation](030-features/080-reference-key-and-id-generation.md) - `@ReferenceKey`, `@GeneratedId`, and exchangeable UUID generation
 
 ### API Reference
 
@@ -90,4 +92,5 @@ service/doc/
 | Adding query filtering to new entity | [Query Filtering Implementation](030-features/020-query-filtering-implementation.md) |
 | Using the public price API | [Public Price API - Integration Guide](030-features/040-public-price-api/010-integration-guide.md) |
 | Initial service setup and bootstrap | [Service Initialization](030-features/070-service-initialization.md) |
+| Understanding `$meta`, `@ReferenceKey`, `@GeneratedId` | [Reference Key and ID Generation](030-features/080-reference-key-and-id-generation.md) |
 | Testing the API with Postman | [Postman Collection Guide](020-development/040-postman.md) |
