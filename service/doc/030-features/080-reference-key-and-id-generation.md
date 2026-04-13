@@ -75,7 +75,7 @@ When no `@ReferenceKey` is declared the list falls back to the `@Id` field(s).
 }
 ```
 
-See [Meta Annotation Concept – referenceKeyFields](060-meta-annotation-concept.md#referenceKeyFields) for the full response contract.
+See [Meta Annotation Concept – referenceKeyFields](060-meta-annotation-concept.md#referencekey-and-referenceKeyfields) for the full response contract.
 
 ### When to Add @ReferenceKey
 

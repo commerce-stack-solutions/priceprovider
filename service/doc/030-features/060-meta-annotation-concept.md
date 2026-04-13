@@ -78,7 +78,7 @@ A field annotated with `@Id` is **implicitly mandatory** (the caller must supply
 
 `@GeneratedId` (`commons.dataaccess.idgenerator`) is the equivalent of `@GeneratedValue` for entities that use `@PrePersist`-based ID generation instead of JPA sequence-based generation (e.g. when targeting Cloud Spanner). See [Reference Key and ID Generation](080-reference-key-and-id-generation.md) for full details.
 
-#### `@ReferenceKey` and `referenceKeyFields` {#referenceKeyFields}
+#### `@ReferenceKey` and `referenceKeyFields`
 
 `@ReferenceKey` (`commons.dataaccess`) marks a field as the human-readable alternative key used in JSON references and Lucene-style query filters. The field name is exposed under `$meta.referenceKeyFields`.  When no `@ReferenceKey` is declared, `referenceKeyFields` falls back to the `identityFields` list.
 
