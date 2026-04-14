@@ -6,6 +6,7 @@ import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.query.QueryFilterRuntimeException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.facade.group.restentity.GroupRestEntity;
 import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.GroupController;
 import io.commercestacksolutions.priceproviderservice.facade.group.GroupFacade;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -139,5 +141,55 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.group.alreadyExists"))
                 .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
+    }
+
+    // ---------- PUT (createOrRecreate) ----------
+
+    @Test
+    public void testPut_CreatesNewGroupWithClientProvidedId() throws Exception {
+        GroupRestEntity created = new GroupRestEntity();
+        created.setId("CLIENT-ID-001");
+        created.setPath("GRP-PUT-001");
+        created.setName("Put Group");
+
+        when(groupFacade.createOrRecreate(eq("CLIENT-ID-001"), any())).thenReturn(created);
+
+        mockMvc.perform(put("/admin/api/groups/CLIENT-ID-001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"path\":\"GRP-PUT-001\",\"name\":\"Put Group\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("CLIENT-ID-001"))
+                .andExpect(jsonPath("$.path").value("GRP-PUT-001"));
+    }
+
+    @Test
+    public void testPut_UpdatesExistingGroup() throws Exception {
+        GroupRestEntity updated = new GroupRestEntity();
+        updated.setId("EXISTING-ID");
+        updated.setPath("GRP-EXISTING");
+        updated.setName("Updated Name");
+
+        when(groupFacade.createOrRecreate(eq("EXISTING-ID"), any())).thenReturn(updated);
+
+        mockMvc.perform(put("/admin/api/groups/EXISTING-ID")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"path\":\"GRP-EXISTING\",\"name\":\"Updated Name\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("EXISTING-ID"))
+                .andExpect(jsonPath("$.name").value("Updated Name"));
+    }
+
+    @Test
+    public void testPut_ValidationError_Returns400() throws Exception {
+        Message validationMessage = new Message(Message.MessageType.ERROR,
+                "common.errors.validation.pathRequired", Map.of("field", "path"), List.of("path"));
+        when(groupFacade.createOrRecreate(eq("MY-ID"), any()))
+                .thenThrow(new EntityValidationException("common.errors.validation.pathRequired", validationMessage));
+
+        mockMvc.perform(put("/admin/api/groups/MY-ID")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Missing Path Group\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.pathRequired"));
     }
 }
