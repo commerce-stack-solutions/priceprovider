@@ -84,12 +84,12 @@ public class PublicPriceMapper extends AbstractMapper<PriceRowEntity, PublicPric
         target.setValidFrom(source.getValidFrom());
         target.setValidTo(source.getValidTo());
         
-        // Map group references to string IDs
+        // Map group references to string paths
         if (source.getGroups() != null) {
             Set<String> groupRefIds = new HashSet<>();
             for (GroupEntity group : source.getGroups()) {
-                if (group != null && group.getId() != null) {
-                    groupRefIds.add(group.getId());
+                if (group != null && group.getPath() != null) {
+                    groupRefIds.add(group.getPath());
                 }
             }
             target.setGroupRefs(groupRefIds);

@@ -107,7 +107,8 @@
     "country": "国家",
     "countryRef": "国家",
     "priceRepresentationMode": "价格表示模式",
-    "priceRepresentationModePlaceholder": "选择价格表示模式..."
+    "priceRepresentationModePlaceholder": "选择价格表示模式...",
+    "path": "路径"
   },
   "sections": {
     "auditInformation": "审计信息",
@@ -167,7 +168,8 @@
     "isoKey": "由 2 个小写字母组成的 ISO 键（例如：en、de、fr）。",
     "activeLanguages": "只有处于活动状态的语言会显示在会话配置和 REST API 中。",
     "mandatoryLanguages": "必填语言必须在所有语言输入字段中提供。",
-    "mandatoryLanguagesAndInactiveLanguages": "必填语言是必须的。非活动语言（灰显）会显示但不可编辑。"
+    "mandatoryLanguagesAndInactiveLanguages": "必填语言是必须的。非活动语言（灰显）会显示但不可编辑。",
+    "pathRequired": "路径是必填项"
   },
   "navigation": {
     "home": "主页",

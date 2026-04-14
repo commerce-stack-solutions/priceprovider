@@ -1,11 +1,14 @@
 import { MetaInfo } from '../meta-info.model';
 
 export interface Group {
-  id: string;
+  id?: string;   // generated string ID (auto-assigned, read-only after creation)
+  path?: string; // Unique human-readable identifier (required for create)
   name?: string;
-  parentRefs?: string[];
-  subRefs?: string[];
+  parentRefs?: string[];  // path values
+  subRefs?: string[];     // path values
   $info?: {
+    parentRefIds?: { [path: string]: string };  // path → id map (read-only, for navigation)
+    subRefIds?: { [path: string]: string };     // path → id map (read-only, for navigation)
     [key: string]: any;
   };
   $includes?: {

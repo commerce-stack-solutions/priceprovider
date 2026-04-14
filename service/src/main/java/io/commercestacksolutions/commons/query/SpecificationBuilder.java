@@ -435,7 +435,9 @@ public class SpecificationBuilder {
 
     /**
      * Builds a HAS_ANY predicate using a correlated EXISTS subquery.
-     * The entity matches if its collection contains at least one of the provided IDs.
+     * The entity matches if its collection contains at least one of the provided values.
+     * When the collection element type has a field annotated with {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey}, that
+     * field is used for matching; otherwise the {@code @Id} field is used.
      */
     @SuppressWarnings("unchecked")
     private static <T> Predicate buildHasAnyPredicate(
@@ -449,15 +451,16 @@ public class SpecificationBuilder {
         Root<T> subRoot = subquery.correlate(root);
         Join<T, Object> collJoin = resolveCollectionJoin(subRoot, fieldPath);
 
-        String idAttr = QueryReflectionUtil.findIdAttributeName(collJoin.getJavaType());
         subquery.select(criteriaBuilder.literal(1));
 
-        if (idAttr != null) {
-            Path<Object> idPath = (Path<Object>) collJoin.get(idAttr);
+        String matchAttr = resolveMatchAttribute(collJoin.getJavaType());
+        if (matchAttr != null) {
+            Path<Object> matchPath = (Path<Object>) collJoin.get(matchAttr);
+            Class<?> matchType = matchPath.getJavaType();
             List<Object> convertedIds = ids.stream()
-                .map(id -> QueryReflectionUtil.convertValueToType(id, idPath.getJavaType()))
+                .map(id -> QueryReflectionUtil.convertValueToType(id, matchType))
                 .collect(Collectors.toList());
-            subquery.where(idPath.in(convertedIds));
+            subquery.where(matchPath.in(convertedIds));
         } else {
             subquery.where(collJoin.in(ids));
         }
@@ -466,8 +469,10 @@ public class SpecificationBuilder {
     }
 
     /**
-     * Builds a HAS_ALL predicate using one correlated EXISTS subquery per ID.
-     * The entity matches only if its collection contains all of the provided IDs.
+     * Builds a HAS_ALL predicate using one correlated EXISTS subquery per value.
+     * The entity matches only if its collection contains all of the provided values.
+     * When the collection element type has a field annotated with {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey}, that
+     * field is used for matching; otherwise the {@code @Id} field is used.
      */
     @SuppressWarnings("unchecked")
     private static <T> Predicate buildHasAllPredicate(
@@ -484,13 +489,13 @@ public class SpecificationBuilder {
             Root<T> subRoot = subquery.correlate(root);
             Join<T, Object> collJoin = resolveCollectionJoin(subRoot, fieldPath);
 
-            String idAttr = QueryReflectionUtil.findIdAttributeName(collJoin.getJavaType());
             subquery.select(criteriaBuilder.literal(1));
 
-            if (idAttr != null) {
-                Path<Object> idPath = (Path<Object>) collJoin.get(idAttr);
-                Object convertedId = QueryReflectionUtil.convertValueToType(id, idPath.getJavaType());
-                subquery.where(criteriaBuilder.equal(idPath, convertedId));
+            String matchAttr = resolveMatchAttribute(collJoin.getJavaType());
+            if (matchAttr != null) {
+                Path<Object> matchPath = (Path<Object>) collJoin.get(matchAttr);
+                Object convertedId = QueryReflectionUtil.convertValueToType(id, matchPath.getJavaType());
+                subquery.where(criteriaBuilder.equal(matchPath, convertedId));
             } else {
                 subquery.where(criteriaBuilder.equal(collJoin, id));
             }
@@ -503,6 +508,19 @@ public class SpecificationBuilder {
         }
 
         return criteriaBuilder.and(allPredicates.toArray(new Predicate[0]));
+    }
+
+    /**
+     * Resolves the attribute name to use when matching collection elements.
+     * Prefers a field annotated with {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey}; falls back to the {@code @Id} field.
+     * Returns {@code null} if neither can be determined.
+     */
+    private static String resolveMatchAttribute(Class<?> elementType) {
+        String filterKey = QueryReflectionUtil.findFilterKeyAttributeName(elementType);
+        if (filterKey != null) {
+            return filterKey;
+        }
+        return QueryReflectionUtil.findIdAttributeName(elementType);
     }
 
     /**

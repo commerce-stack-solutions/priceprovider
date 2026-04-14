@@ -107,7 +107,8 @@
     "country": "Riik",
     "countryRef": "Riik",
     "priceRepresentationMode": "Hinna esitusrežiim",
-    "priceRepresentationModePlaceholder": "Valige hinna esitusrežiim..."
+    "priceRepresentationModePlaceholder": "Valige hinna esitusrežiim...",
+    "path": "Tee"
   },
   "sections": {
     "auditInformation": "Audititeave",
@@ -167,7 +168,8 @@
     "mandatoryLanguages": "Kõikides keeleväljade sisendites peavad olema kohustuslikud keeled.",
     "mandatoryLanguagesAndInactiveLanguages": "Kohustuslikud keeled on nõutud. Mitteaktiivseid keeli (hallid) näidatakse, kuid neid ei saa muuta.",
     "noWritePermission": "Teil pole selle üksuse muutmiseks õigust.",
-    "noDeletePermission": "Teil pole selle üksuse kustutamiseks õigust."
+    "noDeletePermission": "Teil pole selle üksuse kustutamiseks õigust.",
+    "pathRequired": "Tee on kohustuslik"
   },
   "navigation": {
     "home": "Avaleht",

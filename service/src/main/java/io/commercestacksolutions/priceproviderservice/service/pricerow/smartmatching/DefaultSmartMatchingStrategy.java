@@ -61,7 +61,8 @@ public class DefaultSmartMatchingStrategy implements SmartMatchingStrategy {
         for (PriceRowEntity candidate : candidates) {
             Set<String> candidateGroupRefs = candidate.getGroups() != null
                     ? candidate.getGroups().stream()
-                            .map(GroupEntity::getId)
+                            .filter(g -> g != null && g.getPath() != null)
+                            .map(GroupEntity::getPath)
                             .collect(Collectors.toSet())
                     : new HashSet<>();
 

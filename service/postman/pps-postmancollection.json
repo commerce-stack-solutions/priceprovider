@@ -7774,7 +7774,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store first group UUID for use in subsequent requests",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"testGroupId\", jsonData.items[0].id);",
+                  "    pm.environment.set(\"testGroupPath\", jsonData.items[0].path);",
+                  "}"
                 ]
               }
             }
@@ -7826,7 +7833,7 @@
           ]
         },
         {
-          "name": "Get Group by ID",
+          "name": "Get Group by Path (via query)",
           "request": {
             "method": "GET",
             "header": [
@@ -7837,21 +7844,23 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/GRP-26-SALE-PROMOTION-SUMMER?$expand=$includes,$info,$meta",
+              "raw": "{{baseUrl}}/admin/api/groups?q=path:GRP-26-SALE-PROMOTION-SUMMER&$expand=$includes,$info,$meta",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "admin",
                 "api",
-                "groups",
-                "GRP-26-SALE-PROMOTION-SUMMER"
+                "groups"
               ],
               "query": [
                 {
+                  "key": "q",
+                  "value": "path:GRP-26-SALE-PROMOTION-SUMMER"
+                },
+                {
                   "key": "$expand",
-                  "value": "$includes,$info,$meta",
-                  "disabled": false
+                  "value": "$includes,$info,$meta"
                 }
               ]
             },
@@ -7864,12 +7873,72 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response contains items\", function () {",
+                  "    pm.expect(jsonData.items).to.be.an(\"array\").that.is.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"First item has expected path\", function () {",
+                  "    pm.expect(jsonData.items[0].path).to.equal(\"GRP-26-SALE-PROMOTION-SUMMER\");",
+                  "});",
+                  "",
+                  "// Store the UUID for the follow-up Get by ID request",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"sampleGroupId\", jsonData.items[0].id);",
+                  "    pm.environment.set(\"testGroupId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
           ]
+        },
+        {
+          "name": "Get Group by ID (UUID)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response has id and path\", function () {",
+                  "    pm.expect(jsonData.id).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.path).to.equal(\"GRP-26-SALE-PROMOTION-SUMMER\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/groups/{{sampleGroupId}}?$expand=$includes,$info,$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "groups",
+                "{{sampleGroupId}}"
+              ],
+              "query": [
+                {
+                  "key": "$expand",
+                  "value": "$includes,$info,$meta"
+                }
+              ]
+            }
+          }
         },
         {
           "name": "Create Group (POST)",
@@ -7888,7 +7957,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"GRP-TEST-001\",\n  \"name\": \"Test Promotion Group\",\n  \"parentRefs\": []\n}"
+              "raw": "{\n  \"path\": \"GRP-TEST-001\",\n  \"name\": \"Test Promotion Group\",\n  \"parentRefs\": []\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/groups/create",
@@ -7912,7 +7981,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store the created group UUID for use in subsequent requests",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set(\"createdGroupId\", jsonData.id);",
+                  "}"
                 ]
               }
             }
@@ -7938,7 +8013,7 @@
               "raw": "{\n  \"name\": \"Updated Test Promotion\",\n  \"parentRefs\": [\n    \"ORG-MY-COMPANY\"\n  ]\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/GRP-TEST-001",
+              "raw": "{{baseUrl}}/admin/api/groups/{{createdGroupId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -7946,7 +8021,7 @@
                 "admin",
                 "api",
                 "groups",
-                "GRP-TEST-001"
+                "{{createdGroupId}}"
               ]
             },
             "description": "Creates or updates a group (Happy Path)"
@@ -7985,7 +8060,7 @@
               "raw": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/name\",\n    \"value\": \"Patched Promotion Name\"\n  }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/GRP-TEST-001",
+              "raw": "{{baseUrl}}/admin/api/groups/{{createdGroupId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -7993,7 +8068,7 @@
                 "admin",
                 "api",
                 "groups",
-                "GRP-TEST-001"
+                "{{createdGroupId}}"
               ]
             },
             "description": "Partially updates a group using JSON Patch (Happy Path)"
@@ -8024,7 +8099,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/GRP-TEST-001",
+              "raw": "{{baseUrl}}/admin/api/groups/{{createdGroupId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -8032,7 +8107,7 @@
                 "admin",
                 "api",
                 "groups",
-                "GRP-TEST-001"
+                "{{createdGroupId}}"
               ]
             },
             "description": "Deletes a group by ID (Happy Path)"
@@ -8067,7 +8142,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"id\": \"GRP-BULK-001\",\n    \"name\": \"Bulk Promotion 1\"\n  },\n  {\n    \"id\": \"GRP-BULK-002\",\n    \"name\": \"Bulk Promotion 2\"\n  }\n]"
+              "raw": "[\n  {\n    \"path\": \"GRP-BULK-001\",\n    \"name\": \"Bulk Promotion 1\"\n  },\n  {\n    \"path\": \"GRP-BULK-002\",\n    \"name\": \"Bulk Promotion 2\"\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/groups/bulk-create-or-update",
@@ -8091,7 +8166,15 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 207', function () { pm.response.to.have.status(207); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store bulk group UUIDs for use in bulk-delete",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length >= 2) {",
+                  "    var ids = jsonData.items.filter(function(i) { return i.id; }).map(function(i) { return i.id; });",
+                  "    pm.environment.set(\"bulkGroupId1\", ids[0] || \"\");",
+                  "    pm.environment.set(\"bulkGroupId2\", ids[1] || \"\");",
+                  "}"
                 ]
               }
             }
@@ -8114,7 +8197,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  \"GRP-BULK-001\",\n  \"GRP-BULK-002\"\n]"
+              "raw": "{{bulkGroupDeleteBody}}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/groups/bulk-delete",
@@ -8138,6 +8221,20 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var ids = [];",
+                  "var id1 = pm.environment.get(\"bulkGroupId1\");",
+                  "var id2 = pm.environment.get(\"bulkGroupId2\");",
+                  "if (id1) ids.push(id1);",
+                  "if (id2) ids.push(id2);",
+                  "pm.variables.set(\"bulkGroupDeleteBody\", JSON.stringify(ids));"
                 ]
               }
             }
@@ -8189,7 +8286,7 @@
           ]
         },
         {
-          "name": "Create Group Without ID (400 Angry Path)",
+          "name": "Create Group Without Path (400 Angry Path)",
           "request": {
             "method": "POST",
             "header": [
@@ -8255,7 +8352,7 @@
               "raw": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/id\",\n    \"value\": \"DIFFERENT-ID\"\n  }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/GRP-001",
+              "raw": "{{baseUrl}}/admin/api/groups/{{testGroupId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -8263,7 +8360,7 @@
                 "admin",
                 "api",
                 "groups",
-                "GRP-001"
+                "{{testGroupId}}"
               ]
             },
             "description": "Attempts to modify immutable ID field - should fail validation (Angry Path)"
@@ -8283,9 +8380,9 @@
           ]
         },
         {
-          "name": "Create Group with Cyclic Dependency (400 Angry Path)",
+          "name": "Update Group with Cyclic Dependency (400 Angry Path)",
           "request": {
-            "method": "POST",
+            "method": "PUT",
             "header": [
               {
                 "key": "Content-Type",
@@ -8299,10 +8396,15 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"GRP-CYCLIC\",\n  \"name\": \"Cyclic Group\",\n  \"parentRefs\": [\n    \"GRP-CYCLIC\"\n  ]\n}"
+              "raw": "{\n  \"path\": \"GRP-26-SALE-PROMOTION-SUMMER\",\n  \"name\": \"Cyclic Test Group\",\n  \"parentRefs\": [\n    \"GRP-26-SALE-PROMOTION-SUMMER\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/groups/create",
+              "raw": "{{baseUrl}}/admin/api/groups/{{sampleGroupId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -8310,10 +8412,10 @@
                 "admin",
                 "api",
                 "groups",
-                "create"
+                "{{sampleGroupId}}"
               ]
             },
-            "description": "Attempts to create group with self-reference - should fail validation (Angry Path)"
+            "description": "Attempts to update group with self-reference - should fail validation (Angry Path)"
           },
           "response": [],
           "event": [
@@ -8398,7 +8500,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/groups?q=id.exists:true",
+                  "raw": "{{baseUrl}}/admin/api/groups?q=path.exists:true",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -8410,8 +8512,7 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "id.exists:true",
-                      "description": "Get all groups with an ID"
+                      "value": "path.exists:true"
                     }
                   ]
                 },
@@ -8440,7 +8541,7 @@
               ]
             },
             {
-              "name": "Get Groups - Filter by ID",
+              "name": "Get Groups - Filter by Path",
               "request": {
                 "method": "GET",
                 "header": [
@@ -8451,7 +8552,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/groups?q=id:GRP-26-SALE-PROMOTION-NEW-YEAR OR id:GRP-26-SALE-PROMOTION-MOTHERS-DAY",
+                  "raw": "{{baseUrl}}/admin/api/groups?q=path:GRP-26-SALE-PROMOTION-NEW-YEAR OR path:GRP-26-SALE-PROMOTION-MOTHERS-DAY",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -8463,8 +8564,7 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "id:GRP-26-SALE-PROMOTION-NEW-YEAR OR id:GRP-26-SALE-PROMOTION-MOTHERS-DAY",
-                      "description": "Get specific groups by ID"
+                      "value": "path:GRP-26-SALE-PROMOTION-NEW-YEAR OR path:GRP-26-SALE-PROMOTION-MOTHERS-DAY"
                     }
                   ]
                 },
@@ -9001,7 +9101,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store first organization UUID for use in subsequent requests",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"testOrgId\", jsonData.items[0].id);",
+                  "    pm.environment.set(\"testOrgPath\", jsonData.items[0].path);",
+                  "}"
                 ]
               }
             }
@@ -9047,26 +9154,28 @@
           ]
         },
         {
-          "name": "Get Organization by ID",
+          "name": "Get Organization by Path (via query)",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/organizations/ORG-MY-COMPANY?$expand=$includes,$info,$meta",
+              "raw": "{{baseUrl}}/admin/api/organizations?q=path:ORG-MY-COMPANY&$expand=$includes,$info,$meta",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "admin",
                 "api",
-                "organizations",
-                "ORG-MY-COMPANY"
+                "organizations"
               ],
               "query": [
                 {
+                  "key": "q",
+                  "value": "path:ORG-MY-COMPANY"
+                },
+                {
                   "key": "$expand",
-                  "value": "$includes,$info,$meta",
-                  "disabled": false
+                  "value": "$includes,$info,$meta"
                 }
               ]
             },
@@ -9079,12 +9188,72 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response contains items\", function () {",
+                  "    pm.expect(jsonData.items).to.be.an(\"array\").that.is.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"First item has expected path\", function () {",
+                  "    pm.expect(jsonData.items[0].path).to.equal(\"ORG-MY-COMPANY\");",
+                  "});",
+                  "",
+                  "// Store the UUID for the follow-up Get by ID request",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"sampleOrgId\", jsonData.items[0].id);",
+                  "    pm.environment.set(\"testOrgId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
           ]
+        },
+        {
+          "name": "Get Organization by ID (UUID)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Response has id and path\", function () {",
+                  "    pm.expect(jsonData.id).to.be.a(\"string\");",
+                  "    pm.expect(jsonData.path).to.equal(\"ORG-MY-COMPANY\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/organizations/{{sampleOrgId}}?$expand=$includes,$info,$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "organizations",
+                "{{sampleOrgId}}"
+              ],
+              "query": [
+                {
+                  "key": "$expand",
+                  "value": "$includes,$info,$meta"
+                }
+              ]
+            }
+          }
         },
         {
           "name": "Create Organization (POST)",
@@ -9098,7 +9267,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"ORG-TEST-001\",\n  \"name\": \"Test Organization\",\n  \"organizationType\": \"COMPANY\",\n  \"parentRefs\": []\n}"
+              "raw": "{\n  \"path\": \"ORG-TEST-001\",\n  \"name\": \"Test Organization\",\n  \"organizationType\": \"COMPANY\",\n  \"parentRefs\": []\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/organizations/create",
@@ -9122,7 +9291,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store the created organization UUID for use in subsequent requests",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set(\"createdOrgId\", jsonData.id);",
+                  "}"
                 ]
               }
             }
@@ -9143,7 +9318,7 @@
               "raw": "{\n  \"name\": \"Updated Test Organization\",\n  \"organizationType\": \"DEPARTMENT\",\n  \"parentRefs\": [\n    \"ORG-MY-COMPANY\"\n  ]\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/organizations/ORG-TEST-001",
+              "raw": "{{baseUrl}}/admin/api/organizations/{{createdOrgId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -9151,7 +9326,7 @@
                 "admin",
                 "api",
                 "organizations",
-                "ORG-TEST-001"
+                "{{createdOrgId}}"
               ]
             },
             "description": "Creates or updates an organization (Happy Path)"
@@ -9185,7 +9360,7 @@
               "raw": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/organizationType\",\n    \"value\": \"PUBLIC_INSTITUTION\"\n  }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/organizations/ORG-TEST-001",
+              "raw": "{{baseUrl}}/admin/api/organizations/{{createdOrgId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -9193,7 +9368,7 @@
                 "admin",
                 "api",
                 "organizations",
-                "ORG-TEST-001"
+                "{{createdOrgId}}"
               ]
             },
             "description": "Partially updates an organization using JSON Patch (Happy Path) - changes organizationType to PUBLIC_INSTITUTION"
@@ -9218,7 +9393,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/organizations/ORG-TEST-001",
+              "raw": "{{baseUrl}}/admin/api/organizations/{{createdOrgId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -9226,7 +9401,7 @@
                 "admin",
                 "api",
                 "organizations",
-                "ORG-TEST-001"
+                "{{createdOrgId}}"
               ]
             },
             "description": "Deletes an organization by ID (Happy Path)"
@@ -9256,7 +9431,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"id\": \"ORG-BULK-001\",\n    \"name\": \"Bulk Org 1\",\n    \"organizationType\": \"COMPANY\"\n  },\n  {\n    \"id\": \"ORG-BULK-002\",\n    \"name\": \"Bulk Org 2\",\n    \"organizationType\": \"DEPARTMENT\"\n  }\n]"
+              "raw": "[\n  {\n    \"path\": \"ORG-BULK-001\",\n    \"name\": \"Bulk Org 1\",\n    \"organizationType\": \"COMPANY\"\n  },\n  {\n    \"path\": \"ORG-BULK-002\",\n    \"name\": \"Bulk Org 2\",\n    \"organizationType\": \"DEPARTMENT\"\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/organizations/bulk-create-or-update",
@@ -9280,7 +9455,15 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 207', function () { pm.response.to.have.status(207); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store bulk org UUIDs for use in bulk-delete",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length >= 2) {",
+                  "    var ids = jsonData.items.filter(function(i) { return i.id; }).map(function(i) { return i.id; });",
+                  "    pm.environment.set(\"bulkOrgId1\", ids[0] || \"\");",
+                  "    pm.environment.set(\"bulkOrgId2\", ids[1] || \"\");",
+                  "}"
                 ]
               }
             }
@@ -9298,7 +9481,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  \"ORG-BULK-001\",\n  \"ORG-BULK-002\"\n]"
+              "raw": "{{bulkOrgDeleteBody}}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/organizations/bulk-delete",
@@ -9322,6 +9505,20 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var ids = [];",
+                  "var id1 = pm.environment.get(\"bulkOrgId1\");",
+                  "var id2 = pm.environment.get(\"bulkOrgId2\");",
+                  "if (id1) ids.push(id1);",
+                  "if (id2) ids.push(id2);",
+                  "pm.variables.set(\"bulkOrgDeleteBody\", JSON.stringify(ids));"
                 ]
               }
             }
@@ -9378,7 +9575,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": \"ORG-NO-TYPE\",\n  \"name\": \"Organization Without Type\"\n}"
+              "raw": "{\n  \"path\": \"ORG-NO-TYPE\",\n  \"name\": \"Organization Without Type\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/organizations/create",
@@ -9451,12 +9648,12 @@
               ]
             },
             {
-              "name": "Get Organizations - Filter by ID",
+              "name": "Get Organizations - Filter by Path",
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/organizations?q=id:org1 OR id:org2",
+                  "raw": "{{baseUrl}}/admin/api/organizations?q=path:ORG-MY-COMPANY OR path:ORG-TECHCORP-GROUP",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -9468,8 +9665,7 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "id:org1 OR id:org2",
-                      "description": "Get specific organizations by ID"
+                      "value": "path:ORG-MY-COMPANY OR path:ORG-TECHCORP-GROUP"
                     }
                   ]
                 },
@@ -9495,7 +9691,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/admin/api/organizations?q=id.exists:true AND name.exists:true",
+                  "raw": "{{baseUrl}}/admin/api/organizations?q=path.exists:true AND name.exists:true",
                   "host": [
                     "{{baseUrl}}"
                   ],
@@ -9507,8 +9703,7 @@
                   "query": [
                     {
                       "key": "q",
-                      "value": "id.exists:true AND name.exists:true",
-                      "description": "Get organizations with both ID and name"
+                      "value": "path.exists:true AND name.exists:true"
                     }
                   ]
                 },
@@ -10294,7 +10489,12 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"appPermissionId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
@@ -10395,12 +10595,30 @@
           "response": [],
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Clear stale role IDs at the start of each App Roles test section",
+                  "// to prevent stale values from a previous run from deleting essential roles",
+                  "pm.environment.unset('createdAppRoleId');",
+                  "pm.environment.unset('bulkAppRoleId1');",
+                  "pm.environment.unset('bulkAppRoleId2');"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length > 0) {",
+                  "    pm.environment.set(\"appRoleId\", jsonData.items[0].id);",
+                  "}"
                 ]
               }
             }
@@ -10541,7 +10759,13 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('role id matches', function () { pm.expect(pm.response.json().id).to.equal('priceprovider.admin:TestRole'); });"
+                  "pm.test('role name matches', function () { pm.expect(pm.response.json().name).to.equal('priceprovider.admin:TestRole'); });",
+                  "",
+                  "// Capture the Long id for use in Update/Patch/Delete tests",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set('createdAppRoleId', jsonData.id);",
+                  "}"
                 ]
               }
             }
@@ -10568,7 +10792,7 @@
               "raw": "{\n  \"name\": \"priceprovider.admin:TestRole\",\n  \"description\": \"Updated test role\",\n  \"permissionRefs\": [\n    \"priceprovider.admin:Group:read\",\n    \"priceprovider.admin:Group:write\"\n  ]\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{createdAppRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10576,7 +10800,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "{{appRoleId}}"
+                "{{createdAppRoleId}}"
               ]
             },
             "description": "Creates or updates an app role (idempotent PUT - Happy Path)"
@@ -10615,7 +10839,7 @@
               "raw": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/description\",\n    \"value\": \"Patched test role description\"\n  }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{createdAppRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10623,7 +10847,7 @@
                 "admin",
                 "api",
                 "app-roles",
-                "{{appRoleId}}"
+                "{{createdAppRoleId}}"
               ]
             },
             "description": "Partially updates an app role using JSON Patch (Happy Path)"
@@ -10653,7 +10877,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/{{appRoleId}}",
+              "raw": "{{baseUrl}}/admin/api/app-roles/{{createdAppRoleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -10661,57 +10885,10 @@
                 "admin",
                 "api",
                 "app-roles",
-                "{{appRoleId}}"
+                "{{createdAppRoleId}}"
               ]
             },
             "description": "Deletes an app role (Happy Path)"
-          },
-          "response": [],
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('expected status is 204', function () { pm.response.to.have.status(204); });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Bulk Delete App Roles",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminAccessToken}}",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "[\n  1,\n  2\n]"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/api/app-roles/bulk-delete",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "api",
-                "app-roles",
-                "bulk-delete"
-              ]
-            },
-            "description": "Bulk deletes app roles by ID (Happy Path)"
           },
           "response": [],
           "event": [
@@ -10767,7 +10944,77 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('expected status is 207', function () { pm.response.to.have.status(207); });"
+                  "pm.test('expected status is 207', function () { pm.response.to.have.status(207); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "",
+                  "// Store bulk app role IDs for use in bulk-delete",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.items && jsonData.items.length >= 2) {",
+                  "    var ids = jsonData.items.filter(function(i) { return i.id; }).map(function(i) { return i.id; });",
+                  "    pm.environment.set('bulkAppRoleId1', ids[0] || '');",
+                  "    pm.environment.set('bulkAppRoleId2', ids[1] || '');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Bulk Delete App Roles",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bulkAppRoleDeleteBody}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/app-roles/bulk-delete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "app-roles",
+                "bulk-delete"
+              ]
+            },
+            "description": "Bulk deletes app roles by ID (Happy Path)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var ids = [];",
+                  "var id1 = pm.environment.get('bulkAppRoleId1');",
+                  "var id2 = pm.environment.get('bulkAppRoleId2');",
+                  "if (id1) ids.push(parseInt(id1));",
+                  "if (id2) ids.push(parseInt(id2));",
+                  "pm.variables.set('bulkAppRoleDeleteBody', JSON.stringify(ids));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 204', function () { pm.response.to.have.status(204); });"
                 ]
               }
             }

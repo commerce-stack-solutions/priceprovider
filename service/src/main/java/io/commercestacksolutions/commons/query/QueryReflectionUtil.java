@@ -1,5 +1,6 @@
 package io.commercestacksolutions.commons.query;
 
+import io.commercestacksolutions.commons.dataaccess.ReferenceKey;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
@@ -8,13 +9,30 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * Helper utilities used by the query/specification builder.
  */
 public final class QueryReflectionUtil {
 
     private QueryReflectionUtil() {}
+
+    /**
+     * Returns the name of the field annotated with {@link ReferenceKey} on the given entity class,
+     * or {@code null} if no such field exists.  The search includes declared fields on all
+     * superclasses up the hierarchy.
+     */
+    public static String findFilterKeyAttributeName(Class<?> entityClass) {
+        Class<?> cls = entityClass;
+        while (cls != null && cls != Object.class) {
+            for (Field f : cls.getDeclaredFields()) {
+                if (f.isAnnotationPresent(ReferenceKey.class)) {
+                    return f.getName();
+                }
+            }
+            cls = cls.getSuperclass();
+        }
+        return null;
+    }
 
     /**
      * Attempts to find the name of the id attribute on the given entity class using reflection.

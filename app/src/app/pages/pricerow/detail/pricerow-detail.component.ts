@@ -126,8 +126,8 @@ export class PricerowDetailComponent implements OnInit {
       });
     }
 
-    // Other info fields section (excluding createdAt and lastModifiedAt)
-    const otherInfoKeys = allInfoKeys.filter(k => k !== 'createdAt' && k !== 'lastModifiedAt' && k !== 'taxation');
+    // Other info fields section (excluding audit fields, taxation, and navigation maps already shown as badges)
+    const otherInfoKeys = allInfoKeys.filter(k => k !== 'createdAt' && k !== 'lastModifiedAt' && k !== 'taxation' && k !== 'groupRefIds');
     if (otherInfoKeys.length > 0) {
       const fields: InfoField[] = otherInfoKeys.map(key => ({
         label: this.label.formatLabel(key),

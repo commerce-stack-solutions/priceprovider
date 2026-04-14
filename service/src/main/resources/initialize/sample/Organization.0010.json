@@ -1,218 +1,218 @@
 [
   {
-    "id": "ORG-MY-COMPANY",
     "name": "My Company",
-    "organizationType": "HOST_ORGANIZATION"
+    "organizationType": "HOST_ORGANIZATION",
+    "path": "ORG-MY-COMPANY"
   },
   {
-    "id": "ORG-TECHCORP-GROUP",
     "name": "My Company",
-    "organizationType": "HOST_ORGANIZATION"
+    "organizationType": "HOST_ORGANIZATION",
+    "path": "ORG-TECHCORP-GROUP"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU",
     "name": "TechCorp Europe",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-TECHCORP-GROUP"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-TECHCORP-ENG",
     "name": "Engineering Department",
     "organizationType": "BUSINESS_UNIT",
     "parentRefs": [
       "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-TECHCORP-ENG"
   },
   {
-    "id": "ORG-CITY-COUNCIL",
     "name": "City Council",
-    "organizationType": "PUBLIC_INSTITUTION"
+    "organizationType": "PUBLIC_INSTITUTION",
+    "path": "ORG-CITY-COUNCIL"
   },
   {
-    "id": "ORG-CITY-COUNCIL/ORG-CITY-HEALTH",
     "name": "City Council - Health Department",
     "organizationType": "DEPARTMENT",
     "parentRefs": [
       "ORG-CITY-COUNCIL"
-    ]
+    ],
+    "path": "ORG-CITY-COUNCIL/ORG-CITY-HEALTH"
   },
   {
-    "id": "ORG-GREEN-PLANET",
     "name": "Green Planet Foundation",
-    "organizationType": "NON_PROFIT_ORGANIZATION"
+    "organizationType": "NON_PROFIT_ORGANIZATION",
+    "path": "ORG-GREEN-PLANET"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-BERLIN",
     "name": "Retail Outlet Berlin",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-BERLIN"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-VIP-ACCOUNTS",
     "name": "VIP Accounts",
     "organizationType": "BUSINESS_UNIT",
     "parentRefs": [
       "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-VIP-ACCOUNTS"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET",
     "name": "Outdoor Outlet GmbH",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET/ORG-OUTDOOR-EU-SALES",
     "name": "Outdoor Outlet - European Sales Team",
     "organizationType": "BUSINESS_UNIT",
     "parentRefs": [
       "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET/ORG-OUTDOOR-EU-SALES"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET/ORG-OUTDOOR-EU-SALES/ORG-OUTDOOR-EU-FIELD",
     "name": "Outdoor Outlet - EU Field Sales",
     "organizationType": "BUSINESS_UNIT",
     "parentRefs": [
       "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET/ORG-OUTDOOR-EU-SALES"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-OUTDOOR-OUTLET/ORG-OUTDOOR-EU-SALES/ORG-OUTDOOR-EU-FIELD"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-MUNICH",
     "name": "Retail Outlet Munich",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-MUNICH"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-HAMBURG",
     "name": "Retail Outlet Hamburg",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-HAMBURG"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-FRANKFURT",
     "name": "Retail Outlet Frankfurt",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-FRANKFURT"
   },
   {
-    "id": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-COLOGNE",
     "name": "Retail Outlet Cologne",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU"
-    ]
+    ],
+    "path": "ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-COLOGNE"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-TECHCORP-US",
     "name": "TechCorp USA",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-TECHCORP-US"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-TECHCORP-ASIA",
     "name": "TechCorp Asia Pacific",
     "organizationType": "COMPANY",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-TECHCORP-ASIA"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-FINANCE-DEPT",
     "name": "Finance Department",
     "organizationType": "DEPARTMENT",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-FINANCE-DEPT"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-HR-DEPT",
     "name": "Human Resources Department",
     "organizationType": "DEPARTMENT",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-HR-DEPT"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-IT-DEPT",
     "name": "IT Department",
     "organizationType": "DEPARTMENT",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-IT-DEPT"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-MARKETING-DEPT",
     "name": "Marketing Department",
     "organizationType": "DEPARTMENT",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-MARKETING-DEPT"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-SALES-DEPT",
     "name": "Sales Department",
     "organizationType": "DEPARTMENT",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-SALES-DEPT"
   },
   {
-    "id": "ORG-MY-COMPANY/ORG-SUPPORT-DEPT",
     "name": "Customer Support Department",
     "organizationType": "DEPARTMENT",
     "parentRefs": [
       "ORG-MY-COMPANY"
-    ]
+    ],
+    "path": "ORG-MY-COMPANY/ORG-SUPPORT-DEPT"
   },
   {
-    "id": "ORG-CHARITY-WATER",
     "name": "Water for All Foundation",
-    "organizationType": "NON_PROFIT_ORGANIZATION"
+    "organizationType": "NON_PROFIT_ORGANIZATION",
+    "path": "ORG-CHARITY-WATER"
   },
   {
-    "id": "ORG-EDUCATION-TRUST",
     "name": "Education Trust Fund",
-    "organizationType": "NON_PROFIT_ORGANIZATION"
+    "organizationType": "NON_PROFIT_ORGANIZATION",
+    "path": "ORG-EDUCATION-TRUST"
   },
   {
-    "id": "ORG-RENTAL-GREEN-LAND",
     "name": "Green Land Outdoors GmbH",
-    "organizationType": "COMPANY"
+    "organizationType": "COMPANY",
+    "path": "ORG-RENTAL-GREEN-LAND"
   },
   {
-    "id": "ORG-RENTAL-GREEN-LAND/OUTDOOR-FACILITIES-DEPARTMENT",
     "name": "Outdoors Facilitiy Department",
     "organizationType": "BUSINESS_UNIT",
     "parentRefs": [
       "ORG-RENTAL-GREEN-LAND"
-    ]
+    ],
+    "path": "ORG-RENTAL-GREEN-LAND/OUTDOOR-FACILITIES-DEPARTMENT"
   },
   {
-    "id": "ORG-RENTAL-BUILDER-PRO",
     "name": "Global Builders Corp.",
-    "organizationType": "COMPANY"
+    "organizationType": "COMPANY",
+    "path": "ORG-RENTAL-BUILDER-PRO"
   },
   {
-    "id": "ORG-RENTAL-BUILDER-PRO/CONSTRUCTION-DEPARTMENT",
     "name": "GEH - Industrial Services",
     "organizationType": "BUSINESS_UNIT",
     "parentRefs": [
       "ORG-RENTAL-BUILDER-PRO"
-    ]
+    ],
+    "path": "ORG-RENTAL-BUILDER-PRO/CONSTRUCTION-DEPARTMENT"
   }
 ]

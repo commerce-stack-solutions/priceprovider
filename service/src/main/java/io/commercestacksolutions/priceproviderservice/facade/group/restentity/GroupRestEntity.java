@@ -1,12 +1,13 @@
 package io.commercestacksolutions.priceproviderservice.facade.group.restentity;
 
-import io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity;
 import io.commercestacksolutions.commons.web.rest.RestEntity;
+import io.commercestacksolutions.priceproviderservice.facade.group.info.InfoGroup;
 
 import java.util.Set;
 
-public class GroupRestEntity extends RestEntity<InfoAuditableRestEntity, IncludesGroup> {
+public class GroupRestEntity extends RestEntity<InfoGroup, IncludesGroup> {
     private String id;
+    private String path;
     private String name;
     private Set<String> parentRefs;
     private Set<String> subRefs;
@@ -17,6 +18,14 @@ public class GroupRestEntity extends RestEntity<InfoAuditableRestEntity, Include
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {
@@ -42,4 +51,5 @@ public class GroupRestEntity extends RestEntity<InfoAuditableRestEntity, Include
     public void setSubRefs(Set<String> subRefs) {
         this.subRefs = subRefs;
     }
+
 }

@@ -107,7 +107,8 @@
     "country": "País",
     "countryRef": "País",
     "priceRepresentationMode": "Modo de representación de precios",
-    "priceRepresentationModePlaceholder": "Seleccionar modo de representación de precios..."
+    "priceRepresentationModePlaceholder": "Seleccionar modo de representación de precios...",
+    "path": "Ruta"
   },
   "sections": {
     "auditInformation": "Información de Auditoría",
@@ -167,7 +168,8 @@
     "channelRefs": "Opcional. Referencias a canales para precios específicos por canal.",
     "channelRefsPlaceholder": "Seleccionar o buscar canales...",
     "noWritePermission": "No tiene permiso para editar este elemento.",
-    "noDeletePermission": "No tiene permiso para eliminar este elemento."
+    "noDeletePermission": "No tiene permiso para eliminar este elemento.",
+    "pathRequired": "La ruta es requerida"
   },
   "navigation": {
     "home": "Inicio",

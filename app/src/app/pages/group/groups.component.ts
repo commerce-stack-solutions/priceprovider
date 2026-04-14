@@ -42,7 +42,7 @@ export class GroupsComponent {
   
   // Filter configurations
   filterConfigs: ColumnFilterConfig[] = [
-    { field: 'id', type: 'string', label: 'ID' },
+    { field: 'path', type: 'string', label: 'Path' },
     { field: 'name', type: 'string', label: 'Name' },
     { field: 'parentRefs', type: 'collection', label: 'Parents' },
     { field: 'subRefs', type: 'collection', label: 'Sub Groups' }
@@ -183,7 +183,7 @@ export class GroupsComponent {
 
   toggleAllSelection(checked: boolean): void {
     if (checked) {
-      const allIds = this.groups().map(g => g.id);
+      const allIds = this.groups().filter(g => g.id).map(g => g.id as string);
       this.selectedGroups.set(new Set(allIds));
     } else {
       this.selectedGroups.set(new Set());
@@ -194,7 +194,7 @@ export class GroupsComponent {
     if (this.selectedGroups().size === 0) return;
     
     if (confirm(this.transloco.translate('common.messages.confirmDeleteMultiple', { count: this.selectedGroups().size }))) {
-      const ids = Array.from(this.selectedGroups());
+      const ids = Array.from(this.selectedGroups()).filter(id => id !== undefined) as string[];
       this.groupsService.bulkDeleteGroups(ids).subscribe({
         next: () => {
           this.selectedGroups.set(new Set());

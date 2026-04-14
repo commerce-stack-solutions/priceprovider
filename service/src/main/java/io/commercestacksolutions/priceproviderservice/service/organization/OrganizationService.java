@@ -38,7 +38,7 @@ public interface OrganizationService extends EntityService<OrganizationEntity> {
     Page<OrganizationEntity> getOrganizations(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
     
     /**
-     * Retrieves an organization by its ID.
+     * Retrieves an organization by its String ID.
      * 
      * @param id the organization ID
      * @return optional containing the organization entity if found
@@ -46,12 +46,20 @@ public interface OrganizationService extends EntityService<OrganizationEntity> {
     Optional<OrganizationEntity> getOrganizationById(String id);
     
     /**
-     * Retrieves an organization by its ID.
+     * Retrieves an organization by its String ID.
      * 
      * @param id the organization ID
      * @return the organization entity, or null if not found
      */
     OrganizationEntity getOrganization(String id);
+
+    /**
+     * Retrieves an organization by its path (unique human-readable identifier).
+     *
+     * @param path the organization path
+     * @return the organization entity, or null if not found
+     */
+    OrganizationEntity getOrganizationByPath(String path);
     
     /**
      * Updates an organization entity.
@@ -62,7 +70,7 @@ public interface OrganizationService extends EntityService<OrganizationEntity> {
     OrganizationEntity updateOrganization(OrganizationEntity updatedOrganization) throws EntityValidationException;
     
     /**
-     * Deletes an organization by its ID.
+     * Deletes an organization by its String ID.
      * 
      * @param id the organization ID
      */

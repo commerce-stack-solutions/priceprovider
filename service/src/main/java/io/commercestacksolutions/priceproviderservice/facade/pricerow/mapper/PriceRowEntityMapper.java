@@ -112,9 +112,9 @@ public class PriceRowEntityMapper extends AbstractMapper<PriceRowRestEntity, Pri
         if (source.getGroupRefs() != null && !source.getGroupRefs().isEmpty()) {
             Set<GroupEntity> groupRefs = new HashSet<>();
             for (String groupRef : source.getGroupRefs()) {
-                GroupEntity group = groupEntityService.getGroup(groupRef);
+                GroupEntity group = groupEntityService.getGroupByPath(groupRef);
                 if (group == null) {
-                    throw new DataMappingException("Group with id '" + groupRef + "' not found");
+                    throw new DataMappingException("Group with path '" + groupRef + "' not found");
                 }
                 groupRefs.add(group);
             }

@@ -115,14 +115,14 @@ export class PricerowFormComponent implements OnInit {
 
   // Data source for group reference-edit
   groupsDataSource = (searchTerm: string, page: number): Observable<ReferenceDataSourceResult> => {
-    // Build query for backend filtering - search in id OR name
-    const query = searchTerm ? `id:*${searchTerm}* OR name:*${searchTerm}*` : undefined;
+    // Build query for backend filtering - search in path OR name
+    const query = searchTerm ? `path:*${searchTerm}* OR name:*${searchTerm}*` : undefined;
 
     return this.groupsService.getGroups(page, OPTIONS_PAGESIZE, undefined, undefined, undefined, query).pipe(
       map(response => ({
-        options: response.items.map(g => ({
-          value: g.id,
-          label: `${g.id}${g.name ? ' - ' + g.name : ''}`
+        options: response.items.filter(g => g.path).map(g => ({
+          value: g.path as string,
+          label: `${g.path}${g.name ? ' - ' + g.name : ''}`
         })),
         hasMore: response.$info?.paging ? response.$info.paging.page < response.$info.paging['total-pages'] - 1 : false
       }))

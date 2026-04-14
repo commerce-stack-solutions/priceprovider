@@ -20,6 +20,7 @@ export interface PriceRow {
       taxRate: number;
       taxIncludedInfo: string;
     };
+    groupRefIds?: { [path: string]: string };  // path → id map (read-only, for navigation)
     createdAt?: string;
     lastModifiedAt?: string;
   };

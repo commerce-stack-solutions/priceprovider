@@ -61,13 +61,13 @@ export class GroupFormComponent implements OnInit {
   groupsDataSource = (searchTerm: string, page: number): Observable<ReferenceDataSourceResult> => {
     const pageSize = 10; // Changed to 10 for testing "Load More" functionality
     // Build query for backend filtering - search in id OR name
-    const query = searchTerm ? `id:*${searchTerm}* OR name:*${searchTerm}*` : undefined;
+    const query = searchTerm ? `path:*${searchTerm}* OR name:*${searchTerm}*` : undefined;
 
     return this.groupsService.getGroups(page, pageSize, undefined, undefined, undefined, query).pipe(
       map(response => {
-        const filtered = response.items.map(g => ({
-          value: g.id,
-          label: g.name ? `${g.id} - ${g.name}` : g.id
+        const filtered = response.items.filter(g => g.path).map(g => ({
+          value: g.path as string,
+          label: g.name ? `${g.path} - ${g.name}` : (g.path as string)
         }));
 
         // Check if there are more pages
@@ -92,7 +92,7 @@ export class GroupFormComponent implements OnInit {
       this.loading.set(false);
 
       if (this.config?.initialValue) {
-        this.form.patchValue({ id: this.config.initialValue });
+        this.form.patchValue({ path: this.config.initialValue });
       }
     } else {
       const idParam = this.route.snapshot.paramMap.get('id');
@@ -129,7 +129,7 @@ export class GroupFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      id: [{ value: '', disabled: this.isEditMode() }, Validators.required],
+      path: [{ value: '', disabled: this.isEditMode() }, Validators.required],
       name: ['', Validators.required],
       parentRefs: [[]],
       subRefs: [[]]
@@ -145,7 +145,7 @@ export class GroupFormComponent implements OnInit {
           this.meta.set(group.$meta);
         }
         const patchData: any = {
-          id: group.id,
+          path: group.path,
           name: group.name,
           parentRefs: group.parentRefs || [],
           subRefs: group.subRefs || []
@@ -242,7 +242,7 @@ export class GroupFormComponent implements OnInit {
       });
     } else {
       const group: Group = {
-        id: formValue.id,
+        path: formValue.path,
         name: formValue.name,
         parentRefs: formValue.parentRefs || [],
         subRefs: formValue.subRefs || []
@@ -356,8 +356,8 @@ export class GroupFormComponent implements OnInit {
 
     if (result.success && result.data) {
       const currentParents = this.form.get('parentRefs')?.value || [];
-      if (!currentParents.includes(result.data.id)) {
-        this.form.get('parentRefs')?.setValue([...currentParents, result.data.id]);
+      if (!currentParents.includes(result.data.path)) {
+        this.form.get('parentRefs')?.setValue([...currentParents, result.data.path]);
       }
     }
   }
@@ -371,8 +371,8 @@ export class GroupFormComponent implements OnInit {
 
     if (result.success && result.data) {
       const currentSubs = this.form.get('subRefs')?.value || [];
-      if (!currentSubs.includes(result.data.id)) {
-        this.form.get('subRefs')?.setValue([...currentSubs, result.data.id]);
+      if (!currentSubs.includes(result.data.path)) {
+        this.form.get('subRefs')?.setValue([...currentSubs, result.data.path]);
       }
     }
   }

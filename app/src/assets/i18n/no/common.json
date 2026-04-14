@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prisrepresentasjonsmodus",
-    "priceRepresentationModePlaceholder": "Velg prisrepresentasjonsmodus..."
+    "priceRepresentationModePlaceholder": "Velg prisrepresentasjonsmodus...",
+    "path": "Sti"
   },
   "sections": {
     "auditInformation": "Revisjonsinformasjon",
@@ -167,7 +168,8 @@
     "isoKey": "ISO-nøkkel bestående av 2 små bokstaver (f.eks. en, de, fr).",
     "activeLanguages": "Bare aktive språk vises i sesjonskonfigurasjonen og REST API.",
     "mandatoryLanguages": "Obligatoriske språk må fylles ut i alle språkfelter.",
-    "mandatoryLanguagesAndInactiveLanguages": "Obligatoriske språk kreves. Inaktive språk (utgrået) vises men kan ikke redigeres."
+    "mandatoryLanguagesAndInactiveLanguages": "Obligatoriske språk kreves. Inaktive språk (utgrået) vises men kan ikke redigeres.",
+    "pathRequired": "Sti er påkrevd"
   },
   "errors": {
     "entity": {

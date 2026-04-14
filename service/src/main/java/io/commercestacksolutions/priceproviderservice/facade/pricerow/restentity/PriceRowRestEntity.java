@@ -22,7 +22,7 @@ public class PriceRowRestEntity extends RestEntity<InfoPriceRow, IncludesPriceRo
     private OffsetDateTime validTo;
     private Set<String> groupRefs;
     private Set<String> channelRefs;
-    private boolean taxIncluded;   // inidcates if this is a net price or a price with tax included
+    private boolean taxIncluded;   // indicates if this is a net price or a price with tax included
 
     public Long getId() {
         return id;

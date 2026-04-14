@@ -107,7 +107,8 @@
     "country": "Valsts",
     "countryRef": "Valsts",
     "priceRepresentationMode": "Cenas attēlošanas režīms",
-    "priceRepresentationModePlaceholder": "Atlasīt cenas attēlošanas režīmu..."
+    "priceRepresentationModePlaceholder": "Atlasīt cenas attēlošanas režīmu...",
+    "path": "Ceļš"
   },
   "sections": {
     "auditInformation": "Audita informācija",
@@ -167,7 +168,8 @@
     "mandatoryLanguages": "Obligātās valodas jānorāda visos valodu ievades laukos.",
     "mandatoryLanguagesAndInactiveLanguages": "Obligātās valodas ir nepieciešamas. Neaktīvās valodas (pelēkā krāsā) tiek rādītas, bet nav rediģējamas.",
     "noWritePermission": "Jums nav atļaujas rediģēt šo vienumu.",
-    "noDeletePermission": "Jums nav atļaujas dzēst šo vienumu."
+    "noDeletePermission": "Jums nav atļaujas dzēst šo vienumu.",
+    "pathRequired": "Ceļš ir obligāts"
   },
   "errors": {
     "entity": {

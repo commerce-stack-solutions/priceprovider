@@ -156,7 +156,7 @@ public class GroupFacadeImpl implements GroupFacade {
             GroupEntity saved = groupEntityService.save(group);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
-            // Create new group with the id from the path
+            // Create new group using the id provided by the client in the URL
             GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(id));
             GroupEntity saved = groupEntityService.save(newGroup);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -165,18 +165,19 @@ public class GroupFacadeImpl implements GroupFacade {
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class, EntityAlreadyExistsException.class})
     public GroupRestEntity create(GroupRestEntity groupRestEntity) throws DataMappingException, EntityValidationException, EntityAlreadyExistsException {
-        if (groupRestEntity.getId() == null || groupRestEntity.getId().isEmpty()) {
-            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id"));
-            throw new EntityValidationException(MessageKeys.ERROR_VALIDATION_ID_REQUIRED, message);
+        if (groupRestEntity.getPath() == null || groupRestEntity.getPath().isEmpty()) {
+            Message message = MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_PATH_REQUIRED, "field", "path", List.of("path"));
+            throw new EntityValidationException(MessageKeys.ERROR_VALIDATION_PATH_REQUIRED, message);
         }
 
-        // Check if group already exists
-        GroupEntity existingGroup = groupEntityService.getGroup(groupRestEntity.getId());
+        // Check if group already exists by path
+        GroupEntity existingGroup = groupEntityService.getGroupByPath(groupRestEntity.getPath());
         if (existingGroup != null) {
-            throw new EntityAlreadyExistsException(MessageKeys.ERROR_GROUP_ALREADY_EXISTS, Map.of("id", groupRestEntity.getId()), List.of("id"));
+            throw new EntityAlreadyExistsException(MessageKeys.ERROR_GROUP_ALREADY_EXISTS, Map.of("path", groupRestEntity.getPath()), List.of("path"));
         }
 
-        GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(groupRestEntity.getId()));
+        // UUID is auto-generated (no id in context)
+        GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(null));
         GroupEntity saved = groupEntityService.save(newGroup);
         return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
@@ -251,22 +252,31 @@ public class GroupFacadeImpl implements GroupFacade {
 
         for (GroupRestEntity restEntity : groupRestEntities) {
             try {
-                if (restEntity.getId() == null || restEntity.getId().isEmpty()) {
+                // Determine if an existing entity can be found (by String id or by path)
+                GroupEntity existingGroup = null;
+                if (restEntity.getId() != null) {
+                    existingGroup = groupEntityService.getGroup(restEntity.getId());
+                }
+                if (existingGroup == null && restEntity.getPath() != null && !restEntity.getPath().isEmpty()) {
+                    existingGroup = groupEntityService.getGroupByPath(restEntity.getPath());
+                }
+
+                if (existingGroup == null && (restEntity.getPath() == null || restEntity.getPath().isEmpty())) {
                     GroupRestEntity errorEntity = new GroupRestEntity();
-                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_ID_REQUIRED, "field", "id", List.of("id")));
+                    errorEntity.setId(restEntity.getId());
+                    errorEntity.addMessage(MessageBuilder.create(Message.MessageType.ERROR, MessageKeys.ERROR_VALIDATION_PATH_REQUIRED, "field", "path", List.of("path")));
                     results.add(errorEntity);
                     continue;
                 }
 
-                GroupEntity existingGroup = groupEntityService.getGroup(restEntity.getId());
                 if (existingGroup != null) {
                     // Update existing
-                    groupEntityMapper.convert(restEntity, existingGroup, new RestRequestMappingContext<>(restEntity.getId()));
+                    groupEntityMapper.convert(restEntity, existingGroup, new RestRequestMappingContext<>(existingGroup.getId()));
                     GroupEntity saved = groupEntityService.save(existingGroup);
                     results.add(groupRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 } else {
-                    // Create new
-                    GroupEntity newGroup = groupEntityMapper.convert(restEntity, new RestRequestMappingContext<>(restEntity.getId()));
+                    // Create new (UUID auto-generated)
+                    GroupEntity newGroup = groupEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
                     GroupEntity saved = groupEntityService.save(newGroup);
                     results.add(groupRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 }
@@ -285,7 +295,7 @@ public class GroupFacadeImpl implements GroupFacade {
                 }
                 results.add(errorEntity);
             } catch (Exception e) {
-                logger.debug("Error processing group with id {}: {}", restEntity.getId(), e.getMessage(), e);
+                logger.debug("Error processing group with path {}: {}", restEntity.getPath(), e.getMessage(), e);
                 GroupRestEntity errorEntity = new GroupRestEntity();
                 errorEntity.setId(restEntity.getId());
                 errorEntity.addMessage(MessageBuilder.create(

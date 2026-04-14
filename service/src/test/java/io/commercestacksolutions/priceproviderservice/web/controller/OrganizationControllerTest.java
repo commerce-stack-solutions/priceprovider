@@ -4,6 +4,8 @@ import io.commercestacksolutions.commons.exception.DataIntegrityException;
 import io.commercestacksolutions.commons.exception.EntityAlreadyExistsException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.facade.organization.restentity.OrganizationRestEntity;
 import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.OrganizationController;
 import io.commercestacksolutions.priceproviderservice.facade.organization.OrganizationFacade;
 import org.junit.jupiter.api.Test;
@@ -17,9 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.context.annotation.Import;
@@ -61,11 +65,11 @@ public class OrganizationControllerTest {
     }
 
     @Test
-    public void testCreate_MissingId_Returns400() throws Exception {
-        // Simulate EntityValidationException when ID is missing
-        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.idRequired", Map.of("field", "id"), List.of("id"));
+    public void testCreate_MissingPath_Returns400() throws Exception {
+        // Simulate EntityValidationException when path is missing
+        Message validationMessage = new Message(Message.MessageType.ERROR, "common.errors.validation.pathRequired", Map.of("field", "path"), List.of("path"));
         when(organizationFacade.create(any()))
-                .thenThrow(new EntityValidationException("common.errors.validation.idRequired", validationMessage));
+                .thenThrow(new EntityValidationException("common.errors.validation.pathRequired", validationMessage));
 
         mockMvc.perform(post("/admin/api/organizations/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -73,23 +77,75 @@ public class OrganizationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
-                .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.idRequired"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.pathRequired"))
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
     }
 
     @Test
     public void testCreate_OrganizationAlreadyExists_Returns409() throws Exception {
         // Simulate EntityAlreadyExistsException when organization already exists
         when(organizationFacade.create(any()))
-                .thenThrow(new EntityAlreadyExistsException("common.errors.organization.alreadyExists", Map.of("id", "ORG-001"), List.of("id")));
+                .thenThrow(new EntityAlreadyExistsException("common.errors.organization.alreadyExists", Map.of("path", "ORG-001"), List.of("path")));
 
         mockMvc.perform(post("/admin/api/organizations/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"ORG-001\",\"name\":\"Test Organization\",\"organizationType\":\"COMPANY\"}"))
+                        .content("{\"path\":\"ORG-001\",\"name\":\"Test Organization\",\"organizationType\":\"COMPANY\"}"))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.$messages").exists())
                 .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
                 .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.organization.alreadyExists"))
-                .andExpect(jsonPath("$.$messages[0].fields[0]").value("id"));
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("path"));
+    }
+
+    // ---------- PUT (createOrRecreate) ----------
+
+    @Test
+    public void testPut_CreatesNewOrganizationWithClientProvidedId() throws Exception {
+        OrganizationRestEntity created = new OrganizationRestEntity();
+        created.setId("CLIENT-ORG-ID-001");
+        created.setPath("ORG-PUT-001");
+        created.setName("Put Organization");
+        created.setOrganizationType(OrganizationType.COMPANY);
+
+        when(organizationFacade.createOrRecreate(eq("CLIENT-ORG-ID-001"), any())).thenReturn(created);
+
+        mockMvc.perform(put("/admin/api/organizations/CLIENT-ORG-ID-001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"path\":\"ORG-PUT-001\",\"name\":\"Put Organization\",\"organizationType\":\"COMPANY\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("CLIENT-ORG-ID-001"))
+                .andExpect(jsonPath("$.path").value("ORG-PUT-001"));
+    }
+
+    @Test
+    public void testPut_UpdatesExistingOrganization() throws Exception {
+        OrganizationRestEntity updated = new OrganizationRestEntity();
+        updated.setId("EXISTING-ORG-ID");
+        updated.setPath("ORG-EXISTING");
+        updated.setName("Updated Org Name");
+        updated.setOrganizationType(OrganizationType.COMPANY);
+
+        when(organizationFacade.createOrRecreate(eq("EXISTING-ORG-ID"), any())).thenReturn(updated);
+
+        mockMvc.perform(put("/admin/api/organizations/EXISTING-ORG-ID")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"path\":\"ORG-EXISTING\",\"name\":\"Updated Org Name\",\"organizationType\":\"COMPANY\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("EXISTING-ORG-ID"))
+                .andExpect(jsonPath("$.name").value("Updated Org Name"));
+    }
+
+    @Test
+    public void testPut_ValidationError_Returns400() throws Exception {
+        Message validationMessage = new Message(Message.MessageType.ERROR,
+                "common.errors.validation.pathRequired", Map.of("field", "path"), List.of("path"));
+        when(organizationFacade.createOrRecreate(eq("MY-ORG-ID"), any()))
+                .thenThrow(new EntityValidationException("common.errors.validation.pathRequired", validationMessage));
+
+        mockMvc.perform(put("/admin/api/organizations/MY-ORG-ID")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Missing Path Org\",\"organizationType\":\"COMPANY\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.$messages[0]['message-key']").value("common.errors.validation.pathRequired"));
     }
 }

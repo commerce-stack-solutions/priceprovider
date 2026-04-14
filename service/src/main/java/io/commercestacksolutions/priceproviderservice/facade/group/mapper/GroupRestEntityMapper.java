@@ -2,11 +2,12 @@ package io.commercestacksolutions.priceproviderservice.facade.group.mapper;
 
 import io.commercestacksolutions.commons.mapper.AbstractMapper;
 import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
-import io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.priceproviderservice.facade.group.info.InfoGroup;
 import io.commercestacksolutions.priceproviderservice.facade.group.restentity.GroupRestEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,40 +22,63 @@ public class GroupRestEntityMapper extends AbstractMapper<GroupEntity, GroupRest
     @Override
     public void convert(GroupEntity source, GroupRestEntity target, RestResponseMappingContext context) {
         target.setId(source.getId());
+        target.setPath(source.getPath());
         target.setName(source.getName());
 
-        // Convert parent entities to IDs
+        // Convert parent entities to paths
         if (source.getParentRefs() != null) {
             Set<String> parentRefs = source.getParentRefs().stream()
-                    .filter(parent -> parent != null && parent.getId() != null)
-                    .map(GroupEntity::getId)
+                    .filter(parent -> parent != null && parent.getPath() != null)
+                    .map(GroupEntity::getPath)
                     .collect(Collectors.toSet());
             target.setParentRefs(parentRefs);
         }
 
-        // Convert sub entities to IDs
+        // Convert sub entities to paths
         if (source.getSubRefs() != null) {
             Set<String> subRefs = source.getSubRefs().stream()
-                    .filter(sub -> sub != null && sub.getId() != null)
-                    .map(GroupEntity::getId)
+                    .filter(sub -> sub != null && sub.getPath() != null)
+                    .map(GroupEntity::getPath)
                     .collect(Collectors.toSet());
             target.setSubRefs(subRefs);
         }
 
-        if (context.shouldExpand("$info")) {
-            addInfoSection(source, target, context);
-        }
+        // Always populate $info with parentRefIds/subRefIds for navigation links
+        // (audit timestamps are added only when $info is explicitly requested)
+        addInfo(source, target, context);
     }
 
-    private void addInfoSection(GroupEntity source, GroupRestEntity target, RestResponseMappingContext context) {
-        // Add audit timestamps to $info
-        InfoAuditableRestEntity info = new InfoAuditableRestEntity();
+    private void addInfo(GroupEntity source, GroupRestEntity target, RestResponseMappingContext context) {
+        InfoGroup info = new InfoGroup();
+
+        // Always populate parentRefIds in $info for UI navigation links (path → id map)
+        if (source.getParentRefs() != null) {
+            Map<String, String> parentRefIds = source.getParentRefs().stream()
+                    .filter(parent -> parent != null && parent.getPath() != null && parent.getId() != null)
+                    .collect(Collectors.toMap(GroupEntity::getPath, GroupEntity::getId));
+            if (!parentRefIds.isEmpty()) {
+                info.setParentRefIds(parentRefIds);
+            }
+        }
+
+        // Always populate subRefIds in $info for UI navigation links (path → id map)
+        if (source.getSubRefs() != null) {
+            Map<String, String> subRefIds = source.getSubRefs().stream()
+                    .filter(sub -> sub != null && sub.getPath() != null && sub.getId() != null)
+                    .collect(Collectors.toMap(GroupEntity::getPath, GroupEntity::getId));
+            if (!subRefIds.isEmpty()) {
+                info.setSubRefIds(subRefIds);
+            }
+        }
+
+        // Add audit timestamps to $info when requested
         if (context.expandWithAnyOf(new String[]{"$info", "$info.createdAt"})) {
             info.setCreatedAt(source.getCreatedAt());
         }
         if (context.expandWithAnyOf(new String[]{"$info", "$info.lastModifiedAt"})) {
             info.setLastModifiedAt(source.getLastModifiedAt());
         }
+
         target.setInfo(info);
     }
 }

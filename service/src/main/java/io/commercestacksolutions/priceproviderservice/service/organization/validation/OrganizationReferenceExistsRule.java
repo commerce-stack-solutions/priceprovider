@@ -39,10 +39,10 @@ public class OrganizationReferenceExistsRule implements ValidationRule<Organizat
         // Validate parent references
         if (entity.getParentRefs() != null && !entity.getParentRefs().isEmpty()) {
             for (GroupEntity parent : entity.getParentRefs()) {
-                if (parent != null && parent.getId() != null) {
-                    if (!groupEntityRepository.existsById(parent.getId())) {
+                if (parent != null && parent.getPath() != null) {
+                    if (!groupEntityRepository.existsByPath(parent.getPath())) {
                         Map<String, String> params = new HashMap<>();
-                        params.put("referenceId", parent.getId());
+                        params.put("referenceId", parent.getPath());
                         params.put("referenceType", "parent");
                         
                         errors.add(new Message(
@@ -59,10 +59,10 @@ public class OrganizationReferenceExistsRule implements ValidationRule<Organizat
         // Validate sub references
         if (entity.getSubRefs() != null && !entity.getSubRefs().isEmpty()) {
             for (GroupEntity sub : entity.getSubRefs()) {
-                if (sub != null && sub.getId() != null) {
-                    if (!groupEntityRepository.existsById(sub.getId())) {
+                if (sub != null && sub.getPath() != null) {
+                    if (!groupEntityRepository.existsByPath(sub.getPath())) {
                         Map<String, String> params = new HashMap<>();
-                        params.put("referenceId", sub.getId());
+                        params.put("referenceId", sub.getPath());
                         params.put("referenceType", "sub");
                         
                         errors.add(new Message(

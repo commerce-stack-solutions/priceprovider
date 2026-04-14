@@ -95,18 +95,18 @@ public class PriceRowControllerHasAnyHasAllTest {
         taxClassRepository.save(taxClass);
 
         GroupEntity groupA = new GroupEntity();
-        groupA.setId("GROUP_A");
+        groupA.setPath("GROUP_A");
         groupA.setName("Group A");
         groupRepository.save(groupA);
 
         GroupEntity groupB = new GroupEntity();
-        groupB.setId("GROUP_B");
+        groupB.setPath("GROUP_B");
         groupB.setName("Group B");
         groupRepository.save(groupB);
 
         // Group with a forward-slash in its ID (e.g., hierarchical/path-style IDs)
         GroupEntity groupSlash = new GroupEntity();
-        groupSlash.setId("ORG/GROUP-SLASH");
+        groupSlash.setPath("ORG/GROUP-SLASH");
         groupSlash.setName("Org Group Slash");
         groupRepository.save(groupSlash);
 

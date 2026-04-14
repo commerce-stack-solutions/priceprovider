@@ -214,7 +214,8 @@ public class PriceRowEntity implements AuditableEntity {
     @Transient
     public Set<String> getGroupRefs() {
         return groupRefs != null ? groupRefs.stream()
-                .map(GroupEntity::getId)
+                .filter(g -> g != null && g.getPath() != null)
+                .map(GroupEntity::getPath)
                 .collect(Collectors.toSet()) : new HashSet<>();
     }
 
@@ -224,7 +225,7 @@ public class PriceRowEntity implements AuditableEntity {
             this.groupRefs = groupRefs.stream()
                     .map(ref -> {
                         GroupEntity group = new GroupEntity();
-                        group.setId(ref);
+                        group.setPath(ref);
                         return group;
                     })
                     .collect(Collectors.toSet());
@@ -296,7 +297,7 @@ public class PriceRowEntity implements AuditableEntity {
                 ", priceType=" + priceType +
                 ", validFrom=" + validFrom +
                 ", validTo=" + validTo +
-                ", groupRefs=" + (groupRefs != null ? groupRefs.stream().map(GroupEntity::getId).collect(Collectors.toSet()) : null) +
+                ", groupRefs=" + (groupRefs != null ? groupRefs.stream().map(GroupEntity::getPath).collect(Collectors.toSet()) : null) +
                 ", channelRefs=" + (channelRefs != null ? channelRefs.stream().map(ChannelEntity::getId).collect(Collectors.toSet()) : null) +
                 ", taxIncluded=" + taxIncluded +
                 ", createdAt=" + createdAt +

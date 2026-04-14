@@ -49,7 +49,7 @@ export class OrganizationsComponent {
   
   // Filter configurations
   filterConfigs: ColumnFilterConfig[] = [
-    { field: 'id', type: 'string', label: 'ID' },
+    { field: 'path', type: 'string', label: 'Path' },
     { field: 'name', type: 'string', label: 'Name' },
     { field: 'organizationType', type: 'string', label: 'Organization Type' },
     { field: 'parentRefs', type: 'collection', label: 'Parents' },
@@ -206,7 +206,7 @@ export class OrganizationsComponent {
     if (selected.size === this.organizations().length) {
       selected.clear();
     } else {
-      this.organizations().forEach(org => selected.add(org.id));
+      this.organizations().forEach(org => { if (org.id) selected.add(org.id); });
     }
     this.selectedIds.set(selected);
   }

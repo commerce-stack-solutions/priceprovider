@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prisrepresentationsläge",
-    "priceRepresentationModePlaceholder": "Välj prisrepresentationsläge..."
+    "priceRepresentationModePlaceholder": "Välj prisrepresentationsläge...",
+    "path": "Sökväg"
   },
   "sections": {
     "auditInformation": "Revisionsinformation",
@@ -167,7 +168,8 @@
     "isoKey": "ISO-nyckel bestående av 2 små bokstäver (t.ex. en, de, fr).",
     "activeLanguages": "Endast aktiva språk visas i sessionskonfigurationen och REST API:et.",
     "mandatoryLanguages": "Obligatoriska språk måste anges i alla språkfält.",
-    "mandatoryLanguagesAndInactiveLanguages": "Obligatoriska språk krävs. Inaktiva språk (nedtonade) visas men kan inte redigeras."
+    "mandatoryLanguagesAndInactiveLanguages": "Obligatoriska språk krävs. Inaktiva språk (nedtonade) visas men kan inte redigeras.",
+    "pathRequired": "Sökväg krävs"
   },
   "navigation": {
     "home": "Hem",

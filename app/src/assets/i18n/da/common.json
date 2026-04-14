@@ -107,7 +107,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Prisrepræsentationstilstand",
-    "priceRepresentationModePlaceholder": "Vælg prisrepræsentationstilstand..."
+    "priceRepresentationModePlaceholder": "Vælg prisrepræsentationstilstand...",
+    "path": "Sti"
   },
   "sections": {
     "auditInformation": "Revisionsoplysninger",
@@ -167,7 +168,8 @@
     "mandatoryLanguages": "Obligatoriske sprog skal angives i alle sprogfelter.",
     "mandatoryLanguagesAndInactiveLanguages": "Obligatoriske sprog er påkrævet. Inaktive sprog (gråtonede) vises, men kan ikke redigeres.",
     "noWritePermission": "Du har ikke tilladelse til at redigere dette element.",
-    "noDeletePermission": "Du har ikke tilladelse til at slette dette element."
+    "noDeletePermission": "Du har ikke tilladelse til at slette dette element.",
+    "pathRequired": "Sti er påkrævet"
   },
   "navigation": {
     "home": "Hjem",

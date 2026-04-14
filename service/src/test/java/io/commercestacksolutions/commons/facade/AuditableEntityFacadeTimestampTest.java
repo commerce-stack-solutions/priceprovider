@@ -36,18 +36,19 @@ public class AuditableEntityFacadeTimestampTest {
     private GroupFacade groupFacade;
 
     @Test
-    public void testGroupFacade_CreateThenUpdate_ShouldPreserveCreatedAt() throws InterruptedException, DataMappingException, NotFoundException, EntityValidationException {
-        // Create new group via facade
-        String groupId = "TEST-GRP-TIMESTAMP-001";
+    public void testGroupFacade_CreateThenUpdate_ShouldPreserveCreatedAt() throws InterruptedException, DataMappingException, NotFoundException, EntityValidationException, io.commercestacksolutions.commons.exception.EntityAlreadyExistsException {
+        // Create new group via facade using POST create
         GroupRestEntity newGroup = new GroupRestEntity();
-        newGroup.setId(groupId);
+        newGroup.setPath("TEST-GRP-TIMESTAMP-001");
         newGroup.setName("Test Group for Timestamp");
         
-        // Create the group using createOrRecreate (simulating PUT request)
-        GroupRestEntity createdGroup = groupFacade.createOrRecreate(groupId, newGroup);
+        // Create the group using create (simulating POST request)
+        GroupRestEntity createdGroup = groupFacade.create(newGroup);
+        String groupUUID = createdGroup.getId() != null ? createdGroup.getId().toString() : null;
+        assertNotNull(groupUUID, "Created group must have a UUID");
         
         // Get the group with $info expanded to see timestamps
-        GroupRestEntity fetchedGroup = groupFacade.getGroup(groupId, Set.of("$info"));
+        GroupRestEntity fetchedGroup = groupFacade.getGroup(groupUUID, Set.of("$info"));
         
         // Verify both timestamps are set
         assertNotNull(fetchedGroup.getInfo());
@@ -63,15 +64,15 @@ public class AuditableEntityFacadeTimestampTest {
         // Wait to ensure timestamp difference
         Thread.sleep(100);
         
-        // Update the group via facade
+        // Update the group via facade using createOrRecreate (PUT) with UUID
         GroupRestEntity updateRequest = new GroupRestEntity();
-        updateRequest.setId(groupId);
+        updateRequest.setPath("TEST-GRP-TIMESTAMP-001");
         updateRequest.setName("Updated Test Group");
         
-        GroupRestEntity updatedGroup = groupFacade.createOrRecreate(groupId, updateRequest);
+        groupFacade.createOrRecreate(groupUUID, updateRequest);
         
         // Get the updated group with $info expanded to see timestamps
-        GroupRestEntity fetchedUpdatedGroup = groupFacade.getGroup(groupId, Set.of("$info"));
+        GroupRestEntity fetchedUpdatedGroup = groupFacade.getGroup(groupUUID, Set.of("$info"));
         
         // Verify timestamps after update
         assertNotNull(fetchedUpdatedGroup.getInfo());
@@ -92,18 +93,19 @@ public class AuditableEntityFacadeTimestampTest {
     }
 
     @Test
-    public void testGroupFacade_Patch_ShouldPreserveCreatedAt() throws InterruptedException, DataMappingException, NotFoundException, JsonProcessingException, EntityValidationException {
+    public void testGroupFacade_Patch_ShouldPreserveCreatedAt() throws InterruptedException, DataMappingException, NotFoundException, JsonProcessingException, EntityValidationException, io.commercestacksolutions.commons.exception.EntityAlreadyExistsException {
         // Create new group via facade
-        String groupId = "TEST-GRP-TIMESTAMP-PATCH";
         GroupRestEntity newGroup = new GroupRestEntity();
-        newGroup.setId(groupId);
+        newGroup.setPath("TEST-GRP-TIMESTAMP-PATCH");
         newGroup.setName("Test Group for Patch");
         
-        // Create the group
-        groupFacade.createOrRecreate(groupId, newGroup);
+        // Create the group using POST create
+        GroupRestEntity createdGroup = groupFacade.create(newGroup);
+        String groupUUID = createdGroup.getId() != null ? createdGroup.getId().toString() : null;
+        assertNotNull(groupUUID, "Created group must have a UUID");
         
         // Get the group with $info expanded to see timestamps
-        GroupRestEntity fetchedGroup = groupFacade.getGroup(groupId, Set.of("$info"));
+        GroupRestEntity fetchedGroup = groupFacade.getGroup(groupUUID, Set.of("$info"));
         
         OffsetDateTime originalCreatedAt = fetchedGroup.getInfo().getCreatedAt();
         OffsetDateTime originalLastModifiedAt = fetchedGroup.getInfo().getLastModifiedAt();
@@ -118,10 +120,10 @@ public class AuditableEntityFacadeTimestampTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String patchJson = "[{\"op\": \"replace\", \"path\": \"/name\", \"value\": \"Patched Test Group\"}]";
         
-        GroupRestEntity patchedGroup = groupFacade.patch(groupId, objectMapper.readTree(patchJson));
+        groupFacade.patch(groupUUID, objectMapper.readTree(patchJson));
         
         // Get the patched group with $info expanded to see timestamps
-        GroupRestEntity fetchedPatchedGroup = groupFacade.getGroup(groupId, Set.of("$info"));
+        GroupRestEntity fetchedPatchedGroup = groupFacade.getGroup(groupUUID, Set.of("$info"));
         
         // Verify timestamps after patch
         assertNotNull(fetchedPatchedGroup.getInfo());

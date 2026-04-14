@@ -38,7 +38,7 @@ public interface GroupService extends EntityService<GroupEntity> {
     Page<GroupEntity> getGroups(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
     
     /**
-     * Retrieves a group by its ID.
+     * Retrieves a group by its String ID.
      * 
      * @param id the group ID
      * @return optional containing the group entity if found
@@ -46,12 +46,20 @@ public interface GroupService extends EntityService<GroupEntity> {
     Optional<GroupEntity> getGroupById(String id);
     
     /**
-     * Retrieves a group by its ID.
+     * Retrieves a group by its String ID.
      * 
      * @param id the group ID
      * @return the group entity, or null if not found
      */
     GroupEntity getGroup(String id);
+
+    /**
+     * Retrieves a group by its path (unique human-readable identifier).
+     *
+     * @param path the group path
+     * @return the group entity, or null if not found
+     */
+    GroupEntity getGroupByPath(String path);
     
     /**
      * Updates a group entity.
@@ -62,7 +70,7 @@ public interface GroupService extends EntityService<GroupEntity> {
     GroupEntity updateGroup(GroupEntity updatedGroup) throws EntityValidationException;
     
     /**
-     * Deletes a group by its ID.
+     * Deletes a group by its String ID.
      * 
      * @param id the group ID
      */

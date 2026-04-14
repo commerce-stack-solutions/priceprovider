@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import io.commercestacksolutions.commons.dataaccess.ReferenceKey;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
+import io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId;
+import io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
 import jakarta.persistence.*;
 
@@ -14,13 +17,21 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = GroupEntity.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "path", scope = GroupEntity.class)
 // Scope auf die konkrete Entity setzen, damit verschiedene Entity-Typen nicht dieselben Object-IDs im globalen Object-Scope teilen
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GroupEntity implements AuditableEntity {
+
     @Id
-        private String id;
-    
+    @GeneratedId
+    @Column(length = 36)
+    private String id;
+
+    @ReferenceKey
+    @MetaMandatoryField
+    @Column(unique = true, nullable = false)
+    private String path;
+
     @MetaMandatoryField
     private String name;
 
@@ -30,12 +41,12 @@ public class GroupEntity implements AuditableEntity {
         joinColumns = @JoinColumn(name = "group_id"),
         inverseJoinColumns = @JoinColumn(name = "parent_id")
     )
-    // Parents nur als ID-Referenzen (z.B. { "id": "GRP-SAMPLE-001" }) lesen/schreiben
+    // Parents als Path-Referenzen (z.B. { "path": "GRP-SAMPLE-001" }) lesen/schreiben
     @JsonIdentityReference(alwaysAsId = true)
     private Set<GroupEntity> parentRefs = new HashSet<>();
     
     @ManyToMany(mappedBy = "parentRefs")
-    // Subs ebenfalls als ID-Referenzen serialisieren
+    // Subs ebenfalls als Path-Referenzen serialisieren
     @JsonIdentityReference(alwaysAsId = true)
     private Set<GroupEntity> subRefs = new HashSet<>();
 
@@ -46,8 +57,15 @@ public class GroupEntity implements AuditableEntity {
     public GroupEntity() {
     }
 
-    public GroupEntity(String id) {
-        this.id = id;
+    public GroupEntity(String path) {
+        this.path = path;
+    }
+
+    @PrePersist
+    protected void prePersist() {
+        if (this.id == null) {
+            this.id = IdGeneratorProvider.generate(GroupEntity.class);
+        }
     }
 
     public String getId() {
@@ -56,6 +74,14 @@ public class GroupEntity implements AuditableEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {
@@ -105,7 +131,8 @@ public class GroupEntity implements AuditableEntity {
     @Override
     public String toString() {
         return "GroupEntity{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", path='" + path + '\'' +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
                 ", lastModifiedAt=" + lastModifiedAt +

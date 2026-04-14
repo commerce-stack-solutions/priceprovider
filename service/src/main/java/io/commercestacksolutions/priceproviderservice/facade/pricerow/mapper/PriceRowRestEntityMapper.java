@@ -55,15 +55,15 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
         target.setValidFrom(source.getValidFrom());
         target.setValidTo(source.getValidTo());
         
-        // Map group references to string IDs
+        // Map group references to path strings (@ReferenceKey)
         if (source.getGroups() != null) {
-            Set<String> groupRefIds = new HashSet<>();
+            Set<String> groupRefPaths = new HashSet<>();
             for (GroupEntity group : source.getGroups()) {
-                if (group != null && group.getId() != null) {
-                    groupRefIds.add(group.getId());
+                if (group != null && group.getPath() != null) {
+                    groupRefPaths.add(group.getPath());
                 }
             }
-            target.setGroupRefs(groupRefIds);
+            target.setGroupRefs(groupRefPaths);
         }
 
         // Map channel references to string IDs
@@ -79,10 +79,9 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
         
         target.setTaxIncluded(source.isTaxIncluded());
 
-        // Add taxation info only if requested via $expand
-        if (context.shouldExpand("$info")) {
-            addInfo(source, target, context);
-        }
+        // Always populate $info with groupRefIds for navigation links
+        // (taxation and timestamps are added only when $info is explicitly requested)
+        addInfo(source, target, context);
 
         // Add includes only if requested via $expand
         if (context.shouldExpand("$includes")) {
@@ -95,6 +94,18 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
         if (source.getTaxClass() != null && source.getPriceValue() != null &&
                 context.expandWithAnyOf(new String[]{"$info", "$info.taxation"})) {
             addTaxation(source, info);
+        }
+        // Always populate groupRefIds in $info for UI navigation links (path → id map)
+        if (source.getGroups() != null && !source.getGroups().isEmpty()) {
+            java.util.Map<String, String> groupRefIds = new java.util.HashMap<>();
+            for (GroupEntity group : source.getGroups()) {
+                if (group != null && group.getPath() != null && group.getId() != null) {
+                    groupRefIds.put(group.getPath(), group.getId());
+                }
+            }
+            if (!groupRefIds.isEmpty()) {
+                info.setGroupRefIds(groupRefIds);
+            }
         }
         target.setInfo(info);
     }

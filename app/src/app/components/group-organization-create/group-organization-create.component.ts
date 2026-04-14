@@ -1,6 +1,7 @@
 import { Component, signal, inject, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslocoModule } from '@jsverse/transloco';
 import { GroupsService } from '../../service/group/groups.service';
 import { OrganizationsService } from '../../service/organization/organizations.service';
 import { Group } from '../../model/group/group.model';
@@ -11,7 +12,7 @@ import { Organization, OrganizationType } from '../../model/organization/organiz
   templateUrl: './group-organization-create.component.html',
   styleUrls: ['./group-organization-create.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslocoModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupOrganizationCreateComponent implements OnInit {
@@ -45,13 +46,13 @@ export class GroupOrganizationCreateComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     if (this.config?.initialValue) {
-      this.form.patchValue({ id: this.config.initialValue });
+      this.form.patchValue({ path: this.config.initialValue });
     }
   }
 
   initForm(): void {
     this.form = this.fb.group({
-      id: ['', Validators.required],
+      path: ['', Validators.required],
       name: ['', Validators.required],
       organizationType: ['']
     });
@@ -81,7 +82,7 @@ export class GroupOrganizationCreateComponent implements OnInit {
       
       // Show error message for missing required fields
       const missingFields = [];
-      if (this.form.get('id')?.invalid) missingFields.push('ID');
+      if (this.form.get('path')?.invalid) missingFields.push('Path');
       if (this.form.get('name')?.invalid) missingFields.push('Name');
       if (this.entityType() === 'organization' && this.form.get('organizationType')?.invalid) {
         missingFields.push('Organization Type');
@@ -103,7 +104,7 @@ export class GroupOrganizationCreateComponent implements OnInit {
 
     if (this.entityType() === 'group') {
       const group: Group = {
-        id: formValue.id,
+        path: formValue.path,
         name: formValue.name,
         parentRefs: [],
         subRefs: []
@@ -130,7 +131,7 @@ export class GroupOrganizationCreateComponent implements OnInit {
       });
     } else {
       const organization: Organization = {
-        id: formValue.id,
+        path: formValue.path,
         name: formValue.name,
         organizationType: formValue.organizationType,
         parentRefs: [],

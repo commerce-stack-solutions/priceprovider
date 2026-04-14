@@ -54,15 +54,15 @@ class RequireMandatoryFieldsRuleTest {
     @Test
     void validate_groupWithNullId_returnsError() {
         GroupEntity group = new GroupEntity();
-        // id is null
+        // path is null (id is auto-generated UUID, not validated as mandatory)
         group.setName("Test Group");
 
         RequireMandatoryFieldsRule<GroupEntity> rule = new RequireMandatoryFieldsRule<>(GroupEntity.class, registry);
         List<Message> errors = rule.validate(group);
 
-        assertFalse(errors.isEmpty(), "Missing id must produce a validation error");
-        assertTrue(errors.stream().anyMatch(m -> m.getFields().contains("id")),
-                "Error must reference the 'id' field");
+        assertFalse(errors.isEmpty(), "Missing path must produce a validation error");
+        assertTrue(errors.stream().anyMatch(m -> m.getFields().contains("path")),
+                "Error must reference the 'path' field");
     }
 
     @Test

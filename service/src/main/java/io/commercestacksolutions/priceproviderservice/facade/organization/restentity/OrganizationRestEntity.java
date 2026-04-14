@@ -1,13 +1,14 @@
 package io.commercestacksolutions.priceproviderservice.facade.organization.restentity;
 
-import io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity;
 import io.commercestacksolutions.commons.web.rest.RestEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.facade.organization.info.InfoOrganization;
 
 import java.util.Set;
 
-public class OrganizationRestEntity extends RestEntity<InfoAuditableRestEntity, IncludesOrganization> {
+public class OrganizationRestEntity extends RestEntity<InfoOrganization, IncludesOrganization> {
     private String id;
+    private String path;
     private String name;
     private OrganizationType organizationType;
     private Set<String> parentRefs;
@@ -19,6 +20,14 @@ public class OrganizationRestEntity extends RestEntity<InfoAuditableRestEntity, 
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {
@@ -52,4 +61,5 @@ public class OrganizationRestEntity extends RestEntity<InfoAuditableRestEntity, 
     public void setSubRefs(Set<String> subRefs) {
         this.subRefs = subRefs;
     }
+
 }

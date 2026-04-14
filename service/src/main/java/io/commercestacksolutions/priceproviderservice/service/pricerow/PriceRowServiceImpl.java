@@ -8,6 +8,8 @@ import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
+import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.service.channel.ChannelService;
@@ -23,8 +25,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Implementation of PriceRowService interface.
@@ -36,6 +40,7 @@ public class PriceRowServiceImpl implements PriceRowService {
     private static final Logger logger = LoggerFactory.getLogger(PriceRowServiceImpl.class);
 
     private final PriceRowEntityRepository priceRowEntityRepository;
+    private final GroupEntityRepository groupEntityRepository;
     private final EntityValidator<PriceRowEntity> entityValidator;
     private final QueryParser queryParser;
     private final ChannelService channelService;
@@ -44,10 +49,12 @@ public class PriceRowServiceImpl implements PriceRowService {
     @Autowired
     public PriceRowServiceImpl(
             PriceRowEntityRepository priceRowEntityRepository,
+            GroupEntityRepository groupEntityRepository,
             List<ValidationRule<PriceRowEntity>> validationRules,
             ChannelService channelService,
             SmartMatchingStrategy smartMatchingStrategy) {
         this.priceRowEntityRepository = priceRowEntityRepository;
+        this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(PriceRowEntity.class);
         this.channelService = channelService;
@@ -65,9 +72,39 @@ public class PriceRowServiceImpl implements PriceRowService {
     }
 
     public PriceRowEntity save(PriceRowEntity priceRowEntity) throws EntityValidationException {
+        resolvePathBasedGroupRefs(priceRowEntity);
         validateEntity(priceRowEntity);
         updateAuditTimestamps(priceRowEntity);
         return priceRowEntityRepository.save(priceRowEntity);
+    }
+
+    /**
+     * Resolves groupRefs that only have a path set (no UUID id) by looking up the
+     * full GroupEntity from the database. This is necessary when importing JSON data
+     * where groupRefs are given as path strings (e.g. "DEMO-GROUP-STANDARD") and
+     * Jackson creates stub GroupEntity objects with only path set but no UUID.
+     * Without this resolution JPA would try to use a null UUID as the FK in the
+     * price_row_groups join table.
+     */
+    private void resolvePathBasedGroupRefs(PriceRowEntity priceRowEntity) {
+        Set<GroupEntity> groups = priceRowEntity.getGroups();
+        if (groups == null || groups.isEmpty()) {
+            return;
+        }
+        Set<GroupEntity> resolved = new HashSet<>();
+        for (GroupEntity group : groups) {
+            if (group.getId() != null) {
+                resolved.add(group);
+            } else if (group.getPath() != null) {
+                Optional<GroupEntity> found = groupEntityRepository.findByPath(group.getPath());
+                if (found.isPresent()) {
+                    resolved.add(found.get());
+                } else {
+                    logger.warn("Could not resolve group reference by path '{}' — skipping this group assignment", group.getPath());
+                }
+            }
+        }
+        priceRowEntity.setGroups(resolved);
     }
 
     public List<PriceRowEntity> findAll() {

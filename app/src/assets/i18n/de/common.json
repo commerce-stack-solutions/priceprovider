@@ -109,7 +109,8 @@
     "country": "Land",
     "countryRef": "Land",
     "priceRepresentationMode": "Preisdarstellungsmodus",
-    "priceRepresentationModePlaceholder": "Preisdarstellungsmodus auswählen..."
+    "priceRepresentationModePlaceholder": "Preisdarstellungsmodus auswählen...",
+    "path": "Pfad"
   },
   "sections": {
     "auditInformation": "Audit-Informationen",
@@ -169,7 +170,8 @@
     "channelRefs": "Optional. Referenzen auf Kanäle für kanalspezifische Preise.",
     "channelRefsPlaceholder": "Kanal auswählen oder suchen...",
     "noWritePermission": "Sie haben keine Berechtigung, dieses Element zu bearbeiten.",
-    "noDeletePermission": "Sie haben keine Berechtigung, dieses Element zu löschen."
+    "noDeletePermission": "Sie haben keine Berechtigung, dieses Element zu löschen.",
+    "pathRequired": "Pfad ist erforderlich"
   },
   "errors": {
     "entity": {

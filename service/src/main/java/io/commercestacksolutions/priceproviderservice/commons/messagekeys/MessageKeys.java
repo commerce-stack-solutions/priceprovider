@@ -38,6 +38,7 @@ public class MessageKeys {
     public static final String ERROR_VALIDATION_MANDATORY_FIELD = "common.errors.validation.mandatoryField";
     public static final String ERROR_VALIDATION_INVALID_REFERENCE = "common.errors.validation.invalidReference";
     public static final String ERROR_VALIDATION_ID_REQUIRED = "common.errors.validation.idRequired";
+    public static final String ERROR_VALIDATION_PATH_REQUIRED = "common.errors.validation.pathRequired";
     public static final String ERROR_VALIDATION_REQUEST_BODY_EMPTY = "common.errors.validation.requestBodyEmpty";
     public static final String ERROR_VALIDATION_MAX_ITEMS_EXCEEDED = "common.errors.validation.maxItemsExceeded";
     public static final String ERROR_VALIDATION_EMPTY_REQUEST = "common.errors.validation.emptyRequest";

@@ -109,7 +109,7 @@ public class PriceRowControllerQueryFilterTest {
 
         // Create group
         groupA = new GroupEntity();
-        groupA.setId("GROUP_A");
+        groupA.setPath("GROUP_A");
         groupA.setName("Group A");
         groupRepository.save(groupA);
 
