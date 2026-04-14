@@ -64,7 +64,7 @@ public class GroupEntity implements AuditableEntity {
     @PrePersist
     protected void prePersist() {
         if (this.id == null) {
-            this.id = IdGeneratorProvider.generate();
+            this.id = IdGeneratorProvider.generate(GroupEntity.class);
         }
     }
 

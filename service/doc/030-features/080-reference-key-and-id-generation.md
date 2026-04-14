@@ -144,17 +144,17 @@ Without `@GeneratedId` (and without `@GeneratedValue`), `MetaInfoBuilder` would 
 ```java
 // commons.dataaccess.idgenerator
 public interface IdGenerator {
-    String generate();
+    String generateId();
 }
 ```
 
-Entities that use `@GeneratedId` call the `IdGeneratorProvider` Spring bean from a `@PrePersist` method to obtain the next ID value:
+Entities that use `@GeneratedId` call the static `IdGeneratorProvider` from a `@PrePersist` method to obtain the next ID value:
 
 ```java
 @PrePersist
-void prePersist() {
+protected void prePersist() {
     if (this.id == null) {
-        this.id = idGeneratorProvider.getIdGenerator().generate();
+        this.id = IdGeneratorProvider.generate(GroupEntity.class);  // pass entity class for per-entity selection
     }
 }
 ```
@@ -168,13 +168,85 @@ The default implementation is `UUIDStringIdGenerator`, registered as the primary
 @Component
 public class UUIDStringIdGenerator implements IdGenerator {
     @Override
-    public String generate() {
+    public String generateId() {
         return UUID.randomUUID().toString();
     }
 }
 ```
 
-To swap the generation strategy (e.g. for a partition-prefixed key on Cloud Spanner), implement `IdGenerator`, annotate it `@Primary`, and the entire application picks it up without touching entity code.
+### Replacing the Global Generator (Open-Closed Principle)
+
+To swap the generation strategy application-wide (e.g. for a partition-prefixed key on Cloud Spanner), implement `IdGenerator` and annotate it `@Primary`.  No entity code needs to change:
+
+```java
+@Primary
+@Component
+public class SpannerIdGenerator implements IdGenerator {
+    @Override
+    public String generateId() {
+        // e.g. CloudSpanner-compatible sortable key
+        return String.format("%d-%s", System.currentTimeMillis(), UUID.randomUUID());
+    }
+}
+```
+
+Because `UUIDStringIdGenerator` already has `@Primary`, Spring will raise a conflict if two primary beans exist.  The new bean must be the only `@Primary` — remove the annotation from `UUIDStringIdGenerator` or use `@ConditionalOnMissingBean` in a `@Configuration`.
+
+### Per-Entity Generator Override: @ForEntity
+
+If you need a different strategy **only for a specific entity** (e.g. Groups and Organizations should use a human-readable path-derived key, while everything else uses random UUIDs), annotate your custom generator with `@ForEntity`:
+
+```java
+@Component
+@ForEntity(GroupEntity.class)        // applied only when GroupEntity.@PrePersist calls generate(GroupEntity.class)
+public class GroupPrefixedIdGenerator implements IdGenerator {
+    @Override
+    public String generateId() {
+        return "GRP-" + UUID.randomUUID();
+    }
+}
+```
+
+You can target multiple entity classes in a single annotation:
+
+```java
+@Component
+@ForEntity({ GroupEntity.class, OrganizationEntity.class })
+public class HierarchyEntityIdGenerator implements IdGenerator { ... }
+```
+
+`@ForEntity` and `@Primary` are independent — a bean can have both (globally primary **and** entity-specific) or only one.
+
+#### How the lookup works
+
+```
+IdGeneratorProvider.generate(entityClass)
+  1. entityClass != null  →  look up entityGenerators map
+       found  →  use entity-specific generator
+       not found  →  fall through
+  2. use global @Primary generator (defaultGenerator)
+  3. fallback: UUID.randomUUID() (provider not yet initialised)
+```
+
+#### Entity-side wiring
+
+For `@ForEntity` to take effect the entity's `@PrePersist` must pass its own class:
+
+```java
+// CORRECT – enables entity-specific selection
+this.id = IdGeneratorProvider.generate(GroupEntity.class);
+
+// also works, but bypasses entity-specific generators
+this.id = IdGeneratorProvider.generate();
+```
+
+#### Selection priority
+
+| Scenario | Generator used |
+|----------|---------------|
+| `@ForEntity(GroupEntity.class)` present, `generate(GroupEntity.class)` called | entity-specific bean |
+| No `@ForEntity` match, `@Primary` bean present | global `@Primary` bean |
+| No Spring context yet (tests, startup) | `UUID.randomUUID()` fallback |
 
 ### Idempotent PUT semantics
 
@@ -229,3 +301,53 @@ This allows a client to create an entity at a deterministic URL and replay the s
      }
    }
    ```
+
+---
+
+## Adding a Custom ID Generator
+
+### Global replacement
+
+1. Implement `IdGenerator` and annotate your class `@Primary @Component`.
+2. No entity code needs to change — all entities that call `IdGeneratorProvider.generate(...)` pick it up automatically.
+
+```java
+@Primary
+@Component
+public class MyCustomIdGenerator implements IdGenerator {
+    @Override
+    public String generateId() {
+        return "CUSTOM-" + UUID.randomUUID();
+    }
+}
+```
+
+> **Note:** `UUIDStringIdGenerator` is already `@Primary`.  If you introduce a second `@Primary` bean, Spring will raise a `NoUniqueBeanDefinitionException` at startup.  Ensure only one `@Primary` `IdGenerator` is present in the application context.
+
+### Per-entity override
+
+1. Implement `IdGenerator`.
+2. Annotate with `@ForEntity(MyEntity.class)` (no `@Primary` needed unless you also want it as the global default).
+3. Make sure the entity's `@PrePersist` passes its own class to `IdGeneratorProvider.generate(MyEntity.class)`.
+
+```java
+// Step 1 + 2 – custom generator for GroupEntity only
+@Component
+@ForEntity(GroupEntity.class)
+public class GroupPrefixedIdGenerator implements IdGenerator {
+    @Override
+    public String generateId() {
+        return "GRP-" + UUID.randomUUID();
+    }
+}
+
+// Step 3 – entity @PrePersist (GroupEntity already does this)
+@PrePersist
+protected void prePersist() {
+    if (this.id == null) {
+        this.id = IdGeneratorProvider.generate(GroupEntity.class);
+    }
+}
+```
+
+The custom generator is used **only** for `GroupEntity` (and its subclasses, e.g. `OrganizationEntity`, whose `@PrePersist` is inherited).  All other entities continue using the global `@Primary` generator.
