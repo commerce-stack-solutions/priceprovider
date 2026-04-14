@@ -1,11 +1,11 @@
 package io.commercestacksolutions.priceproviderservice.facade.approle.restentity;
 
-import io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity;
 import io.commercestacksolutions.commons.web.rest.RestEntity;
+import io.commercestacksolutions.priceproviderservice.facade.approle.info.InfoAppRole;
 
 import java.util.Set;
 
-public class AppRoleRestEntity extends RestEntity<InfoAuditableRestEntity, IncludesAppRole> {
+public class AppRoleRestEntity extends RestEntity<InfoAppRole, IncludesAppRole> {
     private Long id;
     private String name;
     private String description;

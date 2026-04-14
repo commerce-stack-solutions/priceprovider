@@ -60,7 +60,7 @@ export class AppRoleDetailComponent {
       sections.push({ title: this.transloco.translate('common.sections.auditInformation'), fields });
     }
 
-    const otherInfoKeys = allInfoKeys.filter(k => k !== 'createdAt' && k !== 'lastModifiedAt');
+    const otherInfoKeys = allInfoKeys.filter(k => k !== 'createdAt' && k !== 'lastModifiedAt' && k !== 'permissionRefIds');
     if (otherInfoKeys.length > 0) {
       const fields: InfoField[] = otherInfoKeys.map(key => ({
         label: this.label.formatLabel(key),
