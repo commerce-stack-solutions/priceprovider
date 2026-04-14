@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * Generic service-layer validation rule that checks all mandatory fields declared
- * via {@code @MetaMandatoryField} (and auto-mandatory {@code @Id} fields) are
+ * via {@code @MandatoryField} (and auto-mandatory {@code @Id} fields) are
  * populated before an entity is persisted.
  *
  * <p>The list of mandatory fields is read at runtime from the

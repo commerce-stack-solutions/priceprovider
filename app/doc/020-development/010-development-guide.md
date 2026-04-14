@@ -440,7 +440,7 @@ For backend implementation details (annotations, registry, service-layer validat
 | Field            | Description |
 |------------------|-------------|
 | `identityFields` | Primary key fields (from `@Id` on the JPA entity) |
-| `mandatoryFields`| Fields the caller must supply (from `@Id` without `@GeneratedValue`, and `@MetaMandatoryField`) |
+| `mandatoryFields`| Fields the caller must supply (from `@Id` without `@GeneratedValue`, and `@MandatoryField`) |
 | `enumValues`     | All valid values for every enum-typed field (mandatory **and** optional) |
 
 ### `MetaInfo` Interface

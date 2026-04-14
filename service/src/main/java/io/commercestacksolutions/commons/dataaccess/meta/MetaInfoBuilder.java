@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * Traverses the full class hierarchy to detect:
  * <ul>
  *   <li>Identity fields — fields annotated with {@code jakarta.persistence.@Id}</li>
- *   <li>Mandatory fields — fields annotated with {@link MetaMandatoryField}, <strong>plus</strong>
+ *   <li>Mandatory fields — fields annotated with {@link MandatoryField}, <strong>plus</strong>
  *       all {@code @Id} fields that do <em>not</em> also carry {@code @GeneratedValue}
  *       (generated IDs are assigned by the database and must not be supplied by the caller)</li>
  *   <li>Reference key fields — fields annotated with
@@ -31,17 +31,17 @@ import java.util.stream.Collectors;
  * <h3>Auto-mandatory rule for @Id fields</h3>
  * <p>A field annotated with {@code @Id} is implicitly mandatory (i.e. the caller must supply it)
  * unless it is also annotated with {@code @GeneratedValue}, which signals that the persistence
- * layer assigns the value automatically.  Adding {@code @MetaMandatoryField} to an {@code @Id}
+ * layer assigns the value automatically.  Adding {@code @MandatoryField} to an {@code @Id}
  * field is therefore redundant and should be avoided.</p>
  *
  * <h3>Similar annotations to consider for future entities</h3>
  * <ul>
  *   <li>{@code @Column(nullable = false)} — DB-level NOT NULL constraint; if a field carries this
- *       and is not auto-generated, it may be worth marking it {@code @MetaMandatoryField} as
+ *       and is not auto-generated, it may be worth marking it {@code @MandatoryField} as
  *       well so the API consumer knows it is required.</li>
  *   <li>{@code @NotNull} (Bean Validation) — application-level non-null constraint; fields with
  *       this annotation are semantically mandatory from an API perspective and are also candidates
- *       for {@code @MetaMandatoryField}.</li>
+ *       for {@code @MandatoryField}.</li>
  *   <li>{@code @EmbeddedId} / {@code @IdClass} — composite-key patterns; if used, the builder
  *       may need extending to inspect embedded fields for identity/mandatory detection.</li>
  * </ul>
@@ -77,8 +77,8 @@ public class MetaInfoBuilder {
                         mandatoryFields.add(field.getName());
                     }
                 }
-                // @MetaMandatoryField → explicitly mandatory (use for non-@Id fields)
-                if (field.isAnnotationPresent(MetaMandatoryField.class)
+                // @MandatoryField → explicitly mandatory (use for non-@Id fields)
+                if (field.isAnnotationPresent(MandatoryField.class)
                         && !mandatoryFields.contains(field.getName())) {
                     mandatoryFields.add(field.getName());
                 }

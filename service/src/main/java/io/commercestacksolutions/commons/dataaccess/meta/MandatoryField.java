@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a field as mandatory for $meta REST API responses.
+ * Marks a field as mandatory for service-layer validation and $meta REST API responses.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MetaMandatoryField {
+public @interface MandatoryField {
 }

@@ -24,12 +24,12 @@ public class MetaInfoBuilderTest {
     static class BaseEntity {
         @Id
         private String id;          // no @GeneratedValue → auto-mandatory
-        @MetaMandatoryField
+        @MandatoryField
         private String name;
     }
 
     static class ChildEntity extends BaseEntity {
-        @MetaMandatoryField
+        @MandatoryField
         private Color color;        // mandatory enum
         private Color optionalColor; // optional enum – values must still be included
         private String description;  // not mandatory
@@ -39,7 +39,7 @@ public class MetaInfoBuilderTest {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;            // @GeneratedValue → identity field but NOT auto-mandatory
-        @MetaMandatoryField
+        @MandatoryField
         private String name;
     }
 
@@ -47,7 +47,7 @@ public class MetaInfoBuilderTest {
         @Id
         @GeneratedId
         private String id;          // @GeneratedId → auto-generated UUID, NOT mandatory
-        @MetaMandatoryField
+        @MandatoryField
         private String name;
     }
 
@@ -57,7 +57,7 @@ public class MetaInfoBuilderTest {
         private String id;
         @ReferenceKey
         private String path;
-        @MetaMandatoryField
+        @MandatoryField
         private String name;
     }
 
@@ -96,7 +96,7 @@ public class MetaInfoBuilderTest {
         assertFalse(meta.getMandatoryFields().contains("id"),
                 "@Id field with @GeneratedId must NOT appear in mandatoryFields (auto-generated via IdGenerator)");
         assertTrue(meta.getMandatoryFields().contains("name"),
-                "@MetaMandatoryField 'name' must still be mandatory");
+                "@MandatoryField 'name' must still be mandatory");
     }
 
     @Test
@@ -104,7 +104,7 @@ public class MetaInfoBuilderTest {
         MetaInfo meta = MetaInfoBuilder.build(BaseEntity.class);
         assertNotNull(meta.getMandatoryFields());
         assertTrue(meta.getMandatoryFields().contains("name"),
-                "Field annotated with @MetaMandatoryField must appear in mandatoryFields");
+                "Field annotated with @MandatoryField must appear in mandatoryFields");
     }
 
     @Test
@@ -147,16 +147,16 @@ public class MetaInfoBuilderTest {
     void build_nonEnumNonMandatoryFieldNotInMandatoryList() {
         MetaInfo meta = MetaInfoBuilder.build(ChildEntity.class);
         assertFalse(meta.getMandatoryFields().contains("description"),
-                "Field without @MetaMandatoryField must not appear in mandatoryFields");
+                "Field without @MandatoryField must not appear in mandatoryFields");
     }
 
     @Test
     void build_idNotDuplicatedInMandatoryFieldsWhenBothAnnotationsPresent() {
-        // If someone annotates @Id @MetaMandatoryField (redundant but harmless), id must appear only once
+        // If someone annotates @Id @MandatoryField (redundant but harmless), id must appear only once
         @SuppressWarnings("unused")
         class RedundantEntity {
             @Id
-            @MetaMandatoryField   // redundant – @Id already implies mandatory
+            @MandatoryField   // redundant – @Id already implies mandatory
             private String id;
         }
         MetaInfo meta = MetaInfoBuilder.build(RedundantEntity.class);

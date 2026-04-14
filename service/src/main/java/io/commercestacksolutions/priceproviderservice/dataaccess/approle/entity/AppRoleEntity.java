@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -22,7 +22,7 @@ public class AppRoleEntity implements AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @MetaMandatoryField
+    @MandatoryField
     @Column(unique = true, nullable = false)
     private String name;
 

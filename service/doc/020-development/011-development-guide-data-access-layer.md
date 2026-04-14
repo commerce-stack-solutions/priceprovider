@@ -83,7 +83,7 @@ public class UnitEntity implements AuditableEntity {
     @CollectionTable(name = "unit_localized_names", joinColumns = @JoinColumn(name = "symbol"))
     @MapKeyColumn(name = "language_code")
     @Column(name = "name")
-    @MetaMandatoryField
+    @MandatoryField
     private Map<String, String> name;
 
     // Audit timestamps - managed by EntityService.updateAuditTimestamps()
@@ -303,20 +303,20 @@ service-config:
 
 For GUI-based manual loading and bootstrap details, see [Service Initialization](../030-features/070-service-initialization.md).
 
-## Meta Annotations (`@MetaMandatoryField`,`@Id`)
+## Meta Annotations (`@MandatoryField`,`@Id`)
 
 Entity fields can be annotated with meta annotations to expose structural metadata via the `$meta` expand parameter.  Full details are in [060-meta-annotation-concept.md](../030-features/060-meta-annotation-concept.md).
 
-### `@MetaMandatoryField`
+### `@MandatoryField`
 
-Use `@MetaMandatoryField` (package `io.commercestacksolutions.commons.dataaccess.meta`) to mark any **non-`@Id`** field as mandatory:
+Use `@MandatoryField` (package `io.commercestacksolutions.commons.dataaccess.meta`) to mark any **non-`@Id`** field as mandatory:
 
 ```java
-@MetaMandatoryField
+@MandatoryField
 private String name;
 
 @ManyToOne(fetch = FetchType.LAZY)
-@MetaMandatoryField
+@MandatoryField
 private CountryEntity countryRef;   // relation field — null check enforced at service layer
 ```
 
@@ -333,4 +333,4 @@ private String id;           // → identityField AND mandatory (auto rule)
 private Long id;             // → identityField ONLY — NOT mandatory (DB-generated)
 ```
 
-> Do not add `@MetaMandatoryField` to an `@Id` field — the auto-mandatory rule already covers it.
+> Do not add `@MandatoryField` to an `@Id` field — the auto-mandatory rule already covers it.

@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity;
 
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class OrganizationEntity extends GroupEntity {
     
     @Enumerated(EnumType.STRING)
-    @MetaMandatoryField
+    @MandatoryField
     private OrganizationType organizationType;
 
     public OrganizationEntity() {

@@ -30,7 +30,7 @@ GET /api/admin/groups/GRP-001?$expand=$includes,$info,$meta
 | Field                | Description |
 |----------------------|-------------|
 | `identityFields`     | Fields that serve as primary keys (detected from `@jakarta.persistence.Id`) |
-| `mandatoryFields`    | Fields required for create/update (declared with `@MetaMandatoryField`, plus non-generated `@Id` fields) |
+| `mandatoryFields`    | Fields required for create/update (declared with `@MandatoryField`, plus non-generated `@Id` fields) |
 | `referenceKeyFields` | The human-readable alternative key field(s) used in JSON references and query filters (see `@ReferenceKey` below). Falls back to `identityFields` when no `@ReferenceKey` is declared. |
 | `enumValues`         | All valid string constants for every enum-typed field (mandatory **and** optional) |
 
@@ -48,11 +48,11 @@ public class GroupEntity {
     private String id;    // auto-generated UUID
 
     @ReferenceKey         // → listed in referenceKeyFields; used for queries and JSON refs
-    @MetaMandatoryField
+    @MandatoryField
     private String path;  // human-readable key, e.g. "ORG-MY-COMPANY/ORG-IT-DEPT"
 
     @Enumerated(EnumType.STRING)
-    @MetaMandatoryField
+    @MandatoryField
     private GroupType groupType;  // → enum values always included in enumValues
 
     @Enumerated(EnumType.STRING)
@@ -65,7 +65,7 @@ public class PriceRowEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;   // → identityField ONLY – NOT mandatory (DB generates the value)
 
-    @MetaMandatoryField
+    @MandatoryField
     private String pricedResourceId;
 }
 ```
@@ -144,10 +144,10 @@ In **create mode** (no entity ID yet), the form fetches the list endpoint with `
 
 ## Adding $meta Support to a New Entity
 
-1. Annotate entity fields — **do not** add `@MetaMandatoryField` to `@Id` fields:
+1. Annotate entity fields — **do not** add `@MandatoryField` to `@Id` fields:
    ```java
    @Id private String id;           // auto-mandatory (no @GeneratedValue / @GeneratedId)
-   @MetaMandatoryField private String name;
+   @MandatoryField private String name;
    @Enumerated(EnumType.STRING) private MyEnum status; // enum values auto-included
    ```
    For entities with a JPA-generated primary key:

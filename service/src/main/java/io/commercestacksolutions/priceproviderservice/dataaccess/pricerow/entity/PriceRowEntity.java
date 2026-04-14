@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entit
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
@@ -24,25 +24,25 @@ public class PriceRowEntity implements AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-    @MetaMandatoryField
+    @MandatoryField
     private String pricedResourceId;
     @Column(precision = 19, scale = 2)
-    @MetaMandatoryField
+    @MandatoryField
     private BigDecimal priceValue;
     @Column(precision = 19, scale = 2)
-    @MetaMandatoryField
+    @MandatoryField
     private BigDecimal minQuantity;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_symbol")
-    @MetaMandatoryField
+    @MandatoryField
     private UnitEntity unitRef;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_key")
-    @MetaMandatoryField
+    @MandatoryField
     private CurrencyEntity currencyRef;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tax_class_id", nullable = true)
-    @MetaMandatoryField
+    @MandatoryField
     private TaxClassEntity taxClassRef;
     @Enumerated(EnumType.STRING)
     private PriceType priceType;

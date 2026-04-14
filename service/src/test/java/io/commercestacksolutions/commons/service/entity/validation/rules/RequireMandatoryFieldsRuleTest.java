@@ -104,7 +104,7 @@ class RequireMandatoryFieldsRuleTest {
     }
 
     // -------------------------------------------------------------------------
-    // TaxClassEntity tests — countryRef is mandatory via @MetaMandatoryField
+    // TaxClassEntity tests — countryRef is mandatory via @MandatoryField
     // -------------------------------------------------------------------------
 
     @Test
