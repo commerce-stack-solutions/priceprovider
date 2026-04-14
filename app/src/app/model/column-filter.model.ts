@@ -196,7 +196,9 @@ export function parseQueryString(queryString: string): FilterDefinition[] {
     
     // Check for contains operator (wildcards)
     if (trimmed.includes(':*') || trimmed.includes('*:')) {
-      const [field, value] = trimmed.split(':');
+      const colonIndex = trimmed.indexOf(':');
+      const field = trimmed.slice(0, colonIndex);
+      const value = trimmed.slice(colonIndex + 1);
       filters.push({
         field,
         operator: 'contains',
@@ -207,7 +209,9 @@ export function parseQueryString(queryString: string): FilterDefinition[] {
     
     // Default to equals
     if (trimmed.includes(':')) {
-      const [field, value] = trimmed.split(':');
+      const colonIndex = trimmed.indexOf(':');
+      const field = trimmed.slice(0, colonIndex);
+      const value = trimmed.slice(colonIndex + 1);
       filters.push({ field, operator: 'equals', value });
     }
   }

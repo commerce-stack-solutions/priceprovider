@@ -5,7 +5,10 @@ export interface AppRole {
   name: string;
   description?: string;
   permissionRefs?: string[];
-  $info?: { [key: string]: any };
+  $info?: {
+    permissionRefIds?: { [name: string]: number };
+    [key: string]: any;
+  };
   $meta?: MetaInfo;
 }
 

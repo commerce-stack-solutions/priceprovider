@@ -56,7 +56,7 @@
                 <label class="form-label fw-bold">{{ 'pages.appRoles.permissions' | transloco }}</label>
                 <div>
                   @for (ref of role.permissionRefs; track ref) {
-                    <span class="ref-badge me-1">{{ ref }}</span>
+                    <a [routerLink]="['/' + lang(), 'app-permissions', role.$info?.permissionRefIds?.[ref] ?? ref]" class="ref-badge me-1">{{ ref }}</a>
                   }
                 </div>
               </div>
