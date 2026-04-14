@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import jakarta.persistence.*;
@@ -29,7 +29,7 @@ public class CountryEntity implements AuditableEntity {
     @CollectionTable(name = "country_localized_names", joinColumns = @JoinColumn(name = "iso_key"))
     @MapKeyColumn(name = "language_code")
     @Column(name = "name")
-    @MetaMandatoryField
+    @MandatoryField
     private Map<String, String> name;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -42,7 +42,7 @@ public class CountryEntity implements AuditableEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "primary_currency_key")
-    @MetaMandatoryField
+    @MandatoryField
     private CurrencyEntity primaryCurrencyRef;
 
     @OneToMany(mappedBy = "countryRef", fetch = FetchType.LAZY)

@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * <p>Usage example:</p>
  * <pre>{@code
  * @MetaDynamicEnum(beanType = PriceRepresentationMode.class)
- * @MetaMandatoryField
+ * @MandatoryField
  * private String priceRepresentationMode;
  * }</pre>
  */

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -17,7 +17,7 @@ public class LanguageEntity implements AuditableEntity {
     @Id
         private String isoKey;
     
-    @MetaMandatoryField
+    @MandatoryField
     private Boolean active;
     
     private Boolean mandatory;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import jakarta.persistence.*;
 
@@ -19,13 +19,13 @@ public class TaxClassEntity implements AuditableEntity {
         private String taxClassId;
     
     @Column(precision = 4, scale = 2)
-    @MetaMandatoryField
+    @MandatoryField
     private BigDecimal taxRate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_iso_key", nullable = true)
     @JsonIgnoreProperties({"taxClasses", "hibernateLazyInitializer", "handler"})
-    @MetaMandatoryField
+    @MandatoryField
     private CountryEntity countryRef;
 
     private OffsetDateTime createdAt;

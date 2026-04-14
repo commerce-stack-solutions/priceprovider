@@ -352,7 +352,7 @@ For the complete implementation guide (how to register filterable fields, suppor
 
 Instead of writing a custom `ValidationRule` per entity to check mandatory fields, use the shared `RequireMandatoryFieldsRule<T>` from `io.commercestacksolutions.commons.service.entity.validation.rules`.
 
-This rule reads the mandatory field list from the `EntityMetaInfoRegistry` (populated at startup from `@Id` / `@MetaMandatoryField` annotations) and validates all required fields are non-null (and non-blank for `String`s).
+This rule reads the mandatory field list from the `EntityMetaInfoRegistry` (populated at startup from `@Id` / `@MandatoryField` annotations) and validates all required fields are non-null (and non-blank for `String`s).
 
 Full details on the annotation system are in [060-meta-annotation-concept.md](../030-features/060-meta-annotation-concept.md).
 
@@ -384,4 +384,4 @@ Spring auto-wires these beans into each `*ServiceImpl` constructor via `List<Val
 
 - **Single source of truth** — field annotations on the entity drive both the API's `$meta` response and the service-layer validation.
 - **No code duplication** — no per-entity `*MandatoryFieldsRule` class needed.
-- **Automatically kept in sync** — adding `@MetaMandatoryField` to a new field is enough; no rule code needs to change.
+- **Automatically kept in sync** — adding `@MandatoryField` to a new field is enough; no rule code needs to change.

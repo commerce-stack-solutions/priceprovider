@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
  * <p>The mandatory field list for each entity is driven by the
  * {@link EntityMetaInfoRegistry} (pre-built at startup by
  * {@code MetaInfoRegistryConfig}), which reads {@code @Id} and
- * {@code @MetaMandatoryField} annotations on the entity class hierarchy.</p>
+ * {@code @MandatoryField} annotations on the entity class hierarchy.</p>
  */
 @Configuration
 public class RequireMandatoryFieldsValidationConfig {

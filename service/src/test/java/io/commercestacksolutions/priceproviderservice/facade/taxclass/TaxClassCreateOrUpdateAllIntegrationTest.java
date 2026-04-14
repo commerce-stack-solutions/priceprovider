@@ -83,7 +83,7 @@ public class TaxClassCreateOrUpdateAllIntegrationTest {
     public void testCreateOrUpdateAll_AllValid_ShouldSucceed() {
         List<TaxClassRestEntity> taxClasses = new ArrayList<>();
         
-        // Create first tax class — countryRef is mandatory (@MetaMandatoryField on TaxClassEntity.countryRef)
+        // Create first tax class — countryRef is mandatory (@MandatoryField on TaxClassEntity.countryRef)
         TaxClassRestEntity vat19 = new TaxClassRestEntity();
         vat19.setTaxClassId("TEST-VAT-19");
         vat19.setTaxRate(new BigDecimal("0.19"));

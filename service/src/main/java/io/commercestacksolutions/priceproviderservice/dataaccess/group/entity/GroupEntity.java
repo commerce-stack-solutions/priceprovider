@@ -8,7 +8,7 @@ import io.commercestacksolutions.commons.dataaccess.ReferenceKey;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
 import io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId;
 import io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider;
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -28,11 +28,11 @@ public class GroupEntity implements AuditableEntity {
     private String id;
 
     @ReferenceKey
-    @MetaMandatoryField
+    @MandatoryField
     @Column(unique = true, nullable = false)
     private String path;
 
-    @MetaMandatoryField
+    @MandatoryField
     private String name;
 
     @ManyToMany

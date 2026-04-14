@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
-import io.commercestacksolutions.commons.dataaccess.meta.MetaMandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public class UnitEntity implements AuditableEntity {
     @CollectionTable(name = "unit_localized_names", joinColumns = @JoinColumn(name = "symbol"))
     @MapKeyColumn(name = "language_code")
     @Column(name = "name")
-    @MetaMandatoryField
+    @MandatoryField
     private Map<String, String> name;
 
     private String measure;
