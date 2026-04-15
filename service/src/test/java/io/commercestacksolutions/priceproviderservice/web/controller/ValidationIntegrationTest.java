@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,7 +66,7 @@ public class ValidationIntegrationTest {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.addMessage(new Message(Message.MessageType.ERROR, "PriceRow with id '999' not found"));
         
-        when(priceRowFacade.getPriceRow(anyLong(), any()))
+        when(priceRowFacade.getPriceRow(anyString(), any()))
                 .thenThrow(new NotFoundException("PriceRow with id '999' not found", errorResponse));
 
         mockMvc.perform(get("/admin/api/pricerows/999"))
@@ -111,7 +111,7 @@ public class ValidationIntegrationTest {
         errorResponse.addMessage(new Message(Message.MessageType.ERROR, 
                 "Field 'priceValue' is mandatory and cannot be removed", List.of("priceValue")));
         
-        when(priceRowFacade.patch(anyLong(), any()))
+        when(priceRowFacade.patch(anyString(), any()))
                 .thenThrow(new DataMappingException("Validation failed", errorResponse));
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
@@ -129,7 +129,7 @@ public class ValidationIntegrationTest {
         errorResponse.addMessage(new Message(Message.MessageType.ERROR, 
                 "Field 'id' cannot be changed", List.of("id")));
         
-        when(priceRowFacade.patch(anyLong(), any()))
+        when(priceRowFacade.patch(anyString(), any()))
                 .thenThrow(new DataMappingException("Validation failed", errorResponse));
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
@@ -185,7 +185,7 @@ public class ValidationIntegrationTest {
         errorResponse.addMessage(new Message(Message.MessageType.ERROR, 
                 "Invalid value for field 'taxIncluded': expected true or false", List.of("taxIncluded")));
         
-        when(priceRowFacade.patch(anyLong(), any()))
+        when(priceRowFacade.patch(anyString(), any()))
                 .thenThrow(new DataMappingException("Validation failed", errorResponse));
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
@@ -203,7 +203,7 @@ public class ValidationIntegrationTest {
         errorResponse.addMessage(new Message(Message.MessageType.ERROR, 
                 "Unit with symbol 'xyz' not found", List.of("unitRef")));
         
-        when(priceRowFacade.patch(anyLong(), any()))
+        when(priceRowFacade.patch(anyString(), any()))
                 .thenThrow(new DataMappingException("Validation failed", errorResponse));
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
@@ -221,7 +221,7 @@ public class ValidationIntegrationTest {
         errorResponse.addMessage(new Message(Message.MessageType.ERROR, 
                 "Currency with currencyKey 'USDD' not found", List.of("currencyRef")));
         
-        when(priceRowFacade.patch(anyLong(), any()))
+        when(priceRowFacade.patch(anyString(), any()))
                 .thenThrow(new DataMappingException("Validation failed", errorResponse));
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
@@ -296,7 +296,7 @@ public class ValidationIntegrationTest {
         PriceRowRestEntity updated = new PriceRowRestEntity();
         updated.setPricedResourceId("updated-resource");
         
-        when(priceRowFacade.patch(anyLong(), any())).thenReturn(updated);
+        when(priceRowFacade.patch(anyString(), any())).thenReturn(updated);
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
                         .contentType("application/json-patch+json")

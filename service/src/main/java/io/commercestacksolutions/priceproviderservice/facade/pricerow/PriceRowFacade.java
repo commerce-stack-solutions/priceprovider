@@ -15,12 +15,12 @@ import java.util.Set;
 
 public interface PriceRowFacade {
     PriceRowListRestEntity getPriceRows(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException;
-    PriceRowRestEntity getPriceRow(Long id, Set<String> expand) throws DataMappingException, NotFoundException;
+    PriceRowRestEntity getPriceRow(String id, Set<String> expand) throws DataMappingException, NotFoundException;
     MetaInfo getMeta();
-    PriceRowRestEntity createOrRecreate(Long id, PriceRowRestEntity priceRowRestEntity) throws DataMappingException, EntityValidationException;
-    PriceRowRestEntity patch(Long id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
+    PriceRowRestEntity createOrRecreate(String id, PriceRowRestEntity priceRowRestEntity) throws DataMappingException, EntityValidationException;
+    PriceRowRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException;
     PriceRowRestEntity create(PriceRowRestEntity priceRowRestEntity) throws DataMappingException, InvalidParameterException;
-    void delete(Long id) throws NotFoundException;
-    void bulkDeletePriceRows(List<Long> ids) throws io.commercestacksolutions.commons.exception.DataIntegrityException;
+    void delete(String id) throws NotFoundException;
+    void bulkDeletePriceRows(List<String> ids) throws io.commercestacksolutions.commons.exception.DataIntegrityException;
     PriceRowListRestEntity createOrUpdateAllPriceRows(List<PriceRowRestEntity> priceRowRestEntities);
 }

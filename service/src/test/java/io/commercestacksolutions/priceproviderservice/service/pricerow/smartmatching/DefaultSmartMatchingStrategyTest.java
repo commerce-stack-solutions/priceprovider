@@ -104,7 +104,7 @@ class DefaultSmartMatchingStrategyTest {
     @SuppressWarnings("unchecked")
     void findMatch_candidateWithNoGroups_matchesNullGroupRefs() {
         PriceRowEntity candidate = new PriceRowEntity();
-        candidate.setId(42L);
+        candidate.setId("42");
 
         when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
@@ -113,14 +113,14 @@ class DefaultSmartMatchingStrategyTest {
 
         Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
-        assertEquals(42L, result.get().getId());
+        assertEquals("42", result.get().getId());
     }
 
     @Test
     @SuppressWarnings("unchecked")
     void findMatch_candidateWithNoGroups_matchesEmptyGroupRefs() {
         PriceRowEntity candidate = new PriceRowEntity();
-        candidate.setId(42L);
+        candidate.setId("42");
 
         when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
@@ -129,7 +129,7 @@ class DefaultSmartMatchingStrategyTest {
 
         Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
-        assertEquals(42L, result.get().getId());
+        assertEquals("42", result.get().getId());
     }
 
     // --- Successful match with groups ---
@@ -141,7 +141,7 @@ class DefaultSmartMatchingStrategyTest {
         GroupEntity g2 = new GroupEntity("GROUP-B");
 
         PriceRowEntity candidate = new PriceRowEntity();
-        candidate.setId(10L);
+        candidate.setId("10");
         candidate.setGroups(Set.of(g1, g2));
 
         when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
@@ -151,7 +151,7 @@ class DefaultSmartMatchingStrategyTest {
 
         Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
-        assertEquals(10L, result.get().getId());
+        assertEquals("10", result.get().getId());
     }
 
     // --- Group mismatch ---
@@ -162,7 +162,7 @@ class DefaultSmartMatchingStrategyTest {
         GroupEntity g1 = new GroupEntity("GROUP-A");
 
         PriceRowEntity candidate = new PriceRowEntity();
-        candidate.setId(10L);
+        candidate.setId("10");
         candidate.setGroups(Set.of(g1));
 
         when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
@@ -180,7 +180,7 @@ class DefaultSmartMatchingStrategyTest {
     @SuppressWarnings("unchecked")
     void findMatch_withValidFromAndTo_matchesCandidateWithNoGroups() {
         PriceRowEntity candidate = new PriceRowEntity();
-        candidate.setId(99L);
+        candidate.setId("99");
 
         when(priceRowEntityRepository.findAll(any(Specification.class))).thenReturn(List.of(candidate));
 
@@ -190,6 +190,6 @@ class DefaultSmartMatchingStrategyTest {
 
         Optional<PriceRowEntity> result = strategy.findMatch(ctx);
         assertTrue(result.isPresent());
-        assertEquals(99L, result.get().getId());
+        assertEquals("99", result.get().getId());
     }
 }

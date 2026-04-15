@@ -146,14 +146,14 @@ export class PricerowDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.loadPriceRow(parseInt(id, 10));
+      this.loadPriceRow(id);
     } else {
       this.error.set('Price row ID not provided');
       this.loading.set(false);
     }
   }
 
-  loadPriceRow(id: number): void {
+  loadPriceRow(id: string): void {
     this.loading.set(true);
     this.error.set(null);
     this.pricerowsService.getPriceRow(id).subscribe({

@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -75,7 +75,7 @@ public class PriceRowControllerTest {
         PriceRowRestEntity priceRowRestEntity = new PriceRowRestEntity();
         priceRowRestEntity.setPricedResourceId("test");
 
-        when(priceRowFacade.getPriceRow(anyLong(), any())).thenReturn(priceRowRestEntity);
+        when(priceRowFacade.getPriceRow(anyString(), any())).thenReturn(priceRowRestEntity);
 
         mockMvc.perform(get("/admin/api/pricerows/1"))
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ public class PriceRowControllerTest {
         PriceRowRestEntity priceRowRestEntity = new PriceRowRestEntity();
         priceRowRestEntity.addMessage(new Message(Message.MessageType.ERROR, "errors.priceRow.notFound", List.of("id")));
 
-        when(priceRowFacade.getPriceRow(anyLong(), any())).thenReturn(priceRowRestEntity);
+        when(priceRowFacade.getPriceRow(anyString(), any())).thenReturn(priceRowRestEntity);
 
         mockMvc.perform(get("/admin/api/pricerows/1"))
                 .andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class PriceRowControllerTest {
         PriceRowRestEntity priceRowRestEntity = new PriceRowRestEntity();
         priceRowRestEntity.setPricedResourceId("updated");
 
-        when(priceRowFacade.createOrRecreate(anyLong(), any())).thenReturn(priceRowRestEntity);
+        when(priceRowFacade.createOrRecreate(anyString(), any())).thenReturn(priceRowRestEntity);
 
         mockMvc.perform(put("/admin/api/pricerows/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -111,16 +111,16 @@ public class PriceRowControllerTest {
     @Test
     public void testCreatePriceRowViaPut() throws Exception {
         PriceRowRestEntity priceRowRestEntity = new PriceRowRestEntity();
-        priceRowRestEntity.setId(999L);
+        priceRowRestEntity.setId("999");
         priceRowRestEntity.setPricedResourceId("created-via-put");
 
-        when(priceRowFacade.createOrRecreate(anyLong(), any())).thenReturn(priceRowRestEntity);
+        when(priceRowFacade.createOrRecreate(anyString(), any())).thenReturn(priceRowRestEntity);
 
         mockMvc.perform(put("/admin/api/pricerows/999")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new PriceRowRestEntity())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(999))
+                .andExpect(jsonPath("$.id").value("999"))
                 .andExpect(jsonPath("$.pricedResourceId").value("created-via-put"));
     }
 
@@ -129,7 +129,7 @@ public class PriceRowControllerTest {
         PriceRowRestEntity priceRowRestEntity = new PriceRowRestEntity();
         priceRowRestEntity.setPricedResourceId("added");
 
-        when(priceRowFacade.patch(anyLong(), any())).thenReturn(priceRowRestEntity);
+        when(priceRowFacade.patch(anyString(), any())).thenReturn(priceRowRestEntity);
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
                         .contentType("application/json-patch+json")
@@ -140,7 +140,7 @@ public class PriceRowControllerTest {
 
     @Test
     public void testPatchPriceRowRemove() throws Exception {
-        when(priceRowFacade.patch(anyLong(), any())).thenReturn(new PriceRowRestEntity());
+        when(priceRowFacade.patch(anyString(), any())).thenReturn(new PriceRowRestEntity());
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
                         .contentType("application/json-patch+json")
@@ -153,7 +153,7 @@ public class PriceRowControllerTest {
         PriceRowRestEntity priceRowRestEntity = new PriceRowRestEntity();
         priceRowRestEntity.setPricedResourceId("replaced");
 
-        when(priceRowFacade.patch(anyLong(), any())).thenReturn(priceRowRestEntity);
+        when(priceRowFacade.patch(anyString(), any())).thenReturn(priceRowRestEntity);
 
         mockMvc.perform(patch("/admin/api/pricerows/1")
                         .contentType("application/json-patch+json")
@@ -173,7 +173,7 @@ public class PriceRowControllerTest {
     public void testBulkDeletePriceRows() throws Exception {
         mockMvc.perform(post("/admin/api/pricerows/bulk-delete")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("[1, 2, 3]"))
+                        .content("[\"id-1\", \"id-2\", \"id-3\"]"))
                 .andExpect(status().isNoContent());
     }
 

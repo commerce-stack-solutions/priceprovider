@@ -95,7 +95,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
     }
 
     @Transactional
-    public PriceRowRestEntity getPriceRow(Long id, Set<String> expand) throws DataMappingException, NotFoundException {
+    public PriceRowRestEntity getPriceRow(String id, Set<String> expand) throws DataMappingException, NotFoundException {
         Optional<PriceRowEntity> priceRowEntityOptional = priceRowService.findById(id);
         if (priceRowEntityOptional.isPresent()) {
             PriceRowEntity priceRowEntity = priceRowEntityOptional.get();
@@ -110,7 +110,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             return priceRowRestEntity;
         } else {
             Map<String, String> params = new HashMap<>();
-            params.put("id", String.valueOf(id));
+            params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_PRICE_ROW_NOT_FOUND, params);
         }
     }
@@ -121,7 +121,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
     }
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class})
-    public PriceRowRestEntity createOrRecreate(Long id, PriceRowRestEntity priceRowRestEntity) throws DataMappingException, EntityValidationException {
+    public PriceRowRestEntity createOrRecreate(String id, PriceRowRestEntity priceRowRestEntity) throws DataMappingException, EntityValidationException {
         Optional<PriceRowEntity> priceRowEntityOptional = priceRowService.findById(id);
         if (priceRowEntityOptional.isPresent()) {
             // Update existing price row
@@ -138,7 +138,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
     }
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class})
-    public PriceRowRestEntity patch(Long id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException {
+    public PriceRowRestEntity patch(String id, JsonNode patch) throws DataMappingException, NotFoundException, EntityValidationException {
         // Validate that patch doesn't try to modify protected fields
         List<Message> patchValidationErrors = getPatchValidator().validate(patch, id);
         if (!patchValidationErrors.isEmpty()) {
@@ -152,7 +152,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         Optional<PriceRowEntity> existingPriceRowOpt = priceRowService.findById(id);
         if (existingPriceRowOpt.isEmpty()) {
             Map<String, String> params = new HashMap<>();
-            params.put("id", String.valueOf(id));
+            params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_PRICE_ROW_NOT_FOUND, params, List.of("id"));
         }
         PriceRowEntity existingPriceRow = existingPriceRowOpt.get();
@@ -175,20 +175,20 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
     }
 
     @Transactional
-    public void delete(Long id) throws NotFoundException {
+    public void delete(String id) throws NotFoundException {
         Optional<PriceRowEntity> priceRowEntityOptional = priceRowService.findById(id);
         if (priceRowEntityOptional.isEmpty()) {
             Map<String, String> params = new HashMap<>();
-            params.put("id", String.valueOf(id));
+            params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_PRICE_ROW_NOT_FOUND, params, List.of("id"));
         }
         priceRowService.deleteById(id);
     }
 
-    public void bulkDeletePriceRows(List<Long> ids) throws io.commercestacksolutions.commons.exception.DataIntegrityException {
-        List<Long> failedDeletes = new java.util.ArrayList<>();
+    public void bulkDeletePriceRows(List<String> ids) throws io.commercestacksolutions.commons.exception.DataIntegrityException {
+        List<String> failedDeletes = new java.util.ArrayList<>();
         
-        for (Long id : ids) {
+        for (String id : ids) {
             if (priceRowService.findById(id).isPresent()) {
                 try {
                     priceRowService.deleteById(id);
@@ -214,7 +214,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         
         if (!failedDeletes.isEmpty()) {
             Map<String, String> params = new HashMap<>();
-            params.put("ids", failedDeletes.stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(", ")));
+            params.put("ids", String.join(", ", failedDeletes));
             throw new io.commercestacksolutions.commons.exception.DataIntegrityException(MessageKeys.ERROR_DATA_INTEGRITY_REFERENCED, params);
         }
     }

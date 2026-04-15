@@ -2,6 +2,8 @@ package io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entit
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
+import io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId;
+import io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider;
 import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
@@ -22,8 +24,9 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PriceRowEntity implements AuditableEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @GeneratedId
+    @Column(length = 36)
+    private String id;
     @MandatoryField
     private String pricedResourceId;
     @Column(precision = 19, scale = 2)
@@ -67,11 +70,18 @@ public class PriceRowEntity implements AuditableEntity {
     private OffsetDateTime createdAt;
     private OffsetDateTime lastModifiedAt;
 
-    public Long getId() {
+    @PrePersist
+    protected void prePersist() {
+        if (this.id == null) {
+            this.id = IdGeneratorProvider.generate(PriceRowEntity.class);
+        }
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

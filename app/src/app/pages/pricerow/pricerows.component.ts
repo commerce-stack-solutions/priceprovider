@@ -35,7 +35,7 @@ export class PriceRowsComponent {
   totalPages = signal(0);
   sortBy = signal<string[]>([]);
   sortDirection = signal<string>('asc');
-  selectedPriceRows = signal<Set<number>>(new Set());
+  selectedPriceRows = signal<Set<string>>(new Set());
   deleteError = signal<string | null>(null);
   
   // Filter state
@@ -207,7 +207,7 @@ export class PriceRowsComponent {
     });
   }
 
-  toggleSelection(id: number): void {
+  toggleSelection(id: string): void {
     const selected = new Set(this.selectedPriceRows());
     if (selected.has(id)) {
       selected.delete(id);
@@ -218,7 +218,7 @@ export class PriceRowsComponent {
   }
 
   toggleAllSelection(checked: boolean): void {
-    const selected = new Set<number>();
+    const selected = new Set<string>();
     if (checked) {
       this.priceRows().forEach(row => selected.add(row.id));
     }

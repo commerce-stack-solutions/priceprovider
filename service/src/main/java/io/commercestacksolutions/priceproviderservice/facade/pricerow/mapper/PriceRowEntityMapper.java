@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class PriceRowEntityMapper extends AbstractMapper<PriceRowRestEntity, PriceRowEntity, RestRequestMappingContext<Long>> {
+public class PriceRowEntityMapper extends AbstractMapper<PriceRowRestEntity, PriceRowEntity, RestRequestMappingContext<String>> {
     
     private final UnitService unitEntityService;
     private final CurrencyService currencyEntityService;
@@ -53,7 +53,7 @@ public class PriceRowEntityMapper extends AbstractMapper<PriceRowRestEntity, Pri
     }
 
     @Override
-    public void convert(PriceRowRestEntity source, PriceRowEntity target, RestRequestMappingContext<Long> context) throws DataMappingException {
+    public void convert(PriceRowRestEntity source, PriceRowEntity target, RestRequestMappingContext<String> context) throws DataMappingException {
         target.setId(context.getId());
         target.setPricedResourceId(source.getPricedResourceId());
         target.setPriceValue(source.getPriceValue());

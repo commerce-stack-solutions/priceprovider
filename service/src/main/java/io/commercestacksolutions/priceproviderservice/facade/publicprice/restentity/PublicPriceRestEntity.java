@@ -22,8 +22,8 @@ import java.util.Set;
 @Schema(description = "Public price information for a priced resource")
 public class PublicPriceRestEntity extends RestEntity<InfoPublicPrice, IncludesPublicPrice> {
     
-    @Schema(description = "Price row identifier", example = "1")
-    private Long id;
+    @Schema(description = "Price row identifier", example = "550e8400-e29b-41d4-a716-446655440000")
+    private String id;
     
     @Schema(description = "Priced resource identifier (product, material, or service)", example = "PROD-001")
     private String pricedResourceId;
@@ -61,11 +61,11 @@ public class PublicPriceRestEntity extends RestEntity<InfoPublicPrice, IncludesP
     @Schema(description = "Indicates whether the returned price includes tax", example = "true")
     private boolean taxIncluded;
     
-    public Long getId() {
+    public String getId() {
         return id;
     }
     
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     
