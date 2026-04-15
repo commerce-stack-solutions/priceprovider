@@ -38,7 +38,8 @@
     "viewAllLocalizedValues": "Alle lokalisierten Werte anzeigen",
     "hideOptionalValues": "Optionale Werte ausblenden",
     "addLanguage": "Sprache hinzufügen",
-    "view": "Anzeigen"
+    "view": "Anzeigen",
+    "copyId": "ID in die Zwischenablage kopieren"
   },
   "fields": {
     "name": "Name",

@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Pokaż wszystkie wartości językowe",
     "hideOptionalValues": "Ukryj opcjonalne wartości",
     "addLanguage": "Dodaj język",
-    "view": "Zobacz"
+    "view": "Zobacz",
+    "copyId": "Kopiuj ID do schowka"
   },
   "fields": {
     "name": "Nazwa",

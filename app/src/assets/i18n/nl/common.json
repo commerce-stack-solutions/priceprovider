@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Alle gelokaliseerde waarden weergeven",
     "hideOptionalValues": "Optionele waarden verbergen",
     "addLanguage": "Taal toevoegen",
-    "view": "Bekijken"
+    "view": "Bekijken",
+    "copyId": "ID naar klembord kopiëren"
   },
   "fields": {
     "name": "Naam",

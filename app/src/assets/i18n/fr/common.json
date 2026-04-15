@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Voir toutes les valeurs localisées",
     "hideOptionalValues": "Masquer les valeurs optionnelles",
     "addLanguage": "Ajouter une langue",
-    "view": "Voir"
+    "view": "Voir",
+    "copyId": "Copier l'ID dans le presse-papiers"
   },
   "fields": {
     "name": "Nom",

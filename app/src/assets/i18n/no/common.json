@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Vis alle lokaliserte verdier",
     "hideOptionalValues": "Skjul valgfrie verdier",
     "addLanguage": "Legg til språk",
-    "view": "Vis"
+    "view": "Vis",
+    "copyId": "Kopier ID til utklippstavle"
   },
   "fields": {
     "name": "Navn",

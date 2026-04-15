@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "查看所有本地化值",
     "hideOptionalValues": "隐藏可选值",
     "addLanguage": "添加语言",
-    "view": "查看"
+    "view": "查看",
+    "copyId": "复制ID到剪贴板"
   },
   "fields": {
     "name": "名称",

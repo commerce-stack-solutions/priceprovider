@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Rodyti visas lokalizuotas reikšmes",
     "hideOptionalValues": "Slėpti nebūtinas reikšmes",
     "addLanguage": "Pridėti kalbą",
-    "view": "Peržiūrėti"
+    "view": "Peržiūrėti",
+    "copyId": "Kopijuoti ID į iškarpinę"
   },
   "fields": {
     "name": "Pavadinimas",

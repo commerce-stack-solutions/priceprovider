@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class PriceRowEntity implements AuditableEntity {
     @Id
     @GeneratedId
-    @Column(length = 36)
+    @Column(length = 100)
     private String id;
     @MandatoryField
     private String pricedResourceId;

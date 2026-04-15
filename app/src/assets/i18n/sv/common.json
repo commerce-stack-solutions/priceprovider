@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Visa alla lokaliserade värden",
     "hideOptionalValues": "Dölj valfria värden",
     "addLanguage": "Lägg till språk",
-    "view": "Visa"
+    "view": "Visa",
+    "copyId": "Kopiera ID till urklipp"
   },
   "fields": {
     "name": "Namn",

@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "すべての言語の値を表示",
     "hideOptionalValues": "任意の値を非表示",
     "addLanguage": "言語を追加",
-    "view": "表示"
+    "view": "表示",
+    "copyId": "IDをクリップボードにコピー"
   },
   "fields": {
     "name": "名前",

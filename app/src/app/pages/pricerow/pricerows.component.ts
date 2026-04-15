@@ -43,6 +43,7 @@ export class PriceRowsComponent {
   
   // Filter configurations
   filterConfigs: ColumnFilterConfig[] = [
+    { field: 'id', type: 'string', label: 'ID' },
     { field: 'pricedResourceId', type: 'string', label: 'Resource ID' },
     { field: 'priceValue', type: 'number', label: 'Price Value' },
     { field: 'minQuantity', type: 'number', label: 'Min Quantity' },
@@ -205,6 +206,21 @@ export class PriceRowsComponent {
       day: '2-digit',
       timeZone: 'Europe/Berlin'
     });
+  }
+
+  copiedId = signal<string | null>(null);
+
+  copyIdToClipboard(id: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    navigator.clipboard.writeText(id).then(() => {
+      this.copiedId.set(id);
+      setTimeout(() => this.copiedId.set(null), 1500);
+    });
+  }
+
+  shortId(id: string): string {
+    return id ? id.substring(0, 5) + '…' : '';
   }
 
   toggleSelection(id: string): void {

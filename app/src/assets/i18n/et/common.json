@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Kuva kõik lokaliseeritud väärtused",
     "hideOptionalValues": "Peida valikulised väärtused",
     "addLanguage": "Lisa keel",
-    "view": "Vaata"
+    "view": "Vaata",
+    "copyId": "Kopeeri ID lõikelaudale"
   },
   "fields": {
     "name": "Nimi",

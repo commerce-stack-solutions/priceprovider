@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Skatīt visas lokalizētās vērtības",
     "hideOptionalValues": "Paslēpt neobligātās vērtības",
     "addLanguage": "Pievienot valodu",
-    "view": "Skatīt"
+    "view": "Skatīt",
+    "copyId": "Kopēt ID starpliktuvē"
   },
   "fields": {
     "name": "Nosaukums",
