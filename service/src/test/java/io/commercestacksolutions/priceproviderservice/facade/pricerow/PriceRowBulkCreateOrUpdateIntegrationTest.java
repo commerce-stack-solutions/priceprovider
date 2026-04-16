@@ -109,7 +109,7 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         existingEntity.setTaxClass(testTaxClass);
         existingEntity.setTaxIncluded(false);
         PriceRowEntity saved = priceRowRepository.save(existingEntity);
-        Long savedId = saved.getId();
+        String savedId = saved.getId();
 
         // ACT - Send update without ID but with matching fields
         List<PriceRowRestEntity> priceRows = new ArrayList<>();
@@ -227,7 +227,7 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         existingEntity.setTaxClass(testTaxClass);
         existingEntity.setTaxIncluded(false);
         PriceRowEntity saved = priceRowRepository.save(existingEntity);
-        Long savedId = saved.getId();
+        String savedId = saved.getId();
 
         // ACT - Send update with ID (should use ID, not field matching)
         List<PriceRowRestEntity> priceRows = new ArrayList<>();
@@ -266,7 +266,7 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         existingEntity.setTaxClass(testTaxClass);
         existingEntity.setTaxIncluded(false);
         PriceRowEntity saved = priceRowRepository.save(existingEntity);
-        Long existingId = saved.getId();
+        String existingId = saved.getId();
 
         // ACT - Send mixed requests
         List<PriceRowRestEntity> priceRows = new ArrayList<>();
@@ -441,7 +441,7 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         existingEntity.setValidTo(validTo);
         // Not setting groupRefs to avoid constraint issues
         PriceRowEntity saved = priceRowRepository.save(existingEntity);
-        Long savedId = saved.getId();
+        String savedId = saved.getId();
 
         // ACT - Send update with all matching fields but different price
         List<PriceRowRestEntity> priceRows = new ArrayList<>();

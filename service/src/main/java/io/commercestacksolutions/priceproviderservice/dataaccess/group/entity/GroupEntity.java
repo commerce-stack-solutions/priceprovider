@@ -24,7 +24,7 @@ public class GroupEntity implements AuditableEntity {
 
     @Id
     @GeneratedId
-    @Column(length = 36)
+    @Column(length = 100)
     private String id;
 
     @ReferenceKey

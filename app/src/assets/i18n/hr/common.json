@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Prikaži sve lokalizirane vrijednosti",
     "hideOptionalValues": "Sakrij neobavezne vrijednosti",
     "addLanguage": "Dodaj jezik",
-    "view": "Prikaži"
+    "view": "Prikaži",
+    "copyId": "Kopiraj ID u međuspremnik"
   },
   "fields": {
     "name": "Ime",

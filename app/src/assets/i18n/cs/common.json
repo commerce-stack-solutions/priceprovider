@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Zobrazit všechny lokalizované hodnoty",
     "hideOptionalValues": "Skrýt volitelné hodnoty",
     "addLanguage": "Přidat jazyk",
-    "view": "Zobrazit"
+    "view": "Zobrazit",
+    "copyId": "Kopírovat ID do schránky"
   },
   "fields": {
     "name": "Název",

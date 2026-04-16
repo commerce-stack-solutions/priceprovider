@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Ver todos los valores localizados",
     "hideOptionalValues": "Ocultar valores opcionales",
     "addLanguage": "Añadir idioma",
-    "view": "Ver"
+    "view": "Ver",
+    "copyId": "Copiar ID al portapapeles"
   },
   "fields": {
     "name": "Nombre",

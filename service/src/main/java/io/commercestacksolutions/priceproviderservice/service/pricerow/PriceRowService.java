@@ -52,14 +52,14 @@ public interface PriceRowService extends EntityService<PriceRowEntity> {
      * @param id the price row ID
      * @return optional containing the price row entity if found
      */
-    Optional<PriceRowEntity> findById(Long id);
+    Optional<PriceRowEntity> findById(String id);
     
     /**
      * Deletes a price row by its ID.
      * 
      * @param id the price row ID
      */
-    void deleteById(Long id);
+    void deleteById(String id);
     
     /**
      * Finds a price row matching the given criteria using the configured

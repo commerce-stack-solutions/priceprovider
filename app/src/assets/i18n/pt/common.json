@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Ver todos os valores localizados",
     "hideOptionalValues": "Ocultar valores opcionais",
     "addLanguage": "Adicionar idioma",
-    "view": "Ver"
+    "view": "Ver",
+    "copyId": "Copiar ID para a área de transferência"
   },
   "fields": {
     "name": "Nome",

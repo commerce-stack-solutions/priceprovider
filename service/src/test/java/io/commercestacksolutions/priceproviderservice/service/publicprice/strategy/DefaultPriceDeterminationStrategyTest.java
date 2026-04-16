@@ -94,11 +94,11 @@ public class DefaultPriceDeterminationStrategyTest {
     public void testQuantityMatching_NearestMinQuantityWins() {
         // Create two prices with different min quantities
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("100.00"));
-        price1.setId(1L);
+        price1.setId("1");
         price1.setMinQuantity(new BigDecimal("1.00"));
         
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("90.00"));
-        price2.setId(2L);
+        price2.setId("2");
         price2.setMinQuantity(new BigDecimal("10.00"));
         
         PriceMatchingCriteria criteria = createTestCriteria("PROD-001", new BigDecimal("15.00"));
@@ -106,7 +106,7 @@ public class DefaultPriceDeterminationStrategyTest {
         PriceRowEntity result = strategy.determineBestPrice(criteria, Arrays.asList(price1, price2), List.of());
         
         assertNotNull(result);
-        assertEquals(2L, result.getId(), "Higher minQuantity should win (nearest match)");
+        assertEquals("2", result.getId(), "Higher minQuantity should win (nearest match)");
     }
     
     @Test
@@ -114,12 +114,12 @@ public class DefaultPriceDeterminationStrategyTest {
         // Since DB pre-filters by priceType, all candidates will have the same type
         // This test verifies ranking works when types match
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("100.00"));
-        price1.setId(1L);
+        price1.setId("1");
         price1.setPriceType(PriceType.SALES_PRICE);
         price1.setMinQuantity(new BigDecimal("1.00"));
         
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("90.00"));
-        price2.setId(2L);
+        price2.setId("2");
         price2.setPriceType(PriceType.SALES_PRICE);
         price2.setMinQuantity(new BigDecimal("10.00"));
         
@@ -130,7 +130,7 @@ public class DefaultPriceDeterminationStrategyTest {
         PriceRowEntity result = strategy.determineBestPrice(criteria, Arrays.asList(price1, price2), List.of());
         
         assertNotNull(result);
-        assertEquals(2L, result.getId(), "Higher minQuantity should win");
+        assertEquals("2", result.getId(), "Higher minQuantity should win");
     }
     
     // REMOVED: testCurrencyMatching_ExactMatchRequired
@@ -145,15 +145,15 @@ public class DefaultPriceDeterminationStrategyTest {
     public void testAllPrices_ReturnsMultipleMatches() {
         // Create three prices
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("100.00"));
-        price1.setId(1L);
+        price1.setId("1");
         price1.setMinQuantity(new BigDecimal("1.00"));
         
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("90.00"));
-        price2.setId(2L);
+        price2.setId("2");
         price2.setMinQuantity(new BigDecimal("10.00"));
         
         PriceRowEntity price3 = createTestPrice("PROD-001", new BigDecimal("80.00"));
-        price3.setId(3L);
+        price3.setId("3");
         price3.setMinQuantity(new BigDecimal("100.00"));
         
         PriceMatchingCriteria criteria = createTestCriteria("PROD-001", new BigDecimal("150.00"));
@@ -162,9 +162,9 @@ public class DefaultPriceDeterminationStrategyTest {
         
         assertEquals(3, results.size(), "All prices should match");
         // Verify ranking: highest minQuantity first
-        assertEquals(3L, results.get(0).getId());
-        assertEquals(2L, results.get(1).getId());
-        assertEquals(1L, results.get(2).getId());
+        assertEquals("3", results.get(0).getId());
+        assertEquals("2", results.get(1).getId());
+        assertEquals("1", results.get(2).getId());
     }
     
     @Test
@@ -178,17 +178,17 @@ public class DefaultPriceDeterminationStrategyTest {
         
         // Price 1: Assigned to grandparent group (distance = 2)
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("100.00"));
-        price1.setId(1L);
+        price1.setId("1");
         price1.setGroupRefs(Set.of("GROUP-GRANDPARENT"));
         
         // Price 2: Assigned to parent group (distance = 1) - should win
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("95.00"));
-        price2.setId(2L);
+        price2.setId("2");
         price2.setGroupRefs(Set.of("GROUP-PARENT"));
         
         // Price 3: Assigned to child group itself (distance = 0) - should win over both
         PriceRowEntity price3 = createTestPrice("PROD-001", new BigDecimal("90.00"));
-        price3.setId(3L);
+        price3.setId("3");
         price3.setGroupRefs(Set.of("GROUP-CHILD"));
         
         PriceMatchingCriteria criteria = createTestCriteria("PROD-001", new BigDecimal("10.00"));
@@ -198,9 +198,9 @@ public class DefaultPriceDeterminationStrategyTest {
         
         // Verify ranking: nearer group wins (lower distance level)
         assertEquals(3, results.size());
-        assertEquals(3L, results.get(0).getId(), "GROUP-CHILD (distance 0) should win");
-        assertEquals(2L, results.get(1).getId(), "GROUP-PARENT (distance 1) should be second");
-        assertEquals(1L, results.get(2).getId(), "GROUP-GRANDPARENT (distance 2) should be third");
+        assertEquals("3", results.get(0).getId(), "GROUP-CHILD (distance 0) should win");
+        assertEquals("2", results.get(1).getId(), "GROUP-PARENT (distance 1) should be second");
+        assertEquals("1", results.get(2).getId(), "GROUP-GRANDPARENT (distance 2) should be third");
     }
     
     @Test
@@ -213,12 +213,12 @@ public class DefaultPriceDeterminationStrategyTest {
         
         // Price 1: Generic price (no groups) - has max distance
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("100.00"));
-        price1.setId(1L);
+        price1.setId("1");
         price1.setGroupRefs(new HashSet<>());
         
         // Price 2: Group-specific price - should win
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("85.00"));
-        price2.setId(2L);
+        price2.setId("2");
         price2.setGroupRefs(Set.of("GROUP-PREMIUM"));
         
         PriceMatchingCriteria criteria = createTestCriteria("PROD-001", new BigDecimal("10.00"));
@@ -227,8 +227,8 @@ public class DefaultPriceDeterminationStrategyTest {
         List<PriceRowEntity> results = strategy.rankPrices(criteria, Arrays.asList(price1, price2), groupHierarchy);
         
         assertEquals(2, results.size());
-        assertEquals(2L, results.get(0).getId(), "Group-specific price should win over generic");
-        assertEquals(1L, results.get(1).getId(), "Generic price should be second");
+        assertEquals("2", results.get(0).getId(), "Group-specific price should win over generic");
+        assertEquals("1", results.get(1).getId(), "Generic price should be second");
     }
     
     @Test
@@ -241,13 +241,13 @@ public class DefaultPriceDeterminationStrategyTest {
         
         // Price 1: Parent group, higher minQuantity
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("90.00"));
-        price1.setId(1L);
+        price1.setId("1");
         price1.setGroupRefs(Set.of("GROUP-PARENT"));
         price1.setMinQuantity(new BigDecimal("100.00"));
         
         // Price 2: Child group, lower minQuantity - group distance wins over quantity
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("95.00"));
-        price2.setId(2L);
+        price2.setId("2");
         price2.setGroupRefs(Set.of("GROUP-CHILD"));
         price2.setMinQuantity(new BigDecimal("1.00"));
         
@@ -257,7 +257,7 @@ public class DefaultPriceDeterminationStrategyTest {
         List<PriceRowEntity> results = strategy.rankPrices(criteria, Arrays.asList(price1, price2), groupHierarchy);
         
         assertEquals(2, results.size());
-        assertEquals(2L, results.get(0).getId(), "Group distance beats quantity in priority");
+        assertEquals("2", results.get(0).getId(), "Group distance beats quantity in priority");
     }
     
     @Test
@@ -270,13 +270,13 @@ public class DefaultPriceDeterminationStrategyTest {
         
         // Price 1: GROUP-A, lower minQuantity
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("100.00"));
-        price1.setId(1L);
+        price1.setId("1");
         price1.setGroupRefs(Set.of("GROUP-A"));
         price1.setMinQuantity(new BigDecimal("1.00"));
         
         // Price 2: GROUP-B, higher minQuantity - should win
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("95.00"));
-        price2.setId(2L);
+        price2.setId("2");
         price2.setGroupRefs(Set.of("GROUP-B"));
         price2.setMinQuantity(new BigDecimal("50.00"));
         
@@ -285,7 +285,7 @@ public class DefaultPriceDeterminationStrategyTest {
         List<PriceRowEntity> results = strategy.rankPrices(criteria, Arrays.asList(price1, price2), groupHierarchy);
         
         assertEquals(2, results.size());
-        assertEquals(2L, results.get(0).getId(), "When group distance is same, quantity wins");
+        assertEquals("2", results.get(0).getId(), "When group distance is same, quantity wins");
     }
     
     /**
@@ -293,7 +293,7 @@ public class DefaultPriceDeterminationStrategyTest {
      */
     private PriceRowEntity createTestPrice(String pricedResourceId, BigDecimal priceValue) {
         PriceRowEntity price = new PriceRowEntity();
-        price.setId(1L);
+        price.setId("1");
         price.setPricedResourceId(pricedResourceId);
         price.setPriceValue(priceValue);
         price.setMinQuantity(new BigDecimal("1.00"));

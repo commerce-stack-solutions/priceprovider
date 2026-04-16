@@ -29,7 +29,17 @@
    [checked]="selectedPriceRows().size === priceRows().length && priceRows().length > 0"
    (change)="toggleAllSelection($event.target.checked)">
 </th>
-<th class="sortable" (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</th>
+<th class="sortable">
+  <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
+  @if (getFilterConfig('id'); as config) {
+    <app-column-filter 
+      [config]="config"
+      [activeFilter]="getActiveFilter('id')"
+      (filterApplied)="onFilterApplied($event)"
+      (filterRemoved)="onFilterRemoved($event)">
+    </app-column-filter>
+  }
+</th>
 <th>
   {{ 'common.fields.channelRefs' | transloco }}
   @if (getFilterConfig('channelRefs'); as config) {
@@ -162,7 +172,12 @@
    (change)="toggleSelection(row.id)">
 </td>
 <td>
-<a [routerLink]="['/' + lang(), 'pricerows', row.id]" class="ref-badge">{{ row.id }}</a>
+<span class="d-inline-flex align-items-center gap-1">
+  <a [routerLink]="['/' + lang(), 'pricerows', row.id]" class="ref-badge" [title]="row.id">{{ shortId(row.id) }}</a>
+  <button type="button" class="btn btn-link btn-sm p-0 text-muted" [title]="'common.actions.copyId' | transloco" (click)="copyIdToClipboard(row.id, $event)">
+    <i [class]="copiedId() === row.id ? 'bi bi-check text-success' : 'bi bi-clipboard'"></i>
+  </button>
+</span>
 </td>
 <td>
 @if (row.channelRefs && row.channelRefs.length > 0) {

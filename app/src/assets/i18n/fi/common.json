@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Näytä kaikki lokalisoidut arvot",
     "hideOptionalValues": "Piilota valinnaiset arvot",
     "addLanguage": "Lisää kieli",
-    "view": "Näytä"
+    "view": "Näytä",
+    "copyId": "Kopioi ID leikepöydälle"
   },
   "fields": {
     "name": "Nimi",

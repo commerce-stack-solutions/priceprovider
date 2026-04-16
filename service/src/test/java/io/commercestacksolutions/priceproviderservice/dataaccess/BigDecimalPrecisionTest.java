@@ -37,7 +37,7 @@ public class BigDecimalPrecisionTest {
         TaxClassEntity taxClass = new TaxClassEntity();
         taxClass.setTaxClassId("test-tax");
         taxClass.setTaxRate(new BigDecimal("0.19"));
-        taxClassRepository.save(taxClass);
+        taxClass = taxClassRepository.save(taxClass);
 
         // Create a price row with high precision
         PriceRowEntity priceRow = new PriceRowEntity();
@@ -134,7 +134,7 @@ public class BigDecimalPrecisionTest {
         TaxClassEntity taxClass = new TaxClassEntity();
         taxClass.setTaxClassId("test-extreme");
         taxClass.setTaxRate(new BigDecimal("0.19"));
-        taxClassRepository.save(taxClass);
+        taxClass = taxClassRepository.save(taxClass);
 
         PriceRowEntity priceRow = new PriceRowEntity();
         priceRow.setPricedResourceId("extreme-test");

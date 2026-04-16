@@ -36,7 +36,8 @@
     "viewAllLocalizedValues": "Vis alle lokaliserede værdier",
     "hideOptionalValues": "Skjul valgfrie værdier",
     "addLanguage": "Tilføj sprog",
-    "view": "Vis"
+    "view": "Vis",
+    "copyId": "Kopiér ID til udklipsholder"
   },
   "fields": {
     "name": "Navn",

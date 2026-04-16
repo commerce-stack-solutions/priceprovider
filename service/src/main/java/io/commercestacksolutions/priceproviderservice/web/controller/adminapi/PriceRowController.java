@@ -89,8 +89,8 @@ public class PriceRowController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PriceRowRestEntity> getPriceRow(
-            @Parameter(description = "Price row ID", example = "1")
-            @PathVariable("id") Long id,
+            @Parameter(description = "Price row ID", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable("id") String id,
 
             @Parameter(description = "Fields to expand in response. Use comma-separated paths like $info.taxation,$includes.unit,$includes.currency,$includes.taxClass",
                     example = "$info.taxation,$includes.unit")
@@ -136,8 +136,8 @@ public class PriceRowController {
 
     @PutMapping("/{id}")
     public PriceRowRestEntity createOrRecreate(
-            @Parameter(description = "Price row ID", example = "1")
-            @PathVariable("id") Long id,
+            @Parameter(description = "Price row ID", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable("id") String id,
 
             @Parameter(description = "Price row data")
             @RequestBody PriceRowRestEntity priceRowRestEntity
@@ -157,8 +157,8 @@ public class PriceRowController {
 
     @PatchMapping("/{id}")
     public PriceRowRestEntity patch(
-            @Parameter(description = "Price row ID", example = "1")
-            @PathVariable("id") Long id,
+            @Parameter(description = "Price row ID", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable("id") String id,
 
             @Parameter(description = "JSON Patch operations")
             @RequestBody JsonNode patch
@@ -208,8 +208,8 @@ public class PriceRowController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Price row ID", example = "1")
-            @PathVariable("id") Long id
+            @Parameter(description = "Price row ID", example = "550e8400-e29b-41d4-a716-446655440000")
+            @PathVariable("id") String id
     ) throws NotFoundException {
         priceRowFacade.delete(id);
         return ResponseEntity.noContent().build();
@@ -227,7 +227,7 @@ public class PriceRowController {
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeletePriceRows(
             @Parameter(description = "List of price row IDs to delete")
-            @RequestBody List<Long> ids
+            @RequestBody List<String> ids
     ) throws io.commercestacksolutions.commons.exception.DataIntegrityException {
         priceRowFacade.bulkDeletePriceRows(ids);
         return ResponseEntity.noContent().build();

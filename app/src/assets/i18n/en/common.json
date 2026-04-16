@@ -38,7 +38,8 @@
     "viewAllLocalizedValues": "View All Localized Values",
     "hideOptionalValues": "Hide Optional Values",
     "addLanguage": "Add Language",
-    "view": "View"
+    "view": "View",
+    "copyId": "Copy ID to clipboard"
   },
   "fields": {
     "name": "Name",

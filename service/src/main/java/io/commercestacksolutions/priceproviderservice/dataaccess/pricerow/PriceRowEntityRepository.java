@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PriceRowEntityRepository extends JpaRepository<PriceRowEntity, Long>, JpaSpecificationExecutor<PriceRowEntity> {
+public interface PriceRowEntityRepository extends JpaRepository<PriceRowEntity, String>, JpaSpecificationExecutor<PriceRowEntity> {
 }

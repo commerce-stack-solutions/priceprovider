@@ -138,11 +138,11 @@ public class PriceRowServiceImpl implements PriceRowService {
         return priceRowEntityRepository.findAll(pageRequest);
     }
 
-    public Optional<PriceRowEntity> findById(Long id) {
+    public Optional<PriceRowEntity> findById(String id) {
         return priceRowEntityRepository.findById(id);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         priceRowEntityRepository.deleteById(id);
     }
 

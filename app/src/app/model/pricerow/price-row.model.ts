@@ -1,7 +1,7 @@
 import { MetaInfo } from '../meta-info.model';
 
 export interface PriceRow {
-  id: number;
+  id: string;
   pricedResourceId: string;
   priceValue: number;
   minQuantity: number;

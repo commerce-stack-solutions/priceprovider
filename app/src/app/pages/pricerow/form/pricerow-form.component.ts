@@ -59,7 +59,7 @@ export class PricerowFormComponent implements OnInit {
   saving = signal(false);
   error = signal<string | null>(null);
   successMessage = signal<string | null>(null);
-  id = signal<number | null>(null);
+  id = signal<string | null>(null);
   fieldErrors = signal<Map<string, string[]>>(new Map());
   originalValues = signal<any>({});
   showSaveKeyHint = signal(false);
@@ -147,7 +147,7 @@ export class PricerowFormComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.isEditMode.set(!!id);
-    this.id.set(id ? parseInt(id, 10) : null);
+    this.id.set(id ?? null);
 
     if (!this.permissionService.hasWritePermission('PriceRow')) {
       if (id) {
@@ -186,7 +186,7 @@ export class PricerowFormComponent implements OnInit {
     });
   }
 
-  loadPriceRow(id: number): void {
+  loadPriceRow(id: string): void {
     this.loading.set(true);
     this.error.set(null);
     this.pricerowsService.getPriceRow(id).subscribe({

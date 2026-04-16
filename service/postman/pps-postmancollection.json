@@ -3630,7 +3630,11 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "const response = pm.response.json();",
+                  "if (response.items && response.items.length > 0) {",
+                  "    pm.environment.set('samplePriceRowId', response.items[0].id);",
+                  "}"
                 ]
               }
             }
@@ -3753,12 +3757,22 @@
           ]
         },
         {
-          "name": "Get Price Row by ID",
+          "name": "Create Price Row (POST)",
           "request": {
-            "method": "GET",
-            "header": [],
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pricedResourceId\": \"products/999\",\n  \"priceValue\": 49.99,\n  \"minQuantity\": 1.0,\n  \"unitRef\": \"piece\",\n  \"currencyRef\": \"EUR\",\n  \"taxIncluded\": true,\n  \"validFrom\": \"2024-01-01T00:00:00.000Z\",\n  \"validTo\": \"2024-12-31T23:59:59.000Z\",\n  \"groupRefs\": [\"GRP-26-SALE-PROMOTION-VIP\"],\n  \"taxClassRef\": \"de-vat-full\"\n}"
+            },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/pricerows/4?$expand=$includes,$info,$meta",
+              "raw": "{{baseUrl}}/admin/api/pricerows/create",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -3766,7 +3780,43 @@
                 "admin",
                 "api",
                 "pricerows",
-                "4"
+                "create"
+              ]
+            },
+            "description": "Creates a new price row with a server-generated ID"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "const jsonData = pm.response.json();",
+                  "pm.test('response has id', function () { pm.expect(jsonData).to.have.property('id'); });",
+                  "pm.environment.set('testPriceRowId', jsonData.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Price Row by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/pricerows/{{samplePriceRowId}}?$expand=$includes,$info,$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "pricerows",
+                "{{samplePriceRowId}}"
               ],
               "query": [
                 {
@@ -3808,7 +3858,7 @@
               "raw": "{\n  \"pricedResourceId\": \"products/001\",\n  \"priceValue\": 29.99,\n  \"minQuantity\": 1.0,\n  \"unitRef\": \"piece\",\n  \"currencyRef\": \"EUR\",\n  \"taxIncluded\": true,\n  \"taxClassRef\": \"de-vat-full\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/pricerows/4",
+              "raw": "{{baseUrl}}/admin/api/pricerows/{{testPriceRowId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -3816,53 +3866,10 @@
                 "admin",
                 "api",
                 "pricerows",
-                "4"
+                "{{testPriceRowId}}"
               ]
             },
             "description": "Fully replaces a price row with the provided data (note: this is a full replacement, use PATCH for partial updates)"
-          },
-          "response": [],
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('response is valid json', function () { pm.response.to.be.json; });"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Create Price Row (POST)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"pricedResourceId\": \"products/999\",\n  \"priceValue\": 49.99,\n  \"minQuantity\": 1.0,\n  \"unitRef\": \"piece\",\n  \"currencyRef\": \"EUR\",\n  \"taxIncluded\": true,\n  \"validFrom\": \"2024-01-01T00:00:00.000Z\",\n  \"validTo\": \"2024-12-31T23:59:59.000Z\",\n  \"groupRefs\": [\"GRP-26-SALE-PROMOTION-VIP\"],\n  \"taxClassRef\": \"de-vat-full\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admin/api/pricerows/create",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "api",
-                "pricerows",
-                "create"
-              ]
-            },
-            "description": "Creates a new price row with a server-generated ID"
           },
           "response": [],
           "event": [
@@ -3894,7 +3901,7 @@
               "raw": "[\n  { \"op\": \"replace\", \"path\": \"/priceValue\", \"value\": 24.99 }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/pricerows/4",
+              "raw": "{{baseUrl}}/admin/api/pricerows/{{testPriceRowId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -3902,7 +3909,7 @@
                 "admin",
                 "api",
                 "pricerows",
-                "4"
+                "{{testPriceRowId}}"
               ]
             },
             "description": "Updates the price value using JSON Patch RFC 6902"
@@ -3937,7 +3944,7 @@
               "raw": "[\n  { \"op\": \"add\", \"path\": \"/groupRefs\", \"value\": [\"GRP-26-SALE-PROMOTION-VIP\"] }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/pricerows/4",
+              "raw": "{{baseUrl}}/admin/api/pricerows/{{testPriceRowId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -3945,7 +3952,7 @@
                 "admin",
                 "api",
                 "pricerows",
-                "4"
+                "{{testPriceRowId}}"
               ]
             },
             "description": "Adds a customer ID to the price row"
@@ -3980,7 +3987,7 @@
               "raw": "[\n  { \"op\": \"replace\", \"path\": \"/priceValue\", \"value\": 19.99 },\n  { \"op\": \"replace\", \"path\": \"/taxIncluded\", \"value\": false },\n  { \"op\": \"replace\", \"path\": \"/minQuantity\", \"value\": 5.0 }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/pricerows/4",
+              "raw": "{{baseUrl}}/admin/api/pricerows/{{testPriceRowId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -3988,7 +3995,7 @@
                 "admin",
                 "api",
                 "pricerows",
-                "4"
+                "{{testPriceRowId}}"
               ]
             },
             "description": "Applies multiple JSON Patch operations to update price, tax, and quantity"
@@ -4023,7 +4030,7 @@
               "raw": "[\n  { \"op\": \"replace\", \"path\": \"/unitRef\", \"value\": \"g\" }\n]"
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/api/pricerows/4",
+              "raw": "{{baseUrl}}/admin/api/pricerows/{{testPriceRowId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -4031,7 +4038,7 @@
                 "admin",
                 "api",
                 "pricerows",
-                "4"
+                "{{testPriceRowId}}"
               ]
             },
             "description": "Updates the unit reference for the price row"
@@ -4150,7 +4157,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[{{bulkDeleteId1}}, {{bulkDeleteId2}}, {{bulkDeleteId3}}]"
+              "raw": "[\"{{bulkDeleteId1}}\", \"{{bulkDeleteId2}}\", \"{{bulkDeleteId3}}\"]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/pricerows/bulk-delete",
@@ -4315,7 +4322,7 @@
                   "const item = response.items[0];",
                   "pm.test('Same ID as before (updated, not created)', function () {",
                   "    const previousId = pm.environment.get('matchTestPriceRowId');",
-                  "    pm.expect(item.id).to.equal(parseInt(previousId));",
+                  "    pm.expect(item.id).to.equal(previousId);",
                   "});",
                   "pm.test('Price is updated to 149.99', function () { pm.expect(item.priceValue).to.equal(149.99); });"
                 ]
@@ -4365,7 +4372,7 @@
                   "const item = response.items[0];",
                   "pm.test('Different ID (new entity created)', function () {",
                   "    const previousId = pm.environment.get('matchTestPriceRowId');",
-                  "    pm.expect(item.id).to.not.equal(parseInt(previousId));",
+                  "    pm.expect(item.id).to.not.equal(previousId);",
                   "});",
                   "pm.test('TaxIncluded is true', function () { pm.expect(item.taxIncluded).to.be.true; });",
                   "pm.test('Price is 179.99', function () { pm.expect(item.priceValue).to.equal(179.99); });"
@@ -4511,7 +4518,7 @@
                   "const item = response.items[0];",
                   "pm.test('Different ID (new entity)', function () {",
                   "    const salesId = pm.environment.get('priceTypeSalesId');",
-                  "    pm.expect(item.id).to.not.equal(parseInt(salesId));",
+                  "    pm.expect(item.id).to.not.equal(salesId);",
                   "});",
                   "pm.test('PriceType is PURCHASE_PRICE', function () { pm.expect(item.priceType).to.equal('PURCHASE_PRICE'); });"
                 ]
@@ -4680,7 +4687,7 @@
                   "const item = response.items[0];",
                   "pm.test('Same ID as before (updated existing)', function () {",
                   "    const previousId = pm.environment.get('singleGroupPriceRowId');",
-                  "    pm.expect(item.id).to.equal(parseInt(previousId));",
+                  "    pm.expect(item.id).to.equal(previousId);",
                   "});",
                   "pm.test('Price updated to 89.99', function () {",
                   "    pm.expect(item.priceValue).to.equal(89.99);",
@@ -4739,7 +4746,7 @@
                   "const item = response.items[0];",
                   "pm.test('Different ID (new entity)', function () {",
                   "    const previousId = pm.environment.get('singleGroupPriceRowId');",
-                  "    pm.expect(item.id).to.not.equal(parseInt(previousId));",
+                  "    pm.expect(item.id).to.not.equal(previousId);",
                   "});",
                   "pm.test('Has student group reference', function () {",
                   "    pm.expect(item.groupRefs).to.include('GRP-26-SALE-PROMOTION-WINTER');",

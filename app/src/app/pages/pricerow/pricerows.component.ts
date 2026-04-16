@@ -35,7 +35,7 @@ export class PriceRowsComponent {
   totalPages = signal(0);
   sortBy = signal<string[]>([]);
   sortDirection = signal<string>('asc');
-  selectedPriceRows = signal<Set<number>>(new Set());
+  selectedPriceRows = signal<Set<string>>(new Set());
   deleteError = signal<string | null>(null);
   
   // Filter state
@@ -43,6 +43,7 @@ export class PriceRowsComponent {
   
   // Filter configurations
   filterConfigs: ColumnFilterConfig[] = [
+    { field: 'id', type: 'string', label: 'ID' },
     { field: 'pricedResourceId', type: 'string', label: 'Resource ID' },
     { field: 'priceValue', type: 'number', label: 'Price Value' },
     { field: 'minQuantity', type: 'number', label: 'Min Quantity' },
@@ -207,7 +208,22 @@ export class PriceRowsComponent {
     });
   }
 
-  toggleSelection(id: number): void {
+  copiedId = signal<string | null>(null);
+
+  copyIdToClipboard(id: string, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    navigator.clipboard.writeText(id).then(() => {
+      this.copiedId.set(id);
+      setTimeout(() => this.copiedId.set(null), 1500);
+    });
+  }
+
+  shortId(id: string): string {
+    return id ? id.substring(0, 5) + '…' : '';
+  }
+
+  toggleSelection(id: string): void {
     const selected = new Set(this.selectedPriceRows());
     if (selected.has(id)) {
       selected.delete(id);
@@ -218,7 +234,7 @@ export class PriceRowsComponent {
   }
 
   toggleAllSelection(checked: boolean): void {
-    const selected = new Set<number>();
+    const selected = new Set<string>();
     if (checked) {
       this.priceRows().forEach(row => selected.add(row.id));
     }

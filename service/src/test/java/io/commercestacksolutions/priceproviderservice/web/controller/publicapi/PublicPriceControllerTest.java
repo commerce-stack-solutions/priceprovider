@@ -48,7 +48,7 @@ public class PublicPriceControllerTest {
     @Test
     public void testGetBestPrice_Success() throws Exception {
         PublicPriceRestEntity mockResponse = new PublicPriceRestEntity();
-        mockResponse.setId(1L);
+        mockResponse.setId("1");
         mockResponse.setPricedResourceId("DEMO-PRODUCT-001");
         mockResponse.setPriceValue(new BigDecimal("100.00"));
 
@@ -73,7 +73,7 @@ public class PublicPriceControllerTest {
     @Test
     public void testGetBestPrice_WithGroup_Success() throws Exception {
         PublicPriceRestEntity mockResponse = new PublicPriceRestEntity();
-        mockResponse.setId(1L);
+        mockResponse.setId("1");
         mockResponse.setPricedResourceId("DEMO-PRODUCT-001");
         mockResponse.setPriceValue(new BigDecimal("90.00"));
 
@@ -132,7 +132,7 @@ public class PublicPriceControllerTest {
     @ValueSource(strings = {"SALES_PRICE", "PURCHASE_PRICE", "MATERIAL_COST"})
     public void testGetBestPrice_AllPriceTypes(String priceType) throws Exception {
         PublicPriceRestEntity mockResponse = new PublicPriceRestEntity();
-        mockResponse.setId(1L);
+        mockResponse.setId("1");
         mockResponse.setPriceValue(new BigDecimal("100.00"));
 
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(null);

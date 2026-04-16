@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 
 public class PriceRowRestEntity extends RestEntity<InfoPriceRow, IncludesPriceRow> {
-    private Long id;
+    private String id;
     private String pricedResourceId;  // a priced resource can be a product or material or something different
     private BigDecimal priceValue;
     private BigDecimal minQuantity;
@@ -24,11 +24,11 @@ public class PriceRowRestEntity extends RestEntity<InfoPriceRow, IncludesPriceRo
     private Set<String> channelRefs;
     private boolean taxIncluded;   // indicates if this is a net price or a price with tax included
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
