@@ -106,7 +106,7 @@ export class PricerowFormComponent implements OnInit {
       map(response => ({
         options: response.items.map(tc => ({
           value: tc.taxClassId,
-          label: `${tc.taxClassId} (${(tc.taxRate * 100).toFixed(2)}%)`
+          label: `${tc.taxClassId} (${tc.taxRate.toFixed(2)}%)`
         })),
         hasMore: response.$info.paging.page < response.$info.paging['total-pages'] - 1
       }))
