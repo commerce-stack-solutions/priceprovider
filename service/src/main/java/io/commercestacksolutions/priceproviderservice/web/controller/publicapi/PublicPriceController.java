@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,8 @@ import java.util.Set;
  * Public API controller for price queries.
  *
  * All endpoints are scoped by channel and country:
- * - GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}
- * - GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}/all-candidates
+ * - GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}
+ * - GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}/candidates
  *
  * The net/gross price representation is determined by the channel's configured
  * price representation mode — there is no per-request taxation parameter.
@@ -57,7 +58,8 @@ public class PublicPriceController {
                             content = @Content(schema = @Schema(implementation = PublicPriceRestEntity.class))),
                     @ApiResponse(responseCode = "404", description = "No matching price found", content = @Content)
             })
-    @GetMapping("/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}")
+    @PreAuthorize("hasAuthority('priceprovider.public:PriceRow:read')")
+    @GetMapping("/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}")
     public ResponseEntity<PublicPriceRestEntity> getBestPrice(
             @Parameter(description = "Channel identifier", required = true, example = "dach-sales-channel")
             @PathVariable("channelId") String channelId,
@@ -89,7 +91,8 @@ public class PublicPriceController {
             description = "Returns all prices matching the criteria filtered by channel and country.",
             responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved matching prices",
                     content = @Content(schema = @Schema(implementation = PublicPriceListRestEntity.class)))})
-    @GetMapping("/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}/all-candidates")
+    @PreAuthorize("hasAuthority('priceprovider.public:PriceRow:inspect')")
+    @GetMapping("/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}/candidates")
     public ResponseEntity<PublicPriceListRestEntity> getAllPrices(
             @Parameter(description = "Channel identifier", required = true, example = "dach-sales-channel")
             @PathVariable("channelId") String channelId,
@@ -121,7 +124,8 @@ public class PublicPriceController {
             description = "Returns the best matching prices for every unique quantity break point found for the resource.",
             responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved matching prices",
                     content = @Content(schema = @Schema(implementation = PublicPriceListRestEntity.class)))})
-    @GetMapping("/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}/all-quantities")
+    @PreAuthorize("hasAuthority('priceprovider.public:PriceRow:read')")
+    @GetMapping("/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}/all-quantity-breaks")
     public ResponseEntity<PublicPriceListRestEntity> getAllQuantityBestPrices(
             @Parameter(description = "Channel identifier", required = true, example = "dach-sales-channel")
             @PathVariable("channelId") String channelId,
@@ -151,7 +155,8 @@ public class PublicPriceController {
             description = "Finds the best matching prices for multiple resource IDs. The net/gross representation is determined by the channel's price representation mode.",
             responses = {@ApiResponse(responseCode = "200", description = "Successfully retrieved best prices",
                     content = @Content(schema = @Schema(implementation = PublicPriceListRestEntity.class)))})
-    @GetMapping("/channels/{channelId}/countries/{countryIsoKey}/pricerows/{priceType}")
+    @PreAuthorize("hasAuthority('priceprovider.public:PriceRow:read')")
+    @GetMapping("/{channelId}/{countryIsoKey}/pricerows/{priceType}")
     public ResponseEntity<PublicPriceListRestEntity> getBestPrices(
             @Parameter(description = "Channel identifier", required = true, example = "dach-sales-channel")
             @PathVariable("channelId") String channelId,

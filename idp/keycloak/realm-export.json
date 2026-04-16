@@ -157,6 +157,10 @@
       {
         "name": "priceprovider.public:PriceRowReader",
         "description": "Public API price reader. Organization filter is derived from the groups claim."
+      },
+      {
+        "name": "priceprovider.public:PriceRowInspector",
+        "description": "Public API price inspector. Includes candidate inspection endpoints. Organization filter is derived from the groups claim."
       }
     ]
   },
@@ -301,6 +305,27 @@
         "priceprovider.admin:ChannelContributor"
       ],
       "groups": []
+    },
+    {
+      "username": "customer-city-council-inspector",
+      "email": "customer-inspector@org-city-council.local",
+      "firstName": "Customer",
+      "lastName": "CityCouncilInspector",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "customer123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "priceprovider.public:PriceRowInspector"
+      ],
+      "groups": [
+        "/organizations/ORG-CITY-COUNCIL"
+      ]
     },
     {
       "username": "customer-city-council",

@@ -16,17 +16,20 @@ Defined in `AppRole.0010.json`:
 - **priceprovider.admin:Reader**: Read-only access to all data types.
 - **priceprovider.admin:ChannelContributor**: Full access to channels only.
 - **priceprovider.public:PriceRowReader**: Access to the public price API, scoped by organization.
+- **priceprovider.public:PriceRowInspector**: Access to public price API including candidate inspection endpoint, scoped by organization.
 
 The admin role remains protected from AppPermission write/delete operations to prevent accidental permission loss. Use the superuser role when permission maintenance is required.
 
 ### App Permissions
 
-Defined in `AppPermission.0010.json`, permissions follow the pattern `priceprovider.admin:<DataType>:<Action>`. Actions include `read`, `write`, and `delete`.
+Defined in `AppPermission.0010.json`, permissions follow the pattern `priceprovider.<scope>:<DataType>:<Action>`.
 
 Examples:
 - `priceprovider.admin:Channel:read`
 - `priceprovider.admin:PriceRow:write`
 - `priceprovider.admin:Unit:delete`
+- `priceprovider.public:PriceRow:read`
+- `priceprovider.public:PriceRow:inspect`
 
 ### RBAC Hierarchy
 
@@ -62,6 +65,7 @@ The following sample users are pre-configured in the `priceprovider` realm (`idp
 | `admin-user` | `admin123` | `priceprovider.admin:Admin` | Full system administrator. |
 | `contributor-user` | `contributor123` | `priceprovider.admin:Contributor` | Editor for all master data. |
 | `reader-user` | `reader123` | `priceprovider.admin:Reader` | Read-only access for auditing. |
+| `customer-city-council-inspector` | `customer123` | `priceprovider.public:PriceRowInspector` | Scoped to `ORG-CITY-COUNCIL` with candidate inspection access. |
 | `customer-city-council` | `customer123` | `priceprovider.public:PriceRowReader` | Scoped to `ORG-CITY-COUNCIL`. |
 | `customer-city-health` | `customer123` | `priceprovider.public:PriceRowReader` | Scoped to `ORG-CITY-COUNCIL/ORG-CITY-HEALTH`. |
 | `customer-techcorp` | `customer123` | `priceprovider.public:PriceRowReader` | Scoped to `ORG-TECHCORP-GROUP/ORG-TECHCORP-EU`. |

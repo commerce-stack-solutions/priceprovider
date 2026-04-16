@@ -52,8 +52,8 @@
 <main>
   <div class="content">
     <div id="authBanner" class="auth-banner">
-      You are browsing as a guest. Prices shown are public rates.
-      <a href="#" onclick="login(); return false;">Login</a> to see your organization's contract rates.
+      Authentication is required to load organization-scoped prices.
+      <a href="#" onclick="login(); return false;">Login</a> to continue.
     </div>
 
     <div class="card">
@@ -161,10 +161,10 @@
         const auth = await keycloak.init({ onLoad: 'check-sso', pkceMethod: 'S256' });
         updateAuthUI(auth);
       } catch (e) {
-        console.warn("Auth init failed - continuing as guest", e);
+        console.warn("Auth init failed", e);
       }
     } else {
-      console.warn("Keycloak library not loaded - continuing as guest");
+      console.warn("Keycloak library not loaded");
     }
 
     updateView();
@@ -202,8 +202,15 @@
     if (days < 1) days = 1;
 
     try {
+      if (!keycloak?.authenticated || !keycloak?.token) {
+        document.getElementById('sumTotal').textContent = 'Login required';
+        renderMatrix('basePriceTable', [], qty);
+        renderMatrix('dailyRateTable', [], days);
+        return;
+      }
+
       const headers = { 'Accept': 'application/json' };
-      if (keycloak?.token) headers['Authorization'] = `Bearer ${keycloak.token}`;
+      headers['Authorization'] = `Bearer ${keycloak.token}`;
 
       // Call the new bulk endpoint for the selected configuration
       const basePriceUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=${deviceId}&quantity=${qty}&unit=piece&currency=${CONFIG.currency}`;
@@ -218,8 +225,8 @@
       currentPrices.daily = dailyRes.items ? dailyRes.items[0] : null;
 
       // Fetch ALL quantity-specific best prices for the matrix
-      const matrixBaseUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricedresource/${deviceId}/RENTAL_BASE_PRICE/all-quantities?unit=piece&currency=${CONFIG.currency}`;
-      const matrixDailyUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricedresource/${deviceId}/RENTAL_DAILY_RATE/all-quantities?unit=d&currency=${CONFIG.currency}`;
+      const matrixBaseUrl = `${CONFIG.apiUrl}/${CONFIG.channel}/${CONFIG.country}/pricerows/RENTAL_BASE_PRICE/of/${deviceId}/all-quantity-breaks?unit=piece&currency=${CONFIG.currency}`;
+      const matrixDailyUrl = `${CONFIG.apiUrl}/${CONFIG.channel}/${CONFIG.country}/pricerows/RENTAL_DAILY_RATE/of/${deviceId}/all-quantity-breaks?unit=d&currency=${CONFIG.currency}`;
 
       const [allBase, allDaily] = await Promise.all([
         fetch(matrixBaseUrl, { headers }).then(r => r.json()),

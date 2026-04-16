@@ -62,7 +62,7 @@ A **Price Row** is a concrete price entry for a product or resource in a specifi
 All price lookups require both a channel and a country:
 
 ```
-GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}
+GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}
 ```
 
 **Parameters:**
@@ -75,6 +75,6 @@ Organization context is automatically handled via JWT authentication.
 
 **Example:**
 ```
-GET /public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE
+GET /public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001
     ?quantity=10&unit=piece&currency=EUR
 ```

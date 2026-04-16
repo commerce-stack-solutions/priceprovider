@@ -28,7 +28,8 @@ import java.util.stream.Collectors;
  *
  * <p>Access control strategy:
  * <ul>
- *   <li>Public API ({@code /public/api/**}) – open to all (anonymous + authenticated)</li>
+ *   <li>Public API ({@code /public/api/**}) – HTTP layer is open, while endpoint-level
+ *       access is enforced via {@code @PreAuthorize} on controller methods.</li>
  *   <li>Admin API ({@code /admin/api/**}) – requires a valid JWT; individual operations
  *       are further protected by {@code @PreAuthorize} annotations on controllers.</li>
  *   <li>Infrastructure ({@code /actuator/**, /swagger-ui/**, /v3/api-docs/**,
@@ -69,7 +70,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Allow preflight requests without authentication
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // Public price API – open to everyone (anonymous + authenticated)
+                // Public price API – method-level permissions are enforced via @PreAuthorize
                 .requestMatchers("/public/api/**").permitAll()
                 // Infrastructure / tooling
                 .requestMatchers("/public/actuator/**").permitAll()
@@ -151,5 +152,4 @@ public class SecurityConfig {
         return id.replace('/', ':');
     }
 }
-
 

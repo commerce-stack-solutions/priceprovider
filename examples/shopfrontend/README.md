@@ -35,18 +35,19 @@ Open `http://localhost:3000` in your browser.
 
 | Username | Password | Role | Organization |
 |---|---|---|---|
-| `customer-city-council` | `customer123` | `priceprovider.public/PriceRowReader` | ORG-CITY-COUNCIL |
-| `customer-city-health` | `customer123` | `priceprovider.public/PriceRowReader` | ORG-CITY-HEALTH (deepest wins) |
-| `customer-techcorp` | `customer123` | `priceprovider.public/PriceRowReader` | ORG-TECHCORP-EU |
+| `customer-city-council` | `customer123` | `priceprovider.public:PriceRowReader` | ORG-CITY-COUNCIL |
+| `customer-city-health` | `customer123` | `priceprovider.public:PriceRowReader` | ORG-CITY-HEALTH (deepest wins) |
+| `customer-techcorp` | `customer123` | `priceprovider.public:PriceRowReader` | ORG-TECHCORP-EU |
+| `customer-city-council-inspector` | `customer123` | `priceprovider.public:PriceRowInspector` | ORG-CITY-COUNCIL |
 
 ## How It Works
 
-1. **Anonymous**: Prices are fetched from the public API without authentication – returns non-group prices.
-2. **Authenticated (with org group)**: After login, the user's `groups` claim is parsed. The deepest organization group path is used as the filter, and the group-specific price endpoint is called.
+1. **Authentication required**: Public price endpoints require a user with `priceprovider.public:PriceRow:read`.
+2. **Organization-scoped pricing**: After login, the user's `groups` claim is parsed. The deepest organization group path is used as the filter.
 
 ### Price API calls
 
 The shop uses the Public Price API:
-`GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}?quantity={qty}&unit={unit}&currency={currency}`
+`GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}?quantity={qty}&unit={unit}&currency={currency}`
 
 Organization-specific pricing is automatically applied by the service based on the authenticated user's JWT groups.

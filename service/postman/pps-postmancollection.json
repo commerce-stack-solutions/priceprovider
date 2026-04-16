@@ -2695,7 +2695,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testw\u00e4hrung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testwährung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/create",
@@ -2738,7 +2738,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte W\u00e4hrung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte Währung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/XXX",
@@ -2781,7 +2781,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"\u20ac\u20ac\" }\n]"
+              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"€€\" }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/EUR",
@@ -3175,7 +3175,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"\u00a3\"\n  }\n]"
+              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"£\"\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/bulk-create-or-update",
@@ -5849,7 +5849,7 @@
           "name": "Torque Product Tests (Group Filtering)",
           "item": [
             {
-              "name": "Get Torque Price - Anonymous (Generic)",
+              "name": "Get Torque Price - Anonymous (Forbidden)",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -5857,20 +5857,19 @@
                   "type": "noauth"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/TOOL-TORQUE-25NM/SALES_PRICE?quantity=1&unit=piece&currency=USD",
+                  "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/TOOL-TORQUE-25NM?quantity=1&unit=piece&currency=USD",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "global-b2b-sales-channel",
-                    "countries",
                     "US",
-                    "pricedresource",
-                    "TOOL-TORQUE-25NM",
-                    "SALES_PRICE"
+                    "pricerows",
+                    "SALES_PRICE",
+                    "of",
+                    "TOOL-TORQUE-25NM"
                   ],
                   "query": [
                     {
@@ -5894,8 +5893,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
-                      "pm.test(\"Correct Generic Price\", () => pm.expect(pm.response.json().priceValue).to.equal(149.99));"
+                      "pm.test(\"Status 403\", () => pm.response.to.have.status(403));"
                     ]
                   }
                 }
@@ -5913,20 +5911,19 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/TOOL-TORQUE-25NM/SALES_PRICE?quantity=1&unit=piece&currency=USD",
+                  "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/TOOL-TORQUE-25NM?quantity=1&unit=piece&currency=USD",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "global-b2b-sales-channel",
-                    "countries",
                     "US",
-                    "pricedresource",
-                    "TOOL-TORQUE-25NM",
-                    "SALES_PRICE"
+                    "pricerows",
+                    "SALES_PRICE",
+                    "of",
+                    "TOOL-TORQUE-25NM"
                   ],
                   "query": [
                     {
@@ -5965,20 +5962,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice,$includes.unit",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice,$includes.unit",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6028,20 +6024,19 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=10&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=10&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6084,21 +6079,20 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE/all-candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
+                "pricerows",
                 "SALES_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
               ],
               "query": [
                 {
@@ -6142,26 +6136,25 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{customerAccessToken}}",
+                "value": "Bearer {{accessToken}}",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE/all-candidates?quantity=50&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=50&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
+                "pricerows",
                 "SALES_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
               ],
               "query": [
                 {
@@ -6203,20 +6196,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-003/SALES_PRICE?quantity=15&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003?quantity=15&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-003",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-003"
               ],
               "query": [
                 {
@@ -6237,7 +6229,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 \u2248 158.88 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 ≈ 158.88 USD."
           },
           "event": [
             {
@@ -6261,20 +6253,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=5&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=5&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6317,20 +6308,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-002/SALES_PRICE?quantity=3&unit=kg&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-002?quantity=3&unit=kg&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-002",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-002"
               ],
               "query": [
                 {
@@ -6351,7 +6341,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 \u2248 35.32 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 ≈ 35.32 USD."
           },
           "event": [
             {
@@ -6373,21 +6363,20 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-003/SALES_PRICE/all-candidates?quantity=1&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003/candidates?quantity=1&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-003",
+                "pricerows",
                 "SALES_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-003",
+                "candidates"
               ],
               "query": [
                 {
@@ -6436,20 +6425,19 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-003/SALES_PRICE?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-003",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-003"
               ],
               "query": [
                 {
@@ -6492,20 +6480,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/CH/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=5&unit=piece&currency=CHF&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/CH/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=5&unit=piece&currency=CHF&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "CH",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6548,20 +6535,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/PURCHASE_PRICE?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/PURCHASE_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "PURCHASE_PRICE"
+                "pricerows",
+                "PURCHASE_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6603,20 +6589,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/MATERIAL_COST?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/MATERIAL_COST/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "MATERIAL_COST"
+                "pricerows",
+                "MATERIAL_COST",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6658,21 +6643,20 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/PURCHASE_PRICE/all-candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/PURCHASE_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
+                "pricerows",
                 "PURCHASE_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
               ],
               "query": [
                 {
@@ -6714,20 +6698,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6899,16 +6882,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=RENT-DRILL,RENT-SAW",
+                  "raw": "{{baseUrl}}/public/api/rental-channel/DE/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=RENT-DRILL,RENT-SAW",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "rental-channel",
-                    "countries",
                     "DE",
                     "pricerows",
                     "RENTAL_BASE_PRICE"
@@ -6960,21 +6941,20 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricedresource/RENT-DRILL/RENTAL_BASE_PRICE/all-quantities?currency=EUR&unit=piece",
+                  "raw": "{{baseUrl}}/public/api/rental-channel/DE/pricerows/RENTAL_BASE_PRICE/of/RENT-DRILL/all-quantity-breaks?currency=EUR&unit=piece",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "rental-channel",
-                    "countries",
                     "DE",
-                    "pricedresource",
-                    "RENT-DRILL",
+                    "pricerows",
                     "RENTAL_BASE_PRICE",
-                    "all-quantities"
+                    "of",
+                    "RENT-DRILL",
+                    "all-quantity-breaks"
                   ],
                   "query": [
                     {
