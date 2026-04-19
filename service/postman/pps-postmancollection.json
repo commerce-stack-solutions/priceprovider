@@ -6145,7 +6145,7 @@
           ]
         },
         {
-          "name": "FORCE_GROSS: Get All Prices DE/EUR",
+          "name": "FORCE_GROSS: Get All Prices DE/EUR (Candidates, INSPECTOR role -> access)",
           "request": {
             "method": "GET",
             "header": [
@@ -6207,7 +6207,67 @@
           ]
         },
         {
-          "name": "FORCE_GROSS: Get All Prices with Group (PREMIUM, DE/EUR)",
+          "name": "FORCE_GROSS: Get All Prices DE/EUR (Candidates, CUSTOMER role -> access denied)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "api",
+                "dach-sales-channel",
+                "DE",
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "25"
+                },
+                {
+                  "key": "unit",
+                  "value": "piece"
+                },
+                {
+                  "key": "currency",
+                  "value": "EUR"
+                },
+                {
+                  "key": "$expand",
+                  "value": "$info.taxation,$info.originalPrice"
+                }
+              ]
+            },
+            "description": "FORCE_GROSS: all ranked prices for DEMO-PRODUCT-001 via DACH channel. All results should be gross. Expected 403 for user without inspect role."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FORCE_GROSS: Get All Prices with Group (PREMIUM, DE/EUR) (Candidates, INSPECTOR role -> access)",
           "request": {
             "method": "GET",
             "header": [
@@ -6453,7 +6513,7 @@
           ]
         },
         {
-          "name": "FORCE_NET: Get All Prices US/USD DEMO-PRODUCT-003 (all ranked prices)",
+          "name": "FORCE_NET: Get All Prices US/USD DEMO-PRODUCT-003 (Candidates, INSPECTOR role -> access)",
           "request": {
             "method": "GET",
             "header": [
@@ -6509,6 +6569,66 @@
                   "pm.test('Status 200', () => pm.response.to.have.status(200));",
                   "pm.test('Has items array', () => pm.expect(pm.response.json().items).to.be.an('array'));",
                   "pm.test('All items are net (taxIncluded=false)', () => { const items = pm.response.json().items; pm.expect(items.length).to.be.above(0); items.forEach(i => pm.expect(i.taxIncluded).to.be.false); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FORCE_NET: Get All Prices US/USD DEMO-PRODUCT-003 (Candidates, CUSTOMER role -> access denied)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003/candidates?quantity=1&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "api",
+                "global-b2b-sales-channel",
+                "US",
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-003",
+                "candidates"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "1"
+                },
+                {
+                  "key": "unit",
+                  "value": "piece"
+                },
+                {
+                  "key": "currency",
+                  "value": "USD"
+                },
+                {
+                  "key": "$expand",
+                  "value": "$info.originalPrice,$info.taxation"
+                }
+              ]
+            },
+            "description": "FORCE_NET: all ranked USD prices for DEMO-PRODUCT-003 via global-b2b channel. All prices (including gross ones) should be returned as net. Expected 403 for user without inspect role."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
                 ]
               }
             }
@@ -6757,7 +6877,7 @@
           ]
         },
         {
-          "name": "FORCE_GROSS: Get All PURCHASE_PRICE DE/EUR",
+          "name": "FORCE_GROSS: Get All PURCHASE_PRICE DE/EUR (Candidates, INSPECTOR role -> access)",
           "request": {
             "method": "GET",
             "header": [
