@@ -182,8 +182,8 @@
       </div>
 
       <div id="authNotice" class="auth-notice">
-        <strong>Authentication required:</strong>
-        <a href="#" onclick="login();return false">Login</a> to load organization-scoped prices.
+        <strong>Public prices are available anonymously.</strong>
+        <a href="#" onclick="login();return false">Login</a> to apply organization-scoped pricing.
       </div>
 
       <div class="price-box" id="priceBox">
@@ -266,7 +266,7 @@
       loginBtn.style.display  = '';
       logoutBtn.style.display = 'none';
       notice.className = 'auth-notice';
-      notice.innerHTML = `<strong>Authentication required:</strong> <a href="#" onclick="login();return false">Login</a> to load organization-scoped prices.`;
+      notice.innerHTML = `<strong>Public prices are available anonymously.</strong> <a href="#" onclick="login();return false">Login</a> to apply organization-scoped pricing.`;
     }
   }
 
@@ -310,17 +310,14 @@
   async function fetchPrice(sku, quantity) {
     const { serviceBaseUrl, channelId, countryKey, priceType } = CONFIG;
 
-    if (!keycloak?.authenticated || !keycloak?.token) {
-      throw new Error('Login required to access prices.');
-    }
-
-    // Organization filter is automatically derived by the service from the JWT group claim.
+    // Organization filter is automatically derived by the service from the JWT group claim when authenticated.
     const url = `${serviceBaseUrl}/public/api/${channelId}/${countryKey}/pricerows/${priceType}/of/${sku}?quantity=${quantity}&unit=piece&currency=USD`;
 
     const headers = { "Accept": "application/json" };
-    // Refresh token if close to expiry
-    await keycloak.updateToken(30).catch(() => {});
-    headers['Authorization'] = `Bearer ${keycloak.token}`;
+    if (keycloak?.authenticated && keycloak?.token) {
+      await keycloak.updateToken(30).catch(() => {});
+      headers['Authorization'] = `Bearer ${keycloak.token}`;
+    }
 
     const response = await fetch(url, { headers });
     if (!response.ok) {
