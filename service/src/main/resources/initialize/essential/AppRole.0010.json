@@ -15,7 +15,8 @@
       "priceprovider.admin:TaxClass:read", "priceprovider.admin:TaxClass:write", "priceprovider.admin:TaxClass:delete",
       "priceprovider.admin:Unit:read", "priceprovider.admin:Unit:write", "priceprovider.admin:Unit:delete",
       "priceprovider.admin:ServiceInitialization:write",
-      "priceprovider.public:PriceRow:read"
+      "priceprovider.public:PriceRow:read",
+      "priceprovider.public:PriceRow:inspect"
     ]
   },
   {
@@ -91,6 +92,14 @@
     "description": "Public price row reader - organization-scoped price access",
     "permissionRefs": [
       "priceprovider.public:PriceRow:read"
+    ]
+  },
+  {
+    "name": "priceprovider.public:PriceRowInspector",
+    "description": "Public price row inspector - organization-scoped candidate inspection access",
+    "permissionRefs": [
+      "priceprovider.public:PriceRow:read",
+      "priceprovider.public:PriceRow:inspect"
     ]
   }
 ]

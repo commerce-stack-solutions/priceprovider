@@ -182,8 +182,8 @@
       </div>
 
       <div id="authNotice" class="auth-notice">
-        <strong>Anonymous pricing:</strong> You are viewing public prices. 
-        <a href="#" onclick="login();return false">Login</a> to see your organization's contract prices.
+        <strong>Public prices are available anonymously.</strong>
+        <a href="#" onclick="login();return false">Login</a> to apply organization-scoped pricing.
       </div>
 
       <div class="price-box" id="priceBox">
@@ -236,10 +236,10 @@
       });
 
       updateAuthUI(authenticated);
-      setStatus(authenticated ? `Logged in as ${keycloak.tokenParsed?.preferred_username}` : 'Anonymous – not logged in');
+      setStatus(authenticated ? `Logged in as ${keycloak.tokenParsed?.preferred_username}` : 'Not logged in');
       await updatePrice();
     } catch (err) {
-      setStatus('Keycloak unavailable – showing public prices', err);
+      setStatus('Keycloak unavailable', err);
       await updatePrice();
     }
   }
@@ -266,7 +266,7 @@
       loginBtn.style.display  = '';
       logoutBtn.style.display = 'none';
       notice.className = 'auth-notice';
-      notice.innerHTML = `<strong>Anonymous pricing:</strong> You are viewing public prices. <a href="#" onclick="login();return false">Login</a> to see your organization's contract prices.`;
+      notice.innerHTML = `<strong>Public prices are available anonymously.</strong> <a href="#" onclick="login();return false">Login</a> to apply organization-scoped pricing.`;
     }
   }
 
@@ -310,12 +310,11 @@
   async function fetchPrice(sku, quantity) {
     const { serviceBaseUrl, channelId, countryKey, priceType } = CONFIG;
 
-    // Organization filter is now automatically derived by the service from the JWT group claim.
-    const url = `${serviceBaseUrl}/public/api/channels/${channelId}/countries/${countryKey}/pricedresource/${sku}/${priceType}?quantity=${quantity}&unit=piece&currency=USD`;
+    // Organization filter is automatically derived by the service from the JWT group claim when authenticated.
+    const url = `${serviceBaseUrl}/public/api/${channelId}/${countryKey}/pricerows/${priceType}/of/${sku}?quantity=${quantity}&unit=piece&currency=USD`;
 
     const headers = { "Accept": "application/json" };
-    if (keycloak?.authenticated && keycloak.token) {
-      // Refresh token if close to expiry
+    if (keycloak?.authenticated && keycloak?.token) {
       await keycloak.updateToken(30).catch(() => {});
       headers['Authorization'] = `Bearer ${keycloak.token}`;
     }

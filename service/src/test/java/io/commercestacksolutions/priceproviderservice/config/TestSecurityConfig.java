@@ -81,7 +81,8 @@ public class TestSecurityConfig {
                     "priceprovider.admin:Unit:read",
                     "priceprovider.admin:Unit:write",
                     "priceprovider.admin:Unit:delete",
-                    "priceprovider.public:PriceRow:read"
+                    "priceprovider.public:PriceRow:read",
+                    "priceprovider.public:PriceRow:inspect"
                 );
                 var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
@@ -90,6 +91,5 @@ public class TestSecurityConfig {
         };
     }
 }
-
 
 

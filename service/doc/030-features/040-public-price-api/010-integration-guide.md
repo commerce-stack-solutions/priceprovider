@@ -24,7 +24,7 @@ http://localhost:8080/public/api
 Finds the single best matching price based on the provided criteria.
 
 ```
-GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}
+GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}
 ```
 
 **Path Parameters:**
@@ -43,7 +43,7 @@ GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{p
 
 **Example Request:**
 ```
-GET /public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$includes.unit
+GET /public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$includes.unit
 ```
 
 **Example Response:**
@@ -92,7 +92,7 @@ GET /public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRO
 Returns all prices that match the criteria, ranked by priority (best match first).
 
 ```
-GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}/all-candidates
+GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}/candidates
 ```
 
 **Parameters:** Same as "Get Best Matching Price" (path parameters and query parameters)
@@ -250,7 +250,7 @@ The `$expand` parameter controls which optional fields are included in the respo
 **Scenario:** Get sales price for 5 pieces of DEMO-PRODUCT-001 in EUR
 
 ```bash
-curl -X GET "http://localhost:8080/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=5&unit=piece&currency=EUR"
+curl -X GET "http://localhost:8080/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=5&unit=piece&currency=EUR"
 ```
 
 ### Example 2: Organization-Specific Pricing (via JWT)
@@ -259,7 +259,7 @@ curl -X GET "http://localhost:8080/public/api/channels/dach-sales-channel/countr
 
 ```bash
 curl -H "Authorization: Bearer <JWT>" \
-     -X GET "http://localhost:8080/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=15&unit=piece&currency=EUR"
+     -X GET "http://localhost:8080/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR"
 ```
 
 ## Error Handling
@@ -272,7 +272,7 @@ curl -H "Authorization: Bearer <JWT>" \
   "status": 404,
   "error": "Not Found",
   "message": "No matching price found for the given criteria",
-  "path": "/public/api/channels/dach-sales-channel/countries/DE/pricedresource/INVALID-PRODUCT/SALES_PRICE"
+  "path": "/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/INVALID-PRODUCT"
 }
 ```
 

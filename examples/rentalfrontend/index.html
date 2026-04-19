@@ -52,8 +52,8 @@
 <main>
   <div class="content">
     <div id="authBanner" class="auth-banner">
-      You are browsing as a guest. Prices shown are public rates.
-      <a href="#" onclick="login(); return false;">Login</a> to see your organization's contract rates.
+      Public prices are available without login.
+      <a href="#" onclick="login(); return false;">Login</a> for organization-scoped prices.
     </div>
 
     <div class="card">
@@ -133,6 +133,7 @@
     keycloakUrl: 'http://localhost:8081',
     realm: 'priceprovider',
     clientId: 'rentalfrontend',
+    // Keep /public/api in this base URL for all public endpoint calls.
     apiUrl: 'http://localhost:8080/public/api',
     channel: 'rental-channel',
     country: 'DE',
@@ -161,10 +162,10 @@
         const auth = await keycloak.init({ onLoad: 'check-sso', pkceMethod: 'S256' });
         updateAuthUI(auth);
       } catch (e) {
-        console.warn("Auth init failed - continuing as guest", e);
+        console.warn("Auth init failed", e);
       }
     } else {
-      console.warn("Keycloak library not loaded - continuing as guest");
+      console.warn("Keycloak library not loaded");
     }
 
     updateView();
@@ -186,6 +187,12 @@
       userName.textContent = `👤 ${user}`;
       loginBtn.style.display = 'none';
       logoutBtn.style.display = 'block';
+    } else {
+      banner.className = "auth-banner";
+      banner.innerHTML = `Public prices are available without login. <a href="#" onclick="login(); return false;">Login</a> for organization-scoped prices.`;
+      userName.textContent = '';
+      loginBtn.style.display = 'block';
+      logoutBtn.style.display = 'none';
     }
   }
 
@@ -203,11 +210,13 @@
 
     try {
       const headers = { 'Accept': 'application/json' };
-      if (keycloak?.token) headers['Authorization'] = `Bearer ${keycloak.token}`;
+      if (keycloak?.authenticated && keycloak?.token) {
+        headers['Authorization'] = `Bearer ${keycloak.token}`;
+      }
 
       // Call the new bulk endpoint for the selected configuration
-      const basePriceUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=${deviceId}&quantity=${qty}&unit=piece&currency=${CONFIG.currency}`;
-      const dailyRateUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricerows/RENTAL_DAILY_RATE?pricedresourceIds=${deviceId}&quantity=${days}&unit=d&currency=${CONFIG.currency}`;
+      const basePriceUrl = `${CONFIG.apiUrl}/${CONFIG.channel}/${CONFIG.country}/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=${deviceId}&quantity=${qty}&unit=piece&currency=${CONFIG.currency}`;
+      const dailyRateUrl = `${CONFIG.apiUrl}/${CONFIG.channel}/${CONFIG.country}/pricerows/RENTAL_DAILY_RATE?pricedresourceIds=${deviceId}&quantity=${days}&unit=d&currency=${CONFIG.currency}`;
 
       const [baseRes, dailyRes] = await Promise.all([
         fetch(basePriceUrl, { headers }).then(r => r.json()),
@@ -218,8 +227,8 @@
       currentPrices.daily = dailyRes.items ? dailyRes.items[0] : null;
 
       // Fetch ALL quantity-specific best prices for the matrix
-      const matrixBaseUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricedresource/${deviceId}/RENTAL_BASE_PRICE/all-quantities?unit=piece&currency=${CONFIG.currency}`;
-      const matrixDailyUrl = `${CONFIG.apiUrl}/channels/${CONFIG.channel}/countries/${CONFIG.country}/pricedresource/${deviceId}/RENTAL_DAILY_RATE/all-quantities?unit=d&currency=${CONFIG.currency}`;
+      const matrixBaseUrl = `${CONFIG.apiUrl}/${CONFIG.channel}/${CONFIG.country}/pricerows/RENTAL_BASE_PRICE/of/${deviceId}/all-quantity-breaks?unit=piece&currency=${CONFIG.currency}`;
+      const matrixDailyUrl = `${CONFIG.apiUrl}/${CONFIG.channel}/${CONFIG.country}/pricerows/RENTAL_DAILY_RATE/of/${deviceId}/all-quantity-breaks?unit=d&currency=${CONFIG.currency}`;
 
       const [allBase, allDaily] = await Promise.all([
         fetch(matrixBaseUrl, { headers }).then(r => r.json()),

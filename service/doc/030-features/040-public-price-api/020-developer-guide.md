@@ -198,7 +198,7 @@ The controller handles HTTP concerns:
 
 **URL format:**
 ```
-GET /public/api/channels/{channelId}/countries/{countryIsoKey}/pricedresource/{pricedResourceId}/{priceType}
+GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}
 ```
 
 The organization context is implicitly derived from the user's JWT `groups` claim and passed to the facade.
@@ -208,7 +208,7 @@ The organization context is implicitly derived from the user's JWT `groups` clai
 To test organization-specific pricing in `WebMvcTest`, use `spring-security-test` to mock a JWT:
 
 ```java
-mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/PROD-001/SALES_PRICE")
+mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/PROD-001")
                 .with(jwt().jwt(j -> j.claim("groups", List.of("/organizations/ORG-TECHCORP-GROUP/ORG-TECHCORP-EU/ORG-RETAIL-BERLIN"))))
                 .param("quantity", "10.00")
                 .param("unit", "piece")

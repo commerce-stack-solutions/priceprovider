@@ -38,19 +38,19 @@ These users are pre-configured in the Keycloak `priceprovider` realm:
 
 | Username | Password | Organization | Note |
 |---|---|---|---|
-| `rental-builder-pro` | `rental123` | `ORG-BUILDER-PRO` | Specialized contract for construction tools. |
-| `rental-green-land` | `rental123` | `ORG-GREEN-LAND` | Specialized contract for landscaping tools. |
+| `rental-builder-pro` | `rental123` | `ORG-RENTAL-BUILDER-PRO` | Specialized contract for construction tools. |
+| `rental-green-land` | `rental123` | `ORG-RENTAL-GREEN-LAND` | Specialized contract for landscaping tools. |
 
 ## Technical Implementation
 
 ### Bulk Pricing API
 This frontend demonstrates the "Best Price" bulk API. Instead of fetching prices one by one, it uses a single call to retrieve the best available price for a specific configuration:
 
-`GET /public/api/channels/rental-channel/countries/DE/pricerows/{priceType}?pricedresourceIds={toolId}&quantity={qty}&unit={unit}`
+`GET /public/api/rental-channel/DE/pricerows/{priceType}?pricedresourceIds={toolId}&quantity={qty}&unit={unit}`
 
 ### Price Matrix API
-To show the overview of all discount tiers, the frontend uses the `all-quantities` endpoint:
+To show the overview of all discount tiers, the frontend uses the `all-quantity-breaks` endpoint:
 
-`GET /public/api/channels/rental-channel/countries/DE/pricedresource/{toolId}/{priceType}/all-quantities`
+`GET /public/api/rental-channel/DE/pricerows/{priceType}/of/{toolId}/all-quantity-breaks`
 
 This returns a list of all price rows applicable to the current user, sorted by their minimum quantity breakpoints.

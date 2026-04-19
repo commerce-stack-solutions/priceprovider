@@ -144,9 +144,9 @@ The collection covers the following entity (Units shown as example; all other en
 - Bulk create or update with smart field matching
 
 **Public Price API**
-- `GET /public/api/channels/.../countries/.../pricedresource/...` – Get best price for a product
-- `GET /public/api/channels/.../countries/.../pricedresource/...` with group context
-- `GET /public/api/channels/.../countries/.../pricedresource/.../all-candidates` – Get all matching prices
+- `GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}` – Get best prices for one or many resources (`pricedresourceIds` query parameter)
+- `GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}` – Get best price for a single resource
+- `GET /public/api/{channelId}/{countryIsoKey}/pricerows/{priceType}/of/{pricedResourceId}/candidates` – Get all matching candidates (inspect permission required)
 - Validation scripts that check response status and data structure
 
 ## Error Scenarios Covered

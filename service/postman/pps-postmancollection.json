@@ -139,6 +139,71 @@
             }
           ],
           "response": []
+        },
+        {
+          "name": "Get Inspector Access Token (Keycloak)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "{{oidcRealm}}",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password",
+                  "type": "text"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oidcClientId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "username",
+                  "value": "customer-city-council-inspector",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "customer123",
+                  "type": "text"
+                }
+              ]
+            },
+            "description": "Obtains a JWT access token for customer-city-council-inspector user."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"response contains access_token\", function () { pm.response.to.have.jsonBody(\"access_token\"); });",
+                  "var jsonData = pm.response.json();",
+                  "var token = jsonData.access_token;",
+                  "pm.environment.set(\"inspectorAccessToken\", token);"
+                ]
+              }
+            }
+          ],
+          "response": []
         }
       ]
     },
@@ -5849,7 +5914,7 @@
           "name": "Torque Product Tests (Group Filtering)",
           "item": [
             {
-              "name": "Get Torque Price - Anonymous (Generic)",
+              "name": "Get Torque Price - Anonymous (Forbidden)",
               "request": {
                 "method": "GET",
                 "header": [],
@@ -5857,20 +5922,19 @@
                   "type": "noauth"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/TOOL-TORQUE-25NM/SALES_PRICE?quantity=1&unit=piece&currency=USD",
+                  "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/TOOL-TORQUE-25NM?quantity=1&unit=piece&currency=USD",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "global-b2b-sales-channel",
-                    "countries",
                     "US",
-                    "pricedresource",
-                    "TOOL-TORQUE-25NM",
-                    "SALES_PRICE"
+                    "pricerows",
+                    "SALES_PRICE",
+                    "of",
+                    "TOOL-TORQUE-25NM"
                   ],
                   "query": [
                     {
@@ -5894,8 +5958,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
-                      "pm.test(\"Correct Generic Price\", () => pm.expect(pm.response.json().priceValue).to.equal(149.99));"
+                      "pm.test(\"Status 403\", () => pm.response.to.have.status(403));"
                     ]
                   }
                 }
@@ -5913,20 +5976,19 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/TOOL-TORQUE-25NM/SALES_PRICE?quantity=1&unit=piece&currency=USD",
+                  "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/TOOL-TORQUE-25NM?quantity=1&unit=piece&currency=USD",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "global-b2b-sales-channel",
-                    "countries",
                     "US",
-                    "pricedresource",
-                    "TOOL-TORQUE-25NM",
-                    "SALES_PRICE"
+                    "pricerows",
+                    "SALES_PRICE",
+                    "of",
+                    "TOOL-TORQUE-25NM"
                   ],
                   "query": [
                     {
@@ -5963,22 +6025,27 @@
           "name": "FORCE_GROSS: Get Best Price DE/EUR (gross price returned as-is)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice,$includes.unit",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice,$includes.unit",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6028,20 +6095,19 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=10&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=10&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6079,26 +6145,31 @@
           ]
         },
         {
-          "name": "FORCE_GROSS: Get All Prices DE/EUR",
+          "name": "FORCE_GROSS: Get All Prices DE/EUR (Candidates, INSPECTOR role -> access)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE/all-candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
+                "pricerows",
                 "SALES_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
               ],
               "query": [
                 {
@@ -6136,7 +6207,7 @@
           ]
         },
         {
-          "name": "FORCE_GROSS: Get All Prices with Group (PREMIUM, DE/EUR)",
+          "name": "FORCE_GROSS: Get All Prices DE/EUR (Candidates, CUSTOMER role -> access denied)",
           "request": {
             "method": "GET",
             "header": [
@@ -6147,21 +6218,80 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE/all-candidates?quantity=50&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
+                "pricerows",
                 "SALES_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "25"
+                },
+                {
+                  "key": "unit",
+                  "value": "piece"
+                },
+                {
+                  "key": "currency",
+                  "value": "EUR"
+                },
+                {
+                  "key": "$expand",
+                  "value": "$info.taxation,$info.originalPrice"
+                }
+              ]
+            },
+            "description": "FORCE_GROSS: all ranked prices for DEMO-PRODUCT-001 via DACH channel. All results should be gross. Expected 403 for user without inspect role."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "FORCE_GROSS: Get All Prices with Group (PREMIUM, DE/EUR) (Candidates, INSPECTOR role -> access)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorAccessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=50&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "api",
+                "dach-sales-channel",
+                "DE",
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
               ],
               "query": [
                 {
@@ -6201,22 +6331,27 @@
           "name": "FORCE_NET: Get Best Price US/USD - gross price converted to net",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-003/SALES_PRICE?quantity=15&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003?quantity=15&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-003",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-003"
               ],
               "query": [
                 {
@@ -6259,22 +6394,27 @@
           "name": "FORCE_NET: Get Best Price US/USD - net price returned as-is",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=5&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=5&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6315,22 +6455,27 @@
           "name": "FORCE_NET: Get Best Price US/USD DEMO-PRODUCT-002 - gross converted to net",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-002/SALES_PRICE?quantity=3&unit=kg&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-002?quantity=3&unit=kg&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-002",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-002"
               ],
               "query": [
                 {
@@ -6368,26 +6513,31 @@
           ]
         },
         {
-          "name": "FORCE_NET: Get All Prices US/USD DEMO-PRODUCT-003 (all ranked prices)",
+          "name": "FORCE_NET: Get All Prices US/USD DEMO-PRODUCT-003 (Candidates, INSPECTOR role -> access)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-003/SALES_PRICE/all-candidates?quantity=1&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003/candidates?quantity=1&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-003",
+                "pricerows",
                 "SALES_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-003",
+                "candidates"
               ],
               "query": [
                 {
@@ -6425,6 +6575,66 @@
           ]
         },
         {
+          "name": "FORCE_NET: Get All Prices US/USD DEMO-PRODUCT-003 (Candidates, CUSTOMER role -> access denied)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003/candidates?quantity=1&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "public",
+                "api",
+                "global-b2b-sales-channel",
+                "US",
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-003",
+                "candidates"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "1"
+                },
+                {
+                  "key": "unit",
+                  "value": "piece"
+                },
+                {
+                  "key": "currency",
+                  "value": "USD"
+                },
+                {
+                  "key": "$expand",
+                  "value": "$info.originalPrice,$info.taxation"
+                }
+              ]
+            },
+            "description": "FORCE_NET: all ranked USD prices for DEMO-PRODUCT-003 via global-b2b channel. All prices (including gross ones) should be returned as net. Expected 403 for user without inspect role."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "FORCE_NET: Get Best Price with Group (PREMIUM, US/USD)",
           "request": {
             "method": "GET",
@@ -6436,20 +6646,19 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/global-b2b-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-003/SALES_PRICE?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "global-b2b-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-003",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-003"
               ],
               "query": [
                 {
@@ -6490,22 +6699,27 @@
           "name": "FORCE_GROSS: Get Best Price CH/CHF (DACH channel Switzerland)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/CH/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=5&unit=piece&currency=CHF&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/CH/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=5&unit=piece&currency=CHF&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "CH",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6546,22 +6760,27 @@
           "name": "FORCE_GROSS: Get Best PURCHASE_PRICE DE/EUR",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/PURCHASE_PRICE?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/PURCHASE_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "PURCHASE_PRICE"
+                "pricerows",
+                "PURCHASE_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6601,22 +6820,27 @@
           "name": "FORCE_GROSS: Get Best MATERIAL_COST DE/EUR",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/MATERIAL_COST?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/MATERIAL_COST/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "MATERIAL_COST"
+                "pricerows",
+                "MATERIAL_COST",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6653,26 +6877,31 @@
           ]
         },
         {
-          "name": "FORCE_GROSS: Get All PURCHASE_PRICE DE/EUR",
+          "name": "FORCE_GROSS: Get All PURCHASE_PRICE DE/EUR (Candidates, INSPECTOR role -> access)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/PURCHASE_PRICE/all-candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/PURCHASE_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "DE",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
+                "pricerows",
                 "PURCHASE_PRICE",
-                "all-candidates"
+                "of",
+                "DEMO-PRODUCT-001",
+                "candidates"
               ],
               "query": [
                 {
@@ -6712,22 +6941,27 @@
           "name": "Country Not Allowed in Channel (404)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/public/api/channels/dach-sales-channel/countries/US/pricedresource/DEMO-PRODUCT-001/SALES_PRICE?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
+              "raw": "{{baseUrl}}/public/api/dach-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "public",
                 "api",
-                "channels",
                 "dach-sales-channel",
-                "countries",
                 "US",
-                "pricedresource",
-                "DEMO-PRODUCT-001",
-                "SALES_PRICE"
+                "pricerows",
+                "SALES_PRICE",
+                "of",
+                "DEMO-PRODUCT-001"
               ],
               "query": [
                 {
@@ -6894,21 +7128,19 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer {{rentalAccessToken}}",
+                    "value": "Bearer {{customerAccessToken}}",
                     "type": "text"
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=RENT-DRILL,RENT-SAW",
+                  "raw": "{{baseUrl}}/public/api/rental-channel/DE/pricerows/RENTAL_BASE_PRICE?pricedresourceIds=RENT-DRILL,RENT-SAW",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "rental-channel",
-                    "countries",
                     "DE",
                     "pricerows",
                     "RENTAL_BASE_PRICE"
@@ -6955,26 +7187,25 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer {{rentalAccessToken}}",
+                    "value": "Bearer {{customerAccessToken}}",
                     "type": "text"
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/public/api/channels/rental-channel/countries/DE/pricedresource/RENT-DRILL/RENTAL_BASE_PRICE/all-quantities?currency=EUR&unit=piece",
+                  "raw": "{{baseUrl}}/public/api/rental-channel/DE/pricerows/RENTAL_BASE_PRICE/of/RENT-DRILL/all-quantity-breaks?currency=EUR&unit=piece",
                   "host": [
                     "{{baseUrl}}"
                   ],
                   "path": [
                     "public",
                     "api",
-                    "channels",
                     "rental-channel",
-                    "countries",
                     "DE",
-                    "pricedresource",
-                    "RENT-DRILL",
+                    "pricerows",
                     "RENTAL_BASE_PRICE",
-                    "all-quantities"
+                    "of",
+                    "RENT-DRILL",
+                    "all-quantity-breaks"
                   ],
                   "query": [
                     {
@@ -11153,6 +11384,11 @@
     },
     {
       "key": "customerAccessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "inspectorAccessToken",
       "value": "",
       "type": "string"
     },

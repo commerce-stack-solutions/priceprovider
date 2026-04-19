@@ -59,7 +59,7 @@ public class PublicPriceControllerTest {
                 eq(PriceType.SALES_PRICE), any()
         )).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001")
                         .param("quantity", "10.00")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
@@ -85,7 +85,7 @@ public class PublicPriceControllerTest {
                 eq(PriceType.SALES_PRICE), any()
         )).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001")
                         .with(jwt())
                         .param("quantity", "10.00")
                         .param("unit", "piece")
@@ -104,7 +104,7 @@ public class PublicPriceControllerTest {
                 any(PriceType.class), any()
         )).thenThrow(new NotFoundException("No matching price found"));
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/PROD-999/SALES_PRICE")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/PROD-999")
                         .param("quantity", "10.00")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
@@ -113,7 +113,7 @@ public class PublicPriceControllerTest {
 
     @Test
     public void testGetBestPrice_InvalidPriceType() throws Exception {
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/INVALID_TYPE")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/INVALID_TYPE/of/DEMO-PRODUCT-001")
                         .param("quantity", "10.00")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
@@ -122,7 +122,7 @@ public class PublicPriceControllerTest {
 
     @Test
     public void testGetBestPrice_MissingQuantity() throws Exception {
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
                 .andExpect(status().isBadRequest());
@@ -142,7 +142,7 @@ public class PublicPriceControllerTest {
                 any(PriceType.class), any()
         )).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/" + priceType)
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/" + priceType + "/of/DEMO-PRODUCT-001")
                         .param("quantity", "10.00")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
@@ -163,7 +163,7 @@ public class PublicPriceControllerTest {
                 eq(PriceType.SALES_PRICE), any()
         )).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE/all-candidates")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates")
                         .param("quantity", "10.00")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
@@ -185,7 +185,7 @@ public class PublicPriceControllerTest {
                 eq(PriceType.SALES_PRICE), any()
         )).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE/all-candidates")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates")
                         .with(jwt())
                         .param("quantity", "10.00")
                         .param("unit", "piece")
@@ -206,7 +206,7 @@ public class PublicPriceControllerTest {
                 any(PriceType.class), any()
         )).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/PROD-999/SALES_PRICE/all-candidates")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/PROD-999/candidates")
                         .param("quantity", "10.00")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
@@ -227,11 +227,12 @@ public class PublicPriceControllerTest {
                 eq("piece"), eq("EUR"), eq(PriceType.SALES_PRICE), any()
         )).thenReturn(mockResponse);
 
-        mockMvc.perform(get("/public/api/channels/dach-sales-channel/countries/DE/pricedresource/DEMO-PRODUCT-001/SALES_PRICE/all-quantities")
+        mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/all-quantity-breaks")
                         .param("unit", "piece")
                         .param("currency", "EUR"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.items").isArray());
     }
+
 }

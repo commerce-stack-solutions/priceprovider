@@ -33,5 +33,6 @@
   { "name": "priceprovider.admin:Unit:write", "description": "Write units" },
   { "name": "priceprovider.admin:Unit:delete", "description": "Delete units" },
   { "name": "priceprovider.admin:ServiceInitialization:write", "description": "Initialize service data" },
-  { "name": "priceprovider.public:PriceRow:read", "description": "Read public price rows" }
+  { "name": "priceprovider.public:PriceRow:read", "description": "Read public price rows" },
+  { "name": "priceprovider.public:PriceRow:inspect", "description": "Inspect public price row candidates" }
 ]
