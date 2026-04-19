@@ -10,12 +10,15 @@ import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
 import io.commercestacksolutions.commons.mapper.validation.rules.MandatoryFieldsRule;
+import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper.PriceRowEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper.PriceRowRestEntityMapper;
@@ -28,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,17 +49,21 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
     private final PriceRowService priceRowService;
     private final PatchMapper<PriceRowRestEntity> priceRowRestEntityPatchMapper;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
+    private final PermissionMatcher permissionMatcher;
+    private final AuthorizationContext authorizationContext;
 
     // Lazily initialized after @PostConstruct of MetaInfoRegistryConfig has run
     private volatile PatchValidator patchValidator;
 
     @Autowired
-    public PriceRowFacadeImpl(PriceRowEntityMapper priceRowEntityConverter, PriceRowRestEntityMapper priceRowRestEntityMapper, PriceRowService priceRowService, PatchMapper<PriceRowRestEntity> priceRowRestEntityPatchMapper, EntityMetaInfoRegistry entityMetaInfoRegistry) {
+    public PriceRowFacadeImpl(PriceRowEntityMapper priceRowEntityConverter, PriceRowRestEntityMapper priceRowRestEntityMapper, PriceRowService priceRowService, PatchMapper<PriceRowRestEntity> priceRowRestEntityPatchMapper, EntityMetaInfoRegistry entityMetaInfoRegistry, PermissionMatcher permissionMatcher, AuthorizationContext authorizationContext) {
         this.priceRowEntityMapper = priceRowEntityConverter;
         this.priceRowRestEntityMapper = priceRowRestEntityMapper;
         this.priceRowService = priceRowService;
         this.priceRowRestEntityPatchMapper = priceRowRestEntityPatchMapper;
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
+        this.permissionMatcher = permissionMatcher;
+        this.authorizationContext = authorizationContext;
     }
 
     /**
@@ -75,6 +83,23 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             ));
         }
         return patchValidator;
+    }
+
+    /**
+     * Checks if the current user has permission to access the given PriceRow entity.
+     *
+     * @param priceRow the entity to check access for
+     * @param action   the action to perform (read, write, delete)
+     * @throws AccessDeniedException if the user doesn't have permission
+     */
+    private void checkAccess(PriceRowEntity priceRow, String action) {
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        boolean hasAccess = permissionMatcher.hasAccess(permissions, "PriceRow", action, priceRow);
+
+        if (!hasAccess) {
+            logger.warn("Access denied for action '{}' on PriceRow with id '{}'", action, priceRow.getId());
+            throw new AccessDeniedException("Access denied to PriceRow with id " + priceRow.getId());
+        }
     }
 
     @Transactional
@@ -99,6 +124,10 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         Optional<PriceRowEntity> priceRowEntityOptional = priceRowService.findById(id);
         if (priceRowEntityOptional.isPresent()) {
             PriceRowEntity priceRowEntity = priceRowEntityOptional.get();
+
+            // Check read permission
+            checkAccess(priceRowEntity, "read");
+
             RestResponseMappingContext mappingContext = getRestBasicsMappingContext(expand);
             PriceRowRestEntity priceRowRestEntity = priceRowRestEntityMapper.convert(priceRowEntity, mappingContext);
 
@@ -126,12 +155,20 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         if (priceRowEntityOptional.isPresent()) {
             // Update existing price row
             PriceRowEntity priceRowEntity = priceRowEntityOptional.get();
+
+            // Check write permission before updating
+            checkAccess(priceRowEntity, "write");
+
             priceRowEntityMapper.convert(priceRowRestEntity, priceRowEntity, new RestRequestMappingContext<>(id));
             PriceRowEntity saved = priceRowService.save(priceRowEntity);
             return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new price row with the id from the path
             PriceRowEntity newPriceRow = priceRowEntityMapper.convert(priceRowRestEntity, new RestRequestMappingContext<>(id));
+
+            // Check write permission for new entity
+            checkAccess(newPriceRow, "write");
+
             PriceRowEntity saved = priceRowService.save(newPriceRow);
             return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -145,10 +182,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             throw new DataMappingException(MessageKeys.ERROR_MAPPING_PATCH_OPERATION, new ErrorResponse(patchValidationErrors));
         }
 
-        PriceRowRestEntity priceRowRestEntity = getPriceRow(id, Collections.emptySet());
-        priceRowRestEntity = priceRowRestEntityPatchMapper.applyPatch(patch, priceRowRestEntity);
-        
-        // Fetch existing entity to preserve timestamps and update in place
+        // Fetch existing entity
         Optional<PriceRowEntity> existingPriceRowOpt = priceRowService.findById(id);
         if (existingPriceRowOpt.isEmpty()) {
             Map<String, String> params = new HashMap<>();
@@ -156,6 +190,14 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             throw new NotFoundException(MessageKeys.ERROR_PRICE_ROW_NOT_FOUND, params, List.of("id"));
         }
         PriceRowEntity existingPriceRow = existingPriceRowOpt.get();
+
+        // Check write permission
+        checkAccess(existingPriceRow, "write");
+
+        // Apply patch
+        PriceRowRestEntity priceRowRestEntity = priceRowRestEntityMapper.convert(existingPriceRow, new RestResponseMappingContext());
+        priceRowRestEntity = priceRowRestEntityPatchMapper.applyPatch(patch, priceRowRestEntity);
+
         priceRowEntityMapper.convert(priceRowRestEntity, existingPriceRow, new RestRequestMappingContext<>(id));
         PriceRowEntity saved = priceRowService.save(existingPriceRow);
         return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -164,6 +206,10 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
     @Transactional(rollbackFor = {DataMappingException.class})
     public PriceRowRestEntity create(PriceRowRestEntity priceRowRestEntity) throws DataMappingException, InvalidParameterException {
         PriceRowEntity newPriceRow = priceRowEntityMapper.convert(priceRowRestEntity, new RestRequestMappingContext<>(null));
+
+        // Check write permission for new entity
+        checkAccess(newPriceRow, "write");
+
         try {
             PriceRowEntity saved = priceRowService.save(newPriceRow);
             return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -182,6 +228,12 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_PRICE_ROW_NOT_FOUND, params, List.of("id"));
         }
+
+        PriceRowEntity priceRowEntity = priceRowEntityOptional.get();
+
+        // Check delete permission
+        checkAccess(priceRowEntity, "delete");
+
         priceRowService.deleteById(id);
     }
 
