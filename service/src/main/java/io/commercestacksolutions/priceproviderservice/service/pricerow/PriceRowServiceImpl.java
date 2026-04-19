@@ -1,6 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.service.pricerow;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
 import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
@@ -8,6 +9,8 @@ import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
@@ -45,6 +48,8 @@ public class PriceRowServiceImpl implements PriceRowService {
     private final QueryParser queryParser;
     private final ChannelService channelService;
     private final SmartMatchingStrategy smartMatchingStrategy;
+    private final PermissionFilterBuilder permissionFilterBuilder;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public PriceRowServiceImpl(
@@ -52,13 +57,17 @@ public class PriceRowServiceImpl implements PriceRowService {
             GroupEntityRepository groupEntityRepository,
             List<ValidationRule<PriceRowEntity>> validationRules,
             ChannelService channelService,
-            SmartMatchingStrategy smartMatchingStrategy) {
+            SmartMatchingStrategy smartMatchingStrategy,
+            PermissionFilterBuilder permissionFilterBuilder,
+            AuthorizationContext authorizationContext) {
         this.priceRowEntityRepository = priceRowEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(PriceRowEntity.class);
         this.channelService = channelService;
         this.smartMatchingStrategy = smartMatchingStrategy;
+        this.permissionFilterBuilder = permissionFilterBuilder;
+        this.authorizationContext = authorizationContext;
     }
 
     @Override
@@ -108,11 +117,37 @@ public class PriceRowServiceImpl implements PriceRowService {
     }
 
     public List<PriceRowEntity> findAll() {
-        return priceRowEntityRepository.findAll();
+        try {
+            Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+            Specification<PriceRowEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "PriceRow", "read");
+
+            if (permissionSpec != null) {
+                return priceRowEntityRepository.findAll(permissionSpec);
+            } else {
+                return priceRowEntityRepository.findAll();
+            }
+        } catch (InvalidParameterException e) {
+            logger.error("Error applying permission filter", e);
+            return priceRowEntityRepository.findAll();
+        }
     }
 
     public Page<PriceRowEntity> findAll(int page, int pageSize) {
-        return priceRowEntityRepository.findAll(PageRequest.of(page, pageSize));
+        try {
+            Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+            Specification<PriceRowEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "PriceRow", "read");
+
+            PageRequest pageRequest = PageRequest.of(page, pageSize);
+
+            if (permissionSpec != null) {
+                return priceRowEntityRepository.findAll(permissionSpec, pageRequest);
+            } else {
+                return priceRowEntityRepository.findAll(pageRequest);
+            }
+        } catch (InvalidParameterException e) {
+            logger.error("Error applying permission filter", e);
+            return priceRowEntityRepository.findAll(PageRequest.of(page, pageSize));
+        }
     }
 
     @Override
@@ -129,13 +164,34 @@ public class PriceRowServiceImpl implements PriceRowService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
+        // Build specification from permission selectors
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        Specification<PriceRowEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "PriceRow", "read");
+
+        // Build specification from user query (if provided)
+        Specification<PriceRowEntity> querySpec = null;
         if (query != null && !query.trim().isEmpty()) {
             QueryExpression expression = queryParser.parse(query);
-            Specification<PriceRowEntity> spec = SpecificationBuilder.build(expression);
-            return priceRowEntityRepository.findAll(spec, pageRequest);
+            querySpec = SpecificationBuilder.build(expression);
         }
 
-        return priceRowEntityRepository.findAll(pageRequest);
+        // Combine specifications
+        Specification<PriceRowEntity> combinedSpec;
+        if (permissionSpec != null && querySpec != null) {
+            // Both permission filter and query filter present: AND them together
+            combinedSpec = permissionSpec.and(querySpec);
+        } else if (permissionSpec != null) {
+            // Only permission filter
+            combinedSpec = permissionSpec;
+        } else if (querySpec != null) {
+            // Only query filter (user has global permission)
+            combinedSpec = querySpec;
+        } else {
+            // No filters at all (global permission, no query)
+            return priceRowEntityRepository.findAll(pageRequest);
+        }
+
+        return priceRowEntityRepository.findAll(combinedSpec, pageRequest);
     }
 
     public Optional<PriceRowEntity> findById(String id) {

@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -29,16 +30,34 @@ public class AuthorizationContext {
     }
 
     /**
-     * Returns the current user's permissions extracted from the JWT token.
+     * Returns the current user's permissions extracted from the JWT token or Spring Security authorities.
      *
      * @return set of permissions, or empty set if not authenticated
      */
     public Set<AppPermissionEntity> getCurrentPermissions() {
+        // First try JWT-based permissions (production)
         Jwt jwt = getCurrentJwt();
-        if (jwt == null) {
-            return Collections.emptySet();
+        if (jwt != null) {
+            return jwtClaimsExtractor.extractPermissions(jwt);
         }
-        return jwtClaimsExtractor.extractPermissions(jwt);
+
+        // Fallback to Spring Security authorities (tests)
+        Authentication auth = getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            Set<AppPermissionEntity> permissions = new HashSet<>();
+            for (org.springframework.security.core.GrantedAuthority authority : auth.getAuthorities()) {
+                String authorityString = authority.getAuthority();
+                // Filter out ROLE_ authorities, only keep permission strings
+                if (!authorityString.startsWith("ROLE_")) {
+                    AppPermissionEntity permission = new AppPermissionEntity();
+                    permission.setName(authorityString);
+                    permissions.add(permission);
+                }
+            }
+            return permissions;
+        }
+
+        return Collections.emptySet();
     }
 
     /**
