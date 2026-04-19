@@ -1,0 +1,42 @@
+[
+  {
+    "name": "priceprovider.admin:PriceRow[currencyRef=='EUR']:read",
+    "description": "Read EUR price rows"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[currencyRef=='EUR']:write",
+    "description": "Write EUR price rows"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[currencyRef=='EUR']:delete",
+    "description": "Delete EUR price rows"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[currencyRef=='USD']:read",
+    "description": "Read USD price rows"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[currencyRef=='USD']:write",
+    "description": "Write USD price rows"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[currencyRef=='USD']:delete",
+    "description": "Delete USD price rows"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE']:read",
+    "description": "Read sales and rental price rows (excluding purchase prices and material costs)"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[NOT priceType=='PURCHASE_PRICE' AND NOT priceType=='MATERIAL_COST']:read",
+    "description": "Read all price rows except purchase prices and material costs"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[groupRefs isEmpty]:read",
+    "description": "Read price rows without group assignment (public prices)"
+  },
+  {
+    "name": "priceprovider.admin:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE')]:read",
+    "description": "Read public sales and rental prices (for anonymous users)"
+  }
+]

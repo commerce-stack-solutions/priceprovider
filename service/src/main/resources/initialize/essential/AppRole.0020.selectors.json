@@ -1,0 +1,89 @@
+[
+  {
+    "name": "priceprovider.admin:EURPriceContributor",
+    "description": "Manage EUR price rows only",
+    "permissionRefs": [
+      "priceprovider.admin:AppPermission:read",
+      "priceprovider.admin:AppRole:read",
+      "priceprovider.admin:Channel:read",
+      "priceprovider.admin:Country:read",
+      "priceprovider.admin:Currency:read",
+      "priceprovider.admin:Group:read",
+      "priceprovider.admin:Language:read",
+      "priceprovider.admin:Organization:read",
+      "priceprovider.admin:PriceRow[currencyRef=='EUR']:read",
+      "priceprovider.admin:PriceRow[currencyRef=='EUR']:write",
+      "priceprovider.admin:PriceRow[currencyRef=='EUR']:delete",
+      "priceprovider.admin:TaxClass:read",
+      "priceprovider.admin:Unit:read"
+    ]
+  },
+  {
+    "name": "priceprovider.admin:USDPriceContributor",
+    "description": "Manage USD price rows only",
+    "permissionRefs": [
+      "priceprovider.admin:AppPermission:read",
+      "priceprovider.admin:AppRole:read",
+      "priceprovider.admin:Channel:read",
+      "priceprovider.admin:Country:read",
+      "priceprovider.admin:Currency:read",
+      "priceprovider.admin:Group:read",
+      "priceprovider.admin:Language:read",
+      "priceprovider.admin:Organization:read",
+      "priceprovider.admin:PriceRow[currencyRef=='USD']:read",
+      "priceprovider.admin:PriceRow[currencyRef=='USD']:write",
+      "priceprovider.admin:PriceRow[currencyRef=='USD']:delete",
+      "priceprovider.admin:TaxClass:read",
+      "priceprovider.admin:Unit:read"
+    ]
+  },
+  {
+    "name": "priceprovider.admin:MultiCurrencyPriceReader",
+    "description": "Read EUR and USD price rows (union of permissions)",
+    "permissionRefs": [
+      "priceprovider.admin:AppPermission:read",
+      "priceprovider.admin:AppRole:read",
+      "priceprovider.admin:Channel:read",
+      "priceprovider.admin:Country:read",
+      "priceprovider.admin:Currency:read",
+      "priceprovider.admin:Group:read",
+      "priceprovider.admin:Language:read",
+      "priceprovider.admin:Organization:read",
+      "priceprovider.admin:PriceRow[currencyRef=='EUR']:read",
+      "priceprovider.admin:PriceRow[currencyRef=='USD']:read",
+      "priceprovider.admin:TaxClass:read",
+      "priceprovider.admin:Unit:read"
+    ]
+  },
+  {
+    "name": "priceprovider.admin:SalesAndRentalPriceReader",
+    "description": "Read sales and rental prices (excluding purchase prices and material costs)",
+    "permissionRefs": [
+      "priceprovider.admin:AppPermission:read",
+      "priceprovider.admin:AppRole:read",
+      "priceprovider.admin:Channel:read",
+      "priceprovider.admin:Country:read",
+      "priceprovider.admin:Currency:read",
+      "priceprovider.admin:Group:read",
+      "priceprovider.admin:Language:read",
+      "priceprovider.admin:Organization:read",
+      "priceprovider.admin:PriceRow[NOT priceType=='PURCHASE_PRICE' AND NOT priceType=='MATERIAL_COST']:read",
+      "priceprovider.admin:TaxClass:read",
+      "priceprovider.admin:Unit:read"
+    ]
+  },
+  {
+    "name": "priceprovider.public:AnonymousUser",
+    "description": "Anonymous user role - read public sales and rental prices only",
+    "permissionRefs": [
+      "priceprovider.admin:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE')]:read"
+    ]
+  },
+  {
+    "name": "priceprovider.public:AuthenticatedUser",
+    "description": "Authenticated user role - read public prices plus organization-scoped prices",
+    "permissionRefs": [
+      "priceprovider.public:PriceRow:read"
+    ]
+  }
+]
