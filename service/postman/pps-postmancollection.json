@@ -139,6 +139,71 @@
             }
           ],
           "response": []
+        },
+        {
+          "name": "Get Inspector Access Token (Keycloak)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{oidcRealm}}/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "{{oidcRealm}}",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            },
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password",
+                  "type": "text"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oidcClientId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "username",
+                  "value": "customer-city-council-inspector",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "customer123",
+                  "type": "text"
+                }
+              ]
+            },
+            "description": "Obtains a JWT access token for customer-city-council-inspector user."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"response contains access_token\", function () { pm.response.to.have.jsonBody(\"access_token\"); });",
+                  "var jsonData = pm.response.json();",
+                  "var token = jsonData.access_token;",
+                  "pm.environment.set(\"inspectorAccessToken\", token);"
+                ]
+              }
+            }
+          ],
+          "response": []
         }
       ]
     },
@@ -2695,7 +2760,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testwährung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testw\u00e4hrung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/create",
@@ -2738,7 +2803,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte Währung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte W\u00e4hrung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/XXX",
@@ -2781,7 +2846,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"€€\" }\n]"
+              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"\u20ac\u20ac\" }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/EUR",
@@ -3175,7 +3240,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"£\"\n  }\n]"
+              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"\u00a3\"\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/bulk-create-or-update",
@@ -5960,7 +6025,13 @@
           "name": "FORCE_GROSS: Get Best Price DE/EUR (gross price returned as-is)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice,$includes.unit",
               "host": [
@@ -6077,7 +6148,13 @@
           "name": "FORCE_GROSS: Get All Prices DE/EUR",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6136,7 +6213,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer {{accessToken}}",
+                "value": "Bearer {{inspectorAccessToken}}",
                 "type": "text"
               }
             ],
@@ -6194,7 +6271,13 @@
           "name": "FORCE_NET: Get Best Price US/USD - gross price converted to net",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003?quantity=15&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6229,7 +6312,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 ≈ 158.88 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 \u2248 158.88 USD."
           },
           "event": [
             {
@@ -6251,7 +6334,13 @@
           "name": "FORCE_NET: Get Best Price US/USD - net price returned as-is",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=5&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
               "host": [
@@ -6306,7 +6395,13 @@
           "name": "FORCE_NET: Get Best Price US/USD DEMO-PRODUCT-002 - gross converted to net",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-002?quantity=3&unit=kg&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6341,7 +6436,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 ≈ 35.32 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 \u2248 35.32 USD."
           },
           "event": [
             {
@@ -6361,7 +6456,13 @@
           "name": "FORCE_NET: Get All Prices US/USD DEMO-PRODUCT-003 (all ranked prices)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/global-b2b-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-003/candidates?quantity=1&unit=piece&currency=USD&$expand=$info.originalPrice,$info.taxation",
               "host": [
@@ -6478,7 +6579,13 @@
           "name": "FORCE_GROSS: Get Best Price CH/CHF (DACH channel Switzerland)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/dach-sales-channel/CH/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=5&unit=piece&currency=CHF&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6533,7 +6640,13 @@
           "name": "FORCE_GROSS: Get Best PURCHASE_PRICE DE/EUR",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/PURCHASE_PRICE/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6587,7 +6700,13 @@
           "name": "FORCE_GROSS: Get Best MATERIAL_COST DE/EUR",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/MATERIAL_COST/of/DEMO-PRODUCT-001?quantity=15&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6641,7 +6760,13 @@
           "name": "FORCE_GROSS: Get All PURCHASE_PRICE DE/EUR",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{inspectorAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/dach-sales-channel/DE/pricerows/PURCHASE_PRICE/of/DEMO-PRODUCT-001/candidates?quantity=25&unit=piece&currency=EUR&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6696,7 +6821,13 @@
           "name": "Country Not Allowed in Channel (404)",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customerAccessToken}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/public/api/dach-sales-channel/US/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001?quantity=1&unit=piece&currency=USD&$expand=$info.taxation,$info.originalPrice",
               "host": [
@@ -6877,7 +7008,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer {{rentalAccessToken}}",
+                    "value": "Bearer {{customerAccessToken}}",
                     "type": "text"
                   }
                 ],
@@ -6936,7 +7067,7 @@
                 "header": [
                   {
                     "key": "Authorization",
-                    "value": "Bearer {{rentalAccessToken}}",
+                    "value": "Bearer {{customerAccessToken}}",
                     "type": "text"
                   }
                 ],
@@ -11133,6 +11264,11 @@
     },
     {
       "key": "customerAccessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "inspectorAccessToken",
       "value": "",
       "type": "string"
     },
