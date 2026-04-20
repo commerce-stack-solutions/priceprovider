@@ -71,19 +71,5 @@
       "priceprovider.admin:TaxClass:read",
       "priceprovider.admin:Unit:read"
     ]
-  },
-  {
-    "name": "priceprovider.public:AnonymousUser",
-    "description": "Anonymous user role - read public sales and rental prices only",
-    "permissionRefs": [
-      "priceprovider.admin:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE')]:read"
-    ]
-  },
-  {
-    "name": "priceprovider.public:AuthenticatedUser",
-    "description": "Authenticated user role - read public prices plus organization-scoped prices",
-    "permissionRefs": [
-      "priceprovider.public:PriceRow:read"
-    ]
   }
 ]
