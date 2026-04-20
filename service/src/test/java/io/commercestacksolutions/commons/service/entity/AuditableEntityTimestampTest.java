@@ -12,9 +12,15 @@ import io.commercestacksolutions.priceproviderservice.service.unit.UnitService;
 import io.commercestacksolutions.priceproviderservice.service.taxclass.TaxClassService;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.PriceRowService;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests that createdAt and lastModifiedAt are correctly set during save operations.
  */
 @SpringBootTest
+@Import(TestSecurityConfig.class)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
     "service-config.initialize.essential-data-on=false",
@@ -53,6 +60,20 @@ public class AuditableEntityTimestampTest {
 
     @Autowired
     private PriceRowService priceRowEntityService;
+
+    @BeforeEach
+    public void setUp() {
+        // Set up authentication context for direct service method calls
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:Language:write",
+            "priceprovider.admin:Currency:write",
+            "priceprovider.admin:Unit:write",
+            "priceprovider.admin:TaxClass:write",
+            "priceprovider.admin:PriceRow:write"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
 
     @Test
     public void testLanguageEntity_NewEntity_ShouldSetBothTimestamps() throws InterruptedException, EntityValidationException {

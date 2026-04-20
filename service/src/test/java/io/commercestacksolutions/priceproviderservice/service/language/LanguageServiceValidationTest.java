@@ -3,10 +3,15 @@ package io.commercestacksolutions.priceproviderservice.service.language;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.LanguageEntityRepository;
+import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests the inactive + mandatory validation at the service layer.
  */
 @SpringBootTest
+@Import(TestSecurityConfig.class)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
     "service-config.initialize.essential-data-on=false",
@@ -38,6 +44,15 @@ public class LanguageServiceValidationTest {
 
     @BeforeEach
     public void setup() {
+        // Set up authentication context
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:Language:write",
+            "priceprovider.admin:Language:read",
+            "priceprovider.admin:Language:delete"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         languageRepository.deleteAll();
     }
 

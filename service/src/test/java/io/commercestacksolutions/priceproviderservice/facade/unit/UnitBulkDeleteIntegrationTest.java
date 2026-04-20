@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -50,6 +53,18 @@ public class UnitBulkDeleteIntegrationTest {
 
     @BeforeEach
     public void setup() {
+        // Set up authentication context
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:Unit:write",
+            "priceprovider.admin:Unit:read",
+            "priceprovider.admin:Unit:delete",
+            "priceprovider.admin:PriceRow:write",
+            "priceprovider.admin:Currency:write",
+            "priceprovider.admin:TaxClass:write"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         // Clean up test data
         priceRowRepository.findAll().stream()
             .filter(pr -> pr.getPricedResourceId() != null && pr.getPricedResourceId().startsWith("unit-test-"))

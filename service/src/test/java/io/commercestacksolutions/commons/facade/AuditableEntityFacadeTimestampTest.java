@@ -8,10 +8,14 @@ import io.commercestacksolutions.commons.service.entity.validation.exception.Ent
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import io.commercestacksolutions.priceproviderservice.facade.group.GroupFacade;
 import io.commercestacksolutions.priceproviderservice.facade.group.restentity.GroupRestEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +41,17 @@ public class AuditableEntityFacadeTimestampTest {
 
     @Autowired
     private GroupFacade groupFacade;
+
+    @BeforeEach
+    public void setUp() {
+        // Set up authentication context for direct service method calls
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:Group:write",
+            "priceprovider.admin:Group:read"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
 
     @Test
     public void testGroupFacade_CreateThenUpdate_ShouldPreserveCreatedAt() throws InterruptedException, DataMappingException, NotFoundException, EntityValidationException, io.commercestacksolutions.commons.exception.EntityAlreadyExistsException {

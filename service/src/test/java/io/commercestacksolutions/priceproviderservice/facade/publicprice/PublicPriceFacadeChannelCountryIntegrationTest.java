@@ -16,11 +16,16 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntity
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceRestEntity;
+import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -46,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This guard prevents cross-country pricing errors in multi-channel setups.</p>
  */
 @SpringBootTest
+@Import(TestSecurityConfig.class)
 @ActiveProfiles("test")
 public class PublicPriceFacadeChannelCountryIntegrationTest {
 
@@ -81,6 +87,20 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        // Set up authentication context
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:PriceRow:write",
+            "priceprovider.admin:Channel:write",
+            "priceprovider.admin:Channel:read",
+            "priceprovider.admin:Country:write",
+            "priceprovider.admin:Currency:write",
+            "priceprovider.admin:Unit:write",
+            "priceprovider.admin:TaxClass:write",
+            "priceprovider.public:PriceRow:read"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         priceRowRepository.deleteAll();
         channelRepository.deleteAll();
         taxClassRepository.deleteAll();
