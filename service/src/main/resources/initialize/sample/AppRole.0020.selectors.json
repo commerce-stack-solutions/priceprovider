@@ -71,5 +71,24 @@
       "priceprovider.admin:TaxClass:read",
       "priceprovider.admin:Unit:read"
     ]
+  },
+  {
+    "name": "priceprovider.admin:GlobalChannelEURContributor",
+    "description": "Restricted admin: write & delete EUR prices on global-b2b-sales-channel, read EUR/USD prices",
+    "permissionRefs": [
+      "priceprovider.admin:AppPermission:read",
+      "priceprovider.admin:AppRole:read",
+      "priceprovider.admin:Channel:read",
+      "priceprovider.admin:Country:read",
+      "priceprovider.admin:Currency:read",
+      "priceprovider.admin:Group:read",
+      "priceprovider.admin:Language:read",
+      "priceprovider.admin:Organization:read",
+      "priceprovider.admin:PriceRow[currencyRef=='EUR' AND channelRefs.hasAny:('global-b2b-sales-channel')]:write",
+      "priceprovider.admin:PriceRow[currencyRef=='EUR' AND channelRefs.hasAny:('global-b2b-sales-channel')]:delete",
+      "priceprovider.admin:PriceRow[currencyRef=='EUR' OR currencyRef=='USD']:read",
+      "priceprovider.admin:TaxClass:read",
+      "priceprovider.admin:Unit:read"
+    ]
   }
 ]

@@ -65,8 +65,11 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
             "priceprovider.admin:PriceRow:write",
             "priceprovider.admin:PriceRow:read",
             "priceprovider.admin:Unit:write",
+            "priceprovider.admin:Unit:read",
             "priceprovider.admin:Currency:write",
-            "priceprovider.admin:TaxClass:write"
+            "priceprovider.admin:Currency:read",
+            "priceprovider.admin:TaxClass:write",
+            "priceprovider.admin:TaxClass:read"
         );
         var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
         SecurityContextHolder.getContext().setAuthentication(auth);

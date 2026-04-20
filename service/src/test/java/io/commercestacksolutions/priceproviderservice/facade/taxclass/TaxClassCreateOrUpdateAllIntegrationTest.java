@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -45,6 +48,18 @@ public class TaxClassCreateOrUpdateAllIntegrationTest {
 
     @BeforeEach
     public void setup() {
+        // Set up authentication context
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:TaxClass:write",
+            "priceprovider.admin:TaxClass:read",
+            "priceprovider.admin:TaxClass:delete",
+            "priceprovider.admin:Country:write",
+            "priceprovider.admin:Country:read",
+            "priceprovider.admin:Country:delete"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         cleanupTestTaxClasses();
 
         // Ensure required country entities exist (independent of sample data)
