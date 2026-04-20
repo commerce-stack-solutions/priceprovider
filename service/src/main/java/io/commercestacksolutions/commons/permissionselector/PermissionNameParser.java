@@ -9,25 +9,28 @@ import java.util.regex.Pattern;
  *
  * <p>Permission name format:
  * <ul>
- *   <li>Without selector: {@code priceprovider.admin:<DataType|Capability>:<Action>}</li>
- *   <li>With selector: {@code priceprovider.admin:<DataType>[<selector>]:<Action>}</li>
+ *   <li>Without selector: {@code <prefix>:<DataType|Capability>:<Action>}</li>
+ *   <li>With selector: {@code <prefix>:<DataType>[<selector>]:<Action>}</li>
  * </ul>
+ *
+ * <p>Supported prefixes: {@code priceprovider.admin}, {@code priceprovider.public}, or any custom prefix
  *
  * <p>Examples:
  * <ul>
  *   <li>{@code priceprovider.admin:PriceRow:read} - Global permission</li>
  *   <li>{@code priceprovider.admin:PriceRow[currencyRef=='EUR']:read} - Selector-based permission</li>
+ *   <li>{@code priceprovider.public:PriceRow:read} - Public API permission</li>
  *   <li>{@code priceprovider.admin:ServiceInitialization:write} - Capability permission</li>
  * </ul>
  */
 public class PermissionNameParser {
 
-    private static final String PERMISSION_PREFIX = "priceprovider.admin:";
-
-    // Pattern: priceprovider.admin:<DataType>(<OptionalSelector>):<Action>
+    // Pattern: <prefix>:<DataType>(<OptionalSelector>):<Action>
+    // The prefix is everything before the first ":" followed by the DataType
     // Example: priceprovider.admin:PriceRow[currencyRef=='EUR']:read
+    // Example: priceprovider.public:PriceRow:read
     private static final Pattern PERMISSION_PATTERN = Pattern.compile(
-            "^" + Pattern.quote(PERMISSION_PREFIX) +
+            "^(.+?):" +                         // Prefix (anything before first :)
             "([A-Za-z][A-Za-z0-9]*)" +          // DataType or Capability
             "(?:\\[(.+?)\\])?" +                // Optional selector in [...]
             ":([a-z]+)" +                       // Action
@@ -51,9 +54,10 @@ public class PermissionNameParser {
             throw new IllegalArgumentException("Invalid permission name format: " + permissionName);
         }
 
-        String dataType = matcher.group(1);
-        String selectorString = matcher.group(2); // May be null
-        String action = matcher.group(3);
+        String prefix = matcher.group(1);
+        String dataType = matcher.group(2);
+        String selectorString = matcher.group(3); // May be null
+        String action = matcher.group(4);
 
         SelectorExpression selector = null;
         if (selectorString != null && !selectorString.trim().isEmpty()) {
@@ -65,7 +69,7 @@ public class PermissionNameParser {
             }
         }
 
-        return new ParsedPermission(permissionName, dataType, selector, action);
+        return new ParsedPermission(permissionName, prefix, dataType, selector, action);
     }
 
     /**
@@ -103,12 +107,14 @@ public class PermissionNameParser {
      */
     public static class ParsedPermission {
         private final String fullName;
+        private final String prefix;
         private final String dataType;
         private final SelectorExpression selector;
         private final String action;
 
-        public ParsedPermission(String fullName, String dataType, SelectorExpression selector, String action) {
+        public ParsedPermission(String fullName, String prefix, String dataType, SelectorExpression selector, String action) {
             this.fullName = Objects.requireNonNull(fullName);
+            this.prefix = Objects.requireNonNull(prefix);
             this.dataType = Objects.requireNonNull(dataType);
             this.selector = selector; // Nullable
             this.action = Objects.requireNonNull(action);
@@ -119,6 +125,13 @@ public class PermissionNameParser {
          */
         public String getFullName() {
             return fullName;
+        }
+
+        /**
+         * Returns the permission prefix (e.g., "priceprovider.admin", "priceprovider.public").
+         */
+        public String getPrefix() {
+            return prefix;
         }
 
         /**

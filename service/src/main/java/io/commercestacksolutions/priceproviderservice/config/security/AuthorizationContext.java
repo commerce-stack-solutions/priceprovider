@@ -44,6 +44,13 @@ public class AuthorizationContext {
      * Returns the current user's permissions extracted from the JWT token, Spring Security authorities,
      * or the AnonymousUser role for unauthenticated requests.
      *
+     * <p>Fallback mechanism:
+     * <ol>
+     *   <li>JWT claims (production) - extracts permissions from JWT token</li>
+     *   <li>Spring Security authorities (test environments) - allows tests to work without JWT infrastructure</li>
+     *   <li>AnonymousUser role (unauthenticated) - returns permissions from the AnonymousUser role</li>
+     * </ol>
+     *
      * @return set of permissions
      */
     public Set<AppPermissionEntity> getCurrentPermissions() {
@@ -53,7 +60,9 @@ public class AuthorizationContext {
             return jwtClaimsExtractor.extractPermissions(jwt);
         }
 
-        // Fallback to Spring Security authorities (tests)
+        // Fallback to Spring Security authorities (test environments only)
+        // This allows integration tests to work without a full JWT/OIDC infrastructure.
+        // In production, this code path is only reached for anonymous requests (see below).
         Authentication auth = getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
             Set<AppPermissionEntity> permissions = new HashSet<>();
