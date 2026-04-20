@@ -12,7 +12,6 @@ import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
 import io.commercestacksolutions.commons.mapper.validation.rules.LocalizedFieldValidationRule;
-import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.ErrorResponse;
@@ -23,8 +22,6 @@ import io.commercestacksolutions.priceproviderservice.commons.messagekeys.Messag
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.commons.web.rest.PagingInfo;
 import io.commercestacksolutions.commons.web.rest.SortingInfo;
-import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.CountryEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
@@ -41,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -65,8 +61,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
     private final CurrencyEntityMapper currencyEntityMapper;
     private final PatchValidator patchValidator;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
-    private final PermissionMatcher permissionMatcher;
-    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public CurrencyFacadeImpl(CurrencyService currencyEntityService,
@@ -75,9 +69,7 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
                           CurrencyRestEntityMapper currencyRestEntityMapper,
                           PatchMapper<CurrencyRestEntity> currencyRestEntityPatchMapper,
                           CurrencyEntityMapper currencyEntityMapper,
-                          EntityMetaInfoRegistry entityMetaInfoRegistry,
-                          PermissionMatcher permissionMatcher,
-                          AuthorizationContext authorizationContext) {
+                          EntityMetaInfoRegistry entityMetaInfoRegistry) {
         this.currencyEntityService = currencyEntityService;
         this.languageEntityService = languageEntityService;
         this.countryEntityRepository = countryEntityRepository;
@@ -93,8 +85,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
                 new LocalizedFieldValidationRule(Set.of("name"), this::getMandatoryLanguageCodes)
         ));
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
-        this.permissionMatcher = permissionMatcher;
-        this.authorizationContext = authorizationContext;
     }
 
     /**
@@ -108,23 +98,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
         return languageEntityService.getMandatoryLanguages().stream()
                 .map(LanguageEntity::getIsoKey)
                 .collect(Collectors.toSet());
-    }
-
-    /**
-     * Checks if the current user has permission to access the given Currency entity.
-     *
-     * @param currency the entity to check access for
-     * @param action   the action to perform (read, write, delete)
-     * @throws AccessDeniedException if the user doesn't have permission
-     */
-    private void checkAccess(CurrencyEntity currency, String action) {
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-        boolean hasAccess = permissionMatcher.hasAccess(permissions, "Currency", action, currency);
-
-        if (!hasAccess) {
-            logger.warn("Access denied for action '{}' on Currency with currencyKey '{}'", action, currency.getCurrencyKey());
-            throw new AccessDeniedException("Access denied to Currency with currencyKey " + currency.getCurrencyKey());
-        }
     }
 
     @Transactional
@@ -154,9 +127,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
             params.put("id", currencyKey);
             throw new NotFoundException(MessageKeys.ERROR_CURRENCY_NOT_FOUND, params);
         }
-
-        // Check read permission
-        checkAccess(currency, "read");
 
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
@@ -197,9 +167,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
             throw new NotFoundException(MessageKeys.ERROR_CURRENCY_NOT_FOUND, params);
         }
 
-        // Check write permission
-        checkAccess(existingCurrency, "write");
-
         currencyEntityMapper.convert(currency, existingCurrency, new RestRequestMappingContext<>(currencyKey));
         CurrencyEntity saved = currencyEntityService.save(existingCurrency);
         return currencyRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -211,20 +178,12 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
         CurrencyEntity currency = currencyEntityService.getCurrency(currencyKey);
         if (currency != null) {
             // Update existing currency
-
-            // Check write permission before updating
-            checkAccess(currency, "write");
-
             currencyEntityMapper.convert(currencyRestEntity, currency, new RestRequestMappingContext<>(currencyKey));
             CurrencyEntity saved = currencyEntityService.save(currency);
             return currencyRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new currency with the currencyKey from the path
             CurrencyEntity newCurrency = currencyEntityMapper.convert(currencyRestEntity, new RestRequestMappingContext<>(currencyKey));
-
-            // Check write permission for new entity
-            checkAccess(newCurrency, "write");
-
             CurrencyEntity saved = currencyEntityService.save(newCurrency);
             return currencyRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -259,9 +218,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
             throw new NotFoundException(MessageKeys.ERROR_CURRENCY_NOT_FOUND, params);
         }
 
-        // Check delete permission
-        checkAccess(currency, "delete");
-
         // For now, just delete - we'll add reference checking when we update PriceRow
         currencyEntityService.deleteCurrency(currencyKey);
     }
@@ -274,15 +230,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
         for (String currencyKey : currencyKeys) {
             CurrencyEntity currency = currencyEntityService.getCurrency(currencyKey);
             if (currency == null) {
-                continue;
-            }
-
-            try {
-                // Check delete permission
-                checkAccess(currency, "delete");
-            } catch (AccessDeniedException ex) {
-                // Skip this currency if access is denied, but don't add to failedDeletes
-                // (access denied is a different error than data integrity)
                 continue;
             }
 
@@ -303,9 +250,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
                 failedDeletes.add(currencyKey);
             } catch (ConstraintViolationException ex) {
                 failedDeletes.add(currencyKey);
-            } catch (AccessDeniedException ex) {
-                // Rethrow security exceptions - they should not be caught as constraint violations
-                throw ex;
             } catch (Exception ex) {
                 // Check for DataIntegrityViolationException or ConstraintViolationException in the cause chain
                 Throwable cause = ex.getCause();
@@ -376,8 +320,6 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
                 CurrencyEntity existingCurrency = currencyEntityService.getCurrency(restEntity.getCurrencyKey());
                 if (existingCurrency != null) {
                     // Update existing
-                    checkAccess(existingCurrency, "write");
-
                     currencyEntityMapper.convert(restEntity, existingCurrency, new RestRequestMappingContext<>(restEntity.getCurrencyKey()));
                     CurrencyEntity saved = currencyEntityService.save(existingCurrency);
                     results.add(currencyRestEntityMapper.convert(saved, new RestResponseMappingContext()));

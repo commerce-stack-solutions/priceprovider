@@ -4,6 +4,7 @@ import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
@@ -38,19 +39,22 @@ public class ChannelServiceImpl implements ChannelService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public ChannelServiceImpl(
             ChannelEntityRepository channelEntityRepository,
             List<ValidationRule<ChannelEntity>> validationRules,
             PermissionFilterBuilder permissionFilterBuilder,
-            AuthorizationContext authorizationContext) {
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService) {
         this.channelEntityRepository = channelEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
         this.queryParser = new QueryParser(QueryReflectionUtil.buildFieldTypeMap(ChannelEntity.class));
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -67,12 +71,20 @@ public class ChannelServiceImpl implements ChannelService {
     public ChannelEntity save(ChannelEntity channelEntity) throws EntityValidationException {
         validateEntity(channelEntity);
         updateAuditTimestamps(channelEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(channelEntity, getEntityTypeName(), "write",
+            channelEntity.getId() != null ? channelEntity.getId() : "new");
+
         return channelEntityRepository.save(channelEntity);
     }
 
     @Override
     public void deleteChannel(String id) {
-        channelEntityRepository.deleteById(id);
+        channelEntityRepository.findById(id).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", id);
+            channelEntityRepository.deleteById(id);
+        });
     }
 
     @Override
@@ -121,6 +133,9 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public ChannelEntity getChannel(String id) {
-        return channelEntityRepository.findById(id).orElse(null);
+        return channelEntityRepository.findById(id).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", id);
+            return entity;
+        }).orElse(null);
     }
 }

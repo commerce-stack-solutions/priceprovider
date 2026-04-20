@@ -23,6 +23,16 @@ public interface EntityService<T> {
     EntityValidator<T> getEntityValidator();
 
     /**
+     * Returns the entity type name used for permission checks.
+     * By default, returns the simple name of the target class with "Entity" suffix removed.
+     *
+     * @return the entity type name for authorization (e.g., "PriceRow", "Channel")
+     */
+    default String getEntityTypeName() {
+        return getTargetClass().getSimpleName().replace("Entity", "");
+    }
+
+    /**
      * Validates the entity using the configured entity validator.
      * This default implementation applies all registered validation rules
      * and throws EntityValidationException if any validation errors occur.

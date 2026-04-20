@@ -5,6 +5,7 @@ import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuil
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
@@ -38,19 +39,22 @@ public class CountryServiceImpl implements CountryService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public CountryServiceImpl(
             CountryEntityRepository countryEntityRepository,
             List<ValidationRule<CountryEntity>> validationRules,
             PermissionFilterBuilder permissionFilterBuilder,
-            AuthorizationContext authorizationContext) {
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService) {
         this.countryEntityRepository = countryEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
         this.queryParser = new QueryParser(QueryReflectionUtil.buildFieldTypeMap(CountryEntity.class));
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -67,12 +71,20 @@ public class CountryServiceImpl implements CountryService {
     public CountryEntity save(CountryEntity countryEntity) throws EntityValidationException {
         validateEntity(countryEntity);
         updateAuditTimestamps(countryEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(countryEntity, getEntityTypeName(), "write",
+            countryEntity.getIsoKey() != null ? countryEntity.getIsoKey() : "new");
+
         return countryEntityRepository.save(countryEntity);
     }
 
     @Override
     public void deleteCountry(String isoKey) {
-        countryEntityRepository.deleteById(isoKey);
+        countryEntityRepository.findById(isoKey).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", isoKey);
+            countryEntityRepository.deleteById(isoKey);
+        });
     }
 
     @Override
@@ -121,6 +133,9 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public CountryEntity getCountry(String isoKey) {
-        return countryEntityRepository.findByIdWithCurrencies(isoKey).orElse(null);
+        return countryEntityRepository.findByIdWithCurrencies(isoKey).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", isoKey);
+            return entity;
+        }).orElse(null);
     }
 }

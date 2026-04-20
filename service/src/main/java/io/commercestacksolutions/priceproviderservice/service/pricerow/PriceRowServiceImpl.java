@@ -6,6 +6,7 @@ import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
@@ -50,6 +51,7 @@ public class PriceRowServiceImpl implements PriceRowService {
     private final SmartMatchingStrategy smartMatchingStrategy;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public PriceRowServiceImpl(
@@ -59,7 +61,8 @@ public class PriceRowServiceImpl implements PriceRowService {
             ChannelService channelService,
             SmartMatchingStrategy smartMatchingStrategy,
             PermissionFilterBuilder permissionFilterBuilder,
-            AuthorizationContext authorizationContext) {
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService) {
         this.priceRowEntityRepository = priceRowEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
@@ -68,6 +71,7 @@ public class PriceRowServiceImpl implements PriceRowService {
         this.smartMatchingStrategy = smartMatchingStrategy;
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -84,6 +88,11 @@ public class PriceRowServiceImpl implements PriceRowService {
         resolvePathBasedGroupRefs(priceRowEntity);
         validateEntity(priceRowEntity);
         updateAuditTimestamps(priceRowEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(priceRowEntity, getEntityTypeName(), "write",
+            priceRowEntity.getId() != null ? priceRowEntity.getId() : "new");
+
         return priceRowEntityRepository.save(priceRowEntity);
     }
 
@@ -195,11 +204,17 @@ public class PriceRowServiceImpl implements PriceRowService {
     }
 
     public Optional<PriceRowEntity> findById(String id) {
-        return priceRowEntityRepository.findById(id);
+        Optional<PriceRowEntity> entity = priceRowEntityRepository.findById(id);
+        entity.ifPresent(e -> entityAuthorizationService.checkAccess(e, getEntityTypeName(), "read", e.getId()));
+        return entity;
     }
 
     public void deleteById(String id) {
-        priceRowEntityRepository.deleteById(id);
+        Optional<PriceRowEntity> entity = priceRowEntityRepository.findById(id);
+        if (entity.isPresent()) {
+            entityAuthorizationService.checkAccess(entity.get(), getEntityTypeName(), "delete", id);
+            priceRowEntityRepository.deleteById(id);
+        }
     }
 
     @Override

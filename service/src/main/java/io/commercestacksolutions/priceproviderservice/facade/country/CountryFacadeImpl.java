@@ -10,14 +10,11 @@ import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
-import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
-import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.facade.country.mapper.CountryEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.country.mapper.CountryRestEntityMapper;
@@ -30,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,17 +44,13 @@ public class CountryFacadeImpl implements CountryFacade {
     private final CountryEntityMapper countryEntityMapper;
     private final PatchValidator patchValidator;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
-    private final PermissionMatcher permissionMatcher;
-    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public CountryFacadeImpl(CountryService countryService,
                              CountryRestEntityMapper countryRestEntityMapper,
                              PatchMapper<CountryRestEntity> countryRestEntityPatchMapper,
                              CountryEntityMapper countryEntityMapper,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry,
-                              PermissionMatcher permissionMatcher,
-                              AuthorizationContext authorizationContext) {
+                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
         this.countryService = countryService;
         this.countryRestEntityMapper = countryRestEntityMapper;
         this.countryRestEntityPatchMapper = countryRestEntityPatchMapper;
@@ -69,25 +61,6 @@ public class CountryFacadeImpl implements CountryFacade {
                 new ImmutableFieldsRule(Set.of("isoKey"))
         ));
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
-        this.permissionMatcher = permissionMatcher;
-        this.authorizationContext = authorizationContext;
-    }
-
-    /**
-     * Checks if the current user has permission to access the given Country entity.
-     *
-     * @param country the entity to check access for
-     * @param action  the action to perform (read, write, delete)
-     * @throws AccessDeniedException if the user doesn't have permission
-     */
-    private void checkAccess(CountryEntity country, String action) {
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-        boolean hasAccess = permissionMatcher.hasAccess(permissions, "Country", action, country);
-
-        if (!hasAccess) {
-            logger.warn("Access denied for action '{}' on Country with id '{}'", action, country.getIsoKey());
-            throw new AccessDeniedException("Access denied to Country with id " + country.getIsoKey());
-        }
     }
 
     @Transactional
@@ -118,9 +91,6 @@ public class CountryFacadeImpl implements CountryFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_COUNTRY_NOT_FOUND, params);
         }
-
-        // Check read permission
-        checkAccess(country, "read");
 
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
@@ -166,9 +136,6 @@ public class CountryFacadeImpl implements CountryFacade {
             throw new NotFoundException(MessageKeys.ERROR_COUNTRY_NOT_FOUND, params);
         }
 
-        // Check write permission
-        checkAccess(existingCountry, "write");
-
         countryEntityMapper.convert(country, existingCountry, new RestRequestMappingContext<>(isoKey));
         CountryEntity saved = countryService.save(existingCountry);
         return countryRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -181,18 +148,12 @@ public class CountryFacadeImpl implements CountryFacade {
         if (country != null) {
             // Update existing country
 
-            // Check write permission before updating
-            checkAccess(country, "write");
-
             countryEntityMapper.convert(countryRestEntity, country, new RestRequestMappingContext<>(isoKey));
             CountryEntity saved = countryService.save(country);
             return countryRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new country with isoKey from path
             CountryEntity newCountry = countryEntityMapper.convert(countryRestEntity, new RestRequestMappingContext<>(isoKey));
-
-            // Check write permission for new entity
-            checkAccess(newCountry, "write");
 
             CountryEntity saved = countryService.save(newCountry);
             return countryRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -233,9 +194,6 @@ public class CountryFacadeImpl implements CountryFacade {
             throw new NotFoundException(MessageKeys.ERROR_COUNTRY_NOT_FOUND, params);
         }
 
-        // Check delete permission
-        checkAccess(country, "delete");
-
         countryService.deleteCountry(isoKey);
     }
 
@@ -247,17 +205,11 @@ public class CountryFacadeImpl implements CountryFacade {
             CountryEntity country = countryService.getCountry(isoKey);
             if (country != null) {
                 try {
-                    // Check delete permission
-                    checkAccess(country, "delete");
-
                     countryService.deleteCountry(isoKey);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(isoKey);
                 } catch (ConstraintViolationException ex) {
                     failedDeletes.add(isoKey);
-                } catch (AccessDeniedException ex) {
-                    // Rethrow security exceptions - they should not be caught as constraint violations
-                    throw ex;
                 } catch (Exception ex) {
                     Throwable cause = ex.getCause();
                     while (cause != null) {
@@ -324,8 +276,6 @@ public class CountryFacadeImpl implements CountryFacade {
                 CountryEntity existingCountry = countryService.getCountry(restEntity.getIsoKey());
                 if (existingCountry != null) {
                     // Update existing
-                    checkAccess(existingCountry, "write");
-
                     countryEntityMapper.convert(restEntity, existingCountry, new RestRequestMappingContext<>(restEntity.getIsoKey()));
                     CountryEntity saved = countryService.save(existingCountry);
                     results.add(countryRestEntityMapper.convert(saved, new RestResponseMappingContext()));

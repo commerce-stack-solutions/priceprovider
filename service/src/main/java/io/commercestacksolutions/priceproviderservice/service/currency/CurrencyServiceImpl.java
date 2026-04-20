@@ -6,6 +6,7 @@ import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
@@ -41,18 +42,21 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public CurrencyServiceImpl(
             CurrencyEntityRepository currencyEntityRepository,
             List<ValidationRule<CurrencyEntity>> validationRules,
             PermissionFilterBuilder permissionFilterBuilder,
-            AuthorizationContext authorizationContext) {
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService) {
         this.currencyEntityRepository = currencyEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(CurrencyEntity.class);
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -68,12 +72,20 @@ public class CurrencyServiceImpl implements CurrencyService {
     public CurrencyEntity save(CurrencyEntity currencyEntity) throws EntityValidationException {
         validateEntity(currencyEntity);
         updateAuditTimestamps(currencyEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(currencyEntity, getEntityTypeName(), "write",
+            currencyEntity.getCurrencyKey() != null ? currencyEntity.getCurrencyKey() : "new");
+
         return currencyEntityRepository.save(currencyEntity);
     }
 
     @Transactional
     public void deleteCurrency(String currencyKey) {
-        currencyEntityRepository.deleteById(currencyKey);
+        currencyEntityRepository.findById(currencyKey).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", currencyKey);
+            currencyEntityRepository.deleteById(currencyKey);
+        });
     }
 
 
@@ -122,7 +134,10 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     public CurrencyEntity getCurrency(String currencyKey) {
-        return currencyEntityRepository.findById(currencyKey).orElse(null);
+        return currencyEntityRepository.findById(currencyKey).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", currencyKey);
+            return entity;
+        }).orElse(null);
     }
 
 }

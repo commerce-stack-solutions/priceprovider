@@ -6,6 +6,7 @@ import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
@@ -45,19 +46,22 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public OrganizationServiceImpl(OrganizationEntityRepository organizationEntityRepository,
                                    GroupEntityRepository groupEntityRepository,
                                    List<ValidationRule<OrganizationEntity>> validationRules,
                                    PermissionFilterBuilder permissionFilterBuilder,
-                                   AuthorizationContext authorizationContext) {
+                                   AuthorizationContext authorizationContext,
+                                   EntityAuthorizationService entityAuthorizationService) {
         this.organizationEntityRepository = organizationEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(OrganizationEntity.class);
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -74,6 +78,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         resolvePathBasedRefs(organizationEntity);
         validateEntity(organizationEntity);
         updateAuditTimestamps(organizationEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(organizationEntity, getEntityTypeName(), "write",
+            organizationEntity.getId() != null ? organizationEntity.getId() : "new");
+
         return organizationEntityRepository.save(organizationEntity);
     }
 
@@ -148,7 +157,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     public OrganizationEntity getOrganization(String id) {
-        return organizationEntityRepository.findById(id).orElse(null);
+        return organizationEntityRepository.findById(id).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", id);
+            return entity;
+        }).orElse(null);
     }
 
     public OrganizationEntity getOrganizationByPath(String path) {
@@ -160,6 +172,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     public void deleteOrganization(String id) {
-        organizationEntityRepository.deleteById(id);
+        organizationEntityRepository.findById(id).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", id);
+            organizationEntityRepository.deleteById(id);
+        });
     }
 }

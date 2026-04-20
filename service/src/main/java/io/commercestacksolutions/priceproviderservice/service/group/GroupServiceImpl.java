@@ -5,6 +5,7 @@ import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
@@ -41,18 +42,21 @@ public class GroupServiceImpl implements GroupService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public GroupServiceImpl(
             GroupEntityRepository groupEntityRepository,
             List<ValidationRule<GroupEntity>> validationRules,
             PermissionFilterBuilder permissionFilterBuilder,
-            AuthorizationContext authorizationContext) {
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService) {
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(GroupEntity.class);
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -69,6 +73,11 @@ public class GroupServiceImpl implements GroupService {
         resolvePathBasedRefs(groupEntity);
         validateEntity(groupEntity);
         updateAuditTimestamps(groupEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(groupEntity, getEntityTypeName(), "write",
+            groupEntity.getId() != null ? groupEntity.getId() : "new");
+
         return groupEntityRepository.save(groupEntity);
     }
 
@@ -155,7 +164,10 @@ public class GroupServiceImpl implements GroupService {
     }
 
     public GroupEntity getGroup(String id) {
-        return groupEntityRepository.findById(id).orElse(null);
+        return groupEntityRepository.findById(id).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", id);
+            return entity;
+        }).orElse(null);
     }
 
     public GroupEntity getGroupByPath(String path) {
@@ -167,6 +179,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     public void deleteGroup(String id) {
-        groupEntityRepository.deleteById(id);
+        groupEntityRepository.findById(id).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", id);
+            groupEntityRepository.deleteById(id);
+        });
     }
 }

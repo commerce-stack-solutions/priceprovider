@@ -12,13 +12,10 @@ import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
 import io.commercestacksolutions.commons.mapper.validation.rules.LocalizedFieldValidationRule;
-import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
-import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
@@ -35,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -58,8 +54,6 @@ public class UnitFacadeImpl implements UnitFacadeService {
     private final UnitEntityMapper unitEntityMapper;
     private final PatchValidator patchValidator;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
-    private final PermissionMatcher permissionMatcher;
-    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public UnitFacadeImpl(UnitService unitEntityService,
@@ -67,17 +61,13 @@ public class UnitFacadeImpl implements UnitFacadeService {
                           UnitRestEntityMapper unitRestEntityMapper,
                           PatchMapper<UnitRestEntity> unitRestEntityPatchMapper,
                           UnitEntityMapper unitEntityMapper,
-                          EntityMetaInfoRegistry entityMetaInfoRegistry,
-                          PermissionMatcher permissionMatcher,
-                          AuthorizationContext authorizationContext) {
+                          EntityMetaInfoRegistry entityMetaInfoRegistry) {
         this.unitEntityService = unitEntityService;
         this.languageEntityService = languageEntityService;
         this.unitRestEntityMapper = unitRestEntityMapper;
         this.unitRestEntityPatchMapper = unitRestEntityPatchMapper;
         this.unitEntityMapper = unitEntityMapper;
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
-        this.permissionMatcher = permissionMatcher;
-        this.authorizationContext = authorizationContext;
 
         // Initialize patch validator with validation rules
         // Note: getMandatoryLanguageCodes is passed as a method reference and will be invoked
@@ -99,23 +89,6 @@ public class UnitFacadeImpl implements UnitFacadeService {
         return languageEntityService.getMandatoryLanguages().stream()
                 .map(LanguageEntity::getIsoKey)
                 .collect(Collectors.toSet());
-    }
-
-    /**
-     * Checks if the current user has permission to access the given Unit entity.
-     *
-     * @param unit   the entity to check access for
-     * @param action the action to perform (read, write, delete)
-     * @throws AccessDeniedException if the user doesn't have permission
-     */
-    private void checkAccess(UnitEntity unit, String action) {
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-        boolean hasAccess = permissionMatcher.hasAccess(permissions, "Unit", action, unit);
-
-        if (!hasAccess) {
-            logger.warn("Access denied for action '{}' on Unit with symbol '{}'", action, unit.getSymbol());
-            throw new AccessDeniedException("Access denied to Unit with symbol " + unit.getSymbol());
-        }
     }
 
     @Transactional(readOnly = true)
@@ -145,9 +118,6 @@ public class UnitFacadeImpl implements UnitFacadeService {
             params.put("id", symbol);
             throw new NotFoundException(MessageKeys.ERROR_UNIT_NOT_FOUND, params);
         }
-
-        // Check read permission
-        checkAccess(unit, "read");
 
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
@@ -192,9 +162,6 @@ public class UnitFacadeImpl implements UnitFacadeService {
             throw new NotFoundException(MessageKeys.ERROR_UNIT_NOT_FOUND, params);
         }
 
-        // Check write permission
-        checkAccess(existingUnit, "write");
-
         unitEntityMapper.convert(unit, existingUnit, new RestRequestMappingContext<>(symbol));
         UnitEntity saved = unitEntityService.save(existingUnit);
         return unitRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -207,18 +174,12 @@ public class UnitFacadeImpl implements UnitFacadeService {
         if (unit != null) {
             // Update existing unit
 
-            // Check write permission before updating
-            checkAccess(unit, "write");
-
             unitEntityMapper.convert(unitRestEntity, unit, new RestRequestMappingContext<>(symbol));
             UnitEntity saved = unitEntityService.save(unit);
             return unitRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new unit with the symbol from the path
             UnitEntity newUnit = unitEntityMapper.convert(unitRestEntity, new RestRequestMappingContext<>(symbol));
-
-            // Check write permission for new entity
-            checkAccess(newUnit, "write");
 
             UnitEntity saved = unitEntityService.save(newUnit);
             return unitRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -254,9 +215,6 @@ public class UnitFacadeImpl implements UnitFacadeService {
             throw new IllegalArgumentException(MessageKeys.ERROR_UNIT_NOT_FOUND);
         }
 
-        // Check delete permission
-        checkAccess(unit, "delete");
-
         unitEntityService.deleteUnit(symbol);
     }
 
@@ -267,17 +225,11 @@ public class UnitFacadeImpl implements UnitFacadeService {
             UnitEntity unit = unitEntityService.getUnit(symbol);
             if (unit != null) {
                 try {
-                    // Check delete permission
-                    checkAccess(unit, "delete");
-
                     unitEntityService.deleteUnit(symbol);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(symbol);
                 } catch (ConstraintViolationException ex) {
                     failedDeletes.add(symbol);
-                } catch (AccessDeniedException ex) {
-                    // Rethrow security exceptions - they should not be caught as constraint violations
-                    throw ex;
                 } catch (Exception ex) {
                     // Check for DataIntegrityViolationException or ConstraintViolationException in the cause chain
                     Throwable cause = ex.getCause();
@@ -345,8 +297,6 @@ public class UnitFacadeImpl implements UnitFacadeService {
                 UnitEntity existingUnit = unitEntityService.getUnit(restEntity.getSymbol());
                 if (existingUnit != null) {
                     // Update existing
-                    checkAccess(existingUnit, "write");
-
                     unitEntityMapper.convert(restEntity, existingUnit, new RestRequestMappingContext<>(restEntity.getSymbol()));
                     UnitEntity saved = unitEntityService.save(existingUnit);
                     results.add(unitRestEntityMapper.convert(saved, new RestResponseMappingContext()));

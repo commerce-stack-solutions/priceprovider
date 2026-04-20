@@ -6,6 +6,7 @@ import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
@@ -43,15 +44,18 @@ public class UnitServiceImpl implements UnitService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public UnitServiceImpl(List<ValidationRule<UnitEntity>> validationRules,
                            PermissionFilterBuilder permissionFilterBuilder,
-                           AuthorizationContext authorizationContext) {
+                           AuthorizationContext authorizationContext,
+                           EntityAuthorizationService entityAuthorizationService) {
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(UnitEntity.class);
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     // Create operation
@@ -79,12 +83,20 @@ public class UnitServiceImpl implements UnitService {
     public UnitEntity save(UnitEntity unitEntity) throws EntityValidationException {
         validateEntity(unitEntity);
         updateAuditTimestamps(unitEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(unitEntity, getEntityTypeName(), "write",
+            unitEntity.getSymbol() != null ? unitEntity.getSymbol() : "new");
+
         return unitEntityRepository.save(unitEntity);
     }
 
     // Delete operation
     public void deleteUnit(String symbol) {
-        unitEntityRepository.deleteById(symbol);
+        unitEntityRepository.findById(symbol).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", symbol);
+            unitEntityRepository.deleteById(symbol);
+        });
     }
 
     public UnitEntity findBySymbol(String symbol) {
@@ -137,6 +149,9 @@ public class UnitServiceImpl implements UnitService {
     }
 
     public UnitEntity getUnit(String symbol) {
-        return unitEntityRepository.findById(symbol).orElse(null);
+        return unitEntityRepository.findById(symbol).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", symbol);
+            return entity;
+        }).orElse(null);
     }
 }

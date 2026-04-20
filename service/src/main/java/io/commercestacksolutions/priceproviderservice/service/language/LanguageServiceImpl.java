@@ -5,6 +5,7 @@ import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuil
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
@@ -40,18 +41,21 @@ public class LanguageServiceImpl implements LanguageService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public LanguageServiceImpl(
             LanguageEntityRepository languageEntityRepository,
             List<ValidationRule<LanguageEntity>> validationRules,
             PermissionFilterBuilder permissionFilterBuilder,
-            AuthorizationContext authorizationContext) {
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService) {
         this.languageEntityRepository = languageEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(LanguageEntity.class);
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -67,6 +71,11 @@ public class LanguageServiceImpl implements LanguageService {
     public LanguageEntity save(LanguageEntity languageEntity) throws EntityValidationException {
         validateEntity(languageEntity);
         updateAuditTimestamps(languageEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(languageEntity, getEntityTypeName(), "write",
+            languageEntity.getIsoKey() != null ? languageEntity.getIsoKey() : "new");
+
         return languageEntityRepository.save(languageEntity);
     }
 
@@ -91,7 +100,10 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     public void deleteLanguage(String isoKey) {
-        languageEntityRepository.deleteById(isoKey);
+        languageEntityRepository.findById(isoKey).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", isoKey);
+            languageEntityRepository.deleteById(isoKey);
+        });
     }
 
     public LanguageEntity findByIsoKey(String isoKey) {
@@ -144,6 +156,9 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     public LanguageEntity getLanguage(String isoKey) {
-        return languageEntityRepository.findById(isoKey).orElse(null);
+        return languageEntityRepository.findById(isoKey).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", isoKey);
+            return entity;
+        }).orElse(null);
     }
 }

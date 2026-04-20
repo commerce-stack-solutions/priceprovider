@@ -5,6 +5,7 @@ import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuil
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
@@ -39,19 +40,22 @@ public class TaxClassServiceImpl implements TaxClassService {
     private final QueryParser queryParser;
     private final PermissionFilterBuilder permissionFilterBuilder;
     private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public TaxClassServiceImpl(
             TaxClassEntityRepository taxClassEntityRepository,
             List<ValidationRule<TaxClassEntity>> validationRules,
             PermissionFilterBuilder permissionFilterBuilder,
-            AuthorizationContext authorizationContext) {
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService) {
         this.taxClassEntityRepository = taxClassEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
         this.queryParser = new QueryParser(QueryReflectionUtil.buildFieldTypeMap(TaxClassEntity.class));
         this.permissionFilterBuilder = permissionFilterBuilder;
         this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
     }
 
     @Override
@@ -67,11 +71,19 @@ public class TaxClassServiceImpl implements TaxClassService {
     public TaxClassEntity save(TaxClassEntity taxClassEntity) throws EntityValidationException {
         validateEntity(taxClassEntity);
         updateAuditTimestamps(taxClassEntity);
+
+        // Check write permission before saving
+        entityAuthorizationService.checkAccess(taxClassEntity, getEntityTypeName(), "write",
+            taxClassEntity.getTaxClassId() != null ? taxClassEntity.getTaxClassId() : "new");
+
         return taxClassEntityRepository.save(taxClassEntity);
     }
 
     public void deleteTaxClass(String taxClassId) {
-        taxClassEntityRepository.deleteById(taxClassId);
+        taxClassEntityRepository.findById(taxClassId).ifPresent(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", taxClassId);
+            taxClassEntityRepository.deleteById(taxClassId);
+        });
     }
 
 
@@ -120,7 +132,10 @@ public class TaxClassServiceImpl implements TaxClassService {
     }
 
     public TaxClassEntity getTaxClass(String taxClassId) {
-        return taxClassEntityRepository.findById(taxClassId).orElse(null);
+        return taxClassEntityRepository.findById(taxClassId).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", taxClassId);
+            return entity;
+        }).orElse(null);
     }
 
 }
