@@ -66,7 +66,7 @@ priceprovider.admin:<DataType>[<selector>]:<Action>
 1. **Core parsing and evaluation infrastructure**
    - SelectorTokenizer, SelectorParser, SelectorExpression AST
    - SelectorEvaluator with reflection-based field access
-   - Comprehensive unit tests (48 tests, all passing)
+   - Comprehensive unit tests (75+ tests, all passing)
 
 2. **Permission management**
    - PermissionNameParser for extracting components
@@ -75,30 +75,34 @@ priceprovider.admin:<DataType>[<selector>]:<Action>
 
 3. **Authorization infrastructure**
    - PermissionMatcher service for object-level checks
-   - AuthorizationContext for current user context
+   - AuthorizationContext for current user context (JWT and test auth support)
    - Debug logging for permission decisions
 
-4. **Test data**
-   - Example selector-based permissions (EUR, USD, sales/rental)
-   - Example roles (EURPriceContributor, AnonymousUser, etc.)
+4. **Object-level authorization**
+   - PriceRowFacadeImpl integrated with PermissionMatcher
+   - Authorization checks for read/write/delete operations on individual PriceRows
+   - AccessDeniedException thrown when access is denied
 
-### 🚧 In Progress / TODO
+5. **List/search filtering**
+   - PermissionFilterBuilder converts selectors to JPA Specifications
+   - Integrated into all PriceRowService.findAll() methods
+   - Handles union logic (multiple permissions combined with OR)
+   - Combines with user query filters using AND logic
 
-1. **Object-level authorization integration**
-   - Integrate PermissionMatcher into PriceRow service methods
-   - Add authorization checks for create/update/delete operations
+6. **Test data**
+   - Example selector-based permissions (EUR, USD, sales/rental, public prices)
+   - Example roles (EURPriceContributor, AnonymousUser, etc.) in sample data
+   - Essential AnonymousUser role for public API access
 
-2. **List/search filtering**
-   - Create PermissionFilterBuilder to convert selectors to JPA Specifications
-   - Integrate into PriceRowService.findAll() methods
-   - Handle union logic (multiple permissions = OR)
+### 🚧 TODO
 
-3. **Frontend updates**
+1. **Frontend updates (AC #9)**
    - Add $meta support for instance-level permissions
-   - Update detail/edit views to enable/disable actions
+   - Update detail/edit views to enable/disable actions based on permissions
    - Handle mixed permissions in list views
+   - Add multiline input support for permission names
 
-4. **Testing and documentation**
+2. **Testing and documentation**
    - Postman collection updates with selector test cases
    - Business user guide for selector syntax
    - Performance testing
@@ -165,8 +169,8 @@ public void updatePriceRow(String id, PriceRowEntity updates) {
 |-----|----------|--------|
 | 1 | Backwards compatibility | ✅ Complete |
 | 2 | Selector parsing + validation | ✅ Complete |
-| 3 | Object-level authorization | 🚧 Infrastructure ready, integration pending |
-| 4 | List/search authorization | 🚧 TODO |
+| 3 | Object-level authorization | ✅ Complete |
+| 4 | List/search authorization | ✅ Complete |
 | 5 | Multiple permissions (union) | ✅ Complete |
 | 6 | Deterministic evaluation | ✅ Complete |
 | 7 | Fail-safe behavior | ✅ Complete |
