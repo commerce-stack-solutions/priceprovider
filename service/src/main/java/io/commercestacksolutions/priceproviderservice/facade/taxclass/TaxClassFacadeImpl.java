@@ -10,11 +10,14 @@ import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
+import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassEntityMapper;
@@ -28,10 +31,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.Set;
 
 @Service
 public class TaxClassFacadeImpl implements TaxClassFacade {
@@ -44,6 +49,8 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
     private final TaxClassEntityMapper taxClassEntityMapper;
     private final PatchValidator patchValidator;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
+    private final PermissionMatcher permissionMatcher;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public TaxClassFacadeImpl(TaxClassService taxClassEntityService,
@@ -51,7 +58,9 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
                           PatchMapper<TaxClassRestEntity> taxClassRestEntityPatchMapper,
                           TaxClassEntityMapper taxClassEntityMapper,
                           PriceRowEntityRepository priceRowEntityRepository,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
+                              EntityMetaInfoRegistry entityMetaInfoRegistry,
+                              PermissionMatcher permissionMatcher,
+                              AuthorizationContext authorizationContext) {
         this.taxClassEntityService = taxClassEntityService;
         this.taxClassRestEntityMapper = taxClassRestEntityMapper;
         this.taxClassRestEntityPatchMapper = taxClassRestEntityPatchMapper;
@@ -62,6 +71,25 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
                 new ImmutableFieldsRule(Set.of("taxClassId"))
         ));
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
+        this.permissionMatcher = permissionMatcher;
+        this.authorizationContext = authorizationContext;
+    }
+
+    /**
+     * Checks if the current user has permission to access the given TaxClass entity.
+     *
+     * @param taxClass the entity to check access for
+     * @param action  the action to perform (read, write, delete)
+     * @throws AccessDeniedException if the user doesn't have permission
+     */
+    private void checkAccess(TaxClassEntity taxClass, String action) {
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        boolean hasAccess = permissionMatcher.hasAccess(permissions, "TaxClass", action, taxClass);
+
+        if (!hasAccess) {
+            logger.warn("Access denied for action '{}' on TaxClass with id '{}'", action, taxClass.getTaxClassId());
+            throw new AccessDeniedException("Access denied to TaxClass with id " + taxClass.getTaxClassId());
+        }
     }
 
     @Transactional
@@ -91,6 +119,10 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             params.put("taxClassId", taxClassId);
             throw new NotFoundException(MessageKeys.ERROR_TAX_CLASS_NOT_FOUND, params);
         }
+
+        // Check read permission
+        checkAccess(taxClass, "read");
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -125,7 +157,7 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             throw new NotFoundException(MessageKeys.ERROR_TAX_CLASS_NOT_FOUND, params);
         }
         taxClass = taxClassRestEntityPatchMapper.applyPatch(patch, taxClass);
-        
+
         // Fetch existing entity to preserve timestamps and update in place
         TaxClassEntity existingTaxClass = taxClassEntityService.getTaxClass(taxClassId);
         if (existingTaxClass == null) {
@@ -133,6 +165,10 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             params.put("taxClassId", taxClassId);
             throw new NotFoundException(MessageKeys.ERROR_TAX_CLASS_NOT_FOUND, params);
         }
+
+        // Check write permission
+        checkAccess(existingTaxClass, "write");
+
         taxClassEntityMapper.convert(taxClass, existingTaxClass, new RestRequestMappingContext<>(taxClassId));
         TaxClassEntity saved = taxClassEntityService.save(existingTaxClass);
         return taxClassRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -143,12 +179,20 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
         TaxClassEntity taxClass = taxClassEntityService.getTaxClass(taxClassId);
         if (taxClass != null) {
             // Update existing taxClass
+
+            // Check write permission before updating
+            checkAccess(taxClass, "write");
+
             taxClassEntityMapper.convert(taxClassRestEntity, taxClass, new RestRequestMappingContext<>(taxClassId));
             TaxClassEntity saved = taxClassEntityService.save(taxClass);
             return taxClassRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new taxClass with the taxClassId from the path
             TaxClassEntity newTaxClass = taxClassEntityMapper.convert(taxClassRestEntity, new RestRequestMappingContext<>(taxClassId));
+
+            // Check write permission for new entity
+            checkAccess(newTaxClass, "write");
+
             TaxClassEntity saved = taxClassEntityService.save(newTaxClass);
             return taxClassRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -188,6 +232,9 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             throw new NotFoundException(MessageKeys.ERROR_TAX_CLASS_NOT_FOUND, params);
         }
 
+        // Check delete permission
+        checkAccess(taxClass, "delete");
+
         // For now, just delete - we'll add reference checking when we update PriceRow
         taxClassEntityService.deleteTaxClass(taxClassId);
     }
@@ -199,11 +246,17 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             TaxClassEntity taxClass = taxClassEntityService.getTaxClass(taxClassId);
             if (taxClass != null) {
                 try {
+                    // Check delete permission
+                    checkAccess(taxClass, "delete");
+
                     taxClassEntityService.deleteTaxClass(taxClassId);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(taxClassId);
                 } catch (ConstraintViolationException ex) {
                     failedDeletes.add(taxClassId);
+                } catch (AccessDeniedException ex) {
+                    // Rethrow security exceptions - they should not be caught as constraint violations
+                    throw ex;
                 } catch (Exception ex) {
                     // Check for DataIntegrityViolationException or ConstraintViolationException in the cause chain
                     Throwable cause = ex.getCause();
@@ -271,6 +324,8 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
                 TaxClassEntity existingTaxClass = taxClassEntityService.getTaxClass(restEntity.getTaxClassId());
                 if (existingTaxClass != null) {
                     // Update existing
+                    checkAccess(existingTaxClass, "write");
+
                     taxClassEntityMapper.convert(restEntity, existingTaxClass, new RestRequestMappingContext<>(restEntity.getTaxClassId()));
                     TaxClassEntity saved = taxClassEntityService.save(existingTaxClass);
                     results.add(taxClassRestEntityMapper.convert(saved, new RestResponseMappingContext()));

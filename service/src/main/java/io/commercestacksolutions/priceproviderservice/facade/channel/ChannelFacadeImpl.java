@@ -10,11 +10,14 @@ import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
+import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.facade.channel.mapper.ChannelEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.channel.mapper.ChannelRestEntityMapper;
@@ -27,10 +30,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.Set;
 
 @Service
 public class ChannelFacadeImpl implements ChannelFacade {
@@ -43,13 +48,17 @@ public class ChannelFacadeImpl implements ChannelFacade {
     private final ChannelEntityMapper channelEntityMapper;
     private final PatchValidator patchValidator;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
+    private final PermissionMatcher permissionMatcher;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public ChannelFacadeImpl(ChannelService channelService,
                              ChannelRestEntityMapper channelRestEntityMapper,
                              PatchMapper<ChannelRestEntity> channelRestEntityPatchMapper,
                              ChannelEntityMapper channelEntityMapper,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
+                             EntityMetaInfoRegistry entityMetaInfoRegistry,
+                             PermissionMatcher permissionMatcher,
+                             AuthorizationContext authorizationContext) {
         this.channelService = channelService;
         this.channelRestEntityMapper = channelRestEntityMapper;
         this.channelRestEntityPatchMapper = channelRestEntityPatchMapper;
@@ -60,6 +69,25 @@ public class ChannelFacadeImpl implements ChannelFacade {
                 new ImmutableFieldsRule(Set.of("id"))
         ));
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
+        this.permissionMatcher = permissionMatcher;
+        this.authorizationContext = authorizationContext;
+    }
+
+    /**
+     * Checks if the current user has permission to access the given Channel entity.
+     *
+     * @param channel the entity to check access for
+     * @param action  the action to perform (read, write, delete)
+     * @throws AccessDeniedException if the user doesn't have permission
+     */
+    private void checkAccess(ChannelEntity channel, String action) {
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        boolean hasAccess = permissionMatcher.hasAccess(permissions, "Channel", action, channel);
+
+        if (!hasAccess) {
+            logger.warn("Access denied for action '{}' on Channel with id '{}'", action, channel.getId());
+            throw new AccessDeniedException("Access denied to Channel with id " + channel.getId());
+        }
     }
 
     @Transactional
@@ -90,6 +118,10 @@ public class ChannelFacadeImpl implements ChannelFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_CHANNEL_NOT_FOUND, params);
         }
+
+        // Check read permission
+        checkAccess(channel, "read");
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -133,6 +165,10 @@ public class ChannelFacadeImpl implements ChannelFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_CHANNEL_NOT_FOUND, params);
         }
+
+        // Check write permission
+        checkAccess(existingChannel, "write");
+
         channelEntityMapper.convert(channel, existingChannel, new RestRequestMappingContext<>(id));
         ChannelEntity saved = channelService.save(existingChannel);
         return channelRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -144,12 +180,20 @@ public class ChannelFacadeImpl implements ChannelFacade {
         ChannelEntity channel = channelService.getChannel(id);
         if (channel != null) {
             // Update existing channel
+
+            // Check write permission before updating
+            checkAccess(channel, "write");
+
             channelEntityMapper.convert(channelRestEntity, channel, new RestRequestMappingContext<>(id));
             ChannelEntity saved = channelService.save(channel);
             return channelRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new channel with id from path
             ChannelEntity newChannel = channelEntityMapper.convert(channelRestEntity, new RestRequestMappingContext<>(id));
+
+            // Check write permission for new entity
+            checkAccess(newChannel, "write");
+
             ChannelEntity saved = channelService.save(newChannel);
             return channelRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -188,6 +232,10 @@ public class ChannelFacadeImpl implements ChannelFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_CHANNEL_NOT_FOUND, params);
         }
+
+        // Check delete permission
+        checkAccess(channel, "delete");
+
         channelService.deleteChannel(id);
     }
 
@@ -199,11 +247,17 @@ public class ChannelFacadeImpl implements ChannelFacade {
             ChannelEntity channel = channelService.getChannel(id);
             if (channel != null) {
                 try {
+                    // Check delete permission
+                    checkAccess(channel, "delete");
+
                     channelService.deleteChannel(id);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(id);
                 } catch (ConstraintViolationException ex) {
                     failedDeletes.add(id);
+                } catch (AccessDeniedException ex) {
+                    // Rethrow security exceptions - they should not be caught as constraint violations
+                    throw ex;
                 } catch (Exception ex) {
                     Throwable cause = ex.getCause();
                     while (cause != null) {
@@ -270,6 +324,8 @@ public class ChannelFacadeImpl implements ChannelFacade {
                 ChannelEntity existingChannel = channelService.getChannel(restEntity.getId());
                 if (existingChannel != null) {
                     // Update existing
+                    checkAccess(existingChannel, "write");
+
                     channelEntityMapper.convert(restEntity, existingChannel, new RestRequestMappingContext<>(restEntity.getId()));
                     ChannelEntity saved = channelService.save(existingChannel);
                     results.add(channelRestEntityMapper.convert(saved, new RestResponseMappingContext()));

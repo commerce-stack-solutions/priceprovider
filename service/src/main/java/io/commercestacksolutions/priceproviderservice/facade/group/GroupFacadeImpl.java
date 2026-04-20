@@ -11,6 +11,7 @@ import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
+import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.ErrorResponse;
@@ -20,6 +21,8 @@ import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.web.rest.PagingInfo;
 import io.commercestacksolutions.commons.web.rest.SortingInfo;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.facade.group.mapper.GroupEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.group.mapper.GroupRestEntityMapper;
@@ -32,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 
@@ -55,13 +59,17 @@ public class GroupFacadeImpl implements GroupFacade {
     private final GroupEntityMapper groupEntityMapper;
     private final PatchValidator patchValidator;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
+    private final PermissionMatcher permissionMatcher;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public GroupFacadeImpl(GroupService groupEntityService,
                        GroupRestEntityMapper groupRestEntityMapper,
                        PatchMapper<GroupRestEntity> groupRestEntityPatchMapper,
                        GroupEntityMapper groupEntityMapper,
-                       EntityMetaInfoRegistry entityMetaInfoRegistry) {
+                       EntityMetaInfoRegistry entityMetaInfoRegistry,
+                       PermissionMatcher permissionMatcher,
+                       AuthorizationContext authorizationContext) {
         this.groupEntityService = groupEntityService;
         this.groupRestEntityMapper = groupRestEntityMapper;
         this.groupRestEntityPatchMapper = groupRestEntityPatchMapper;
@@ -72,6 +80,25 @@ public class GroupFacadeImpl implements GroupFacade {
         this.patchValidator = new PatchValidator(List.of(
                 new ImmutableFieldsRule(Set.of("id"))
         ));
+        this.permissionMatcher = permissionMatcher;
+        this.authorizationContext = authorizationContext;
+    }
+
+    /**
+     * Checks if the current user has permission to access the given Group entity.
+     *
+     * @param group  the entity to check access for
+     * @param action the action to perform (read, write, delete)
+     * @throws AccessDeniedException if the user doesn't have permission
+     */
+    private void checkAccess(GroupEntity group, String action) {
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        boolean hasAccess = permissionMatcher.hasAccess(permissions, "Group", action, group);
+
+        if (!hasAccess) {
+            logger.warn("Access denied for action '{}' on Group with id '{}'", action, group.getId());
+            throw new AccessDeniedException("Access denied to Group with id " + group.getId());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -107,16 +134,20 @@ public class GroupFacadeImpl implements GroupFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
         }
+
+        // Check read permission
+        checkAccess(group, "read");
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
         GroupRestEntity result = groupRestEntityMapper.convert(group, context);
-        
+
         // Add metadata if requested
         if (expand != null && expand.contains("$meta")) {
             result.setMeta(entityMetaInfoRegistry.getMetaInfo(GroupEntity.class));
         }
-        
+
         return result;
     }
 
@@ -133,7 +164,7 @@ public class GroupFacadeImpl implements GroupFacade {
         GroupRestEntity group = getGroup(id, Collections.emptySet());
 
         group = groupRestEntityPatchMapper.applyPatch(patch, group);
-        
+
         // Fetch existing entity to preserve timestamps and update in place
         GroupEntity existingGroup = groupEntityService.getGroup(id);
         if (existingGroup == null) {
@@ -142,6 +173,10 @@ public class GroupFacadeImpl implements GroupFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
         }
+
+        // Check write permission
+        checkAccess(existingGroup, "write");
+
         groupEntityMapper.convert(group, existingGroup, new RestRequestMappingContext<>(id));
         GroupEntity saved = groupEntityService.save(existingGroup);
         return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -152,12 +187,20 @@ public class GroupFacadeImpl implements GroupFacade {
         GroupEntity group = groupEntityService.getGroup(id);
         if (group != null) {
             // Update existing group
+
+            // Check write permission before updating
+            checkAccess(group, "write");
+
             groupEntityMapper.convert(groupRestEntity, group, new RestRequestMappingContext<>(id));
             GroupEntity saved = groupEntityService.save(group);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new group using the id provided by the client in the URL
             GroupEntity newGroup = groupEntityMapper.convert(groupRestEntity, new RestRequestMappingContext<>(id));
+
+            // Check write permission for new entity
+            checkAccess(newGroup, "write");
+
             GroupEntity saved = groupEntityService.save(newGroup);
             return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -192,19 +235,28 @@ public class GroupFacadeImpl implements GroupFacade {
             throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
         }
 
+        // Check delete permission
+        checkAccess(group, "delete");
+
         groupEntityService.deleteGroup(id);
     }
 
     public void bulkDeleteGroups(List<String> ids) throws DataIntegrityException {
         List<String> failedDeletes = new java.util.ArrayList<>();
-        
+
         for (String id : ids) {
             GroupEntity group = groupEntityService.getGroup(id);
             if (group != null) {
                 try {
+                    // Check delete permission
+                    checkAccess(group, "delete");
+
                     groupEntityService.deleteGroup(id);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(id);
+                } catch (AccessDeniedException ex) {
+                    // Rethrow security exceptions - they should not be caught as constraint violations
+                    throw ex;
                 } catch (Exception ex) {
                     // Check for SQLIntegrityConstraintViolationException in the cause chain
                     Throwable cause = ex.getCause();
@@ -222,7 +274,7 @@ public class GroupFacadeImpl implements GroupFacade {
                 }
             }
         }
-        
+
         if (!failedDeletes.isEmpty()) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "Group");
@@ -271,6 +323,8 @@ public class GroupFacadeImpl implements GroupFacade {
 
                 if (existingGroup != null) {
                     // Update existing
+                    checkAccess(existingGroup, "write");
+
                     groupEntityMapper.convert(restEntity, existingGroup, new RestRequestMappingContext<>(existingGroup.getId()));
                     GroupEntity saved = groupEntityService.save(existingGroup);
                     results.add(groupRestEntityMapper.convert(saved, new RestResponseMappingContext()));

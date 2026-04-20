@@ -1,5 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.service.group;
 
+import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
@@ -32,11 +34,17 @@ public class GroupServiceImplResolveRefsTest {
     @Mock
     private ValidationRule<GroupEntity> validationRule;
 
+    @Mock
+    private PermissionFilterBuilder permissionFilterBuilder;
+
+    @Mock
+    private AuthorizationContext authorizationContext;
+
     private GroupServiceImpl groupService;
 
     @BeforeEach
     void setUp() {
-        groupService = new GroupServiceImpl(groupEntityRepository, List.of(validationRule));
+        groupService = new GroupServiceImpl(groupEntityRepository, List.of(validationRule), permissionFilterBuilder, authorizationContext);
     }
 
     // ---------- helpers ----------

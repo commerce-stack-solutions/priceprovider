@@ -1,11 +1,14 @@
 package io.commercestacksolutions.priceproviderservice.service.country;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.CountryEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import org.slf4j.Logger;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of CountryService interface.
@@ -32,13 +36,21 @@ public class CountryServiceImpl implements CountryService {
     private final CountryEntityRepository countryEntityRepository;
     private final EntityValidator<CountryEntity> entityValidator;
     private final QueryParser queryParser;
+    private final PermissionFilterBuilder permissionFilterBuilder;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
-    public CountryServiceImpl(CountryEntityRepository countryEntityRepository, List<ValidationRule<CountryEntity>> validationRules) {
+    public CountryServiceImpl(
+            CountryEntityRepository countryEntityRepository,
+            List<ValidationRule<CountryEntity>> validationRules,
+            PermissionFilterBuilder permissionFilterBuilder,
+            AuthorizationContext authorizationContext) {
         this.countryEntityRepository = countryEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
         this.queryParser = new QueryParser(QueryReflectionUtil.buildFieldTypeMap(CountryEntity.class));
+        this.permissionFilterBuilder = permissionFilterBuilder;
+        this.authorizationContext = authorizationContext;
     }
 
     @Override
@@ -77,13 +89,34 @@ public class CountryServiceImpl implements CountryService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
+        // Build specification from permission selectors
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        Specification<CountryEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "Country", "read");
+
+        // Build specification from user query (if provided)
+        Specification<CountryEntity> querySpec = null;
         if (query != null && !query.trim().isEmpty()) {
             QueryExpression expression = queryParser.parse(query);
-            Specification<CountryEntity> spec = SpecificationBuilder.build(expression);
-            return countryEntityRepository.findAll(spec, pageRequest);
+            querySpec = SpecificationBuilder.build(expression);
         }
 
-        return countryEntityRepository.findAll(pageRequest);
+        // Combine specifications
+        Specification<CountryEntity> combinedSpec;
+        if (permissionSpec != null && querySpec != null) {
+            // Both permission filter and query filter present: AND them together
+            combinedSpec = permissionSpec.and(querySpec);
+        } else if (permissionSpec != null) {
+            // Only permission filter
+            combinedSpec = permissionSpec;
+        } else if (querySpec != null) {
+            // Only query filter (user has global permission)
+            combinedSpec = querySpec;
+        } else {
+            // No filters at all (global permission, no query)
+            return countryEntityRepository.findAll(pageRequest);
+        }
+
+        return countryEntityRepository.findAll(combinedSpec, pageRequest);
     }
 
     @Override

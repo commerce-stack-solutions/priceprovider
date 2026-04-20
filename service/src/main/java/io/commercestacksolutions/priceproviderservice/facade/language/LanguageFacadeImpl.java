@@ -12,11 +12,14 @@ import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
 import io.commercestacksolutions.commons.mapper.validation.rules.LocalizedFieldValidationRule;
+import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
 import io.commercestacksolutions.priceproviderservice.facade.language.mapper.LanguageEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.language.mapper.LanguageRestEntityMapper;
@@ -27,10 +30,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,10 +49,17 @@ public class LanguageFacadeImpl implements LanguageFacade {
     private final LanguageEntityMapper languageEntityMapper;
     private final PatchValidator patchValidator;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
+    private final PermissionMatcher permissionMatcher;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
-    public LanguageFacadeImpl(LanguageService languageEntityService, LanguageRestEntityMapper languageRestEntityMapper, PatchMapper<LanguageRestEntity> languageRestEntityPatchMapper, LanguageEntityMapper languageEntityMapper,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
+    public LanguageFacadeImpl(LanguageService languageEntityService,
+                              LanguageRestEntityMapper languageRestEntityMapper,
+                              PatchMapper<LanguageRestEntity> languageRestEntityPatchMapper,
+                              LanguageEntityMapper languageEntityMapper,
+                              EntityMetaInfoRegistry entityMetaInfoRegistry,
+                              PermissionMatcher permissionMatcher,
+                              AuthorizationContext authorizationContext) {
         this.languageEntityService = languageEntityService;
         this.languageRestEntityMapper = languageRestEntityMapper;
         this.languageRestEntityPatchMapper = languageRestEntityPatchMapper;
@@ -61,6 +73,8 @@ public class LanguageFacadeImpl implements LanguageFacade {
                 new LocalizedFieldValidationRule(Set.of("name"), this::getMandatoryLanguageCodes)
         ));
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
+        this.permissionMatcher = permissionMatcher;
+        this.authorizationContext = authorizationContext;
     }
 
     /**
@@ -74,6 +88,23 @@ public class LanguageFacadeImpl implements LanguageFacade {
         return languageEntityService.getMandatoryLanguages().stream()
                 .map(LanguageEntity::getIsoKey)
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * Checks if the current user has permission to access the given Language entity.
+     *
+     * @param language the entity to check access for
+     * @param action  the action to perform (read, write, delete)
+     * @throws AccessDeniedException if the user doesn't have permission
+     */
+    private void checkAccess(LanguageEntity language, String action) {
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        boolean hasAccess = permissionMatcher.hasAccess(permissions, "Language", action, language);
+
+        if (!hasAccess) {
+            logger.warn("Access denied for action '{}' on Language with id '{}'", action, language.getIsoKey());
+            throw new AccessDeniedException("Access denied to Language with id " + language.getIsoKey());
+        }
     }
 
     @Override
@@ -104,6 +135,10 @@ public class LanguageFacadeImpl implements LanguageFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_LANGUAGE_NOT_FOUND, params);
         }
+
+        // Check read permission
+        checkAccess(language, "read");
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         if (includes != null) {
             context.addExpandPaths(includes);
@@ -144,6 +179,10 @@ public class LanguageFacadeImpl implements LanguageFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_LANGUAGE_NOT_FOUND, params);
         }
+
+        // Check write permission
+        checkAccess(existingLanguage, "write");
+
         languageEntityMapper.convert(language, existingLanguage, new RestRequestMappingContext<>(isoKey));
         LanguageEntity saved = languageEntityService.save(existingLanguage);
         return languageRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -154,12 +193,20 @@ public class LanguageFacadeImpl implements LanguageFacade {
         LanguageEntity language = languageEntityService.getLanguage(isoKey);
         if (language != null) {
             // Update existing language
+
+            // Check write permission before updating
+            checkAccess(language, "write");
+
             languageEntityMapper.convert(languageRestEntity, language, new RestRequestMappingContext<>(isoKey));
             LanguageEntity saved = languageEntityService.save(language);
             return languageRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new language with the isoKey from the path
             LanguageEntity newLanguage = languageEntityMapper.convert(languageRestEntity, new RestRequestMappingContext<>(isoKey));
+
+            // Check write permission for new entity
+            checkAccess(newLanguage, "write");
+
             LanguageEntity saved = languageEntityService.save(newLanguage);
             return languageRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -214,6 +261,8 @@ public class LanguageFacadeImpl implements LanguageFacade {
                 LanguageEntity existingLanguage = languageEntityService.getLanguage(restEntity.getIsoKey());
                 if (existingLanguage != null) {
                     // Update existing
+                    checkAccess(existingLanguage, "write");
+
                     languageEntityMapper.convert(restEntity, existingLanguage, new RestRequestMappingContext<>(restEntity.getIsoKey()));
                     LanguageEntity saved = languageEntityService.save(existingLanguage);
                     results.add(languageRestEntityMapper.convert(saved, new RestResponseMappingContext()));
@@ -261,6 +310,10 @@ public class LanguageFacadeImpl implements LanguageFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_LANGUAGE_NOT_FOUND, params, List.of("isoKey"));
         }
+
+        // Check delete permission
+        checkAccess(language, "delete");
+
         languageEntityService.deleteLanguage(isoKey);
     }
 
@@ -271,9 +324,15 @@ public class LanguageFacadeImpl implements LanguageFacade {
             LanguageEntity language = languageEntityService.getLanguage(isoKey);
             if (language != null) {
                 try {
+                    // Check delete permission
+                    checkAccess(language, "delete");
+
                     languageEntityService.deleteLanguage(isoKey);
                 } catch (org.springframework.dao.DataIntegrityViolationException ex) {
                     failedDeletes.add(isoKey);
+                } catch (AccessDeniedException ex) {
+                    // Rethrow security exceptions - they should not be caught as constraint violations
+                    throw ex;
                 } catch (Exception ex) {
                     // Check for DataIntegrityViolationException in the cause chain
                     Throwable cause = ex.getCause();

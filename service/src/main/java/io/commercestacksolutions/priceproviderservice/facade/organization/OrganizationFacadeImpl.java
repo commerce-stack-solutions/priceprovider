@@ -11,12 +11,15 @@ import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.mapper.validation.PatchValidator;
 import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFieldsRule;
+import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
 import io.commercestacksolutions.priceproviderservice.facade.organization.mapper.OrganizationEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.organization.mapper.OrganizationRestEntityMapper;
@@ -28,11 +31,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,24 +53,47 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
     private final PatchValidator patchValidator;
     private final QueryParser queryParser;
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
+    private final PermissionMatcher permissionMatcher;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public OrganizationFacadeImpl(OrganizationService organizationEntityService,
                               OrganizationRestEntityMapper organizationRestEntityMapper,
                               PatchMapper<OrganizationRestEntity> organizationRestEntityPatchMapper,
                               OrganizationEntityMapper organizationEntityMapper,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
+                              EntityMetaInfoRegistry entityMetaInfoRegistry,
+                              PermissionMatcher permissionMatcher,
+                              AuthorizationContext authorizationContext) {
         this.organizationEntityService = organizationEntityService;
         this.organizationRestEntityMapper = organizationRestEntityMapper;
         this.organizationRestEntityPatchMapper = organizationRestEntityPatchMapper;
         this.organizationEntityMapper = organizationEntityMapper;
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
         this.queryParser = new QueryParser(OrganizationEntity.class);
+        this.permissionMatcher = permissionMatcher;
+        this.authorizationContext = authorizationContext;
 
         // Initialize patch validator with validation rules
         this.patchValidator = new PatchValidator(List.of(
                 new ImmutableFieldsRule(Set.of("id"))
         ));
+    }
+
+    /**
+     * Checks if the current user has permission to access the given Organization entity.
+     *
+     * @param organization the entity to check access for
+     * @param action       the action to perform (read, write, delete)
+     * @throws AccessDeniedException if the user doesn't have permission
+     */
+    private void checkAccess(OrganizationEntity organization, String action) {
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        boolean hasAccess = permissionMatcher.hasAccess(permissions, "Organization", action, organization);
+
+        if (!hasAccess) {
+            logger.warn("Access denied for action '{}' on Organization with id '{}'", action, organization.getId());
+            throw new AccessDeniedException("Access denied to Organization with id " + organization.getId());
+        }
     }
 
     @Transactional
@@ -95,6 +123,10 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
         }
+
+        // Check read permission
+        checkAccess(organization, "read");
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -125,7 +157,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
         OrganizationRestEntity organization = getOrganization(id, Collections.emptySet());
 
         organization = organizationRestEntityPatchMapper.applyPatch(patch, organization);
-        
+
         // Fetch existing entity to preserve timestamps and update in place
         OrganizationEntity existingOrganization = organizationEntityService.getOrganization(id);
         if (existingOrganization == null) {
@@ -133,6 +165,10 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
         }
+
+        // Check write permission
+        checkAccess(existingOrganization, "write");
+
         organizationEntityMapper.convert(organization, existingOrganization, new RestRequestMappingContext<>(id));
         OrganizationEntity saved = organizationEntityService.save(existingOrganization);
         return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -143,12 +179,20 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
         OrganizationEntity organization = organizationEntityService.getOrganization(id);
         if (organization != null) {
             // Update existing organization
+
+            // Check write permission before updating
+            checkAccess(organization, "write");
+
             organizationEntityMapper.convert(organizationRestEntity, organization, new RestRequestMappingContext<>(id));
             OrganizationEntity saved = organizationEntityService.save(organization);
             return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new organization using the id provided by the client in the URL
             OrganizationEntity newOrganization = organizationEntityMapper.convert(organizationRestEntity, new RestRequestMappingContext<>(id));
+
+            // Check write permission for new entity
+            checkAccess(newOrganization, "write");
+
             OrganizationEntity saved = organizationEntityService.save(newOrganization);
             return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -182,19 +226,28 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
             throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
         }
 
+        // Check delete permission
+        checkAccess(organization, "delete");
+
         organizationEntityService.deleteOrganization(id);
     }
 
     public void bulkDeleteOrganizations(List<String> ids) throws DataIntegrityException {
         List<String> failedDeletes = new java.util.ArrayList<>();
-        
+
         for (String id : ids) {
             OrganizationEntity organization = organizationEntityService.getOrganization(id);
             if (organization != null) {
                 try {
+                    // Check delete permission
+                    checkAccess(organization, "delete");
+
                     organizationEntityService.deleteOrganization(id);
                 } catch (DataIntegrityViolationException ex) {
                     failedDeletes.add(id);
+                } catch (AccessDeniedException ex) {
+                    // Rethrow security exceptions - they should not be caught as constraint violations
+                    throw ex;
                 } catch (Exception ex) {
                     // Check for SQLIntegrityConstraintViolationException in the cause chain
                     Throwable cause = ex.getCause();
@@ -212,7 +265,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
                 }
             }
         }
-        
+
         if (!failedDeletes.isEmpty()) {
             Map<String, String> params = new HashMap<>();
             params.put("ids", String.join(", ", failedDeletes));
@@ -271,6 +324,8 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
 
                 if (existingOrganization != null) {
                     // Update existing
+                    checkAccess(existingOrganization, "write");
+
                     organizationEntityMapper.convert(restEntity, existingOrganization, new RestRequestMappingContext<>(existingOrganization.getId()));
                     OrganizationEntity saved = organizationEntityService.save(existingOrganization);
                     results.add(organizationRestEntityMapper.convert(saved, new RestResponseMappingContext()));

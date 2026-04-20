@@ -1,5 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.group;
 
+import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
@@ -7,6 +8,8 @@ import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import org.slf4j.Logger;
@@ -36,12 +39,20 @@ public class GroupServiceImpl implements GroupService {
     private final GroupEntityRepository groupEntityRepository;
     private final EntityValidator<GroupEntity> entityValidator;
     private final QueryParser queryParser;
+    private final PermissionFilterBuilder permissionFilterBuilder;
+    private final AuthorizationContext authorizationContext;
 
     @Autowired
-    public GroupServiceImpl(GroupEntityRepository groupEntityRepository, List<ValidationRule<GroupEntity>> validationRules) {
+    public GroupServiceImpl(
+            GroupEntityRepository groupEntityRepository,
+            List<ValidationRule<GroupEntity>> validationRules,
+            PermissionFilterBuilder permissionFilterBuilder,
+            AuthorizationContext authorizationContext) {
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(GroupEntity.class);
+        this.permissionFilterBuilder = permissionFilterBuilder;
+        this.authorizationContext = authorizationContext;
     }
 
     @Override
@@ -109,14 +120,34 @@ public class GroupServiceImpl implements GroupService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        // Parse and apply query filter if provided
+        // Build specification from permission selectors
+        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        Specification<GroupEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "Group", "read");
+
+        // Build specification from user query (if provided)
+        Specification<GroupEntity> querySpec = null;
         if (query != null && !query.trim().isEmpty()) {
             QueryExpression expression = queryParser.parse(query);
-            Specification<GroupEntity> spec = SpecificationBuilder.build(expression);
-            return groupEntityRepository.findAll(spec, pageRequest);
+            querySpec = SpecificationBuilder.build(expression);
         }
 
-        return groupEntityRepository.findAll(pageRequest);
+        // Combine specifications
+        Specification<GroupEntity> combinedSpec;
+        if (permissionSpec != null && querySpec != null) {
+            // Both permission filter and query filter present: AND them together
+            combinedSpec = permissionSpec.and(querySpec);
+        } else if (permissionSpec != null) {
+            // Only permission filter
+            combinedSpec = permissionSpec;
+        } else if (querySpec != null) {
+            // Only query filter (user has global permission)
+            combinedSpec = querySpec;
+        } else {
+            // No filters at all (global permission, no query)
+            return groupEntityRepository.findAll(pageRequest);
+        }
+
+        return groupEntityRepository.findAll(combinedSpec, pageRequest);
     }
 
     public Optional<GroupEntity> getGroupById(String id) {
