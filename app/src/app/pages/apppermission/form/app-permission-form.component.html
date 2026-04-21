@@ -39,9 +39,16 @@
               [class.is-invalid]="form.get('name')?.invalid && form.get('name')?.touched || hasFieldError('name')"
             >
             @if (form.get('name')?.invalid && form.get('name')?.touched) {
-              <div class="invalid-feedback d-block">
-                {{ 'common.messages.idRequired' | transloco }}
-              </div>
+              @if (form.get('name')?.hasError('required')) {
+                <div class="invalid-feedback d-block">
+                  {{ 'common.messages.idRequired' | transloco }}
+                </div>
+              }
+              @if (form.get('name')?.hasError('permissionSelector')) {
+                <div class="invalid-feedback d-block">
+                  {{ form.get('name')?.getError('permissionSelector').message }}
+                </div>
+              }
             }
             @if (hasFieldError('name')) {
               @for (error of getFieldErrors('name'); track error) {
