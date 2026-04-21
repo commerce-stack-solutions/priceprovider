@@ -1,6 +1,7 @@
 /* Global Styles */
 @use "bootstrap/scss/bootstrap" as bootstrap;
 @use "bootstrap-icons/font/bootstrap-icons.css" as *;
+@use "sass:color";
 
 /* Theme Variables */
 :root {
@@ -50,6 +51,62 @@ body {
   &:not(.disabled):not(:disabled) {
     border-width: 1px;
     border-style: solid;
+  }
+}
+
+// Active outline buttons: add background color when not disabled
+.btn-outline-primary:not(.disabled):not(:disabled) {
+  background-color: bootstrap.$primary;
+  color: white;
+  border-color: bootstrap.$primary;
+
+  &:hover {
+    background-color: color.adjust(bootstrap.$primary, $lightness: -10%);
+    border-color: color.adjust(bootstrap.$primary, $lightness: -10%);
+  }
+}
+
+.btn-outline-success:not(.disabled):not(:disabled) {
+  background-color: bootstrap.$success;
+  color: white;
+  border-color: bootstrap.$success;
+
+  &:hover {
+    background-color: color.adjust(bootstrap.$success, $lightness: -10%);
+    border-color: color.adjust(bootstrap.$success, $lightness: -10%);
+  }
+}
+
+.btn-outline-danger:not(.disabled):not(:disabled) {
+  background-color: bootstrap.$danger;
+  color: white;
+  border-color: bootstrap.$danger;
+
+  &:hover {
+    background-color: color.adjust(bootstrap.$danger, $lightness: -10%);
+    border-color: color.adjust(bootstrap.$danger, $lightness: -10%);
+  }
+}
+
+.btn-outline-warning:not(.disabled):not(:disabled) {
+  background-color: bootstrap.$warning;
+  color: var(--bs-dark);
+  border-color: bootstrap.$warning;
+
+  &:hover {
+    background-color: color.adjust(bootstrap.$warning, $lightness: -10%);
+    border-color: color.adjust(bootstrap.$warning, $lightness: -10%);
+  }
+}
+
+.btn-outline-info:not(.disabled):not(:disabled) {
+  background-color: bootstrap.$info;
+  color: var(--bs-dark);
+  border-color: bootstrap.$info;
+
+  &:hover {
+    background-color: color.adjust(bootstrap.$info, $lightness: -10%);
+    border-color: color.adjust(bootstrap.$info, $lightness: -10%);
   }
 }
 
