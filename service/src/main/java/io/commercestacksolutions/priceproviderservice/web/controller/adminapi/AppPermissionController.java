@@ -42,7 +42,7 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved app permissions",
                     content = @Content(schema = @Schema(implementation = AppPermissionListRestEntity.class)))
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:read')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'read')")
     @GetMapping
     public AppPermissionListRestEntity getAppPermissions(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -59,7 +59,7 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved app permission"),
             @ApiResponse(responseCode = "404", description = "App permission not found")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:read')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'read')")
     @GetMapping("/{id}")
     public AppPermissionRestEntity getAppPermission(
             @PathVariable("id") Long id,
@@ -80,7 +80,7 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "400", description = "Validation error"),
             @ApiResponse(responseCode = "404", description = "App permission not found")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'write')")
     @PatchMapping("/{id}")
     public AppPermissionRestEntity patch(
             @PathVariable("id") Long id,
@@ -93,7 +93,7 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "200", description = "Successfully created or updated app permission"),
             @ApiResponse(responseCode = "400", description = "Validation error")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'write')")
     @PutMapping("/{id}")
     public AppPermissionRestEntity createOrRecreate(
             @PathVariable("id") Long id,
@@ -107,7 +107,7 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "400", description = "Validation error"),
             @ApiResponse(responseCode = "409", description = "App permission with the same ID already exists")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'write')")
     @PostMapping("/create")
     public AppPermissionRestEntity create(
             @RequestBody AppPermissionRestEntity restEntity
@@ -119,7 +119,7 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "204", description = "Successfully deleted app permission"),
             @ApiResponse(responseCode = "404", description = "App permission not found")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:delete')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         try {
@@ -136,7 +136,7 @@ public class AppPermissionController {
             @ApiResponse(responseCode = "204", description = "Successfully deleted app permissions"),
             @ApiResponse(responseCode = "400", description = "Cannot delete - referential integrity constraint violation")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:delete')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'delete')")
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteAppPermissions(@RequestBody List<Long> ids) throws DataIntegrityException {
         appPermissionFacade.bulkDeleteAppPermissions(ids);
@@ -148,7 +148,7 @@ public class AppPermissionController {
                     content = @Content(schema = @Schema(implementation = AppPermissionListRestEntity.class))),
             @ApiResponse(responseCode = "400", description = "Validation error or request exceeds maximum batch size")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppPermission:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppPermission', 'write')")
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<AppPermissionListRestEntity> createOrUpdateAllAppPermissions(
             @RequestBody List<AppPermissionRestEntity> restEntities

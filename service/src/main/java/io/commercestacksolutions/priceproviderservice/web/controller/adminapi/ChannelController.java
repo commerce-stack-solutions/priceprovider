@@ -44,7 +44,7 @@ public class ChannelController {
                             content = @Content(schema = @Schema(implementation = ChannelListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'read')") 
 
     @GetMapping
     public ChannelListRestEntity getChannels(
@@ -81,7 +81,7 @@ public class ChannelController {
                             content = @Content(schema = @Schema(implementation = ChannelRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'read')") 
 
     @GetMapping("/{id}")
     public ChannelRestEntity getChannel(
@@ -121,7 +121,7 @@ public class ChannelController {
                             content = @Content(schema = @Schema(implementation = ChannelRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'write')") 
 
     @PatchMapping("/{id}")
     public ChannelRestEntity patch(
@@ -142,7 +142,7 @@ public class ChannelController {
                             content = @Content(schema = @Schema(implementation = ChannelRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'write')") 
 
     @PutMapping("/{id}")
     public ChannelRestEntity createOrRecreate(
@@ -164,7 +164,7 @@ public class ChannelController {
                     @ApiResponse(responseCode = "409", description = "Channel with the same ID already exists")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'write')") 
 
     @PostMapping("/create")
     public ResponseEntity<ChannelRestEntity> create(
@@ -196,7 +196,7 @@ public class ChannelController {
                     @ApiResponse(responseCode = "409", description = "Cannot delete channel - it is referenced by price rows")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'delete')") 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
@@ -221,7 +221,7 @@ public class ChannelController {
                     @ApiResponse(responseCode = "409", description = "Cannot delete one or more channels - they are referenced by price rows")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteChannels(
@@ -240,7 +240,7 @@ public class ChannelController {
                             content = @Content(schema = @Schema(implementation = ChannelListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Channel:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Channel', 'write')") 
 
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<ChannelListRestEntity> createOrUpdateAllChannels(

@@ -51,7 +51,7 @@ public class LanguageController {
                             content = @Content(schema = @Schema(implementation = LanguageListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Language:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Language', 'read')") 
 
     @GetMapping
     public LanguageListRestEntity getLanguages(
@@ -164,7 +164,7 @@ public class LanguageController {
                     @ApiResponse(responseCode = "409", description = "Language with the same ISO key already exists")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Language:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Language', 'write')") 
 
     @PostMapping("/create")
     public LanguageRestEntity create(
@@ -185,7 +185,7 @@ public class LanguageController {
                             content = @Content(schema = @Schema(implementation = LanguageListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Language:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Language', 'write')") 
 
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<LanguageListRestEntity> createOrUpdateAllLanguages(
@@ -235,7 +235,7 @@ public class LanguageController {
                     @ApiResponse(responseCode = "204", description = "Successfully deleted languages")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Language:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Language', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteLanguages(

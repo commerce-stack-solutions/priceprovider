@@ -46,7 +46,7 @@ public class TaxClassController {
                 content = @Content(schema = @Schema(implementation = TaxClassListRestEntity.class)))
         }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:TaxClass:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('TaxClass', 'read')") 
 
     @GetMapping
     public TaxClassListRestEntity getTaxClasses(
@@ -161,7 +161,7 @@ public class TaxClassController {
             @ApiResponse(responseCode = "409", description = "Tax class with the same ID already exists")
         }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:TaxClass:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('TaxClass', 'write')") 
 
     @PostMapping("/create")
     public ResponseEntity<TaxClassRestEntity> create(
@@ -216,7 +216,7 @@ public class TaxClassController {
             @ApiResponse(responseCode = "409", description = "Cannot delete one or more tax classes - they are referenced by price rows")
         }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:TaxClass:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('TaxClass', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteTaxClasses(

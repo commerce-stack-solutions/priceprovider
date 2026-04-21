@@ -48,7 +48,7 @@ public class CurrencyController {
                             content = @Content(schema = @Schema(implementation = CurrencyListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Currency:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Currency', 'read')") 
 
     @GetMapping
     public CurrencyListRestEntity getCurrencies(
@@ -158,7 +158,7 @@ public class CurrencyController {
                     @ApiResponse(responseCode = "409", description = "Currency with the same key already exists")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Currency:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Currency', 'write')") 
 
     @PostMapping("/create")
     public CurrencyRestEntity create(
@@ -200,7 +200,7 @@ public class CurrencyController {
                     @ApiResponse(responseCode = "409", description = "Cannot delete one or more currencies - they are referenced by price rows")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Currency:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Currency', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteCurrencies(
@@ -222,7 +222,7 @@ public class CurrencyController {
                             content = @Content(schema = @Schema(implementation = CurrencyListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Currency:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Currency', 'write')") 
 
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<CurrencyListRestEntity> createOrUpdateAllCurrencies(
