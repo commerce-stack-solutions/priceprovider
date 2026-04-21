@@ -1,8 +1,11 @@
 package io.commercestacksolutions.priceproviderservice.config;
 
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.config.security.TestAuthorizationContext;
 import jakarta.servlet.Filter;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -23,9 +26,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  *
  * <p>Sets up a fully-authenticated test user with all admin permissions so that
  * both HTTP-level and method-level {@code @PreAuthorize} checks pass in integration tests.</p>
+ *
+ * <p>Also provides a {@link TestAuthorizationContext} bean that extracts permissions from
+ * Spring Security authorities instead of JWT claims.</p>
  */
 @TestConfiguration
 public class TestSecurityConfig {
+
+    @Bean
+    @Primary
+    public AuthorizationContext testAuthorizationContext() {
+        return new TestAuthorizationContext();
+    }
 
     @Bean
     @Order(1)
@@ -88,5 +100,4 @@ public class TestSecurityConfig {
         };
     }
 }
-
 
