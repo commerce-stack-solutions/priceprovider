@@ -40,11 +40,11 @@
     "description": "Read public sales and rental prices (for anonymous users)"
   },
   {
-    "name": "priceprovider.admin:PriceRow[currencyRef=='EUR' AND channelRefs.hasAny:('global-b2b-sales-channel')]:write",
+    "name": "priceprovider.admin:PriceRow[currencyRef=='EUR' AND channelRefs hasAny('global-b2b-sales-channel')]:write",
     "description": "Write EUR price rows for global B2B sales channel"
   },
   {
-    "name": "priceprovider.admin:PriceRow[currencyRef=='EUR' AND channelRefs.hasAny:('global-b2b-sales-channel')]:delete",
+    "name": "priceprovider.admin:PriceRow[currencyRef=='EUR' AND channelRefs hasAny('global-b2b-sales-channel')]:delete",
     "description": "Delete EUR price rows for global B2B sales channel"
   },
   {
