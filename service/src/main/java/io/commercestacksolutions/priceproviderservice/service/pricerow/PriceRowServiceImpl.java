@@ -125,22 +125,6 @@ public class PriceRowServiceImpl implements PriceRowService {
         priceRowEntity.setGroups(resolved);
     }
 
-    public List<PriceRowEntity> findAll() {
-        try {
-            Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-            Specification<PriceRowEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "PriceRow", "read");
-
-            if (permissionSpec != null) {
-                return priceRowEntityRepository.findAll(permissionSpec);
-            } else {
-                return priceRowEntityRepository.findAll();
-            }
-        } catch (InvalidParameterException e) {
-            logger.error("Error applying permission filter", e);
-            return priceRowEntityRepository.findAll();
-        }
-    }
-
     public Page<PriceRowEntity> findAll(int page, int pageSize) {
         try {
             Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();

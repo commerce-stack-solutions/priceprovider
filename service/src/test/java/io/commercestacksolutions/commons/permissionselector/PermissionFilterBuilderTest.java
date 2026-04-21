@@ -164,6 +164,33 @@ class PermissionFilterBuilderTest {
         assertNotNull(spec, "Invalid permission should be ignored and return deny-all specification");
     }
 
+    @Test
+    void testBuildFilterWithNotEqualsOperator() throws InvalidParameterException {
+        // Test that NOT_EQUALS is correctly handled via negation
+        // Permission: can read all price rows EXCEPT purchase prices
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[priceType!='PURCHASE_PRICE']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "NOT_EQUALS operator should be supported in selector");
+
+        // The implementation converts NOT_EQUALS to EQUALS with negation applied to the expression
+        // This test verifies the filter is created without errors
+        // The actual negation semantics are tested in SelectorEvaluatorTest
+    }
+
+    @Test
+    void testBuildFilterWithComplexNotEquals() throws InvalidParameterException {
+        // Test NOT_EQUALS combined with AND operator
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[currencyRef=='EUR' AND priceType!='PURCHASE_PRICE']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "Complex selector with NOT_EQUALS should return a filtering specification");
+    }
+
     // Helper method to create a permission entity
     private AppPermissionEntity createPermission(String name) {
         AppPermissionEntity entity = new AppPermissionEntity();

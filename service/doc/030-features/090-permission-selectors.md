@@ -85,7 +85,7 @@ priceprovider.admin:<DataType>[<selector>]:<Action>
 
 5. **List/search filtering**
    - PermissionFilterBuilder converts selectors to JPA Specifications
-   - Integrated into all PriceRowService.findAll() methods
+   - Integrated into PriceRowService.findAll(page, pageSize, ...) methods
    - Handles union logic (multiple permissions combined with OR)
    - Combines with user query filters using AND logic
 
