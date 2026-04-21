@@ -65,9 +65,13 @@ public class PermissionFilterBuilder {
         List<ParsedPermission> matchingPermissions = new ArrayList<>();
         for (AppPermissionEntity perm : permissions) {
             try {
+                logger.debug("Parsing permission: {}", perm.getName());
                 ParsedPermission parsed = permissionNameParser.parse(perm.getName());
                 if (parsed.matchesTypeAndAction(dataType, action)) {
+                    logger.debug("  -> Matches {}:{}", dataType, action);
                     matchingPermissions.add(parsed);
+                } else {
+                    logger.debug("  -> Does not match {}:{}", dataType, action);
                 }
             } catch (Exception e) {
                 logger.warn("Failed to parse permission '{}': {}", perm.getName(), e.getMessage());
@@ -87,6 +91,8 @@ public class PermissionFilterBuilder {
             logger.debug("Global permission found for {}:{}, no filtering applied", dataType, action);
             return null;
         }
+
+        logger.debug("All {} matching permissions have selectors, will apply filtering", matchingPermissions.size());
 
         // Build OR of all selector specifications
         List<QueryExpression> selectorExpressions = new ArrayList<>();

@@ -159,7 +159,12 @@ public class PriceRowServiceImpl implements PriceRowService {
 
         // Build specification from permission selectors
         Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        logger.debug("Current user permissions count: {}", permissions.size());
+        for (AppPermissionEntity perm : permissions) {
+            logger.debug("Permission: {}", perm.getName());
+        }
         Specification<PriceRowEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "PriceRow", "read");
+        logger.debug("Permission filter built: {}", permissionSpec != null ? "filtering applied" : "no filtering (global permission)");
 
         // Build specification from user query (if provided)
         Specification<PriceRowEntity> querySpec = null;
