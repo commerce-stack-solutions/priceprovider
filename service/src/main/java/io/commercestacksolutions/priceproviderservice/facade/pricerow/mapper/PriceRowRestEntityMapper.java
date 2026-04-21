@@ -112,7 +112,7 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
 
     private static void addTaxation(PriceRowEntity source, InfoPriceRow info) {
         BigDecimal taxRate = source.getTaxClass().getTaxRate();
-        BigDecimal taxRateDecimal = taxRate.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
+        BigDecimal taxRateDecimal = taxRate.movePointLeft(2);
         BigDecimal priceValue = source.getPriceValue();
         BigDecimal taxValue;
 
