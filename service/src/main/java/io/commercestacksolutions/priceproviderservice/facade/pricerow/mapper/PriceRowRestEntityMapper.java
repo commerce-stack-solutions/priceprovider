@@ -112,15 +112,16 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
 
     private static void addTaxation(PriceRowEntity source, InfoPriceRow info) {
         BigDecimal taxRate = source.getTaxClass().getTaxRate();
+        BigDecimal taxRateDecimal = taxRate.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
         BigDecimal priceValue = source.getPriceValue();
         BigDecimal taxValue;
 
         if (source.isTaxIncluded()) {
             // Price includes tax - calculate tax portion
-            taxValue = priceValue.subtract(priceValue.divide(BigDecimal.ONE.add(taxRate), 2, RoundingMode.HALF_UP));
+            taxValue = priceValue.subtract(priceValue.divide(BigDecimal.ONE.add(taxRateDecimal), 2, RoundingMode.HALF_UP));
         } else {
             // Tax to be added - calculate tax to add
-            taxValue = priceValue.multiply(taxRate).setScale(2, RoundingMode.HALF_UP);
+            taxValue = priceValue.multiply(taxRateDecimal).setScale(2, RoundingMode.HALF_UP);
         }
 
         String taxIncludedInfo = source.isTaxIncluded() ? "included (gross)" : "to be added (net)";
