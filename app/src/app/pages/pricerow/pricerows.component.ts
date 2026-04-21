@@ -37,6 +37,22 @@ export class PriceRowsComponent {
   sortDirection = signal<string>('asc');
   selectedPriceRows = signal<Set<string>>(new Set());
   deleteError = signal<string | null>(null);
+
+  // Computed signal to check if user can delete ALL selected items
+  canDeleteSelected = computed(() => {
+    const selected = this.selectedPriceRows();
+    if (selected.size === 0) return false;
+
+    const rows = this.priceRows();
+    // Check if user has delete permission for each selected row
+    for (const id of selected) {
+      const row = rows.find(r => r.id === id);
+      if (!row || !this.permissionService.hasDeletePermissionForInstance('PriceRow', row)) {
+        return false; // If any row can't be deleted, disable the bulk delete button
+      }
+    }
+    return true;
+  });
   
   // Filter state
   activeFilters = signal<Map<string, FilterDefinition>>(new Map());
@@ -244,7 +260,7 @@ export class PriceRowsComponent {
   deleteSelected(): void {
     if (confirm(this.transloco.translate('common.messages.confirmDeleteMultiple', { count: this.selectedPriceRows().size }))) {
       const ids = Array.from(this.selectedPriceRows());
-      
+
       this.pricerowsService.bulkDeletePriceRows(ids)
         .subscribe({
           next: () => {
@@ -258,5 +274,12 @@ export class PriceRowsComponent {
           }
         });
     }
+  }
+
+  /**
+   * Checks if the user can edit a specific price row instance.
+   */
+  canEditRow(row: PriceRow): boolean {
+    return this.permissionService.hasWritePermissionForInstance('PriceRow', row);
   }
 }

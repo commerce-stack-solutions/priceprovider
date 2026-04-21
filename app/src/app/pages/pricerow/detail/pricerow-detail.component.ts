@@ -31,8 +31,17 @@ export class PricerowDetailComponent implements OnInit {
   private transloco = inject(TranslocoService);
   protected permissionService = inject(PermissionService);
 
-  canWrite = computed(() => this.permissionService.hasWritePermission('PriceRow'));
-  canDelete = computed(() => this.permissionService.hasDeletePermission('PriceRow'));
+  canWrite = computed(() => {
+    const priceRow = this.priceRow();
+    if (!priceRow) return false;
+    return this.permissionService.hasWritePermissionForInstance('PriceRow', priceRow);
+  });
+
+  canDelete = computed(() => {
+    const priceRow = this.priceRow();
+    if (!priceRow) return false;
+    return this.permissionService.hasDeletePermissionForInstance('PriceRow', priceRow);
+  });
 
   priceRow = signal<PriceRow | null>(null);
   loading = signal(true);
