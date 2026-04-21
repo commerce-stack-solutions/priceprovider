@@ -42,6 +42,7 @@ priceprovider:
 logging:
   level:
     io.commercestacksolutions.priceproviderservice: DEBUG
+    io.commercestacksolutions.commons: DEBUG
     org.springframework.web: DEBUG
     org.springframework.security: DEBUG
 #    org.hibernate.SQL: DEBUG
