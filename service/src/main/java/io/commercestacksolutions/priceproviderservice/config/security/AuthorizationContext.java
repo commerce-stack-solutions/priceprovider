@@ -32,12 +32,47 @@ public class AuthorizationContext {
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationContext.class);
     private static final String ANONYMOUS_USER_ROLE_NAME = "priceprovider.public:AnonymousUser";
 
+    /**
+     * ThreadLocal flag to bypass authorization during bootstrap/data import.
+     * This is ONLY used during initial data setup when the database is empty
+     * and no permissions/roles exist yet.
+     */
+    private static final ThreadLocal<Boolean> BOOTSTRAP_MODE = ThreadLocal.withInitial(() -> false);
+
     private final JwtClaimsExtractor jwtClaimsExtractor;
     private final AppRoleService appRoleService;
 
     public AuthorizationContext(JwtClaimsExtractor jwtClaimsExtractor, @Lazy AppRoleService appRoleService) {
         this.jwtClaimsExtractor = jwtClaimsExtractor;
         this.appRoleService = appRoleService;
+    }
+
+    /**
+     * Enable bootstrap mode for the current thread.
+     * This allows data import operations to bypass authorization checks.
+     * MUST be called only during initial data setup.
+     */
+    public static void enableBootstrapMode() {
+        logger.info("Bootstrap mode ENABLED - authorization checks will be bypassed");
+        BOOTSTRAP_MODE.set(true);
+    }
+
+    /**
+     * Disable bootstrap mode for the current thread.
+     * This re-enables normal authorization checks.
+     */
+    public static void disableBootstrapMode() {
+        logger.info("Bootstrap mode DISABLED - authorization checks restored");
+        BOOTSTRAP_MODE.remove();
+    }
+
+    /**
+     * Check if bootstrap mode is currently active.
+     *
+     * @return true if in bootstrap mode, false otherwise
+     */
+    public static boolean isBootstrapMode() {
+        return Boolean.TRUE.equals(BOOTSTRAP_MODE.get());
     }
 
     /**

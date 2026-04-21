@@ -38,6 +38,13 @@ public class EntityAuthorizationService {
      * @throws AccessDeniedException if the user doesn't have permission
      */
     public <T> void checkAccess(T entity, String entityType, String action, Object entityId) {
+        // Skip authorization checks during bootstrap/data import
+        if (AuthorizationContext.isBootstrapMode()) {
+            logger.debug("Bootstrap mode active - skipping authorization check for {} on {} with id '{}'",
+                action, entityType, entityId);
+            return;
+        }
+
         Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
         boolean hasAccess = permissionMatcher.hasAccess(permissions, entityType, action, entity);
 
