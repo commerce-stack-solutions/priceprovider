@@ -93,17 +93,45 @@ export class PermissionService {
 
   /** Returns true when the user can read entities of the given data type. */
   hasReadPermission(dataType: string): boolean {
-    return this.hasPermission(`priceprovider.admin:${dataType}:read`);
+    return this.hasPermissionForAction(dataType, 'read');
   }
 
   /** Returns true when the user can create/update entities of the given data type. */
   hasWritePermission(dataType: string): boolean {
-    return this.hasPermission(`priceprovider.admin:${dataType}:write`);
+    return this.hasPermissionForAction(dataType, 'write');
   }
 
   /** Returns true when the user can delete entities of the given data type. */
   hasDeletePermission(dataType: string): boolean {
-    return this.hasPermission(`priceprovider.admin:${dataType}:delete`);
+    return this.hasPermissionForAction(dataType, 'delete');
+  }
+
+  /**
+   * Returns true if the user has ANY permission for the given dataType and action,
+   * including permissions with selectors.
+   *
+   * Examples:
+   * - priceprovider.admin:PriceRow:read (global permission)
+   * - priceprovider.admin:PriceRow[currencyRef=='EUR']:read (selector-based permission)
+   *
+   * Both would return true for hasPermissionForAction('PriceRow', 'read')
+   */
+  private hasPermissionForAction(dataType: string, action: string): boolean {
+    const permissions = this.userPermissions();
+    const prefix = `priceprovider.admin:${dataType}`;
+    const suffix = `:${action}`;
+
+    for (const permission of permissions) {
+      if (permission.startsWith(prefix) && permission.endsWith(suffix)) {
+        // Check if it's either a direct match or has a selector in between
+        const middle = permission.substring(prefix.length, permission.length - suffix.length);
+        if (middle === '' || middle.startsWith('[')) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   /** Delegates to AuthService. */
