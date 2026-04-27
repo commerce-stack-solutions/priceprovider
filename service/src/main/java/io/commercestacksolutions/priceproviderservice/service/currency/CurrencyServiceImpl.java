@@ -1,17 +1,14 @@
 package io.commercestacksolutions.priceproviderservice.service.currency;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
-import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import jakarta.transaction.Transactional;
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Implementation of CurrencyService interface.
@@ -40,7 +36,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final CurrencyEntityRepository currencyEntityRepository;
     private final EntityValidator<CurrencyEntity> entityValidator;
     private final QueryParser queryParser;
-    private final PermissionFilterBuilder permissionFilterBuilder;
+    private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
 
@@ -48,13 +44,13 @@ public class CurrencyServiceImpl implements CurrencyService {
     public CurrencyServiceImpl(
             CurrencyEntityRepository currencyEntityRepository,
             List<ValidationRule<CurrencyEntity>> validationRules,
-            PermissionFilterBuilder permissionFilterBuilder,
+            SpecificationCombiner specificationCombiner,
             AuthorizationContext authorizationContext,
             EntityAuthorizationService entityAuthorizationService) {
         this.currencyEntityRepository = currencyEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(CurrencyEntity.class);
-        this.permissionFilterBuilder = permissionFilterBuilder;
+        this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
     }
@@ -103,34 +99,16 @@ public class CurrencyServiceImpl implements CurrencyService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        // Build specification from permission selectors
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-        Specification<CurrencyEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "Currency", "read");
+        // Combine permission-based and query-based filtering
+        Specification<CurrencyEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Currency", "read", query, queryParser);
 
-        // Build specification from user query (if provided)
-        Specification<CurrencyEntity> querySpec = null;
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            querySpec = SpecificationBuilder.build(expression);
-        }
-
-        // Combine specifications
-        Specification<CurrencyEntity> combinedSpec;
-        if (permissionSpec != null && querySpec != null) {
-            // Both permission filter and query filter present: AND them together
-            combinedSpec = permissionSpec.and(querySpec);
-        } else if (permissionSpec != null) {
-            // Only permission filter
-            combinedSpec = permissionSpec;
-        } else if (querySpec != null) {
-            // Only query filter (user has global permission)
-            combinedSpec = querySpec;
+        if (combinedSpec != null) {
+            return currencyEntityRepository.findAll(combinedSpec, pageRequest);
         } else {
             // No filters at all (global permission, no query)
             return currencyEntityRepository.findAll(pageRequest);
         }
-
-        return currencyEntityRepository.findAll(combinedSpec, pageRequest);
     }
 
     public CurrencyEntity getCurrency(String currencyKey) {

@@ -1,10 +1,8 @@
 package io.commercestacksolutions.priceproviderservice.service.unit;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
-import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
@@ -12,7 +10,6 @@ import io.commercestacksolutions.commons.service.entity.validation.ValidationRul
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import org.slf4j.Logger;
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Implementation of UnitService interface.
@@ -42,18 +38,18 @@ public class UnitServiceImpl implements UnitService {
 
     private final EntityValidator<UnitEntity> entityValidator;
     private final QueryParser queryParser;
-    private final PermissionFilterBuilder permissionFilterBuilder;
+    private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
 
     @Autowired
     public UnitServiceImpl(List<ValidationRule<UnitEntity>> validationRules,
-                           PermissionFilterBuilder permissionFilterBuilder,
+                           SpecificationCombiner specificationCombiner,
                            AuthorizationContext authorizationContext,
                            EntityAuthorizationService entityAuthorizationService) {
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(UnitEntity.class);
-        this.permissionFilterBuilder = permissionFilterBuilder;
+        this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
     }
@@ -118,34 +114,16 @@ public class UnitServiceImpl implements UnitService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        // Build specification from permission selectors
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-        Specification<UnitEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "Unit", "read");
+        // Combine permission-based and query-based filtering
+        Specification<UnitEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Unit", "read", query, queryParser);
 
-        // Build specification from user query (if provided)
-        Specification<UnitEntity> querySpec = null;
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            querySpec = SpecificationBuilder.build(expression);
-        }
-
-        // Combine specifications
-        Specification<UnitEntity> combinedSpec;
-        if (permissionSpec != null && querySpec != null) {
-            // Both permission filter and query filter present: AND them together
-            combinedSpec = permissionSpec.and(querySpec);
-        } else if (permissionSpec != null) {
-            // Only permission filter
-            combinedSpec = permissionSpec;
-        } else if (querySpec != null) {
-            // Only query filter (user has global permission)
-            combinedSpec = querySpec;
+        if (combinedSpec != null) {
+            return unitEntityRepository.findAll(combinedSpec, pageRequest);
         } else {
             // No filters at all (global permission, no query)
             return unitEntityRepository.findAll(pageRequest);
         }
-
-        return unitEntityRepository.findAll(combinedSpec, pageRequest);
     }
 
     public UnitEntity getUnit(String symbol) {

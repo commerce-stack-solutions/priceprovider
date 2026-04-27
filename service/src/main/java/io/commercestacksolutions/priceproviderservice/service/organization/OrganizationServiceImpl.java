@@ -1,17 +1,14 @@
 package io.commercestacksolutions.priceproviderservice.service.organization;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
-import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.OrganizationEntityRepository;
@@ -44,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final GroupEntityRepository groupEntityRepository;
     private final EntityValidator<OrganizationEntity> entityValidator;
     private final QueryParser queryParser;
-    private final PermissionFilterBuilder permissionFilterBuilder;
+    private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
 
@@ -52,14 +49,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationServiceImpl(OrganizationEntityRepository organizationEntityRepository,
                                    GroupEntityRepository groupEntityRepository,
                                    List<ValidationRule<OrganizationEntity>> validationRules,
-                                   PermissionFilterBuilder permissionFilterBuilder,
+                                   SpecificationCombiner specificationCombiner,
                                    AuthorizationContext authorizationContext,
                                    EntityAuthorizationService entityAuthorizationService) {
         this.organizationEntityRepository = organizationEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(OrganizationEntity.class);
-        this.permissionFilterBuilder = permissionFilterBuilder;
+        this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
     }
@@ -122,34 +119,16 @@ public class OrganizationServiceImpl implements OrganizationService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        // Build specification from permission selectors
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-        Specification<OrganizationEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "Organization", "read");
+        // Combine permission-based and query-based filtering
+        Specification<OrganizationEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Organization", "read", query, queryParser);
 
-        // Build specification from user query (if provided)
-        Specification<OrganizationEntity> querySpec = null;
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            querySpec = SpecificationBuilder.build(expression);
-        }
-
-        // Combine specifications
-        Specification<OrganizationEntity> combinedSpec;
-        if (permissionSpec != null && querySpec != null) {
-            // Both permission filter and query filter present: AND them together
-            combinedSpec = permissionSpec.and(querySpec);
-        } else if (permissionSpec != null) {
-            // Only permission filter
-            combinedSpec = permissionSpec;
-        } else if (querySpec != null) {
-            // Only query filter (user has global permission)
-            combinedSpec = querySpec;
+        if (combinedSpec != null) {
+            return organizationEntityRepository.findAll(combinedSpec, pageRequest);
         } else {
             // No filters at all (global permission, no query)
             return organizationEntityRepository.findAll(pageRequest);
         }
-
-        return organizationEntityRepository.findAll(combinedSpec, pageRequest);
     }
 
     public Optional<OrganizationEntity> getOrganizationById(String id) {
