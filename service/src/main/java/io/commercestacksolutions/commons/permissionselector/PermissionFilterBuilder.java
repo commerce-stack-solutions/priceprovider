@@ -5,6 +5,7 @@ import io.commercestacksolutions.commons.permissionselector.PermissionNameParser
 import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryFilter;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
+import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +44,16 @@ public class PermissionFilterBuilder {
     private static final Logger logger = LoggerFactory.getLogger(PermissionFilterBuilder.class);
 
     private final PermissionNameParser permissionNameParser = new PermissionNameParser();
+    private final ApiContextResolver apiContextResolver;
+
+    public PermissionFilterBuilder(ApiContextResolver apiContextResolver) {
+        this.apiContextResolver = apiContextResolver;
+    }
 
     /**
      * Builds a JPA Specification from the user's permissions for a given dataType and action.
+     *
+     * <p>Only considers permissions matching the current API context (admin or public).
      *
      * @param permissions the user's permissions
      * @param dataType    the data type to filter (e.g., "PriceRow")
@@ -61,14 +69,25 @@ public class PermissionFilterBuilder {
             return (root, query, cb) -> cb.disjunction(); // Always false
         }
 
-        // Find all permissions matching dataType:action
+        // Determine the correct permission prefix based on API context
+        String requiredPrefix = apiContextResolver.getCurrentPermissionPrefix();
+
+        // Find all permissions matching dataType:action AND the current API context
         List<ParsedPermission> matchingPermissions = new ArrayList<>();
         for (AppPermissionEntity perm : permissions) {
             try {
                 logger.debug("Parsing permission: {}", perm.getName());
                 ParsedPermission parsed = permissionNameParser.parse(perm.getName());
+
+                // Check if permission matches the required prefix
+                if (!parsed.getPrefix().equals(requiredPrefix)) {
+                    logger.debug("  -> Skipping permission with prefix '{}' (required: '{}')",
+                        parsed.getPrefix(), requiredPrefix);
+                    continue;
+                }
+
                 if (parsed.matchesTypeAndAction(dataType, action)) {
-                    logger.debug("  -> Matches {}:{}", dataType, action);
+                    logger.debug("  -> Matches {}:{} in context '{}'", dataType, action, requiredPrefix);
                     matchingPermissions.add(parsed);
                 } else {
                     logger.debug("  -> Does not match {}:{}", dataType, action);
@@ -80,7 +99,8 @@ public class PermissionFilterBuilder {
 
         if (matchingPermissions.isEmpty()) {
             // No matching permissions = deny all
-            logger.debug("No matching permissions for {}:{}, denying all access", dataType, action);
+            logger.debug("No matching permissions for {}:{} in context '{}', denying all access",
+                dataType, action, requiredPrefix);
             return (root, query, cb) -> cb.disjunction(); // Always false
         }
 
@@ -88,7 +108,8 @@ public class PermissionFilterBuilder {
         boolean hasGlobalPermission = matchingPermissions.stream().anyMatch(p -> !p.hasSelector());
         if (hasGlobalPermission) {
             // Global permission = allow all, no filtering needed
-            logger.debug("Global permission found for {}:{}, no filtering applied", dataType, action);
+            logger.debug("Global permission found for {}:{} in context '{}', no filtering applied",
+                dataType, action, requiredPrefix);
             return null;
         }
 
