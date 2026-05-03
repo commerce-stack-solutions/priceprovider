@@ -34,5 +34,6 @@
   { "name": "priceprovider.admin:Unit:delete", "description": "Delete units" },
   { "name": "priceprovider.admin:ServiceInitialization:write", "description": "Initialize service data" },
   { "name": "priceprovider.public:PriceRow:read", "description": "Read public price rows" },
-  { "name": "priceprovider.public:PriceRow:inspect", "description": "Inspect public price row candidates" }
+  { "name": "priceprovider.public:PriceRow:inspect", "description": "Inspect public price row candidates" },
+  { "name": "priceprovider.public:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE')]:read", "description": "Read public sales and rental prices without group assignment" }
 ]
