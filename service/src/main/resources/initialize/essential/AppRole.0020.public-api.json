@@ -1,0 +1,24 @@
+[
+  {
+    "name": "priceprovider.public:AnonymousUser",
+    "description": "Anonymous user role - read public sales and rental prices only",
+    "permissionRefs": [
+      "priceprovider.public:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE')]:read"
+    ]
+  },
+  {
+    "name": "priceprovider.public:PriceRowReader",
+    "description": "Public price row reader - organization-scoped price access",
+    "permissionRefs": [
+      "priceprovider.public:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE')]:read"
+    ]
+  },
+  {
+    "name": "priceprovider.public:PriceRowInspector",
+    "description": "Public price row inspector - organization-scoped candidate inspection access",
+    "permissionRefs": [
+      "priceprovider.public:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE')]:read",
+      "priceprovider.public:PriceRow:inspect"
+    ]
+  }
+]
