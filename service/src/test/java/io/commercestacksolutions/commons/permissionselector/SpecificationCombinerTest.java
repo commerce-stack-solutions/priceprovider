@@ -4,9 +4,13 @@ import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.QueryReflectionUtil;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collections;
@@ -14,11 +18,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for SpecificationCombiner.
  */
+@ExtendWith(MockitoExtension.class)
 class SpecificationCombinerTest {
+
+    @Mock
+    private ApiContextResolver apiContextResolver;
 
     private SpecificationCombiner specificationCombiner;
     private PermissionFilterBuilder permissionFilterBuilder;
@@ -40,7 +49,9 @@ class SpecificationCombinerTest {
 
     @BeforeEach
     void setUp() {
-        permissionFilterBuilder = new PermissionFilterBuilder();
+        // Mock API context to return admin prefix by default for tests
+        when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
+        permissionFilterBuilder = new PermissionFilterBuilder(apiContextResolver);
         specificationCombiner = new SpecificationCombiner(permissionFilterBuilder);
         queryParser = new QueryParser(TestEntity.class);
     }

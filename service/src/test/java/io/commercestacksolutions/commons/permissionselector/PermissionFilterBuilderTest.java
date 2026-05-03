@@ -1,8 +1,13 @@
 package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
@@ -11,10 +16,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PermissionFilterBuilderTest {
 
-    private final PermissionFilterBuilder filterBuilder = new PermissionFilterBuilder();
+    @Mock
+    private ApiContextResolver apiContextResolver;
+
+    private PermissionFilterBuilder filterBuilder;
+
+    @BeforeEach
+    void setUp() {
+        // Mock API context to return admin prefix by default for tests
+        when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
+        filterBuilder = new PermissionFilterBuilder(apiContextResolver);
+    }
 
     // Test entity class
     static class TestPriceRow {

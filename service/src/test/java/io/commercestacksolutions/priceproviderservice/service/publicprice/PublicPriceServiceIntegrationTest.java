@@ -1,5 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice;
 
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.ChannelEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.CountryEntityRepository;
@@ -81,6 +82,9 @@ public class PublicPriceServiceIntegrationTest {
     
     @BeforeEach
     public void setUp() {
+        // Enable bootstrap mode to bypass permission checks in tests
+        AuthorizationContext.enableBootstrapMode();
+
         priceRowRepository.deleteAll();
         groupRepository.deleteAll();
         channelRepository.deleteAll();
@@ -196,6 +200,9 @@ public class PublicPriceServiceIntegrationTest {
         countryRepository.deleteAll();
         unitRepository.deleteAll();
         currencyRepository.deleteAll();
+
+        // Disable bootstrap mode after test
+        AuthorizationContext.disableBootstrapMode();
     }
     
     @Test

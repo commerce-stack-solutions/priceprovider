@@ -1,9 +1,15 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice.strategy;
 
+import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
 import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityManager;
@@ -13,29 +19,40 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 /**
  * Default implementation of PriceCandidatesQueryStrategy using JPA Criteria API.
- * 
+ *
  * This implementation uses a query builder approach for flexibility and maintainability.
  * The Criteria API allows for dynamic query construction while maintaining type safety.
- * 
+ *
  * The query filters price rows at the database level for optimal performance:
  * - Exact matches: pricedResourceId, currencyRef, priceType
  * - Optional exact match: unitRef (null = any unit matches)
  * - Range filters: minQuantity, validFrom/validTo date range
  * - Group filtering: either no groups or matching group hierarchy with distance-based priority
+ * - Permission filtering: applies user's permission selectors at the database level
  */
 @Component
 public class DefaultPriceCandidatesQueryStrategy implements PriceCandidatesQueryStrategy {
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(DefaultPriceCandidatesQueryStrategy.class);
+
     private final EntityManager entityManager;
-    
+    private final PermissionFilterBuilder permissionFilterBuilder;
+    private final AuthorizationContext authorizationContext;
+
     @Autowired
-    public DefaultPriceCandidatesQueryStrategy(EntityManager entityManager) {
+    public DefaultPriceCandidatesQueryStrategy(
+            EntityManager entityManager,
+            PermissionFilterBuilder permissionFilterBuilder,
+            AuthorizationContext authorizationContext) {
         this.entityManager = entityManager;
+        this.permissionFilterBuilder = permissionFilterBuilder;
+        this.authorizationContext = authorizationContext;
     }
     
     @Override
@@ -132,7 +149,36 @@ public class DefaultPriceCandidatesQueryStrategy implements PriceCandidatesQuery
         if (taxIncludedFilter != null) {
             predicates.add(cb.equal(priceRow.get("taxIncluded"), taxIncludedFilter));
         }
-        
+
+        // 11. Permission filtering - apply user's permission selectors at database level
+        // Skip authorization checks during bootstrap/data import
+        if (!AuthorizationContext.isBootstrapMode()) {
+            Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+
+            try {
+                Specification<PriceRowEntity> permissionSpec = permissionFilterBuilder.buildFilter(permissions, "PriceRow", "read");
+
+                if (permissionSpec != null) {
+                    // Permission spec returned non-null means we need to apply filtering
+                    // Convert the Specification to a Predicate and add it to our predicates list
+                    Predicate permissionPredicate = permissionSpec.toPredicate(priceRow, query, cb);
+                    if (permissionPredicate != null) {
+                        predicates.add(permissionPredicate);
+                        logger.debug("Applied permission-based filtering at database query level");
+                    }
+                } else {
+                    // null spec means global permission without selector - no filtering needed
+                    logger.debug("Global permission found - no permission filtering applied at query level");
+                }
+            } catch (Exception e) {
+                logger.error("Failed to build permission filter, denying all access: {}", e.getMessage());
+                // On error, add a predicate that denies all access as a safety measure
+                predicates.add(cb.disjunction()); // Always false
+            }
+        } else {
+            logger.debug("Bootstrap mode active - skipping permission filtering at query level");
+        }
+
         // Apply all predicates
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         

@@ -1,6 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.facade.publicprice;
 
 import io.commercestacksolutions.commons.exception.NotFoundException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.ChannelEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.CountryEntityRepository;
@@ -87,6 +88,9 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        // Enable bootstrap mode to bypass permission checks in query strategy
+        AuthorizationContext.enableBootstrapMode();
+
         // Set up authentication context
         var authorities = AuthorityUtils.createAuthorityList(
             "priceprovider.admin:PriceRow:write",
@@ -175,6 +179,9 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         countryRepository.deleteAll();
         unitRepository.deleteAll();
         currencyRepository.deleteAll();
+
+        // Disable bootstrap mode after test
+        AuthorizationContext.disableBootstrapMode();
     }
 
     // ---- getBestPrice channel-country validation ----

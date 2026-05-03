@@ -1,8 +1,5 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice;
 
-import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
-import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.service.group.GroupHierarchyService;
 import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
@@ -17,8 +14,6 @@ import java.math.BigDecimal;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Default implementation of PublicPriceService.
@@ -30,8 +25,8 @@ import java.util.stream.Collectors;
  * The service uses a single SQL query to build group hierarchies with distance
  * levels, avoiding N+1 query problems and enabling distance-based group priority.
  *
- * Permission filtering is applied to candidates based on the current user's permissions,
- * ensuring anonymous users and authenticated users only see prices they're authorized to access.
+ * Permission filtering is applied at the database query level by the query strategy,
+ * ensuring that users only retrieve prices they're authorized to access.
  */
 @Service
 public class PublicPriceServiceImpl implements PublicPriceService {
@@ -41,34 +36,25 @@ public class PublicPriceServiceImpl implements PublicPriceService {
     private final PriceCandidatesQueryStrategy queryStrategy;
     private final PriceDeterminationStrategy priceDeterminationStrategy;
     private final GroupHierarchyService groupHierarchyService;
-    private final PermissionMatcher permissionMatcher;
-    private final AuthorizationContext authorizationContext;
 
     @Autowired
     public PublicPriceServiceImpl(
             PriceCandidatesQueryStrategy queryStrategy,
             PriceDeterminationStrategy priceDeterminationStrategy,
-            GroupHierarchyService groupHierarchyService,
-            PermissionMatcher permissionMatcher,
-            AuthorizationContext authorizationContext) {
+            GroupHierarchyService groupHierarchyService) {
         this.queryStrategy = queryStrategy;
         this.priceDeterminationStrategy = priceDeterminationStrategy;
         this.groupHierarchyService = groupHierarchyService;
-        this.permissionMatcher = permissionMatcher;
-        this.authorizationContext = authorizationContext;
     }
     
     @Override
     @Transactional(readOnly = true)
     public PriceRowEntity findBestPrice(PriceMatchingCriteria criteria) {
-        // Get candidate prices for the priced resource
+        // Get candidate prices for the priced resource (permission-filtered at query level)
         List<PriceRowEntity> candidates = getCandidatePrices(criteria);
 
-        // Apply permission-based filtering
-        List<PriceRowEntity> permittedCandidates = filterByPermissions(candidates);
-
-        if (permittedCandidates.isEmpty()) {
-            logger.debug("No permitted price candidates found for {}", criteria.getPricedResourceId());
+        if (candidates.isEmpty()) {
+            logger.debug("No price candidates found for {}", criteria.getPricedResourceId());
             return null;
         }
 
@@ -77,20 +63,17 @@ public class PublicPriceServiceImpl implements PublicPriceService {
             groupHierarchyService.findAllAncestorsWithDistance(criteria.getGroupId());
 
         // Use strategy to determine best match
-        return priceDeterminationStrategy.determineBestPrice(criteria, permittedCandidates, groupHierarchy);
+        return priceDeterminationStrategy.determineBestPrice(criteria, candidates, groupHierarchy);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PriceRowEntity> findAllPrices(PriceMatchingCriteria criteria) {
-        // Get candidate prices for the priced resource
+        // Get candidate prices for the priced resource (permission-filtered at query level)
         List<PriceRowEntity> candidates = getCandidatePrices(criteria);
 
-        // Apply permission-based filtering
-        List<PriceRowEntity> permittedCandidates = filterByPermissions(candidates);
-
-        if (permittedCandidates.isEmpty()) {
-            logger.debug("No permitted price candidates found for {}", criteria.getPricedResourceId());
+        if (candidates.isEmpty()) {
+            logger.debug("No price candidates found for {}", criteria.getPricedResourceId());
             return List.of();
         }
 
@@ -99,7 +82,7 @@ public class PublicPriceServiceImpl implements PublicPriceService {
             groupHierarchyService.findAllAncestorsWithDistance(criteria.getGroupId());
 
         // Use strategy to rank all matches by priority
-        return priceDeterminationStrategy.rankPrices(criteria, permittedCandidates, groupHierarchy);
+        return priceDeterminationStrategy.rankPrices(criteria, candidates, groupHierarchy);
     }
 
     @Override
@@ -115,6 +98,7 @@ public class PublicPriceServiceImpl implements PublicPriceService {
         boolean hasGroups = groupHierarchy != null && !groupHierarchy.isEmpty();
 
         // Find ALL prices matching basic criteria (ignore quantity for now)
+        // Permission filtering happens at the query level
         List<PriceRowEntity> allCandidates = queryStrategy.findCandidatePrices(
             criteria.getPricedResourceId(),
             criteria.getCurrencyRef(),
@@ -133,16 +117,8 @@ public class PublicPriceServiceImpl implements PublicPriceService {
             return List.of();
         }
 
-        // Apply permission-based filtering
-        List<PriceRowEntity> permittedCandidates = filterByPermissions(allCandidates);
-
-        if (permittedCandidates.isEmpty()) {
-            logger.debug("No permitted price candidates found for {}", criteria.getPricedResourceId());
-            return List.of();
-        }
-
         // Find unique minQuantity values
-        java.util.Set<java.math.BigDecimal> quantities = permittedCandidates.stream()
+        java.util.Set<java.math.BigDecimal> quantities = allCandidates.stream()
             .map(PriceRowEntity::getMinQuantity)
             .collect(java.util.stream.Collectors.toSet());
 
@@ -152,7 +128,7 @@ public class PublicPriceServiceImpl implements PublicPriceService {
             .map(qty -> {
 
                 final java.math.BigDecimal currentQty = qty;
-                List<PriceRowEntity> applicableCandidates = permittedCandidates.stream()
+                List<PriceRowEntity> applicableCandidates = allCandidates.stream()
                     .filter(p -> p.getMinQuantity() == null || p.getMinQuantity().compareTo(currentQty) <= 0)
                     .collect(java.util.stream.Collectors.toList());
 
@@ -176,14 +152,15 @@ public class PublicPriceServiceImpl implements PublicPriceService {
 
             .collect(java.util.stream.Collectors.toList());
     }
-    
+
     /**
      * Gets all candidate prices for the priced resource.
-     * 
-     * Uses the query strategy to filter at database level for optimal performance.
+     *
+     * Uses the query strategy to filter at database level for optimal performance,
+     * including permission-based filtering via permission selectors.
      * The query strategy is responsible for building and executing the appropriate
-     * database query based on the criteria.
-     * 
+     * database query based on the criteria and the user's permissions.
+     *
      * Group hierarchy is built using a single SQL query with recursive CTE,
      * providing both group IDs and their distance levels for sorting.
      */
@@ -191,14 +168,14 @@ public class PublicPriceServiceImpl implements PublicPriceService {
         if (criteria.getPricedResourceId() == null) {
             return List.of();
         }
-        
+
         // Build group hierarchy with distance levels using single SQL query
-        List<GroupWithDistance> groupHierarchy = 
+        List<GroupWithDistance> groupHierarchy =
             groupHierarchyService.findAllAncestorsWithDistance(criteria.getGroupId());
-        
-        // Use database-level filtering for performance via strategy
+
+        // Use database-level filtering for performance via strategy (includes permission filtering)
         boolean hasGroups = groupHierarchy != null && !groupHierarchy.isEmpty();
-        
+
         return queryStrategy.findCandidatePrices(
             criteria.getPricedResourceId(),
             criteria.getCurrencyRef(),
@@ -212,44 +189,5 @@ public class PublicPriceServiceImpl implements PublicPriceService {
             criteria.getCountryKey(),
             criteria.getTaxIncludedFilter()
         );
-    }
-
-    /**
-     * Filters price row candidates based on the current user's permissions.
-     *
-     * This method applies permission selector evaluation to each candidate price row,
-     * ensuring that only prices matching the user's permission selectors are returned.
-     *
-     * For example, an anonymous user with permission:
-     * priceprovider.public:PriceRow[groupRefs isEmpty AND (priceType=='SALES_PRICE' OR ...)]:read
-     * will only see prices without group assignment and of the specified price types.
-     *
-     * @param candidates the list of candidate price rows from the database query
-     * @return filtered list containing only prices the user has permission to access
-     */
-    private List<PriceRowEntity> filterByPermissions(List<PriceRowEntity> candidates) {
-        // Skip authorization checks during bootstrap/data import
-        if (AuthorizationContext.isBootstrapMode()) {
-            logger.debug("Bootstrap mode active - skipping permission filtering");
-            return candidates;
-        }
-
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-
-        // If user has global PriceRow:read permission (no selector), return all candidates
-        if (permissionMatcher.hasGlobalPermission(permissions, "PriceRow", "read")) {
-            logger.debug("User has global PriceRow:read permission - no filtering applied");
-            return candidates;
-        }
-
-        // Filter candidates by evaluating permission selectors against each entity
-        List<PriceRowEntity> permittedCandidates = candidates.stream()
-            .filter(priceRow -> permissionMatcher.hasAccess(permissions, "PriceRow", "read", priceRow))
-            .collect(Collectors.toList());
-
-        logger.debug("Permission filtering: {} candidates -> {} permitted",
-            candidates.size(), permittedCandidates.size());
-
-        return permittedCandidates;
     }
 }
