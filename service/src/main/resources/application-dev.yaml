@@ -3,7 +3,14 @@
 # It enables developer-friendly features like Swagger UI, detailed logging, and H2 console
 
 spring:
+  datasource:
+    url: ${PPS_DB_JDBCURL:jdbc:h2:mem:priceProviderService;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driverClassName: ${PPS_DB_DRIVER:org.h2.Driver}
+    username: ${PPS_DB_USERNAME:sa}
+    password: ${PPS_DB_PASSWORD:}
   jpa:
+    database-platform: ${PPS_JPA_DB_PLATFORM:org.hibernate.dialect.H2Dialect}
+    open-in-view: false
     show-sql: false          # Enable SQL logging for debugging
     properties:
       hibernate:
