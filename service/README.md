@@ -271,3 +271,27 @@ service-config:
   initialize:
     sample-data-on: true # or false
 ```
+
+## Documentation
+
+For comprehensive documentation on architecture, development guidelines, features, and API reference, see the [service/doc/](doc/) directory.
+
+### Key Features
+
+- **Query Filtering**: Lucene-like query syntax for flexible data filtering (`q` parameter)
+- **Bulk Operations**: Smart field-matching bulk create/update operations for price rows
+- **Permission Selectors**: Fine-grained, object-level access control with database-level filtering
+  - Field-based permission filters (e.g., `PriceRow[currencyRef=='EUR']:read`)
+  - Anonymous and authenticated user support with different permission scopes
+  - Database-level filtering for optimal performance
+- **Public Price API**: External API for shop systems, PIM, and ERP integration
+- **RBAC Security**: Role-based access control with JWT authentication via Keycloak
+- **Multi-language Support**: Localized names and translations for all master data
+
+### Quick Links
+
+- [Architecture Overview](doc/010-architecture/010-overview.md)
+- [Development Guide](doc/020-development/010-development-guide.md)
+- [Permission Selectors - Business User Guide](doc/030-features/091-permission-selectors-user-guide.md)
+- [Permission Selectors - Technical Guide](doc/030-features/090-permission-selectors.md)
+- [API Reference](doc/040-api-reference/010-general-concept.md)

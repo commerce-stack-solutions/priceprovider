@@ -30,10 +30,15 @@ service/doc/
 │   ├── 040-public-price-api/
 │   │   ├── 010-integration-guide.md          Public Price API - Integration guide for consumers
 │   │   └── 020-developer-guide.md            Public Price API - Developer/architecture guide
+│   ├── 050-channels-countries/
+│   │   ├── 010-business-guide.md             Channel-country consistency business rules
+│   │   └── 020-developer-guide.md            Implementation and validation architecture
 │   ├── 050-rbac-and-user-guide.md            RBAC model, sample users, and organization concept
 │   ├── 060-meta-annotation-concept.md        $meta expand – entity metadata API
 │   ├── 070-service-initialization.md         Service initialization and bootstrap mechanism
-│   └── 080-reference-key-and-id-generation.md  @ReferenceKey, @GeneratedId, and exchangeable ID generation
+│   ├── 080-reference-key-and-id-generation.md  @ReferenceKey, @GeneratedId, and exchangeable ID generation
+│   ├── 090-permission-selectors.md           Permission Selectors - Technical Implementation Guide
+│   └── 091-permission-selectors-user-guide.md  Permission Selectors - Business User Guide
 │
 └── 040-api-reference/
     ├── 010-general-concept.md                Typical REST call patterns, GET/PUT/PATCH/POST/DELETE
@@ -67,10 +72,14 @@ service/doc/
 - [Bulk Update of Price Rows](030-features/030-bulk-update-pricerows.md) - Smart field-matching bulk create/update
 - [Public Price API - Integration Guide](030-features/040-public-price-api/010-integration-guide.md) - API for external consumers (shop, PIM, ERP)
 - [Public Price API - Developer Guide](030-features/040-public-price-api/020-developer-guide.md) - Architecture, strategies, extensibility
+- [Channel-Country Consistency - Business Guide](030-features/050-channels-countries/010-business-guide.md) - Business rules for channel-country validation
+- [Channel-Country Consistency - Developer Guide](030-features/050-channels-countries/020-developer-guide.md) - Implementation and validation architecture
 - [RBAC and User Guide](030-features/050-rbac-and-user-guide.md) - RBAC model, sample users, and organization concept
 - [Meta Annotation Concept](030-features/060-meta-annotation-concept.md) - `$meta` expand, `referenceKeyFields`, `@GeneratedId`
 - [Service Initialization](030-features/070-service-initialization.md) - Service initialization and bootstrap mechanism
 - [Reference Key and ID Generation](030-features/080-reference-key-and-id-generation.md) - `@ReferenceKey`, `@GeneratedId`, and exchangeable UUID generation
+- **[Permission Selectors - Technical Guide](030-features/090-permission-selectors.md)** - Implementation, architecture, and developer guide for permission selectors
+- **[Permission Selectors - Business User Guide](030-features/091-permission-selectors-user-guide.md)** - Non-technical guide for creating and managing permission-based access control
 
 ### API Reference
 
@@ -93,4 +102,6 @@ service/doc/
 | Using the public price API | [Public Price API - Integration Guide](030-features/040-public-price-api/010-integration-guide.md) |
 | Initial service setup and bootstrap | [Service Initialization](030-features/070-service-initialization.md) |
 | Understanding `$meta`, `@ReferenceKey`, `@GeneratedId` | [Reference Key and ID Generation](030-features/080-reference-key-and-id-generation.md) |
+| **Creating permission-based access control** | **[Permission Selectors - Business User Guide](030-features/091-permission-selectors-user-guide.md)** |
+| **Implementing permission selectors for new entities** | **[Permission Selectors - Technical Guide](030-features/090-permission-selectors.md)** |
 | Testing the API with Postman | [Postman Collection Guide](020-development/040-postman.md) |
