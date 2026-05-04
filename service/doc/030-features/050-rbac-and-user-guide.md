@@ -22,7 +22,7 @@ The admin role remains protected from AppPermission write/delete operations to p
 
 ### App Permissions
 
-Defined in `AppPermission.0010.json`, permissions follow the pattern `priceprovider.<scope>:<DataType>:<Action>`.
+Defined in `AppPermission.0010.json`, permissions follow the pattern `priceprovider.<scope>:<DataType>[<selector>]:<Action>`.
 
 Examples:
 - `priceprovider.admin:Channel:read`
@@ -30,6 +30,14 @@ Examples:
 - `priceprovider.admin:Unit:delete`
 - `priceprovider.public:PriceRow:read`
 - `priceprovider.public:PriceRow:inspect`
+
+**Permission Selectors**: Permissions can include optional field-based filters (selectors) to restrict access to specific object instances. For example:
+- `priceprovider.admin:PriceRow[currencyRef=='EUR']:read` - Only EUR prices
+- `priceprovider.public:PriceRow[groupRefs isEmpty]:read` - Only prices without group assignment
+
+For detailed information on creating and using permission selectors, see:
+- **[Permission Selectors - Business User Guide](090-permissions/010-permission-selectors-user-guide.md)** - Non-technical guide for administrators
+- **[Permission Selectors - Technical Guide](090-permissions/020-permission-selectors-developer-guide.md)** - Implementation details for developers
 
 ### RBAC Hierarchy
 

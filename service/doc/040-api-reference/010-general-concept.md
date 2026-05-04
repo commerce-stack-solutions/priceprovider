@@ -16,6 +16,27 @@ The public price API is served under:
 /public/api/
 ```
 
+## Security and Permissions
+
+All API endpoints are secured using role-based access control (RBAC) with JWT authentication. Permissions are enforced at the controller layer using Spring Security's `@PreAuthorize` annotations.
+
+**Permission Format**: `priceprovider.<scope>:<DataType>[<selector>]:<Action>`
+
+- **Admin API** (`/api/admin/**`): Requires permissions with `priceprovider.admin:*` prefix
+- **Public API** (`/public/api/**`): Requires permissions with `priceprovider.public:*` prefix
+
+**Permission Selectors**: Permissions can include optional field-based filters (selectors) that restrict access to specific object instances. For example:
+- `priceprovider.admin:PriceRow:read` - Access to all price rows
+- `priceprovider.admin:PriceRow[currencyRef=='EUR']:read` - Access only to EUR price rows
+- `priceprovider.public:PriceRow[groupRefs isEmpty]:read` - Public access to unassigned price rows
+
+Permission filtering is applied at the database level for optimal performance, ensuring users only retrieve data they're authorized to access.
+
+For detailed information on permissions and selectors, see:
+- **[RBAC and User Guide](../030-features/050-rbac-and-user-guide.md)** - Role-based access control overview
+- **[Permission Selectors - Business User Guide](../030-features/090-permissions/010-permission-selectors-user-guide.md)** - Creating permission-based access control
+- **[Permission Selectors - Technical Guide](../030-features/090-permissions/020-permission-selectors-developer-guide.md)** - Implementation details
+
 ## Typical Calls for an Entity
 
 For every managed entity (e.g., `units`, `currencies`, `pricerows`, `groups`, `taxclasses`, `languages`, `organizations`) the following standard operations are available:

@@ -323,5 +323,5 @@ User has `priceprovider.admin:PriceRow[currencyRef=='EUR']:write`
 
 - **Debug Logging:** Ask administrators to enable debug logging to see permission evaluation details
 - **Test in Dev:** Always test new permission configurations in development first
-- **Documentation:** Refer to the [Technical Guide](./090-permission-selectors.md) for implementation details
+- **Documentation:** Refer to the [Technical Guide](./020-permission-selectors-developer-guide.md) for implementation details
 - **Support:** Contact your system administrator for permission-related issues

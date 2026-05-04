@@ -292,6 +292,6 @@ For comprehensive documentation on architecture, development guidelines, feature
 
 - [Architecture Overview](doc/010-architecture/010-overview.md)
 - [Development Guide](doc/020-development/010-development-guide.md)
-- [Permission Selectors - Business User Guide](doc/030-features/091-permission-selectors-user-guide.md)
-- [Permission Selectors - Technical Guide](doc/030-features/090-permission-selectors.md)
+- [Permission Selectors - Business User Guide](doc/030-features/090-permissions/010-permission-selectors-user-guide.md)
+- [Permission Selectors - Technical Guide](doc/030-features/090-permissions/020-permission-selectors-developer-guide.md)
 - [API Reference](doc/040-api-reference/010-general-concept.md)

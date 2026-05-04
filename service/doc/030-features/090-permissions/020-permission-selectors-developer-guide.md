@@ -258,50 +258,75 @@ public Page<PriceRowEntity> findPriceRows(String query, Pageable pageable) {
 
 ### Integrating into Query Strategy (Public API)
 
-```java
-public class DefaultPriceCandidatesQueryStrategy implements PriceCandidatesQueryStrategy {
+**Important**: All custom query strategy implementations must extend `AbstractPermissionAwarePriceCandidatesQueryStrategy` to ensure permission filtering is automatically applied.
 
-    private final EntityManager entityManager;
-    private final PermissionFilterBuilder permissionFilterBuilder;
-    private final AuthorizationContext authorizationContext;
+The abstract base class provides:
+- Automatic permission filtering at database level
+- Trace logging for SQL queries (when TRACE level is enabled)
+- Consistent error handling with fail-safe access denial
+- Centralized permission filtering logic
+
+**Example - Custom Query Strategy:**
+
+```java
+@Component
+public class CustomPriceCandidatesQueryStrategy
+        extends AbstractPermissionAwarePriceCandidatesQueryStrategy
+        implements PriceCandidatesQueryStrategy {
+
+    @Autowired
+    public CustomPriceCandidatesQueryStrategy(
+            EntityManager entityManager,
+            PermissionFilterBuilder permissionFilterBuilder,
+            AuthorizationContext authorizationContext) {
+        super(entityManager, permissionFilterBuilder, authorizationContext);
+    }
 
     @Override
-    public List<PriceRowEntity> findCandidatePrices(...) {
-        // Build JPA Criteria query
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<PriceRowEntity> query = cb.createQuery(PriceRowEntity.class);
-        Root<PriceRowEntity> root = query.from(PriceRowEntity.class);
+    public List<PriceRowEntity> findCandidatePrices(
+            String pricedResourceId,
+            String currencyRef,
+            PriceType priceType,
+            // ... other parameters
+            ) {
 
-        List<Predicate> predicates = new ArrayList<>();
+        // Build parameter object
+        PriceCandidatesQueryParams params = PriceCandidatesQueryParams.builder()
+            .pricedResourceId(pricedResourceId)
+            .currencyRef(currencyRef)
+            .priceType(priceType)
+            // ... set other parameters
+            .build();
 
-        // Add business logic predicates
-        predicates.add(cb.equal(root.get("currencyRef"), currencyRef));
+        // Execute query with automatic permission filtering
+        return executeQuery(params);
+    }
+
+    @Override
+    protected void buildBusinessLogicPredicates(
+            CriteriaBuilder cb,
+            Root<PriceRowEntity> root,
+            CriteriaQuery<?> query,
+            List<Predicate> predicates,
+            PriceCandidatesQueryParams params) {
+
+        // Add your custom query logic here
+        predicates.add(cb.equal(root.get("pricedResourceId"), params.getPricedResourceId()));
+        predicates.add(cb.equal(root.get("currencyRef").get("currencyKey"), params.getCurrencyRef()));
         // ... more business logic predicates
 
-        // Add permission filtering at query construction time
-        if (!AuthorizationContext.isBootstrapMode()) {
-            Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-
-            try {
-                Specification<PriceRowEntity> permissionSpec =
-                    permissionFilterBuilder.buildFilter(permissions, "PriceRow", "read");
-
-                if (permissionSpec != null) {
-                    Predicate permissionPredicate = permissionSpec.toPredicate(root, query, cb);
-                    predicates.add(permissionPredicate);
-                }
-            } catch (Exception e) {
-                // On error, deny all access
-                predicates.add(cb.disjunction()); // Always false
-            }
-        }
-
-        // Execute query with permission filtering at SQL level
-        query.where(cb.and(predicates.toArray(new Predicate[0])));
-        return entityManager.createQuery(query).getResultList();
+        // Note: Permission filtering is automatically added by the abstract base class
+        // Note: SQL query is automatically logged at TRACE level
     }
 }
 ```
+
+**Key Points:**
+- **Mandatory Extension**: All query strategies MUST extend `AbstractPermissionAwarePriceCandidatesQueryStrategy`
+- **Separation of Concerns**: Business logic goes in `buildBusinessLogicPredicates()`, permission filtering is automatic
+- **SQL Logging**: Enable TRACE logging on `AbstractPermissionAwarePriceCandidatesQueryStrategy` to see generated SQL
+- **No Direct Filtering**: Never add permission filtering manually - the base class handles it
+- **Parameter Object**: Use `PriceCandidatesQueryParams.builder()` for clean parameter passing
 
 ## Acceptance Criteria Status
 
@@ -383,6 +408,7 @@ Enable debug logging to see permission evaluation:
 logging:
   level:
     io.commercestacksolutions.commons.permissionselector: DEBUG
+    io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.AbstractPermissionAwarePriceCandidatesQueryStrategy: DEBUG
 ```
 
 Sample output:
@@ -390,7 +416,30 @@ Sample output:
 DEBUG PermissionFilterBuilder - No permissions for PriceRow:read, denying all access
 DEBUG PermissionFilterBuilder - Global permission found for PriceRow:read, no filtering applied
 DEBUG PermissionMatcher - Permission check: PriceRow:read on PriceRowEntity -> GRANTED (Matched permission: priceprovider.admin:PriceRow[currencyRef=='EUR']:read)
+DEBUG AbstractPermissionAwarePriceCandidatesQueryStrategy - Applied permission-based filtering at database query level
+DEBUG AbstractPermissionAwarePriceCandidatesQueryStrategy - Global permission found - no permission filtering applied at query level
 ```
+
+### SQL Query Logging
+
+Enable TRACE logging to see generated SQL queries with permission filtering:
+
+```yaml
+logging:
+  level:
+    io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.AbstractPermissionAwarePriceCandidatesQueryStrategy: TRACE
+```
+
+Sample output:
+```
+TRACE AbstractPermissionAwarePriceCandidatesQueryStrategy - Executing price candidates query for pricedResourceId=PROD-001, SQL: select pricerow0_.id as id1_6_, ... from price_row pricerow0_ where pricerow0_.priced_resource_id=? and pricerow0_.currency_ref=? and pricerow0_.price_type=? and (pricerow0_.price_type='SALES_PRICE' or pricerow0_.price_type='RENTAL_BASE_PRICE')
+```
+
+This is particularly useful for:
+- Understanding the exact WHERE clause generated by permission filtering
+- Performance analysis and query optimization
+- Debugging permission selector logic
+- Verifying that permission filtering is working as expected
 
 ### Common Issues
 
@@ -484,9 +533,9 @@ public class MyEntityController {
 ## References
 
 - **Original Issue**: #49 - feat candidate - extend AppPermissions by selectors
-- **Business User Guide**: [091-permission-selectors-user-guide.md](./091-permission-selectors-user-guide.md)
-- **Security Overview**: [020-security.md](../020-development/020-security.md)
-- **RBAC Guide**: [050-rbac-and-user-guide.md](./050-rbac-and-user-guide.md)
+- **Business User Guide**: [010-permission-selectors-user-guide.md](./010-permission-selectors-user-guide.md)
+- **Security Overview**: [020-security.md](../../020-development/020-security.md)
+- **RBAC Guide**: [050-rbac-and-user-guide.md](../050-rbac-and-user-guide.md)
 - **Package**: `io.commercestacksolutions.commons.permissionselector`
 - **Key Commits**:
   - 7e4ba7e - Initial selector parsing infrastructure
