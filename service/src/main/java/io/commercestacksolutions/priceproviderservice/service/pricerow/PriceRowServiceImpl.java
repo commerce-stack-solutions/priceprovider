@@ -13,7 +13,6 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEnti
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.service.channel.ChannelService;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching.PriceRowMatchingContext;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching.SmartMatchingStrategy;
 import org.slf4j.Logger;
@@ -25,11 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Implementation of PriceRowService interface.
@@ -44,7 +39,6 @@ public class PriceRowServiceImpl implements PriceRowService {
     private final GroupEntityRepository groupEntityRepository;
     private final EntityValidator<PriceRowEntity> entityValidator;
     private final QueryParser queryParser;
-    private final ChannelService channelService;
     private final SmartMatchingStrategy smartMatchingStrategy;
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
@@ -55,7 +49,6 @@ public class PriceRowServiceImpl implements PriceRowService {
             PriceRowEntityRepository priceRowEntityRepository,
             GroupEntityRepository groupEntityRepository,
             List<ValidationRule<PriceRowEntity>> validationRules,
-            ChannelService channelService,
             SmartMatchingStrategy smartMatchingStrategy,
             SpecificationCombiner specificationCombiner,
             AuthorizationContext authorizationContext,
@@ -64,7 +57,6 @@ public class PriceRowServiceImpl implements PriceRowService {
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(PriceRowEntity.class);
-        this.channelService = channelService;
         this.smartMatchingStrategy = smartMatchingStrategy;
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
@@ -88,7 +80,7 @@ public class PriceRowServiceImpl implements PriceRowService {
 
         // Check write permission before saving
         entityAuthorizationService.checkAccess(priceRowEntity, getEntityTypeName(), "write",
-            priceRowEntity.getId() != null ? priceRowEntity.getId() : "new");
+                priceRowEntity.getId() != null ? priceRowEntity.getId() : "new");
 
         return priceRowEntityRepository.save(priceRowEntity);
     }
