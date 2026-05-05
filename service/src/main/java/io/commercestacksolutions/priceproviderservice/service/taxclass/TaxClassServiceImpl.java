@@ -72,12 +72,19 @@ public class TaxClassServiceImpl implements TaxClassService {
     }
 
     public TaxClassEntity save(TaxClassEntity taxClassEntity) throws EntityValidationException {
-        validateEntity(taxClassEntity);
-        updateAuditTimestamps(taxClassEntity);
-
         // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching taxClassEntity
         TaxClassEntity existingEntity = fetchAndDetachExistingEntity(
             taxClassEntity.getTaxClassId(), taxClassEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (taxClassEntity.getTaxClassId() != null) {
+            taxClassEntity = entityManager.merge(taxClassEntity);
+        }
+
+        validateEntity(taxClassEntity);
+        updateAuditTimestamps(taxClassEntity);
 
         // Check write permission on both before (existing) and after (new) states
         entityAuthorizationService.checkAccessBeforeAndAfter(

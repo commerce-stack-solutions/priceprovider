@@ -81,12 +81,19 @@ public class UnitServiceImpl implements UnitService {
     }
 
     public UnitEntity save(UnitEntity unitEntity) throws EntityValidationException {
-        validateEntity(unitEntity);
-        updateAuditTimestamps(unitEntity);
-
         // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching unitEntity
         UnitEntity existingEntity = fetchAndDetachExistingEntity(
             unitEntity.getSymbol(), unitEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (unitEntity.getSymbol() != null) {
+            unitEntity = entityManager.merge(unitEntity);
+        }
+
+        validateEntity(unitEntity);
+        updateAuditTimestamps(unitEntity);
 
         // Check write permission on both before (existing) and after (new) states
         entityAuthorizationService.checkAccessBeforeAndAfter(

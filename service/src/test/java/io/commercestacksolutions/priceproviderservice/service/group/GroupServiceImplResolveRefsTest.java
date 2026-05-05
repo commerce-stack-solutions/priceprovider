@@ -6,6 +6,7 @@ import io.commercestacksolutions.priceproviderservice.config.security.Authorizat
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,11 +45,14 @@ public class GroupServiceImplResolveRefsTest {
     @Mock
     private EntityAuthorizationService entityAuthorizationService;
 
+    @Mock
+    private EntityManager entityManager;
+
     private GroupServiceImpl groupService;
 
     @BeforeEach
     void setUp() {
-        groupService = new GroupServiceImpl(groupEntityRepository, List.of(validationRule), specificationCombiner, authorizationContext, entityAuthorizationService);
+        groupService = new GroupServiceImpl(groupEntityRepository, List.of(validationRule), specificationCombiner, authorizationContext, entityAuthorizationService, entityManager);
     }
 
     // ---------- helpers ----------

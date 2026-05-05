@@ -12,6 +12,7 @@ import io.commercestacksolutions.commons.service.entity.validation.exception.Ent
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.CountryEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ public class CountryServiceImpl implements CountryService {
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public CountryServiceImpl(
@@ -46,7 +48,8 @@ public class CountryServiceImpl implements CountryService {
             List<ValidationRule<CountryEntity>> validationRules,
             SpecificationCombiner specificationCombiner,
             AuthorizationContext authorizationContext,
-            EntityAuthorizationService entityAuthorizationService) {
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.countryEntityRepository = countryEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
@@ -54,6 +57,7 @@ public class CountryServiceImpl implements CountryService {
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -68,12 +72,28 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public CountryEntity save(CountryEntity countryEntity) throws EntityValidationException {
+        // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching countryEntity
+        CountryEntity existingEntity = fetchAndDetachExistingEntity(
+            countryEntity.getIsoKey(), countryEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (countryEntity.getIsoKey() != null) {
+            countryEntity = entityManager.merge(countryEntity);
+        }
+
         validateEntity(countryEntity);
         updateAuditTimestamps(countryEntity);
 
-        // Check write permission before saving
-        entityAuthorizationService.checkAccess(countryEntity, getEntityTypeName(), "write",
-            countryEntity.getIsoKey() != null ? countryEntity.getIsoKey() : "new");
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            countryEntity,
+            getEntityTypeName(),
+            "write",
+            countryEntity.getIsoKey() != null ? countryEntity.getIsoKey() : "new"
+        );
 
         return countryEntityRepository.save(countryEntity);
     }
@@ -81,7 +101,14 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public void deleteCountry(String isoKey) {
         countryEntityRepository.findById(isoKey).ifPresent(entity -> {
-            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", isoKey);
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                isoKey
+            );
             countryEntityRepository.deleteById(isoKey);
         });
     }

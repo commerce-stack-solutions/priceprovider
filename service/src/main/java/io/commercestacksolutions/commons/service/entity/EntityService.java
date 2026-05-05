@@ -84,12 +84,19 @@ public interface EntityService<T> {
      * <p><b>Usage in service save() methods:</b></p>
      * <pre>
      * public MyEntity save(MyEntity entity) throws EntityValidationException {
-     *     validateEntity(entity);
-     *     updateAuditTimestamps(entity);
-     *
      *     // Fetch and detach existing entity for permission check
+     *     // Note: This will clear the persistence context, detaching the incoming entity
      *     MyEntity existingEntity = fetchAndDetachExistingEntity(
      *         entity.getId(), myEntityRepository, entityManager);
+     *
+     *     // Re-attach the incoming entity to the persistence context
+     *     // This is necessary because fetchAndDetachExistingEntity clears the context
+     *     if (entity.getId() != null) {
+     *         entity = entityManager.merge(entity);
+     *     }
+     *
+     *     validateEntity(entity);
+     *     updateAuditTimestamps(entity);
      *
      *     // Check write permission on both before and after states
      *     entityAuthorizationService.checkAccessBeforeAndAfter(
@@ -100,19 +107,23 @@ public interface EntityService<T> {
      * }
      * </pre>
      *
-     * <p><b>Why detachment is necessary:</b></p>
+     * <p><b>Why this pattern is necessary:</b></p>
      * <ul>
-     *   <li>JPA manages entity state and automatically synchronizes changes across references to the same entity</li>
-     *   <li>Without detachment, both "existingEntity" and the entity being saved would reference the same managed object</li>
-     *   <li>Changes to the entity would be reflected in "existingEntity", making before/after checks ineffective</li>
-     *   <li>Detachment creates a true snapshot of the database state before modification</li>
+     *   <li>JPA's first-level cache (persistence context) returns the same managed instance for repeated queries by ID</li>
+     *   <li>If the incoming entity is already managed and modified, {@code entityManager.find()} would return that same instance</li>
+     *   <li>We must clear the persistence context to force a fresh fetch from the database</li>
+     *   <li>After clearing, the incoming entity becomes detached and must be re-attached with {@code merge()}</li>
+     *   <li>The fetched entity is immediately detached to create an independent "before" snapshot</li>
      * </ul>
+     *
+     * <p><b>Important:</b> This method clears the entire persistence context using {@code entityManager.clear()}.
+     * The calling code must re-attach the incoming entity using {@code entityManager.merge()} if it has an ID.</p>
      *
      * @param <T> the entity type
      * @param <ID> the ID type (typically String for this codebase, but can be Long or composite keys)
      * @param entityId the ID of the entity to fetch (null returns null)
-     * @param repository the JPA repository for the entity type
-     * @param entityManager the JPA EntityManager for detachment
+     * @param repository the JPA repository for the entity type (not used, kept for API compatibility)
+     * @param entityManager the JPA EntityManager for clearing context, fetching, and detachment
      * @return the detached entity from the database, or null if the ID is null or entity not found
      */
     default <ID> T fetchAndDetachExistingEntity(ID entityId, JpaRepository<T, ID> repository, EntityManager entityManager) {
@@ -120,9 +131,15 @@ public interface EntityService<T> {
             return null;
         }
 
-        T existingEntity = repository.findById(entityId).orElse(null);
+        // Clear the persistence context to remove all managed entities
+        // This is necessary to force a fresh database fetch without getting the modified instance
+        entityManager.clear();
+
+        // Now fetch the entity from the database - it will be a fresh instance
+        T existingEntity = entityManager.find(getTargetClass(), entityId);
+
         if (existingEntity != null) {
-            // Detach to ensure it won't be modified when we change the "after" entity
+            // Detach immediately to create an independent snapshot
             entityManager.detach(existingEntity);
         }
 

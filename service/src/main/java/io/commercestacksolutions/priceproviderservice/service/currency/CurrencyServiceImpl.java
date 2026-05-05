@@ -70,12 +70,19 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     public CurrencyEntity save(CurrencyEntity currencyEntity) throws EntityValidationException {
-        validateEntity(currencyEntity);
-        updateAuditTimestamps(currencyEntity);
-
         // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching currencyEntity
         CurrencyEntity existingEntity = fetchAndDetachExistingEntity(
             currencyEntity.getCurrencyKey(), currencyEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (currencyEntity.getCurrencyKey() != null) {
+            currencyEntity = entityManager.merge(currencyEntity);
+        }
+
+        validateEntity(currencyEntity);
+        updateAuditTimestamps(currencyEntity);
 
         // Check write permission on both before (existing) and after (new) states
         entityAuthorizationService.checkAccessBeforeAndAfter(

@@ -72,12 +72,19 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public ChannelEntity save(ChannelEntity channelEntity) throws EntityValidationException {
-        validateEntity(channelEntity);
-        updateAuditTimestamps(channelEntity);
-
         // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching channelEntity
         ChannelEntity existingEntity = fetchAndDetachExistingEntity(
             channelEntity.getId(), channelEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (channelEntity.getId() != null) {
+            channelEntity = entityManager.merge(channelEntity);
+        }
+
+        validateEntity(channelEntity);
+        updateAuditTimestamps(channelEntity);
 
         // Check write permission on both before (existing) and after (new) states
         entityAuthorizationService.checkAccessBeforeAndAfter(

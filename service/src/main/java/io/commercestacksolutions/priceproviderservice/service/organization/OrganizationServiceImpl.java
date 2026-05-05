@@ -13,6 +13,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEnti
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.OrganizationEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public OrganizationServiceImpl(OrganizationEntityRepository organizationEntityRepository,
@@ -51,7 +53,8 @@ public class OrganizationServiceImpl implements OrganizationService {
                                    List<ValidationRule<OrganizationEntity>> validationRules,
                                    SpecificationCombiner specificationCombiner,
                                    AuthorizationContext authorizationContext,
-                                   EntityAuthorizationService entityAuthorizationService) {
+                                   EntityAuthorizationService entityAuthorizationService,
+                                   EntityManager entityManager) {
         this.organizationEntityRepository = organizationEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
@@ -59,6 +62,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -72,13 +76,29 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     public OrganizationEntity save(OrganizationEntity organizationEntity) throws EntityValidationException {
+        // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching organizationEntity
+        OrganizationEntity existingEntity = fetchAndDetachExistingEntity(
+            organizationEntity.getId(), organizationEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (organizationEntity.getId() != null) {
+            organizationEntity = entityManager.merge(organizationEntity);
+        }
+
         resolvePathBasedRefs(organizationEntity);
         validateEntity(organizationEntity);
         updateAuditTimestamps(organizationEntity);
 
-        // Check write permission before saving
-        entityAuthorizationService.checkAccess(organizationEntity, getEntityTypeName(), "write",
-            organizationEntity.getId() != null ? organizationEntity.getId() : "new");
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            organizationEntity,
+            getEntityTypeName(),
+            "write",
+            organizationEntity.getId() != null ? organizationEntity.getId() : "new"
+        );
 
         return organizationEntityRepository.save(organizationEntity);
     }
@@ -152,7 +172,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     public void deleteOrganization(String id) {
         organizationEntityRepository.findById(id).ifPresent(entity -> {
-            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", id);
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id
+            );
             organizationEntityRepository.deleteById(id);
         });
     }
