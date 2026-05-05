@@ -12,6 +12,7 @@ import io.commercestacksolutions.commons.web.rest.Message;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +42,20 @@ public class UnitServiceImpl implements UnitService {
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public UnitServiceImpl(List<ValidationRule<UnitEntity>> validationRules,
                            SpecificationCombiner specificationCombiner,
                            AuthorizationContext authorizationContext,
-                           EntityAuthorizationService entityAuthorizationService) {
+                           EntityAuthorizationService entityAuthorizationService,
+                           EntityManager entityManager) {
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(UnitEntity.class);
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     // Create operation
@@ -80,9 +84,18 @@ public class UnitServiceImpl implements UnitService {
         validateEntity(unitEntity);
         updateAuditTimestamps(unitEntity);
 
-        // Check write permission before saving
-        entityAuthorizationService.checkAccess(unitEntity, getEntityTypeName(), "write",
-            unitEntity.getSymbol() != null ? unitEntity.getSymbol() : "new");
+        // Fetch and detach existing entity for permission check
+        UnitEntity existingEntity = fetchAndDetachExistingEntity(
+            unitEntity.getSymbol(), unitEntityRepository, entityManager);
+
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            unitEntity,
+            getEntityTypeName(),
+            "write",
+            unitEntity.getSymbol() != null ? unitEntity.getSymbol() : "new"
+        );
 
         return unitEntityRepository.save(unitEntity);
     }
@@ -90,7 +103,14 @@ public class UnitServiceImpl implements UnitService {
     // Delete operation
     public void deleteUnit(String symbol) {
         unitEntityRepository.findById(symbol).ifPresent(entity -> {
-            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", symbol);
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                symbol
+            );
             unitEntityRepository.deleteById(symbol);
         });
     }

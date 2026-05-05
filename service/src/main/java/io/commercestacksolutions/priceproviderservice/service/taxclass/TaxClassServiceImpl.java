@@ -13,6 +13,7 @@ import io.commercestacksolutions.priceproviderservice.commons.messagekeys.Messag
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class TaxClassServiceImpl implements TaxClassService {
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public TaxClassServiceImpl(
@@ -47,7 +49,8 @@ public class TaxClassServiceImpl implements TaxClassService {
             List<ValidationRule<TaxClassEntity>> validationRules,
             SpecificationCombiner specificationCombiner,
             AuthorizationContext authorizationContext,
-            EntityAuthorizationService entityAuthorizationService) {
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.taxClassEntityRepository = taxClassEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
@@ -55,6 +58,7 @@ public class TaxClassServiceImpl implements TaxClassService {
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -71,16 +75,32 @@ public class TaxClassServiceImpl implements TaxClassService {
         validateEntity(taxClassEntity);
         updateAuditTimestamps(taxClassEntity);
 
-        // Check write permission before saving
-        entityAuthorizationService.checkAccess(taxClassEntity, getEntityTypeName(), "write",
-            taxClassEntity.getTaxClassId() != null ? taxClassEntity.getTaxClassId() : "new");
+        // Fetch and detach existing entity for permission check
+        TaxClassEntity existingEntity = fetchAndDetachExistingEntity(
+            taxClassEntity.getTaxClassId(), taxClassEntityRepository, entityManager);
+
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            taxClassEntity,
+            getEntityTypeName(),
+            "write",
+            taxClassEntity.getTaxClassId() != null ? taxClassEntity.getTaxClassId() : "new"
+        );
 
         return taxClassEntityRepository.save(taxClassEntity);
     }
 
     public void deleteTaxClass(String taxClassId) {
         taxClassEntityRepository.findById(taxClassId).ifPresent(entity -> {
-            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", taxClassId);
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                taxClassId
+            );
             taxClassEntityRepository.deleteById(taxClassId);
         });
     }

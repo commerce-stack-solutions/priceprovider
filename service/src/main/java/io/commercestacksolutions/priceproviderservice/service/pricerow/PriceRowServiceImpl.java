@@ -82,15 +82,9 @@ public class PriceRowServiceImpl implements PriceRowService {
         validateEntity(priceRowEntity);
         updateAuditTimestamps(priceRowEntity);
 
-        // Fetch existing entity from database if this is an update
-        PriceRowEntity existingEntity = null;
-        if (priceRowEntity.getId() != null) {
-            existingEntity = priceRowEntityRepository.findById(priceRowEntity.getId()).orElse(null);
-            // Detach the existing entity to ensure it won't be modified when we check permissions
-            if (existingEntity != null) {
-                entityManager.detach(existingEntity);
-            }
-        }
+        // Fetch and detach existing entity for permission check
+        PriceRowEntity existingEntity = fetchAndDetachExistingEntity(
+            priceRowEntity.getId(), priceRowEntityRepository, entityManager);
 
         // Check write permission on both before (existing) and after (new) states
         entityAuthorizationService.checkAccessBeforeAndAfter(
