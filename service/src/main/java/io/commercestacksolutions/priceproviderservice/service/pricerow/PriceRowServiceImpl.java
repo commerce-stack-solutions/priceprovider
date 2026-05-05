@@ -15,6 +15,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceR
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching.PriceRowMatchingContext;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching.SmartMatchingStrategy;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class PriceRowServiceImpl implements PriceRowService {
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public PriceRowServiceImpl(
@@ -52,7 +54,8 @@ public class PriceRowServiceImpl implements PriceRowService {
             SmartMatchingStrategy smartMatchingStrategy,
             SpecificationCombiner specificationCombiner,
             AuthorizationContext authorizationContext,
-            EntityAuthorizationService entityAuthorizationService) {
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.priceRowEntityRepository = priceRowEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
@@ -61,6 +64,7 @@ public class PriceRowServiceImpl implements PriceRowService {
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -78,9 +82,24 @@ public class PriceRowServiceImpl implements PriceRowService {
         validateEntity(priceRowEntity);
         updateAuditTimestamps(priceRowEntity);
 
-        // Check write permission before saving
-        entityAuthorizationService.checkAccess(priceRowEntity, getEntityTypeName(), "write",
-                priceRowEntity.getId() != null ? priceRowEntity.getId() : "new");
+        // Fetch existing entity from database if this is an update
+        PriceRowEntity existingEntity = null;
+        if (priceRowEntity.getId() != null) {
+            existingEntity = priceRowEntityRepository.findById(priceRowEntity.getId()).orElse(null);
+            // Detach the existing entity to ensure it won't be modified when we check permissions
+            if (existingEntity != null) {
+                entityManager.detach(existingEntity);
+            }
+        }
+
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            priceRowEntity,
+            getEntityTypeName(),
+            "write",
+            priceRowEntity.getId() != null ? priceRowEntity.getId() : "new"
+        );
 
         return priceRowEntityRepository.save(priceRowEntity);
     }
@@ -173,7 +192,14 @@ public class PriceRowServiceImpl implements PriceRowService {
     public void deleteById(String id) {
         Optional<PriceRowEntity> entity = priceRowEntityRepository.findById(id);
         if (entity.isPresent()) {
-            entityAuthorizationService.checkAccess(entity.get(), getEntityTypeName(), "delete", id);
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity.get(),
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id
+            );
             priceRowEntityRepository.deleteById(id);
         }
     }

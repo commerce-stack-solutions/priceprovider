@@ -4,6 +4,7 @@ import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuil
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -214,7 +215,7 @@ public abstract class AbstractPermissionAwarePriceCandidatesQueryStrategy {
 
         try {
             // Attempt to extract SQL using Hibernate-specific API
-            org.hibernate.query.Query<?> hibernateQuery = typedQuery.unwrap(org.hibernate.query.Query.class);
+            Query<?> hibernateQuery = typedQuery.unwrap(Query.class);
             String sql = hibernateQuery.getQueryString();
             logger.trace("Executing price candidates query for pricedResourceId={}, SQL: {}",
                 params.getPricedResourceId(), sql);
