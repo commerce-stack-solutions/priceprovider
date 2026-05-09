@@ -53,6 +53,15 @@ public class GroupServiceImplResolveRefsTest {
     @BeforeEach
     void setUp() {
         groupService = new GroupServiceImpl(groupEntityRepository, List.of(validationRule), specificationCombiner, authorizationContext, entityAuthorizationService, entityManager);
+
+        // Setup mocks for permission checks (checkAccessBeforeAndAfter doesn't throw by default)
+        doNothing().when(entityAuthorizationService).checkAccessBeforeAndAfter(any(), any(), any(), any(), any());
+
+        // Setup EntityManager mocks for fetch-and-detach logic (lenient because they're not always called)
+        lenient().when(entityManager.find(eq(GroupEntity.class), any())).thenReturn(null);  // For new entities
+        lenient().when(entityManager.merge(any(GroupEntity.class))).thenAnswer(inv -> inv.getArgument(0));
+        lenient().doNothing().when(entityManager).clear();
+        lenient().doNothing().when(entityManager).detach(any());
     }
 
     // ---------- helpers ----------

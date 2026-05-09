@@ -12,6 +12,7 @@ import io.commercestacksolutions.priceproviderservice.commons.messagekeys.Messag
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.LanguageEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class LanguageServiceImpl implements LanguageService {
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public LanguageServiceImpl(
@@ -47,13 +49,15 @@ public class LanguageServiceImpl implements LanguageService {
             List<ValidationRule<LanguageEntity>> validationRules,
             SpecificationCombiner specificationCombiner,
             AuthorizationContext authorizationContext,
-            EntityAuthorizationService entityAuthorizationService) {
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.languageEntityRepository = languageEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(LanguageEntity.class);
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -67,12 +71,28 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     public LanguageEntity save(LanguageEntity languageEntity) throws EntityValidationException {
+        // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching languageEntity
+        LanguageEntity existingEntity = fetchAndDetachExistingEntity(
+            languageEntity.getIsoKey(), languageEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (languageEntity.getIsoKey() != null) {
+            languageEntity = entityManager.merge(languageEntity);
+        }
+
         validateEntity(languageEntity);
         updateAuditTimestamps(languageEntity);
 
-        // Check write permission before saving
-        entityAuthorizationService.checkAccess(languageEntity, getEntityTypeName(), "write",
-            languageEntity.getIsoKey() != null ? languageEntity.getIsoKey() : "new");
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            languageEntity,
+            getEntityTypeName(),
+            "write",
+            languageEntity.getIsoKey() != null ? languageEntity.getIsoKey() : "new"
+        );
 
         return languageEntityRepository.save(languageEntity);
     }
@@ -99,7 +119,14 @@ public class LanguageServiceImpl implements LanguageService {
 
     public void deleteLanguage(String isoKey) {
         languageEntityRepository.findById(isoKey).ifPresent(entity -> {
-            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", isoKey);
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                isoKey
+            );
             languageEntityRepository.deleteById(isoKey);
         });
     }

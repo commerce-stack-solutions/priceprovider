@@ -12,6 +12,7 @@ import io.commercestacksolutions.commons.service.entity.validation.exception.Ent
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class GroupServiceImpl implements GroupService {
     private final SpecificationCombiner specificationCombiner;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public GroupServiceImpl(
@@ -49,13 +51,15 @@ public class GroupServiceImpl implements GroupService {
             List<ValidationRule<GroupEntity>> validationRules,
             SpecificationCombiner specificationCombiner,
             AuthorizationContext authorizationContext,
-            EntityAuthorizationService entityAuthorizationService) {
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(GroupEntity.class);
         this.specificationCombiner = specificationCombiner;
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -69,13 +73,29 @@ public class GroupServiceImpl implements GroupService {
     }
 
     public GroupEntity save(GroupEntity groupEntity) throws EntityValidationException {
+        // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching groupEntity
+        GroupEntity existingEntity = fetchAndDetachExistingEntity(
+            groupEntity.getId(), groupEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (groupEntity.getId() != null) {
+            groupEntity = entityManager.merge(groupEntity);
+        }
+
         resolvePathBasedRefs(groupEntity);
         validateEntity(groupEntity);
         updateAuditTimestamps(groupEntity);
 
-        // Check write permission before saving
-        entityAuthorizationService.checkAccess(groupEntity, getEntityTypeName(), "write",
-            groupEntity.getId() != null ? groupEntity.getId() : "new");
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            groupEntity,
+            getEntityTypeName(),
+            "write",
+            groupEntity.getId() != null ? groupEntity.getId() : "new"
+        );
 
         return groupEntityRepository.save(groupEntity);
     }
@@ -161,7 +181,14 @@ public class GroupServiceImpl implements GroupService {
 
     public void deleteGroup(String id) {
         groupEntityRepository.findById(id).ifPresent(entity -> {
-            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "delete", id);
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id
+            );
             groupEntityRepository.deleteById(id);
         });
     }

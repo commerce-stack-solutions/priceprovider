@@ -3,11 +3,14 @@ package io.commercestacksolutions.priceproviderservice.service.approle;
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppPermissionEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +32,22 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     private final AppPermissionEntityRepository appPermissionEntityRepository;
     private final EntityValidator<AppPermissionEntity> entityValidator;
     private final QueryParser queryParser;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public AppPermissionServiceImpl(AppPermissionEntityRepository appPermissionEntityRepository,
-                                    List<ValidationRule<AppPermissionEntity>> validationRules) {
+                                    List<ValidationRule<AppPermissionEntity>> validationRules,
+                                    AuthorizationContext authorizationContext,
+                                    EntityAuthorizationService entityAuthorizationService,
+                                    EntityManager entityManager) {
         this.appPermissionEntityRepository = appPermissionEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(AppPermissionEntity.class);
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -49,10 +61,31 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
-    public AppPermissionEntity save(AppPermissionEntity entity) throws EntityValidationException {
-        validateEntity(entity);
-        updateAuditTimestamps(entity);
-        return appPermissionEntityRepository.save(entity);
+    public AppPermissionEntity save(AppPermissionEntity permissionEntity) throws EntityValidationException {
+        // Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching permissionEntity
+        AppPermissionEntity existingEntity = fetchAndDetachExistingEntity(
+            permissionEntity.getId(), appPermissionEntityRepository, entityManager);
+
+        // Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (permissionEntity.getId() != null) {
+            permissionEntity = entityManager.merge(permissionEntity);
+        }
+
+        validateEntity(permissionEntity);
+        updateAuditTimestamps(permissionEntity);
+
+        // Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            permissionEntity,
+            getEntityTypeName(),
+            "write",
+            permissionEntity.getId() != null ? permissionEntity.getId().toString() : "new"
+        );
+
+        return appPermissionEntityRepository.save(permissionEntity);
     }
 
     @Override
@@ -105,6 +138,16 @@ public class AppPermissionServiceImpl implements AppPermissionService {
 
     @Override
     public void deleteAppPermission(Long id) {
-        appPermissionEntityRepository.deleteById(id);
+        appPermissionEntityRepository.findById(id).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id.toString()
+            );
+            appPermissionEntityRepository.deleteById(id);
+        });
     }
 }
