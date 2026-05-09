@@ -105,7 +105,8 @@ The `ApiContextResolver` determines the current API context from the request pat
 4. **Object-level authorization**
    - Service layer integrated with PermissionMatcher
    - Authorization checks for read/write/delete operations on individual entities
-   - Pre- and post-update checks to prevent permission violations
+   - Before/after permission checks implemented in all entity services (write and delete operations)
+   - Dual-state validation prevents permission bypass via field modifications
    - AccessDeniedException thrown when access is denied
 
 5. **List/search filtering - Database Level**
@@ -255,6 +256,112 @@ public Page<PriceRowEntity> findPriceRows(String query, Pageable pageable) {
     return repository.findAll(combined, pageable);
 }
 ```
+
+### Before/After Permission Checks for Write and Delete Operations
+
+All entity services implement **dual-state permission checks** for write and delete operations. This ensures that users have permission for both the existing state (before) and the new/modified state (after) of an entity.
+
+**Implementation Pattern:**
+
+```java
+@Service
+public class MyEntityServiceImpl implements MyEntityService {
+    private final MyEntityRepository repository;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
+
+    @Override
+    public MyEntity save(MyEntity entity) throws EntityValidationException {
+        // 1. Fetch and detach existing entity for permission check
+        // Note: This clears the persistence context, detaching the incoming entity
+        MyEntity existingEntity = fetchAndDetachExistingEntity(
+            entity.getId(), repository, entityManager);
+
+        // 2. Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity cleared the context
+        if (entity.getId() != null) {
+            entity = entityManager.merge(entity);
+        }
+
+        // 3. Validate entity
+        validateEntity(entity);
+        updateAuditTimestamps(entity);
+
+        // 4. Check write permission on both before (existing) and after (new) states
+        entityAuthorizationService.checkAccessBeforeAndAfter(
+            existingEntity,
+            entity,
+            getEntityTypeName(),
+            "write",
+            entity.getId() != null ? entity.getId().toString() : "new"
+        );
+
+        // 5. Save entity
+        return repository.save(entity);
+    }
+
+    @Override
+    public void delete(String id) {
+        repository.findById(id).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id
+            );
+            repository.deleteById(id);
+        });
+    }
+}
+```
+
+**Key Points:**
+
+1. **fetchAndDetachExistingEntity**: Helper method from `EntityService` interface that:
+   - Clears the persistence context (removes all managed entities)
+   - Fetches the original entity from the database (fresh, unmodified state)
+   - Detaches it immediately (creates independent snapshot for permission check)
+   - Returns null for new entities (when id is null)
+
+2. **entityManager.merge**: Re-attaches the incoming entity after the context was cleared by `fetchAndDetachExistingEntity`
+
+3. **checkAccessBeforeAndAfter**: Validates permissions against both states:
+   - **Before state** (existingEntity): The original entity from database
+   - **After state** (entity): The new/modified entity to be saved
+   - **For deletes**: After state is null (entity is being removed)
+
+4. **Permission Violation Prevention**: The dual check prevents scenarios like:
+   - User changing a PriceRow from EUR (permitted) to USD (not permitted)
+   - User modifying a PriceRow they have permission for, but the changes would violate their permissions
+   - User deleting an entity they don't have permission to access
+
+**Why This Matters:**
+
+- **Security**: Users cannot bypass permissions by modifying field values
+- **Audit Trail**: Both before/after states are validated and logged
+- **Selector-Based Permissions**: Critical for field-based permissions like `PriceRow[currencyRef=='EUR']:write`
+
+**Example Scenarios:**
+
+*Scenario 1: User updates allowed field*
+- Before: PriceRow with currencyRef='EUR', priceValue=100
+- After: PriceRow with currencyRef='EUR', priceValue=150
+- Permission: `PriceRow[currencyRef=='EUR']:write`
+- Result: ✅ Allowed (both states match permission)
+
+*Scenario 2: User changes restricted field*
+- Before: PriceRow with currencyRef='EUR'
+- After: PriceRow with currencyRef='USD'
+- Permission: `PriceRow[currencyRef=='EUR']:write`
+- Result: ❌ Denied (after state doesn't match permission)
+
+*Scenario 3: User deletes entity*
+- Before: PriceRow with currencyRef='EUR'
+- After: null (deletion)
+- Permission: `PriceRow[currencyRef=='EUR']:delete`
+- Result: ✅ Allowed (before state matches delete permission)
 
 ### Integrating into Query Strategy (Public API)
 
