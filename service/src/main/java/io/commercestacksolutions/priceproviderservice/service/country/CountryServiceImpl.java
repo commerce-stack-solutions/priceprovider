@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,31 +72,32 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
+    public <ID> JpaRepository<CountryEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<CountryEntity, ID> repo = (JpaRepository<CountryEntity, ID>) countryEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(CountryEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getIsoKey();
+        return id;
+    }
+
+    @Override
     public CountryEntity save(CountryEntity countryEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching countryEntity
-        CountryEntity existingEntity = fetchAndDetachExistingEntity(
-            countryEntity.getIsoKey(), countryEntityRepository, entityManager);
-
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (countryEntity.getIsoKey() != null) {
-            countryEntity = entityManager.merge(countryEntity);
-        }
-
-        validateEntity(countryEntity);
-        updateAuditTimestamps(countryEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            countryEntity,
-            getEntityTypeName(),
-            "write",
-            countryEntity.getIsoKey() != null ? countryEntity.getIsoKey() : "new"
-        );
-
-        return countryEntityRepository.save(countryEntity);
+        return performGenericSave(countryEntity);
     }
 
     @Override

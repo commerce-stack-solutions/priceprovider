@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,6 +71,30 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
+    public <ID> JpaRepository<UnitEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<UnitEntity, ID> repo = (JpaRepository<UnitEntity, ID>) unitEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(UnitEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getSymbol();
+        return id;
+    }
+
+    @Override
     public void validateEntity(UnitEntity entity) throws EntityValidationException {
         List<Message> validationErrors = entityValidator.validate(entity);
         if (!validationErrors.isEmpty()) {
@@ -81,30 +106,7 @@ public class UnitServiceImpl implements UnitService {
     }
 
     public UnitEntity save(UnitEntity unitEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching unitEntity
-        UnitEntity existingEntity = fetchAndDetachExistingEntity(
-            unitEntity.getSymbol(), unitEntityRepository, entityManager);
-
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (unitEntity.getSymbol() != null) {
-            unitEntity = entityManager.merge(unitEntity);
-        }
-
-        validateEntity(unitEntity);
-        updateAuditTimestamps(unitEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            unitEntity,
-            getEntityTypeName(),
-            "write",
-            unitEntity.getSymbol() != null ? unitEntity.getSymbol() : "new"
-        );
-
-        return unitEntityRepository.save(unitEntity);
+        return performGenericSave(unitEntity);
     }
 
     // Delete operation

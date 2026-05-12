@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,31 +70,33 @@ public class CurrencyServiceImpl implements CurrencyService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<CurrencyEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<CurrencyEntity, ID> repo = (JpaRepository<CurrencyEntity, ID>) currencyEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(CurrencyEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getCurrencyKey();
+        return id;
+    }
+
+    @Override
     public CurrencyEntity save(CurrencyEntity currencyEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching currencyEntity
-        CurrencyEntity existingEntity = fetchAndDetachExistingEntity(
-            currencyEntity.getCurrencyKey(), currencyEntityRepository, entityManager);
-
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (currencyEntity.getCurrencyKey() != null) {
-            currencyEntity = entityManager.merge(currencyEntity);
-        }
-
-        validateEntity(currencyEntity);
-        updateAuditTimestamps(currencyEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            currencyEntity,
-            getEntityTypeName(),
-            "write",
-            currencyEntity.getCurrencyKey() != null ? currencyEntity.getCurrencyKey() : "new"
-        );
-
-        return currencyEntityRepository.save(currencyEntity);
+        return performGenericSave(currencyEntity);
     }
 
     @Transactional

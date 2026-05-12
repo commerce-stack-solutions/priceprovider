@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,33 +66,37 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
+    public <ID> JpaRepository<AppRoleEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<AppRoleEntity, ID> repo = (JpaRepository<AppRoleEntity, ID>) appRoleEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(AppRoleEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
+    @Override
     public AppRoleEntity save(AppRoleEntity roleEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching roleEntity
-        AppRoleEntity existingEntity = fetchAndDetachExistingEntity(
-            roleEntity.getId(), appRoleEntityRepository, entityManager);
+        return performGenericSave(roleEntity);
+    }
 
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (roleEntity.getId() != null) {
-            roleEntity = entityManager.merge(roleEntity);
-        }
-
-        // Resolve permission entities by name to avoid detached entity issues
+    @Override
+    public void resolveRelatedReferences(AppRoleEntity roleEntity) {
         resolvePermissionRefs(roleEntity);
-        validateEntity(roleEntity);
-        updateAuditTimestamps(roleEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            roleEntity,
-            getEntityTypeName(),
-            "write",
-            roleEntity.getId() != null ? roleEntity.getId().toString() : "new"
-        );
-
-        return appRoleEntityRepository.save(roleEntity);
     }
 
     /**

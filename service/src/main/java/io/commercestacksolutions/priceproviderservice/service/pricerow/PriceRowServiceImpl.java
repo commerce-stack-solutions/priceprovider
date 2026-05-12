@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -77,32 +78,38 @@ public class PriceRowServiceImpl implements PriceRowService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<PriceRowEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<PriceRowEntity, ID> repo = (JpaRepository<PriceRowEntity, ID>) priceRowEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(PriceRowEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
+    @Override
     public PriceRowEntity save(PriceRowEntity priceRowEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching priceRowEntity
-        PriceRowEntity existingEntity = fetchAndDetachExistingEntity(
-            priceRowEntity.getId(), priceRowEntityRepository, entityManager);
+        return performGenericSave(priceRowEntity);
+    }
 
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (priceRowEntity.getId() != null) {
-            priceRowEntity = entityManager.merge(priceRowEntity);
-        }
-
+    @Override
+    public void resolveRelatedReferences(PriceRowEntity priceRowEntity) {
         resolvePathBasedGroupRefs(priceRowEntity);
-        validateEntity(priceRowEntity);
-        updateAuditTimestamps(priceRowEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            priceRowEntity,
-            getEntityTypeName(),
-            "write",
-            priceRowEntity.getId() != null ? priceRowEntity.getId() : "new"
-        );
-
-        return priceRowEntityRepository.save(priceRowEntity);
     }
 
     /**

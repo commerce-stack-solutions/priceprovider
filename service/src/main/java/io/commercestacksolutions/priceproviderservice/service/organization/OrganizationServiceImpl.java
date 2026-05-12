@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -75,32 +76,37 @@ public class OrganizationServiceImpl implements OrganizationService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<OrganizationEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<OrganizationEntity, ID> repo = (JpaRepository<OrganizationEntity, ID>) organizationEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(OrganizationEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
     public OrganizationEntity save(OrganizationEntity organizationEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching organizationEntity
-        OrganizationEntity existingEntity = fetchAndDetachExistingEntity(
-            organizationEntity.getId(), organizationEntityRepository, entityManager);
+        return performGenericSave(organizationEntity);
+    }
 
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (organizationEntity.getId() != null) {
-            organizationEntity = entityManager.merge(organizationEntity);
-        }
-
+    @Override
+    public void resolveRelatedReferences(OrganizationEntity organizationEntity) {
         resolvePathBasedRefs(organizationEntity);
-        validateEntity(organizationEntity);
-        updateAuditTimestamps(organizationEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            organizationEntity,
-            getEntityTypeName(),
-            "write",
-            organizationEntity.getId() != null ? organizationEntity.getId() : "new"
-        );
-
-        return organizationEntityRepository.save(organizationEntity);
     }
 
     /**

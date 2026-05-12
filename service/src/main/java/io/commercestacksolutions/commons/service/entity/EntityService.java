@@ -1,6 +1,7 @@
 package io.commercestacksolutions.commons.service.entity;
 
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
@@ -23,6 +24,43 @@ public interface EntityService<T> {
      * @return the entity validator, or null if no validation is configured
      */
     EntityValidator<T> getEntityValidator();
+
+    /**
+     * Returns the JPA repository for this entity type.
+     * Used by the generic save implementation to fetch and persist entities.
+     *
+     * @param <ID> the ID type for this entity
+     * @return the JPA repository instance
+     */
+    <ID> JpaRepository<T, ID> getRepository();
+
+    /**
+     * Returns the EntityManager for this service.
+     * Used by the generic save implementation for persistence context management.
+     *
+     * @return the EntityManager instance
+     */
+    EntityManager getEntityManager();
+
+    /**
+     * Returns the EntityAuthorizationService for permission checks.
+     * Used by the generic save implementation for before/after authorization.
+     *
+     * @return the EntityAuthorizationService instance
+     */
+    EntityAuthorizationService getEntityAuthorizationService();
+
+    /**
+     * Extracts the entity ID for permission checks and logging.
+     * This method must be implemented by each service to return the entity's ID.
+     * The ID can be of any type (String, Long, composite) but will be used for
+     * fetching the existing entity and logging purposes.
+     *
+     * @param entity the entity to extract ID from
+     * @param <ID> the ID type
+     * @return the entity ID, or null if the entity is new (has no ID yet)
+     */
+    <ID> ID extractEntityId(T entity);
 
     /**
      * Returns the entity type name used for permission checks.
@@ -144,5 +182,103 @@ public interface EntityService<T> {
         }
 
         return existingEntity;
+    }
+
+    /**
+     * Resolves related entity references before saving.
+     * This is a hook method that services can override to resolve path-based or name-based references
+     * to full managed entities before validation and persistence.
+     *
+     * <p>Examples of when to override:</p>
+     * <ul>
+     *   <li>PriceRowService: Resolve groupRefs from path strings to full GroupEntity objects</li>
+     *   <li>GroupService: Resolve parentRefs and subRefs from path strings</li>
+     *   <li>AppRoleService: Resolve permissionRefs from names to full AppPermissionEntity objects</li>
+     * </ul>
+     *
+     * <p>Default implementation does nothing - override in your service if needed.</p>
+     *
+     * @param entity the entity whose references need resolving
+     */
+    default void resolveRelatedReferences(T entity) {
+        // Default: no-op. Override in service implementations that need reference resolution.
+    }
+
+    /**
+     * Generic save implementation that follows the standard entity save pattern:
+     * 1. Fetch and detach existing entity (for before/after permission check)
+     * 2. Merge entity if it has an ID (re-attach to persistence context)
+     * 3. Resolve related references (hook method - override if needed)
+     * 4. Validate entity
+     * 5. Update audit timestamps
+     * 6. Check permissions (before and after states)
+     * 7. Save entity to repository
+     *
+     * <p>This method provides a complete, consistent save implementation across all entity services.
+     * Services that need special reference resolution should override {@link #resolveRelatedReferences(Object)}.</p>
+     *
+     * <p><b>Usage in service implementations:</b></p>
+     * <pre>
+     * &#64;Override
+     * public MyEntity save(MyEntity entity) throws EntityValidationException {
+     *     return performGenericSave(entity);
+     * }
+     *
+     * // If you need custom reference resolution:
+     * &#64;Override
+     * protected void resolveRelatedReferences(MyEntity entity) {
+     *     // Custom logic to resolve entity references
+     * }
+     *
+     * // Implement ID extraction:
+     * &#64;Override
+     * public &lt;ID&gt; ID extractEntityId(MyEntity entity) {
+     *     return (ID) entity.getId(); // or entity.getCurrencyKey(), etc.
+     * }
+     * </pre>
+     *
+     * @param entity the entity to save
+     * @param <ID> the ID type for this entity
+     * @return the saved entity
+     * @throws EntityValidationException if validation fails or permission is denied
+     */
+    default <ID> T performGenericSave(T entity) throws EntityValidationException {
+        // 1. Fetch and detach existing entity for permission check
+        // Note: This will clear the persistence context, detaching the incoming entity
+        ID entityId = extractEntityId(entity);
+        T existingEntity = fetchAndDetachExistingEntity(
+            entityId,
+            getRepository(),
+            getEntityManager()
+        );
+
+        // 2. Re-attach the incoming entity to the persistence context
+        // This is necessary because fetchAndDetachExistingEntity clears the context
+        if (entityId != null) {
+            entity = getEntityManager().merge(entity);
+        }
+
+        // 3. Resolve related references (hook method - override in subclasses if needed)
+        resolveRelatedReferences(entity);
+
+        // 4. Validate entity
+        validateEntity(entity);
+
+        // 5. Update audit timestamps
+        updateAuditTimestamps(entity);
+
+        // 6. Check write permission on both before (existing) and after (new) states
+        getEntityAuthorizationService().checkAccessBeforeAndAfter(
+            existingEntity,
+            entity,
+            getEntityTypeName(),
+            "write",
+            entityId != null ? entityId.toString() : "new"
+        );
+
+        // 7. Save entity
+        @SuppressWarnings("unchecked")
+        T savedEntity = (T) getRepository().save(entity);
+        return savedEntity;
     }
 }

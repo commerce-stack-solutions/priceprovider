@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,31 +71,33 @@ public class LanguageServiceImpl implements LanguageService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<LanguageEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<LanguageEntity, ID> repo = (JpaRepository<LanguageEntity, ID>) languageEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(LanguageEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getIsoKey();
+        return id;
+    }
+
+    @Override
     public LanguageEntity save(LanguageEntity languageEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching languageEntity
-        LanguageEntity existingEntity = fetchAndDetachExistingEntity(
-            languageEntity.getIsoKey(), languageEntityRepository, entityManager);
-
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (languageEntity.getIsoKey() != null) {
-            languageEntity = entityManager.merge(languageEntity);
-        }
-
-        validateEntity(languageEntity);
-        updateAuditTimestamps(languageEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            languageEntity,
-            getEntityTypeName(),
-            "write",
-            languageEntity.getIsoKey() != null ? languageEntity.getIsoKey() : "new"
-        );
-
-        return languageEntityRepository.save(languageEntity);
+        return performGenericSave(languageEntity);
     }
 
     public List<LanguageEntity> getAllLanguages() {

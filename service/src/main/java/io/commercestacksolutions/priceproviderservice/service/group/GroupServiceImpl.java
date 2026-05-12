@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -72,32 +73,38 @@ public class GroupServiceImpl implements GroupService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<GroupEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<GroupEntity, ID> repo = (JpaRepository<GroupEntity, ID>) groupEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(GroupEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
+    @Override
     public GroupEntity save(GroupEntity groupEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching groupEntity
-        GroupEntity existingEntity = fetchAndDetachExistingEntity(
-            groupEntity.getId(), groupEntityRepository, entityManager);
+        return performGenericSave(groupEntity);
+    }
 
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (groupEntity.getId() != null) {
-            groupEntity = entityManager.merge(groupEntity);
-        }
-
+    @Override
+    public void resolveRelatedReferences(GroupEntity groupEntity) {
         resolvePathBasedRefs(groupEntity);
-        validateEntity(groupEntity);
-        updateAuditTimestamps(groupEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            groupEntity,
-            getEntityTypeName(),
-            "write",
-            groupEntity.getId() != null ? groupEntity.getId() : "new"
-        );
-
-        return groupEntityRepository.save(groupEntity);
     }
 
     /**

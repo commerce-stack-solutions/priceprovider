@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -61,31 +62,32 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
+    public <ID> JpaRepository<AppPermissionEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<AppPermissionEntity, ID> repo = (JpaRepository<AppPermissionEntity, ID>) appPermissionEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(AppPermissionEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
+    @Override
     public AppPermissionEntity save(AppPermissionEntity permissionEntity) throws EntityValidationException {
-        // Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching permissionEntity
-        AppPermissionEntity existingEntity = fetchAndDetachExistingEntity(
-            permissionEntity.getId(), appPermissionEntityRepository, entityManager);
-
-        // Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (permissionEntity.getId() != null) {
-            permissionEntity = entityManager.merge(permissionEntity);
-        }
-
-        validateEntity(permissionEntity);
-        updateAuditTimestamps(permissionEntity);
-
-        // Check write permission on both before (existing) and after (new) states
-        entityAuthorizationService.checkAccessBeforeAndAfter(
-            existingEntity,
-            permissionEntity,
-            getEntityTypeName(),
-            "write",
-            permissionEntity.getId() != null ? permissionEntity.getId().toString() : "new"
-        );
-
-        return appPermissionEntityRepository.save(permissionEntity);
+        return performGenericSave(permissionEntity);
     }
 
     @Override
