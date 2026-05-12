@@ -1,0 +1,11 @@
+{
+  "default": {
+    "id": "default",
+    "org_id": "default",
+    "rate": -1,
+    "per": -1,
+    "quota_max": -1,
+    "quota_renewal_rate": 0,
+    "access_rights": {}
+  }
+}

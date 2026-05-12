@@ -1,0 +1,98 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: price-provider-db-nextjs-commerce
+    environment:
+      POSTGRES_DB: ${PPS_DB_NAME:-priceProviderService}
+      POSTGRES_USER: ${PPS_DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${PPS_DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PPS_DB_USERNAME:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - commerce-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak-nextjs-commerce
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+    ports:
+      - "8081:8080"
+    volumes:
+      - ../../idp/keycloak:/opt/keycloak/data/import
+    networks:
+      - commerce-network
+
+  service:
+    image: price-provider-service:${VERSION:-0.0.0-SNAPSHOT}
+    container_name: price-provider-service-nextjs-commerce
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PPS_DB_JDBCURL: ${PPS_DB_JDBCURL:-jdbc:postgresql://db:5432/priceProviderService}
+      PPS_DB_USERNAME: ${PPS_DB_USERNAME:-postgres}
+      PPS_DB_PASSWORD: ${PPS_DB_PASSWORD:-postgres}
+      PPS_DB_DRIVER: ${PPS_DB_DRIVER:-org.postgresql.Driver}
+      PPS_JPA_DB_PLATFORM: ${PPS_JPA_DB_PLATFORM:-org.hibernate.dialect.PostgreSQLDialect}
+      PPS_OIDC_ISSUER_URI: ${PPS_OIDC_ISSUER_URI:-http://localhost:8081/realms/priceprovider}
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: ${PPS_OIDC_JWK_SET_URI:-http://keycloak:8080/realms/priceprovider/protocol/openid-connect/certs}
+      PPS_OIDC_CLIENT_ID: ${PPS_OIDC_CLIENT_ID:-priceprovider-service}
+      PPS_CORS_ALLOWED_ORIGINS: ${PPS_CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:8081}
+      SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON: ${SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON:-true}
+      SERVICE_CONFIG_INITIALIZE_SAMPLE_DATA_ON: ${SERVICE_CONFIG_INITIALIZE_SAMPLE_DATA_ON:-true}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8080/public/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - commerce-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: tyk-redis-nextjs-commerce
+    ports:
+      - "6379:6379"
+    networks:
+      - commerce-network
+
+  tyk-gateway:
+    image: docker.tyk.io/tyk-gateway/tyk-gateway:v5.8.2
+    container_name: tyk-gateway-nextjs-commerce
+    depends_on:
+      service:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      TYK_GW_SECRET: ${TYK_GW_SECRET:-352d20ee67be67f6340b4c0605b044b7}
+      TYK_GW_STORAGE_TYPE: redis
+      TYK_GW_STORAGE_HOST: redis
+      TYK_GW_STORAGE_PORT: 6379
+      TYK_GW_LISTENPORT: 8080
+      TYK_GW_ENABLEANALYTICS: "false"
+      TYK_GW_APPPATH: /opt/tyk-gateway/apps
+      TYK_GW_POLICIES_POLICYRECORDNAME: tyk_policies
+      TYK_GW_POLICIES_POLICY_PATH: /opt/tyk-gateway/policies
+    volumes:
+      - ./tyk/apps:/opt/tyk-gateway/apps
+      - ./tyk/policies:/opt/tyk-gateway/policies
+    ports:
+      - "8088:8080"
+    networks:
+      - commerce-network
+
+networks:
+  commerce-network:
+    driver: bridge
