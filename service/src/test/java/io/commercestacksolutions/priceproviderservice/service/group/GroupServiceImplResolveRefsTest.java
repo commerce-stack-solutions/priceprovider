@@ -48,6 +48,12 @@ public class GroupServiceImplResolveRefsTest {
     @Mock
     private EntityManager entityManager;
 
+    @Mock
+    private jakarta.persistence.EntityManagerFactory entityManagerFactory;
+
+    @Mock
+    private EntityManager tempEntityManager;
+
     private GroupServiceImpl groupService;
 
     @BeforeEach
@@ -57,11 +63,12 @@ public class GroupServiceImplResolveRefsTest {
         // Setup mocks for permission checks (checkAccessBeforeAndAfter doesn't throw by default)
         doNothing().when(entityAuthorizationService).checkAccessBeforeAndAfter(any(), any(), any(), any(), any());
 
-        // Setup EntityManager mocks for fetch-and-detach logic (lenient because they're not always called)
-        lenient().when(entityManager.find(eq(GroupEntity.class), any())).thenReturn(null);  // For new entities
-        lenient().when(entityManager.merge(any(GroupEntity.class))).thenAnswer(inv -> inv.getArgument(0));
-        lenient().doNothing().when(entityManager).clear();
-        lenient().doNothing().when(entityManager).detach(any());
+        // Setup EntityManager mocks for fetch-and-detach logic
+        lenient().when(entityManager.getEntityManagerFactory()).thenReturn(entityManagerFactory);
+        lenient().when(entityManagerFactory.createEntityManager()).thenReturn(tempEntityManager);
+        lenient().when(tempEntityManager.find(eq(GroupEntity.class), any())).thenReturn(null);  // For new entities by default
+        lenient().when(tempEntityManager.isOpen()).thenReturn(true);
+        lenient().doNothing().when(tempEntityManager).close();
     }
 
     // ---------- helpers ----------

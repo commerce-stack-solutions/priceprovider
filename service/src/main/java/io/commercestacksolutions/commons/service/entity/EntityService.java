@@ -123,15 +123,8 @@ public interface EntityService<T> {
      * <pre>
      * public MyEntity save(MyEntity entity) throws EntityValidationException {
      *     // Fetch and detach existing entity for permission check
-     *     // Note: This will clear the persistence context, detaching the incoming entity
      *     MyEntity existingEntity = fetchAndDetachExistingEntity(
      *         entity.getId(), myEntityRepository, entityManager);
-     *
-     *     // Re-attach the incoming entity to the persistence context
-     *     // This is necessary because fetchAndDetachExistingEntity clears the context
-     *     if (entity.getId() != null) {
-     *         entity = entityManager.merge(entity);
-     *     }
      *
      *     validateEntity(entity);
      *     updateAuditTimestamps(entity);
@@ -148,20 +141,20 @@ public interface EntityService<T> {
      * <p><b>Why this pattern is necessary:</b></p>
      * <ul>
      *   <li>JPA's first-level cache (persistence context) returns the same managed instance for repeated queries by ID</li>
-     *   <li>If the incoming entity is already managed and modified, {@code entityManager.find()} would return that same instance</li>
-     *   <li>We must clear the persistence context to force a fresh fetch from the database</li>
-     *   <li>After clearing, the incoming entity becomes detached and must be re-attached with {@code merge()}</li>
-     *   <li>The fetched entity is immediately detached to create an independent "before" snapshot</li>
+     *   <li>If the incoming entity is already managed and modified, we need the unmodified database state for comparison</li>
+     *   <li>We use a separate EntityManager to bypass the current persistence context</li>
+     *   <li>The fetched entity is immediately detached and the temporary EntityManager is closed</li>
      * </ul>
      *
-     * <p><b>Important:</b> This method clears the entire persistence context using {@code entityManager.clear()}.
-     * The calling code must re-attach the incoming entity using {@code entityManager.merge()} if it has an ID.</p>
+     * <p><b>Implementation:</b> This method creates a temporary EntityManager from the EntityManagerFactory,
+     * uses it to fetch a fresh copy from the database, detaches the entity, and closes the temporary EntityManager.
+     * This ensures we get database state without affecting other managed entities in the main persistence context.</p>
      *
      * @param <T> the entity type
      * @param <ID> the ID type (typically String for this codebase, but can be Long or composite keys)
      * @param entityId the ID of the entity to fetch (null returns null)
      * @param repository the JPA repository for the entity type (not used, kept for API compatibility)
-     * @param entityManager the JPA EntityManager for clearing context, fetching, and detachment
+     * @param entityManager the JPA EntityManager (used to access the EntityManagerFactory)
      * @return the detached entity from the database, or null if the ID is null or entity not found
      */
     default <ID> T fetchAndDetachExistingEntity(ID entityId, JpaRepository<T, ID> repository, EntityManager entityManager) {
@@ -169,19 +162,20 @@ public interface EntityService<T> {
             return null;
         }
 
-        // Clear the persistence context to remove all managed entities
-        // This is necessary to force a fresh database fetch without getting the modified instance
-        entityManager.clear();
+        // Create a temporary EntityManager from the factory to bypass the current persistence context
+        // This ensures we fetch from the database, not from the first-level cache
+        EntityManager tempEm = null;
+        try {
+            tempEm = entityManager.getEntityManagerFactory().createEntityManager();
+            T existingEntity = tempEm.find(getTargetClass(), entityId);
 
-        // Now fetch the entity from the database - it will be a fresh instance
-        T existingEntity = entityManager.find(getTargetClass(), entityId);
-
-        if (existingEntity != null) {
-            // Detach immediately to create an independent snapshot
-            entityManager.detach(existingEntity);
+            // Entity fetched in the temporary EntityManager is automatically detached when we close it
+            return existingEntity;
+        } finally {
+            if (tempEm != null && tempEm.isOpen()) {
+                tempEm.close();
+            }
         }
-
-        return existingEntity;
     }
 
     /**
@@ -207,12 +201,11 @@ public interface EntityService<T> {
     /**
      * Generic save implementation that follows the standard entity save pattern:
      * 1. Fetch and detach existing entity (for before/after permission check)
-     * 2. Merge entity if it has an ID (re-attach to persistence context)
-     * 3. Resolve related references (hook method - override if needed)
-     * 4. Validate entity
-     * 5. Update audit timestamps
-     * 6. Check permissions (before and after states)
-     * 7. Save entity to repository
+     * 2. Resolve related references (hook method - override if needed)
+     * 3. Validate entity
+     * 4. Update audit timestamps
+     * 5. Check permissions (before and after states)
+     * 6. Save entity to repository
      *
      * <p>This method provides a complete, consistent save implementation across all entity services.
      * Services that need special reference resolution should override {@link #resolveRelatedReferences(Object)}.</p>
@@ -244,7 +237,6 @@ public interface EntityService<T> {
      */
     default <ID> T performGenericSave(T entity) throws EntityValidationException {
         // 1. Fetch and detach existing entity for permission check
-        // Note: This will clear the persistence context, detaching the incoming entity
         ID entityId = extractEntityId(entity);
         T existingEntity = fetchAndDetachExistingEntity(
             entityId,
@@ -252,22 +244,16 @@ public interface EntityService<T> {
             getEntityManager()
         );
 
-        // 2. Re-attach the incoming entity to the persistence context
-        // This is necessary because fetchAndDetachExistingEntity clears the context
-        if (entityId != null) {
-            entity = getEntityManager().merge(entity);
-        }
-
-        // 3. Resolve related references (hook method - override in subclasses if needed)
+        // 2. Resolve related references (hook method - override in subclasses if needed)
         resolveRelatedReferences(entity);
 
-        // 4. Validate entity
+        // 3. Validate entity
         validateEntity(entity);
 
-        // 5. Update audit timestamps
+        // 4. Update audit timestamps
         updateAuditTimestamps(entity);
 
-        // 6. Check write permission on both before (existing) and after (new) states
+        // 5. Check write permission on both before (existing) and after (new) states
         getEntityAuthorizationService().checkAccessBeforeAndAfter(
             existingEntity,
             entity,
@@ -276,7 +262,7 @@ public interface EntityService<T> {
             entityId != null ? entityId.toString() : "new"
         );
 
-        // 7. Save entity
+        // 6. Save entity
         @SuppressWarnings("unchecked")
         T savedEntity = (T) getRepository().save(entity);
         return savedEntity;
