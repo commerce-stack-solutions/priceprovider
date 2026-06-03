@@ -2,6 +2,7 @@ package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.permissionselector.PermissionNameParser.ParsedPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,9 +33,10 @@ class PermissionMatcherTest {
     }
 
     // Test entity class
+    @SuppressWarnings("unused")
     static class TestPriceRow {
-        private String currencyRef;
-        private String priceType;
+        private final String currencyRef;
+        private final String priceType;
 
         public TestPriceRow(String currencyRef, String priceType) {
             this.currencyRef = currencyRef;
@@ -44,16 +46,14 @@ class PermissionMatcherTest {
         public String getCurrencyRef() {
             return currencyRef;
         }
-
-        public String getPriceType() {
-            return priceType;
-        }
     }
 
     @Test
     void testHasAccessWithGlobalPermission() {
         AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow:read");
         TestPriceRow priceRow = new TestPriceRow("EUR", "SALES_PRICE");
+
+        assertEquals("SALES_PRICE", priceRow.priceType);
 
         boolean hasAccess = permissionMatcher.hasAccess(Collections.singleton(perm), "PriceRow", "read", priceRow);
 
@@ -178,7 +178,7 @@ class PermissionMatcherTest {
 
         assertEquals(2, readPermissions.size(), "Should find 2 PriceRow:read permissions");
         assertTrue(readPermissions.stream().anyMatch(p -> !p.hasSelector()), "Should include global permission");
-        assertTrue(readPermissions.stream().anyMatch(p -> p.hasSelector()), "Should include selector permission");
+        assertTrue(readPermissions.stream().anyMatch(ParsedPermission::hasSelector), "Should include selector permission");
     }
 
     // Helper method to create a permission entity

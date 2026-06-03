@@ -2,7 +2,6 @@ package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.QueryReflectionUtil;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
@@ -30,20 +29,17 @@ class SpecificationCombinerTest {
     private ApiContextResolver apiContextResolver;
 
     private SpecificationCombiner specificationCombiner;
-    private PermissionFilterBuilder permissionFilterBuilder;
     private QueryParser queryParser;
 
     // Test entity class
+    @SuppressWarnings("unused")
     static class TestEntity {
-        private String field1;
-        private String field2;
+        private final String field1;
+        private final String field2;
 
-        public String getField1() {
-            return field1;
-        }
-
-        public String getField2() {
-            return field2;
+        TestEntity(String field1, String field2) {
+            this.field1 = field1;
+            this.field2 = field2;
         }
     }
 
@@ -51,13 +47,17 @@ class SpecificationCombinerTest {
     void setUp() {
         // Mock API context to return admin prefix by default for tests
         lenient().when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
-        permissionFilterBuilder = new PermissionFilterBuilder(apiContextResolver);
+        PermissionFilterBuilder permissionFilterBuilder = new PermissionFilterBuilder(apiContextResolver);
         specificationCombiner = new SpecificationCombiner(permissionFilterBuilder);
         queryParser = new QueryParser(TestEntity.class);
     }
 
     @Test
     void testCombine_NoPermissionsNoQuery_ReturnsNull() throws QueryParseException, InvalidParameterException {
+        TestEntity sample = new TestEntity("A", "B");
+        assertEquals("A", sample.field1);
+        assertEquals("B", sample.field2);
+
         Specification<TestEntity> spec = specificationCombiner.combine(
                 Collections.emptySet(), "TestEntity", "read", null, queryParser);
 

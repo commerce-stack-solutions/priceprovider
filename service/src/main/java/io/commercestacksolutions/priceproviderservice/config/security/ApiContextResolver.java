@@ -93,21 +93,4 @@ public class ApiContextResolver {
         return null;
     }
 
-    /**
-     * Checks if the current context is the admin API.
-     *
-     * @return true if the current request is targeting the admin API
-     */
-    public boolean isAdminContext() {
-        return ADMIN_PREFIX.equals(getCurrentPermissionPrefix());
-    }
-
-    /**
-     * Checks if the current context is the public API.
-     *
-     * @return true if the current request is targeting the public API
-     */
-    public boolean isPublicContext() {
-        return PUBLIC_PREFIX.equals(getCurrentPermissionPrefix());
-    }
 }

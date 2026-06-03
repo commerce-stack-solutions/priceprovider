@@ -12,7 +12,6 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxCla
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,12 +32,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration test for before/after permission checks on PriceRow operations.
- *
  * Tests that write and delete operations check permissions against both:
  * - The existing object in the database (before state)
  * - The changed object (after state)
@@ -63,9 +60,6 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
 
     @Autowired
     private TaxClassEntityRepository taxClassRepository;
-
-    @Autowired
-    private EntityManager entityManager;
 
     private CurrencyEntity eur;
     private CurrencyEntity usd;
@@ -157,9 +151,7 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
         PriceRowEntity priceRow = createPriceRow(usd);
 
         // Execute & Verify: Save should fail on after state check
-        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
-            priceRowService.save(priceRow);
-        });
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> priceRowService.save(priceRow));
         assertTrue(exception.getMessage().contains("no permission for new state"));
     }
 
@@ -215,9 +207,7 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
         reloaded.setCurrency(usd);
 
         // Execute & Verify: Update should fail on after state check (no permission for USD)
-        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
-            priceRowService.save(reloaded);
-        });
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> priceRowService.save(reloaded));
         assertTrue(exception.getMessage().contains("no permission for new state"));
     }
 
@@ -247,14 +237,11 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
         // Setup: User with permission for USD prices only (no EUR permission)
         setPermissions("priceprovider.public:PriceRow[currencyRef=='USD']:write");
 
-
         // Change currency from EUR to USD
         reloaded.setCurrency(usd);
 
         // Execute & Verify: Update should fail on before state check (no permission for EUR)
-        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
-            priceRowService.save(reloaded);
-        });
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> priceRowService.save(reloaded));
         assertTrue(exception.getMessage().contains("no permission for existing state"));
     }
 
@@ -315,9 +302,7 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
         setPermissions("priceprovider.public:PriceRow[currencyRef=='USD']:delete");
 
         // Execute & Verify: Delete should fail on before state check
-        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
-            priceRowService.deleteById(savedId);
-        });
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> priceRowService.deleteById(savedId));
         assertTrue(exception.getMessage().contains("no permission for existing state"));
 
         // Verify: Price row still exists
@@ -347,8 +332,7 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
      */
     private void setPermissions(String... permissions) {
         // Build combined list of permissions including those needed for validation
-        java.util.List<String> allPermissions = new java.util.ArrayList<>();
-        allPermissions.addAll(java.util.Arrays.asList(permissions));
+        java.util.List<String> allPermissions = new java.util.ArrayList<>(java.util.Arrays.asList(permissions));
 
         // Add read permissions for related entities needed during validation
         allPermissions.add("priceprovider.public:Unit:read");

@@ -34,9 +34,10 @@ class PermissionFilterBuilderTest {
     }
 
     // Test entity class
+    @SuppressWarnings("unused")
     static class TestPriceRow {
-        private String currencyRef;
-        private String priceType;
+        private final String currencyRef;
+        private final String priceType;
 
         public TestPriceRow(String currencyRef, String priceType) {
             this.currencyRef = currencyRef;
@@ -46,14 +47,12 @@ class PermissionFilterBuilderTest {
         public String getCurrencyRef() {
             return currencyRef;
         }
-
-        public String getPriceType() {
-            return priceType;
-        }
     }
 
     @Test
     void testBuildFilterWithNoPermissions() throws InvalidParameterException {
+        assertEquals("SALES_PRICE", new TestPriceRow("EUR", "SALES_PRICE").priceType);
+
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.emptySet(), "PriceRow", "read");
 
         assertNotNull(spec, "Should return a deny-all specification");
