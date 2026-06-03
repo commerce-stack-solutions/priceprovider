@@ -6,6 +6,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Collection;
 
 /**
  * Resolves the current API context (admin vs public) based on the request path.
@@ -48,9 +52,45 @@ public class ApiContextResolver {
             }
         }
 
+        String permissionPrefix = resolvePrefixFromAuthentication();
+        if (permissionPrefix != null) {
+            return permissionPrefix;
+        }
+
         // If we can't determine the context, throw an exception
         // This shouldn't happen in normal operation, but it's better to fail explicitly
         throw new IllegalStateException("Unable to determine API context - request path does not match admin or public API patterns");
+    }
+
+    private String resolvePrefixFromAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        Collection<? extends org.springframework.security.core.GrantedAuthority> authorities = authentication.getAuthorities();
+        boolean hasAdminAuthority = false;
+        boolean hasPublicAuthority = false;
+
+        for (org.springframework.security.core.GrantedAuthority authority : authorities) {
+            String name = authority.getAuthority();
+            if (name == null) {
+                continue;
+            }
+            if (name.startsWith(ADMIN_PREFIX + ":")) {
+                hasAdminAuthority = true;
+            } else if (name.startsWith(PUBLIC_PREFIX + ":")) {
+                hasPublicAuthority = true;
+            }
+        }
+
+        if (hasAdminAuthority) {
+            return ADMIN_PREFIX;
+        }
+        if (hasPublicAuthority) {
+            return PUBLIC_PREFIX;
+        }
+        return null;
     }
 
     /**

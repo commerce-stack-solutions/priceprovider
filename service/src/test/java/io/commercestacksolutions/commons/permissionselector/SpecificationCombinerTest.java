@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
 /**
  * Unit tests for SpecificationCombiner.
@@ -50,7 +50,7 @@ class SpecificationCombinerTest {
     @BeforeEach
     void setUp() {
         // Mock API context to return admin prefix by default for tests
-        when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
+        lenient().when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
         permissionFilterBuilder = new PermissionFilterBuilder(apiContextResolver);
         specificationCombiner = new SpecificationCombiner(permissionFilterBuilder);
         queryParser = new QueryParser(TestEntity.class);

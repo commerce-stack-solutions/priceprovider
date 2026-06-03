@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class PermissionMatcherTest {
@@ -27,7 +27,7 @@ class PermissionMatcherTest {
     @BeforeEach
     void setUp() {
         // Mock API context to return admin prefix by default for tests
-        when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
+        lenient().when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
         permissionMatcher = new PermissionMatcher(apiContextResolver);
     }
 

@@ -194,12 +194,22 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
         String savedId = saved.getId();
         AuthorizationContext.disableBootstrapMode();
 
+        PriceRowEntity reloaded = new PriceRowEntity();
+        reloaded.setId(savedId);
+        reloaded.setPricedResourceId(saved.getPricedResourceId());
+        reloaded.setPriceValue(saved.getPriceValue());
+        reloaded.setMinQuantity(saved.getMinQuantity());
+        reloaded.setUnit(saved.getUnit());
+        reloaded.setCurrency(saved.getCurrency());
+        reloaded.setTaxClass(saved.getTaxClass());
+        reloaded.setPriceType(saved.getPriceType());
+        reloaded.setTaxIncluded(saved.isTaxIncluded());
+
+        org.springframework.test.context.transaction.TestTransaction.flagForCommit();
+        org.springframework.test.context.transaction.TestTransaction.end();
+
         // Setup: User with permission for EUR prices only
         setPermissions("priceprovider.public:PriceRow[currencyRef=='EUR']:write");
-
-        // Clear entity manager and reload to ensure fresh entity
-        entityManager.clear();
-        PriceRowEntity reloaded = priceRowRepository.findById(savedId).orElseThrow();
 
         // Change currency from EUR to USD
         reloaded.setCurrency(usd);
@@ -220,12 +230,23 @@ public class PriceRowBeforeAfterPermissionIntegrationTest {
         String savedId = saved.getId();
         AuthorizationContext.disableBootstrapMode();
 
+        PriceRowEntity reloaded = new PriceRowEntity();
+        reloaded.setId(savedId);
+        reloaded.setPricedResourceId(saved.getPricedResourceId());
+        reloaded.setPriceValue(saved.getPriceValue());
+        reloaded.setMinQuantity(saved.getMinQuantity());
+        reloaded.setUnit(saved.getUnit());
+        reloaded.setCurrency(saved.getCurrency());
+        reloaded.setTaxClass(saved.getTaxClass());
+        reloaded.setPriceType(saved.getPriceType());
+        reloaded.setTaxIncluded(saved.isTaxIncluded());
+
+        org.springframework.test.context.transaction.TestTransaction.flagForCommit();
+        org.springframework.test.context.transaction.TestTransaction.end();
+
         // Setup: User with permission for USD prices only (no EUR permission)
         setPermissions("priceprovider.public:PriceRow[currencyRef=='USD']:write");
 
-        // Clear entity manager and reload to ensure fresh entity
-        entityManager.clear();
-        PriceRowEntity reloaded = priceRowRepository.findById(savedId).orElseThrow();
 
         // Change currency from EUR to USD
         reloaded.setCurrency(usd);
