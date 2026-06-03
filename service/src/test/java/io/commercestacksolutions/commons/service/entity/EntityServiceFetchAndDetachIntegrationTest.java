@@ -4,6 +4,7 @@ import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.priceproviderservice.service.currency.CurrencyService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,9 @@ public class EntityServiceFetchAndDetachIntegrationTest {
 
     @Autowired
     private PlatformTransactionManager transactionManager;
+
+    @Autowired
+    private CurrencyService currencyService;
 
     private String testCurrencyId;
 
@@ -225,18 +229,15 @@ public class EntityServiceFetchAndDetachIntegrationTest {
     }
 
     /**
-     * Helper method that exactly replicates what fetchAndDetachExistingEntity does.
-     * Creates a temporary EntityManager to fetch from the committed database state.
+     * Helper method that calls the actual production method fetchAndDetachExistingEntity
+     * from the EntityService interface via CurrencyService implementation.
      */
     private CurrencyEntity fetchUsingTemporaryEntityManager(String currencyId) {
-        EntityManager tempEm = null;
-        try {
-            tempEm = entityManager.getEntityManagerFactory().createEntityManager();
-            return tempEm.find(CurrencyEntity.class, currencyId);
-        } finally {
-            if (tempEm != null && tempEm.isOpen()) {
-                tempEm.close();
-            }
-        }
+        // Call the ACTUAL production method we want to test
+        return currencyService.fetchAndDetachExistingEntity(
+            currencyId,
+            currencyRepository,
+            entityManager
+        );
     }
 }
