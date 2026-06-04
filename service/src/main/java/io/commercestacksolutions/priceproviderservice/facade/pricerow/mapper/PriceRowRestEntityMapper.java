@@ -12,10 +12,10 @@ import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.unit.mapper.UnitRestEntityMapper;
+import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxRoundingStrategy;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,13 +25,16 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
     private final UnitRestEntityMapper unitRestEntityMapper;
     private final CurrencyRestEntityMapper currencyRestEntityMapper;
     private final TaxClassRestEntityMapper taxClassRestEntityMapper;
+    private final TaxRoundingStrategy taxRoundingStrategy;
 
     public PriceRowRestEntityMapper(UnitRestEntityMapper unitRestEntityMapper,
                                     CurrencyRestEntityMapper currencyRestEntityMapper,
-                                    TaxClassRestEntityMapper taxClassRestEntityMapper) {
+                                    TaxClassRestEntityMapper taxClassRestEntityMapper,
+                                    TaxRoundingStrategy taxRoundingStrategy) {
         this.unitRestEntityMapper = unitRestEntityMapper;
         this.currencyRestEntityMapper = currencyRestEntityMapper;
         this.taxClassRestEntityMapper = taxClassRestEntityMapper;
+        this.taxRoundingStrategy = taxRoundingStrategy;
     }
 
     @Override
@@ -93,7 +96,7 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
         InfoPriceRow info = new InfoPriceRow();
         if (source.getTaxClass() != null && source.getPriceValue() != null &&
                 context.expandWithAnyOf(new String[]{"$info", "$info.taxation"})) {
-            addTaxation(source, info);
+            addTaxation(source, info, taxRoundingStrategy);
         }
         // Always populate groupRefIds in $info for UI navigation links (path → id map)
         if (source.getGroups() != null && !source.getGroups().isEmpty()) {
@@ -110,19 +113,17 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
         target.setInfo(info);
     }
 
-    private static void addTaxation(PriceRowEntity source, InfoPriceRow info) {
+    private static void addTaxation(PriceRowEntity source, InfoPriceRow info, TaxRoundingStrategy taxRoundingStrategy) {
         BigDecimal taxRate = source.getTaxClass().getTaxRate();
-        BigDecimal taxRateDecimal = taxRate.movePointLeft(2);
         BigDecimal priceValue = source.getPriceValue();
         BigDecimal taxValue;
 
         if (source.isTaxIncluded()) {
             // Price includes tax - calculate tax portion
-            BigDecimal netValue = priceValue.divide(BigDecimal.ONE.add(taxRateDecimal), 10, RoundingMode.HALF_UP);
-            taxValue = priceValue.subtract(netValue).setScale(2, RoundingMode.HALF_UP);
+            taxValue = taxRoundingStrategy.calculateTaxFromGross(priceValue, taxRate);
         } else {
             // Tax to be added - calculate tax to add
-            taxValue = priceValue.multiply(taxRateDecimal).setScale(2, RoundingMode.HALF_UP);
+            taxValue = taxRoundingStrategy.calculateTaxFromNet(priceValue, taxRate);
         }
 
         String taxIncludedInfo = source.isTaxIncluded() ? "included (gross)" : "to be added (net)";

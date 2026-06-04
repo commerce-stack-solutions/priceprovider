@@ -52,6 +52,17 @@ public class HalfUpTaxRoundingStrategyTest {
         
         assertEquals(new BigDecimal("15.97"), taxValue);
     }
+
+    @Test
+    public void testCalculateTaxFromGross_PrecisionEdgeCase() {
+        // 0.03 gross with 20% tax should result in 0.01 tax
+        BigDecimal grossPrice = new BigDecimal("0.03");
+        BigDecimal taxRate = new BigDecimal("20.00");
+
+        BigDecimal taxValue = strategy.calculateTaxFromGross(grossPrice, taxRate);
+
+        assertEquals(new BigDecimal("0.01"), taxValue);
+    }
     
     @Test
     public void testCalculateTaxFromNet_StandardRate() {
