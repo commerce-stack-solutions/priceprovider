@@ -3,8 +3,8 @@
   <p>{{ 'pages.home.description' | transloco }}</p>
 
   @if (permissionService.hasReadPermission('Channel') || permissionService.hasReadPermission('PriceRow') || permissionService.hasReadPermission('TaxClass')) {
-    <h5 class="mt-4 mb-2">{{ 'components.sidebar.categories.commerceManagement' | transloco }}</h5>
-    <div class="list-group mb-3">
+    <div class="home-category-label">{{ 'components.sidebar.categories.commerceManagement' | transloco }}</div>
+    <div class="list-group home-list-group mb-3">
       @if (permissionService.hasReadPermission('Channel')) {
         <a [routerLink]="['/' + lang(), 'channels']" class="list-group-item list-group-item-action">
           {{ 'components.sidebar.channels' | transloco }}
@@ -24,8 +24,8 @@
   }
 
   @if (permissionService.hasReadPermission('Organization') || permissionService.hasReadPermission('Group')) {
-    <h5 class="mt-4 mb-2">{{ 'components.sidebar.categories.organizationsGroups' | transloco }}</h5>
-    <div class="list-group mb-3">
+    <div class="home-category-label">{{ 'components.sidebar.categories.organizationsGroups' | transloco }}</div>
+    <div class="list-group home-list-group mb-3">
       @if (permissionService.hasReadPermission('Organization')) {
         <a [routerLink]="['/' + lang(), 'organizations']" class="list-group-item list-group-item-action">
           {{ 'components.sidebar.organizations' | transloco }}
@@ -40,8 +40,8 @@
   }
 
   @if (permissionService.hasReadPermission('Country') || permissionService.hasReadPermission('Currency') || permissionService.hasReadPermission('Unit') || permissionService.hasReadPermission('Language')) {
-    <h5 class="mt-4 mb-2">{{ 'components.sidebar.categories.masterData' | transloco }}</h5>
-    <div class="list-group mb-3">
+    <div class="home-category-label">{{ 'components.sidebar.categories.masterData' | transloco }}</div>
+    <div class="list-group home-list-group mb-3">
       @if (permissionService.hasReadPermission('Country')) {
         <a [routerLink]="['/' + lang(), 'countries']" class="list-group-item list-group-item-action">
           {{ 'components.sidebar.countries' | transloco }}
@@ -66,8 +66,8 @@
   }
 
   @if (permissionService.hasReadPermission('AppRole') || permissionService.hasReadPermission('AppPermission') || permissionService.hasPermission('priceprovider.admin:ServiceInitialization:write')) {
-    <h5 class="mt-4 mb-2">{{ 'components.sidebar.categories.systemAccessManagement' | transloco }}</h5>
-    <div class="list-group mb-3">
+    <div class="home-category-label">{{ 'components.sidebar.categories.systemAccessManagement' | transloco }}</div>
+    <div class="list-group home-list-group mb-3">
       @if (permissionService.hasReadPermission('AppRole')) {
         <a [routerLink]="['/' + lang(), 'app-roles']" class="list-group-item list-group-item-action">
           {{ 'components.sidebar.appRoles' | transloco }}

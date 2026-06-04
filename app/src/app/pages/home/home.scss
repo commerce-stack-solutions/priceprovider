@@ -1,1 +1,18 @@
-// Add any home-specific styles here
+.home-category-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bs-secondary);
+  padding: 0.3rem 0.5rem;
+  margin: 1.25rem 0 0.5rem;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.home-list-group .list-group-item {
+  border-color: transparent;
+  border-radius: 6px !important;
+  margin-bottom: 2px;
+}
