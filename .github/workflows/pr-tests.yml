@@ -1,0 +1,120 @@
+name: PR Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+
+jobs:
+  service-gradle-tests:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: service
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Run service tests
+        run: ./gradlew test
+
+      - name: Summarize service test results
+        if: always()
+        run: |
+          python - <<'PY'
+          import glob
+          import os
+          import xml.etree.ElementTree as ET
+
+          tests = failures = errors = skipped = 0
+          files = glob.glob('build/test-results/test/*.xml')
+          for path in files:
+              root = ET.parse(path).getroot()
+              tests += int(root.attrib.get('tests', 0))
+              failures += int(root.attrib.get('failures', 0))
+              errors += int(root.attrib.get('errors', 0))
+              skipped += int(root.attrib.get('skipped', 0))
+
+          summary = os.environ['GITHUB_STEP_SUMMARY']
+          with open(summary, 'a', encoding='utf-8') as f:
+              f.write('## Service test results\n\n')
+              f.write('| Total | Failed | Errors | Skipped |\n')
+              f.write('| ---: | ---: | ---: | ---: |\n')
+              f.write(f'| {tests} | {failures} | {errors} | {skipped} |\n')
+          PY
+
+      - name: Upload service test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: service-test-report
+          path: service/build/reports/tests/test
+          if-no-files-found: warn
+
+  app-angular-tests:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run app tests
+        run: |
+          npm test -- --watch=false --browsers=ChromeHeadless | tee app-test-output.log
+
+      - name: Summarize app test results
+        if: always()
+        run: |
+          total_line="$(grep 'TOTAL:' app-test-output.log | tail -n 1 || true)"
+          echo '## App test results' >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$total_line" ]; then
+            echo "- ${total_line}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- Could not parse Karma TOTAL line (see app-test-log artifact)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload app test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-test-log
+          path: app/app-test-output.log
+          if-no-files-found: warn
