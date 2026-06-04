@@ -59,6 +59,17 @@ class PriceRowRestEntityMapperTest {
         assertEquals(new BigDecimal("7.00"), target.getInfo().getTaxation().getTaxValue());
     }
 
+    @Test
+    void convert_taxIncludedTaxation_usesPreciseIntermediateNetValue() throws DataMappingException {
+        PriceRowEntity source = createPriceRow(new BigDecimal("0.03"), true, new BigDecimal("20.00"));
+
+        PriceRowRestEntity target = mapper.convert(source, taxationContext());
+
+        assertNotNull(target.getInfo());
+        assertNotNull(target.getInfo().getTaxation());
+        assertEquals(new BigDecimal("0.01"), target.getInfo().getTaxation().getTaxValue());
+    }
+
     private static PriceRowEntity createPriceRow(BigDecimal priceValue, boolean taxIncluded, BigDecimal taxRate) {
         TaxClassEntity taxClass = new TaxClassEntity();
         taxClass.setTaxRate(taxRate);
