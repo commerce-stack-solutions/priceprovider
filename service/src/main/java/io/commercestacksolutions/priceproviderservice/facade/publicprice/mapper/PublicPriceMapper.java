@@ -14,7 +14,7 @@ import io.commercestacksolutions.priceproviderservice.facade.publicprice.restent
 import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.unit.mapper.UnitRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
-import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxRoundingStrategy;
+import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxCalculationStrategy;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -37,17 +37,17 @@ public class PublicPriceMapper extends AbstractMapper<PriceRowEntity, PublicPric
     private final UnitRestEntityMapper unitRestEntityMapper;
     private final CurrencyRestEntityMapper currencyRestEntityMapper;
     private final TaxClassRestEntityMapper taxClassRestEntityMapper;
-    private final TaxRoundingStrategy taxRoundingStrategy;
+    private final TaxCalculationStrategy taxCalculationStrategy;
     
     public PublicPriceMapper(
             UnitRestEntityMapper unitRestEntityMapper,
             CurrencyRestEntityMapper currencyRestEntityMapper,
             TaxClassRestEntityMapper taxClassRestEntityMapper,
-            TaxRoundingStrategy taxRoundingStrategy) {
+            TaxCalculationStrategy taxCalculationStrategy) {
         this.unitRestEntityMapper = unitRestEntityMapper;
         this.currencyRestEntityMapper = currencyRestEntityMapper;
         this.taxClassRestEntityMapper = taxClassRestEntityMapper;
-        this.taxRoundingStrategy = taxRoundingStrategy;
+        this.taxCalculationStrategy = taxCalculationStrategy;
     }
     
     @Override
@@ -134,7 +134,7 @@ public class PublicPriceMapper extends AbstractMapper<PriceRowEntity, PublicPric
                 // Return net price (tax excluded)
                 if (originalTaxIncluded) {
                     // Convert from gross to net
-                    return taxRoundingStrategy.calculateNetFromGross(originalPrice, taxRate);
+                    return taxCalculationStrategy.calculateNetFromGross(originalPrice, taxRate);
                 } else {
                     // Already net
                     return originalPrice;
@@ -147,7 +147,7 @@ public class PublicPriceMapper extends AbstractMapper<PriceRowEntity, PublicPric
                     return originalPrice;
                 } else {
                     // Convert from net to gross
-                    return taxRoundingStrategy.calculateGrossFromNet(originalPrice, taxRate);
+                    return taxCalculationStrategy.calculateGrossFromNet(originalPrice, taxRate);
                 }
                 
             case AS_DECLARED:
@@ -207,10 +207,10 @@ public class PublicPriceMapper extends AbstractMapper<PriceRowEntity, PublicPric
         
         if (target.isTaxIncluded()) {
             // Calculated price includes tax - calculate tax portion
-            taxValue = taxRoundingStrategy.calculateTaxFromGross(calculatedPrice, taxRate);
+            taxValue = taxCalculationStrategy.calculateTaxFromGross(calculatedPrice, taxRate);
         } else {
             // Calculated price excludes tax - calculate tax to add
-            taxValue = taxRoundingStrategy.calculateTaxFromNet(calculatedPrice, taxRate);
+            taxValue = taxCalculationStrategy.calculateTaxFromNet(calculatedPrice, taxRate);
         }
         
         String taxIncludedInfo = target.isTaxIncluded() ? "included (gross)" : "to be added (net)";

@@ -8,16 +8,16 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests for HalfUpTaxRoundingStrategy to ensure correct tax calculations
+ * Tests for HalfUpRoundingTaxCalculationStrategy to ensure correct tax calculations
  * using HALF_UP rounding mode.
  */
-public class HalfUpTaxRoundingStrategyTest {
+public class HalfUpRoundingTaxCalculationStrategyTest {
     
-    private HalfUpTaxRoundingStrategy strategy;
+    private HalfUpRoundingTaxCalculationStrategy strategy;
     
     @BeforeEach
     public void setup() {
-        strategy = new HalfUpTaxRoundingStrategy();
+        strategy = new HalfUpRoundingTaxCalculationStrategy();
     }
     
     @Test
@@ -51,6 +51,17 @@ public class HalfUpTaxRoundingStrategyTest {
         BigDecimal taxValue = strategy.calculateTaxFromGross(grossPrice, taxRate);
         
         assertEquals(new BigDecimal("15.97"), taxValue);
+    }
+
+    @Test
+    public void testCalculateTaxFromGross_PrecisionEdgeCase() {
+        // 0.03 gross with 20% tax should result in 0.01 tax
+        BigDecimal grossPrice = new BigDecimal("0.03");
+        BigDecimal taxRate = new BigDecimal("20.00");
+
+        BigDecimal taxValue = strategy.calculateTaxFromGross(grossPrice, taxRate);
+
+        assertEquals(new BigDecimal("0.01"), taxValue);
     }
     
     @Test

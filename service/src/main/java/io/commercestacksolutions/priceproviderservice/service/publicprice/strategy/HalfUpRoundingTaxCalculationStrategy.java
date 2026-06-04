@@ -16,9 +16,10 @@ import java.math.RoundingMode;
  * This is the default implementation and can be exchanged with other strategies if needed.
  */
 @Component
-public class HalfUpTaxRoundingStrategy implements TaxRoundingStrategy {
+public class HalfUpRoundingTaxCalculationStrategy implements TaxCalculationStrategy {
     
     private static final int SCALE = 2;
+    private static final int DIVISION_SCALE = 10;
     private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
     
     @Override
@@ -28,12 +29,12 @@ public class HalfUpTaxRoundingStrategy implements TaxRoundingStrategy {
         }
         
         // Convert percentage to decimal (e.g., 19% -> 0.19)
-        BigDecimal taxRateDecimal = taxRate.divide(BigDecimal.valueOf(100), 4, ROUNDING_MODE);
+        BigDecimal taxRateDecimal = taxRate.movePointLeft(2);
         
         // Tax = Gross - (Gross / (1 + TaxRate))
         // Tax = Gross - Net
         BigDecimal divisor = BigDecimal.ONE.add(taxRateDecimal);
-        BigDecimal netPrice = grossPrice.divide(divisor, 4, ROUNDING_MODE);
+        BigDecimal netPrice = grossPrice.divide(divisor, DIVISION_SCALE, ROUNDING_MODE);
         BigDecimal tax = grossPrice.subtract(netPrice);
         
         return tax.setScale(SCALE, ROUNDING_MODE);
@@ -46,7 +47,7 @@ public class HalfUpTaxRoundingStrategy implements TaxRoundingStrategy {
         }
         
         // Convert percentage to decimal (e.g., 19% -> 0.19)
-        BigDecimal taxRateDecimal = taxRate.divide(BigDecimal.valueOf(100), 4, ROUNDING_MODE);
+        BigDecimal taxRateDecimal = taxRate.movePointLeft(2);
         
         // Tax = Net * TaxRate
         BigDecimal tax = netPrice.multiply(taxRateDecimal);
@@ -61,11 +62,11 @@ public class HalfUpTaxRoundingStrategy implements TaxRoundingStrategy {
         }
         
         // Convert percentage to decimal (e.g., 19% -> 0.19)
-        BigDecimal taxRateDecimal = taxRate.divide(BigDecimal.valueOf(100), 4, ROUNDING_MODE);
+        BigDecimal taxRateDecimal = taxRate.movePointLeft(2);
         
         // Net = Gross / (1 + TaxRate)
         BigDecimal divisor = BigDecimal.ONE.add(taxRateDecimal);
-        BigDecimal netPrice = grossPrice.divide(divisor, 4, ROUNDING_MODE);
+        BigDecimal netPrice = grossPrice.divide(divisor, DIVISION_SCALE, ROUNDING_MODE);
         
         return netPrice.setScale(SCALE, ROUNDING_MODE);
     }
@@ -77,7 +78,7 @@ public class HalfUpTaxRoundingStrategy implements TaxRoundingStrategy {
         }
         
         // Convert percentage to decimal (e.g., 19% -> 0.19)
-        BigDecimal taxRateDecimal = taxRate.divide(BigDecimal.valueOf(100), 4, ROUNDING_MODE);
+        BigDecimal taxRateDecimal = taxRate.movePointLeft(2);
         
         // Gross = Net * (1 + TaxRate)
         BigDecimal multiplier = BigDecimal.ONE.add(taxRateDecimal);
