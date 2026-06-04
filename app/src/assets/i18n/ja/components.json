@@ -10,7 +10,14 @@
     "countries": "国",
     "channels": "チャンネル",
     "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appRoles": "App Roles",
+    "serviceInitialization": "サービス初期化",
+    "categories": {
+      "commerceManagement": "コマース管理",
+      "organizationsGroups": "組織とグループ",
+      "masterData": "マスターデータ",
+      "systemAccessManagement": "システムとアクセス管理"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "言語を選択",

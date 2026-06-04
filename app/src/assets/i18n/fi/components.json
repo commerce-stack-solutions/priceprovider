@@ -9,8 +9,15 @@
     "organizations": "Organisaatiot",
     "countries": "Maat",
     "channels": "Kanavat",
-    "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appPermissions": "Sovelluksen käyttöoikeudet",
+    "appRoles": "Sovelluksen roolit",
+    "serviceInitialization": "Palvelun alustus",
+    "categories": {
+      "commerceManagement": "Kaupanhallinta",
+      "organizationsGroups": "Organisaatiot ja ryhmät",
+      "masterData": "Päätiedot",
+      "systemAccessManagement": "Järjestelmä ja käyttöoikeuksien hallinta"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Valitse kieli",

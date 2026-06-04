@@ -9,8 +9,15 @@
     "organizations": "Organisatsioonid",
     "countries": "Riigid",
     "channels": "Kanalid",
-    "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appPermissions": "Rakenduse load",
+    "appRoles": "Rakenduse rollid",
+    "serviceInitialization": "Teenuse lähtestamine",
+    "categories": {
+      "commerceManagement": "Kaubandushaldus",
+      "organizationsGroups": "Organisatsioonid ja rühmad",
+      "masterData": "Põhiandmed",
+      "systemAccessManagement": "Süsteem ja juurdepääsuhaldus"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Vali keel",

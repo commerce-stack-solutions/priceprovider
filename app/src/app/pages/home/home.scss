@@ -1,1 +1,43 @@
-// Add any home-specific styles here
+.home-category-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bs-secondary);
+  padding: 0.3rem 0.5rem;
+  margin: 0 0 0.75rem;
+  background-color: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  display: block;
+}
+
+.home-list-group .list-group-item {
+  border-color: transparent;
+  border-radius: 6px !important;
+  margin-bottom: 2px;
+}
+
+.home-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  align-items: stretch;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.home-category-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 1rem;
+}

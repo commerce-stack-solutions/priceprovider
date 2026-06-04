@@ -44,9 +44,28 @@
   overflow: hidden; // Hide content that might overflow during transition
 }
 
+.list-group-item {
+  border-color: transparent;
+  border-radius: 6px !important;
+  margin-bottom: 2px;
+}
+
 .list-group-item.active {
   background-color: #0d6efd;
   border-color: #0d6efd;
+}
+
+.sidebar-category-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bs-secondary);
+  padding: 0.3rem 0.5rem;
+  margin: 1rem 0 0.25rem;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  pointer-events: none;
 }
 
 :host {

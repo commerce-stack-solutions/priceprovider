@@ -10,7 +10,14 @@
     "countries": "Země",
     "channels": "Kanály",
     "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appRoles": "App Roles",
+    "serviceInitialization": "Inicializace služby",
+    "categories": {
+      "commerceManagement": "Správa obchodu",
+      "organizationsGroups": "Organizace & Skupiny",
+      "masterData": "Kmenová data",
+      "systemAccessManagement": "Systém & Správa přístupu"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Vybrat jazyk",

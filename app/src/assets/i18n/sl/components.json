@@ -9,8 +9,15 @@
     "organizations": "Organizacije",
     "countries": "Države",
     "channels": "Kanali",
-    "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appPermissions": "Dovoljenja aplikacije",
+    "appRoles": "Vloge aplikacije",
+    "serviceInitialization": "Inicializacija storitve",
+    "categories": {
+      "commerceManagement": "Upravljanje s trgovino",
+      "organizationsGroups": "Organizacije in skupine",
+      "masterData": "Osnovni podatki",
+      "systemAccessManagement": "Sistem in upravljanje dostopa"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Izberi jezik",
