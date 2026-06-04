@@ -10,6 +10,8 @@
     "name": "priceprovider.public:PriceRowReader",
     "description": "Public price row reader - organization-scoped price access",
     "permissionRefs": [
+      "priceprovider.public:Channel:read",
+      "priceprovider.public:Country:read",
       "priceprovider.public:PriceRow[priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE']:read"
     ]
   },
@@ -17,6 +19,8 @@
     "name": "priceprovider.public:PriceRowInspector",
     "description": "Public price row inspector - organization-scoped candidate inspection access",
     "permissionRefs": [
+      "priceprovider.public:Channel:read",
+      "priceprovider.public:Country:read",
       "priceprovider.public:PriceRow[priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE' OR priceType=='RENTAL_DAILY_RATE']:read",
       "priceprovider.public:PriceRow:inspect"
     ]
