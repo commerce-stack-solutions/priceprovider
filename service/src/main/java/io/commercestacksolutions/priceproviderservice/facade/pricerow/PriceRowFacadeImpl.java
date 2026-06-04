@@ -99,6 +99,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         Optional<PriceRowEntity> priceRowEntityOptional = priceRowService.findById(id);
         if (priceRowEntityOptional.isPresent()) {
             PriceRowEntity priceRowEntity = priceRowEntityOptional.get();
+
             RestResponseMappingContext mappingContext = getRestBasicsMappingContext(expand);
             PriceRowRestEntity priceRowRestEntity = priceRowRestEntityMapper.convert(priceRowEntity, mappingContext);
 
@@ -126,12 +127,14 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         if (priceRowEntityOptional.isPresent()) {
             // Update existing price row
             PriceRowEntity priceRowEntity = priceRowEntityOptional.get();
+
             priceRowEntityMapper.convert(priceRowRestEntity, priceRowEntity, new RestRequestMappingContext<>(id));
             PriceRowEntity saved = priceRowService.save(priceRowEntity);
             return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new price row with the id from the path
             PriceRowEntity newPriceRow = priceRowEntityMapper.convert(priceRowRestEntity, new RestRequestMappingContext<>(id));
+
             PriceRowEntity saved = priceRowService.save(newPriceRow);
             return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -145,10 +148,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             throw new DataMappingException(MessageKeys.ERROR_MAPPING_PATCH_OPERATION, new ErrorResponse(patchValidationErrors));
         }
 
-        PriceRowRestEntity priceRowRestEntity = getPriceRow(id, Collections.emptySet());
-        priceRowRestEntity = priceRowRestEntityPatchMapper.applyPatch(patch, priceRowRestEntity);
-        
-        // Fetch existing entity to preserve timestamps and update in place
+        // Fetch existing entity
         Optional<PriceRowEntity> existingPriceRowOpt = priceRowService.findById(id);
         if (existingPriceRowOpt.isEmpty()) {
             Map<String, String> params = new HashMap<>();
@@ -156,6 +156,11 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             throw new NotFoundException(MessageKeys.ERROR_PRICE_ROW_NOT_FOUND, params, List.of("id"));
         }
         PriceRowEntity existingPriceRow = existingPriceRowOpt.get();
+
+        // Apply patch
+        PriceRowRestEntity priceRowRestEntity = priceRowRestEntityMapper.convert(existingPriceRow, new RestResponseMappingContext());
+        priceRowRestEntity = priceRowRestEntityPatchMapper.applyPatch(patch, priceRowRestEntity);
+
         priceRowEntityMapper.convert(priceRowRestEntity, existingPriceRow, new RestRequestMappingContext<>(id));
         PriceRowEntity saved = priceRowService.save(existingPriceRow);
         return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -164,6 +169,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
     @Transactional(rollbackFor = {DataMappingException.class})
     public PriceRowRestEntity create(PriceRowRestEntity priceRowRestEntity) throws DataMappingException, InvalidParameterException {
         PriceRowEntity newPriceRow = priceRowEntityMapper.convert(priceRowRestEntity, new RestRequestMappingContext<>(null));
+
         try {
             PriceRowEntity saved = priceRowService.save(newPriceRow);
             return priceRowRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -182,6 +188,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_PRICE_ROW_NOT_FOUND, params, List.of("id"));
         }
+
         priceRowService.deleteById(id);
     }
 

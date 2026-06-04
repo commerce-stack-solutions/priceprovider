@@ -9,7 +9,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
         "io.commercestacksolutions.commons.dataaccess.dbupdate",
         "io.commercestacksolutions.commons.dataaccess.meta",
         "io.commercestacksolutions.commons.dataaccess.config",
-        "io.commercestacksolutions.commons.service"
+        "io.commercestacksolutions.commons.service",
+        "io.commercestacksolutions.commons.permissionselector"
 })
 @EnableAsync
 public class PriceProviderServiceApp {

@@ -4,6 +4,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { AppRolesService } from './approle/app-role.service';
+import { PermissionSelectorEvaluator } from './permission-selector-evaluator';
 
 /**
  * PermissionService maps the current user's roles (extracted from the JWT) to
@@ -19,6 +20,7 @@ export class PermissionService {
   private authService = inject(AuthService);
   private appRolesService = inject(AppRolesService);
   private oauthService = inject(OAuthService);
+  private selectorEvaluator = new PermissionSelectorEvaluator();
 
   /** All permission strings the current user holds (empty when not logged in). */
   userPermissions = signal<Set<string>>(new Set());
@@ -93,22 +95,113 @@ export class PermissionService {
 
   /** Returns true when the user can read entities of the given data type. */
   hasReadPermission(dataType: string): boolean {
-    return this.hasPermission(`priceprovider.admin:${dataType}:read`);
+    return this.hasPermissionForAction(dataType, 'read');
   }
 
   /** Returns true when the user can create/update entities of the given data type. */
   hasWritePermission(dataType: string): boolean {
-    return this.hasPermission(`priceprovider.admin:${dataType}:write`);
+    return this.hasPermissionForAction(dataType, 'write');
   }
 
   /** Returns true when the user can delete entities of the given data type. */
   hasDeletePermission(dataType: string): boolean {
-    return this.hasPermission(`priceprovider.admin:${dataType}:delete`);
+    return this.hasPermissionForAction(dataType, 'delete');
+  }
+
+  /**
+   * Returns true if the user has ANY permission for the given dataType and action,
+   * including permissions with selectors.
+   *
+   * Examples:
+   * - priceprovider.admin:PriceRow:read (global permission)
+   * - priceprovider.admin:PriceRow[currencyRef=='EUR']:read (selector-based permission)
+   *
+   * Both would return true for hasPermissionForAction('PriceRow', 'read')
+   */
+  private hasPermissionForAction(dataType: string, action: string): boolean {
+    const permissions = this.userPermissions();
+    const prefix = `priceprovider.admin:${dataType}`;
+    const suffix = `:${action}`;
+
+    for (const permission of permissions) {
+      if (permission.startsWith(prefix) && permission.endsWith(suffix)) {
+        // Check if it's either a direct match or has a selector in between
+        const middle = permission.substring(prefix.length, permission.length - suffix.length);
+        if (middle === '' || middle.startsWith('[')) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   /** Delegates to AuthService. */
   isLoggedIn(): boolean {
     return this.authService.isAuthenticated();
+  }
+
+  /**
+   * Returns true when the user can read the specific entity instance.
+   * Evaluates permission selectors against the object instance.
+   *
+   * @param dataType the entity type (e.g., 'PriceRow', 'Channel')
+   * @param obj the entity instance to check permissions against
+   */
+  hasReadPermissionForInstance(dataType: string, obj: any): boolean {
+    return this.hasPermissionForInstance(dataType, 'read', obj);
+  }
+
+  /**
+   * Returns true when the user can write (create/update) the specific entity instance.
+   * Evaluates permission selectors against the object instance.
+   *
+   * @param dataType the entity type (e.g., 'PriceRow', 'Channel')
+   * @param obj the entity instance to check permissions against
+   */
+  hasWritePermissionForInstance(dataType: string, obj: any): boolean {
+    return this.hasPermissionForInstance(dataType, 'write', obj);
+  }
+
+  /**
+   * Returns true when the user can delete the specific entity instance.
+   * Evaluates permission selectors against the object instance.
+   *
+   * @param dataType the entity type (e.g., 'PriceRow', 'Channel')
+   * @param obj the entity instance to check permissions against
+   */
+  hasDeletePermissionForInstance(dataType: string, obj: any): boolean {
+    return this.hasPermissionForInstance(dataType, 'delete', obj);
+  }
+
+  /**
+   * Returns true if the user has permission for the given action on the specific object instance.
+   * This evaluates permission selectors against the object.
+   *
+   * Examples:
+   * - priceprovider.admin:PriceRow:read → grants access to ALL price rows
+   * - priceprovider.admin:PriceRow[currencyRef=='EUR']:read → grants access only to EUR price rows
+   *
+   * @param dataType the entity type (e.g., 'PriceRow', 'Channel')
+   * @param action the action (read, write, delete)
+   * @param obj the entity instance to check permissions against
+   */
+  private hasPermissionForInstance(dataType: string, action: string, obj: any): boolean {
+    const permissions = this.userPermissions();
+    const prefix = `priceprovider.admin:${dataType}`;
+    const suffix = `:${action}`;
+
+    // Check each permission to see if it grants access to this specific instance
+    for (const permission of permissions) {
+      if (permission.startsWith(prefix) && permission.endsWith(suffix)) {
+        // Evaluate this permission against the object instance
+        if (this.selectorEvaluator.evaluate(permission, obj)) {
+          return true; // At least one permission grants access
+        }
+      }
+    }
+
+    return false;
   }
 
   private normalizePermission(permission: string): string {

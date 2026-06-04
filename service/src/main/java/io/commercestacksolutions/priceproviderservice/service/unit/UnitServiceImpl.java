@@ -1,16 +1,18 @@
 package io.commercestacksolutions.priceproviderservice.service.unit;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,11 +40,23 @@ public class UnitServiceImpl implements UnitService {
 
     private final EntityValidator<UnitEntity> entityValidator;
     private final QueryParser queryParser;
+    private final SpecificationCombiner specificationCombiner;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
-    public UnitServiceImpl(List<ValidationRule<UnitEntity>> validationRules) {
+    public UnitServiceImpl(List<ValidationRule<UnitEntity>> validationRules,
+                           SpecificationCombiner specificationCombiner,
+                           AuthorizationContext authorizationContext,
+                           EntityAuthorizationService entityAuthorizationService,
+                           EntityManager entityManager) {
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(UnitEntity.class);
+        this.specificationCombiner = specificationCombiner;
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     // Create operation
@@ -56,6 +71,30 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
+    public <ID> JpaRepository<UnitEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<UnitEntity, ID> repo = (JpaRepository<UnitEntity, ID>) unitEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(UnitEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getSymbol();
+        return id;
+    }
+
+    @Override
     public void validateEntity(UnitEntity entity) throws EntityValidationException {
         List<Message> validationErrors = entityValidator.validate(entity);
         if (!validationErrors.isEmpty()) {
@@ -67,14 +106,22 @@ public class UnitServiceImpl implements UnitService {
     }
 
     public UnitEntity save(UnitEntity unitEntity) throws EntityValidationException {
-        validateEntity(unitEntity);
-        updateAuditTimestamps(unitEntity);
-        return unitEntityRepository.save(unitEntity);
+        return performGenericSave(unitEntity);
     }
 
     // Delete operation
     public void deleteUnit(String symbol) {
-        unitEntityRepository.deleteById(symbol);
+        unitEntityRepository.findById(symbol).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                symbol
+            );
+            unitEntityRepository.deleteById(symbol);
+        });
     }
 
     public UnitEntity findBySymbol(String symbol) {
@@ -96,18 +143,22 @@ public class UnitServiceImpl implements UnitService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        // Parse and apply query filter if provided
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            Specification<UnitEntity> spec = SpecificationBuilder.build(expression);
-            return unitEntityRepository.findAll(spec, pageRequest);
+        // Combine permission-based and query-based filtering
+        Specification<UnitEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Unit", "read", query, queryParser);
 
+        if (combinedSpec != null) {
+            return unitEntityRepository.findAll(combinedSpec, pageRequest);
+        } else {
+            // No filters at all (global permission, no query)
+            return unitEntityRepository.findAll(pageRequest);
         }
-
-        return unitEntityRepository.findAll(pageRequest);
     }
 
     public UnitEntity getUnit(String symbol) {
-        return unitEntityRepository.findById(symbol).orElse(null);
+        return unitEntityRepository.findById(symbol).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", symbol);
+            return entity;
+        }).orElse(null);
     }
 }

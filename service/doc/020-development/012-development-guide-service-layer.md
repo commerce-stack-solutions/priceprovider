@@ -153,6 +153,145 @@ public class UnitFacadeImpl implements UnitFacadeService {
 | Implementation | `{Entity}ServiceImpl` | `UnitServiceImpl` |
 | Alt. implementation | `{Entity}Service{Variant}Impl` | `UnitServiceAuditedImpl` |
 
+## Generic Save Pattern for Entity Services
+
+All entity services use a standardized generic save pattern provided by the `EntityService` interface. This pattern ensures consistent handling of:
+- Permission checks (before/after state validation)
+- Entity validation
+- Audit timestamp updates
+- Related reference resolution
+- Transaction management
+
+### Implementation Pattern
+
+Service implementations delegate their `save()` method to the generic `performGenericSave()` method from the `EntityService` interface:
+
+```java
+@Service
+public class UnitServiceImpl implements UnitService {
+
+    private final UnitEntityRepository unitEntityRepository;
+    private final EntityValidator<UnitEntity> entityValidator;
+    private final EntityManager entityManager;
+    private final EntityAuthorizationService entityAuthorizationService;
+
+    @Autowired
+    public UnitServiceImpl(
+            UnitEntityRepository unitEntityRepository,
+            List<ValidationRule<UnitEntity>> validationRules,
+            EntityManager entityManager,
+            EntityAuthorizationService entityAuthorizationService) {
+        this.unitEntityRepository = unitEntityRepository;
+        this.entityValidator = new EntityValidator<>(validationRules);
+        this.entityManager = entityManager;
+        this.entityAuthorizationService = entityAuthorizationService;
+    }
+
+    @Override
+    public Class<UnitEntity> getTargetClass() {
+        return UnitEntity.class;
+    }
+
+    @Override
+    public EntityValidator<UnitEntity> getEntityValidator() {
+        return entityValidator;
+    }
+
+    @Override
+    public <ID> JpaRepository<UnitEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<UnitEntity, ID> repo = (JpaRepository<UnitEntity, ID>) unitEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(UnitEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getSymbol();  // Or getId(), getCurrencyKey(), etc.
+        return id;
+    }
+
+    @Override
+    public UnitEntity save(UnitEntity unitEntity) throws EntityValidationException {
+        return performGenericSave(unitEntity);
+    }
+}
+```
+
+### Required Method Implementations
+
+Each service must implement these methods to support the generic save pattern:
+
+1. **`getRepository()`** - Returns the JPA repository for this entity type
+2. **`getEntityManager()`** - Returns the EntityManager for persistence context management
+3. **`getEntityAuthorizationService()`** - Returns the authorization service for permission checks
+4. **`extractEntityId(T entity)`** - Extracts the entity's ID (handles different ID field names like `getId()`, `getSymbol()`, `getCurrencyKey()`, etc.)
+
+### Optional: Resolving Related References
+
+Services that need to resolve related entity references (e.g., converting path strings to full entities) can override the `resolveRelatedReferences()` hook method:
+
+```java
+@Override
+public void resolveRelatedReferences(PriceRowEntity entity) {
+    // Resolve groupRefs from path strings to full GroupEntity objects
+    resolvePathBasedGroupRefs(entity);
+}
+
+private void resolvePathBasedGroupRefs(PriceRowEntity priceRowEntity) {
+    Set<GroupEntity> groups = priceRowEntity.getGroups();
+    if (groups == null || groups.isEmpty()) {
+        return;
+    }
+    Set<GroupEntity> resolvedGroups = new HashSet<>();
+    for (GroupEntity group : groups) {
+        if (group.getId() != null) {
+            resolvedGroups.add(group);
+        } else if (group.getPath() != null) {
+            groupEntityRepository.findByPath(group.getPath())
+                .ifPresent(resolvedGroups::add);
+        }
+    }
+    priceRowEntity.setGroups(resolvedGroups);
+}
+```
+
+### What the Generic Save Does
+
+The `performGenericSave()` method executes these steps in order:
+
+1. **Fetch and detach existing entity** - Retrieves the current database state for permission checks
+2. **Merge incoming entity** - Re-attaches the entity to the persistence context (if it has an ID)
+3. **Resolve related references** - Calls the hook method (if overridden)
+4. **Validate entity** - Runs all validation rules
+5. **Update audit timestamps** - Sets `createdAt` and `lastModifiedAt`
+6. **Check permissions** - Validates both before and after states
+7. **Save entity** - Persists to the database
+
+This standardized approach ensures all entity services have:
+- Consistent permission enforcement
+- Proper JPA entity lifecycle management
+- Complete validation coverage
+- Correct audit trail timestamps
+
+### Naming Conventions
+
+| Artifact | Convention | Example |
+|----------|-----------|---------|
+| Interface | `{Entity}Service` | `UnitService` |
+| Implementation | `{Entity}ServiceImpl` | `UnitServiceImpl` |
+| Alt. implementation | `{Entity}Service{Variant}Impl` | `UnitServiceAuditedImpl` |
+
 ## Service-Layer Validation
 
 Domain validation is centralized in the service layer to ensure all callers (facades, other services) go through the same validation pipeline. Complex, cross-entity checks that need repositories must run here.

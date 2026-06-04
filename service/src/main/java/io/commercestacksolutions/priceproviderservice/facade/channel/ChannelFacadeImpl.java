@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.Set;
 
 @Service
 public class ChannelFacadeImpl implements ChannelFacade {
@@ -49,7 +50,7 @@ public class ChannelFacadeImpl implements ChannelFacade {
                              ChannelRestEntityMapper channelRestEntityMapper,
                              PatchMapper<ChannelRestEntity> channelRestEntityPatchMapper,
                              ChannelEntityMapper channelEntityMapper,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
+                             EntityMetaInfoRegistry entityMetaInfoRegistry) {
         this.channelService = channelService;
         this.channelRestEntityMapper = channelRestEntityMapper;
         this.channelRestEntityPatchMapper = channelRestEntityPatchMapper;
@@ -90,6 +91,7 @@ public class ChannelFacadeImpl implements ChannelFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_CHANNEL_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -133,6 +135,7 @@ public class ChannelFacadeImpl implements ChannelFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_CHANNEL_NOT_FOUND, params);
         }
+
         channelEntityMapper.convert(channel, existingChannel, new RestRequestMappingContext<>(id));
         ChannelEntity saved = channelService.save(existingChannel);
         return channelRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -188,6 +191,7 @@ public class ChannelFacadeImpl implements ChannelFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_CHANNEL_NOT_FOUND, params);
         }
+
         channelService.deleteChannel(id);
     }
 

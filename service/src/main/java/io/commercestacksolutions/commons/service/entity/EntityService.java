@@ -1,9 +1,12 @@
 package io.commercestacksolutions.commons.service.entity;
 
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
+import jakarta.persistence.EntityManager;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -21,6 +24,53 @@ public interface EntityService<T> {
      * @return the entity validator, or null if no validation is configured
      */
     EntityValidator<T> getEntityValidator();
+
+    /**
+     * Returns the JPA repository for this entity type.
+     * Used by the generic save implementation to fetch and persist entities.
+     *
+     * @param <ID> the ID type for this entity
+     * @return the JPA repository instance
+     */
+    <ID> JpaRepository<T, ID> getRepository();
+
+    /**
+     * Returns the EntityManager for this service.
+     * Used by the generic save implementation for persistence context management.
+     *
+     * @return the EntityManager instance
+     */
+    EntityManager getEntityManager();
+
+    /**
+     * Returns the EntityAuthorizationService for permission checks.
+     * Used by the generic save implementation for before/after authorization.
+     *
+     * @return the EntityAuthorizationService instance
+     */
+    EntityAuthorizationService getEntityAuthorizationService();
+
+    /**
+     * Extracts the entity ID for permission checks and logging.
+     * This method must be implemented by each service to return the entity's ID.
+     * The ID can be of any type (String, Long, composite) but will be used for
+     * fetching the existing entity and logging purposes.
+     *
+     * @param entity the entity to extract ID from
+     * @param <ID> the ID type
+     * @return the entity ID, or null if the entity is new (has no ID yet)
+     */
+    <ID> ID extractEntityId(T entity);
+
+    /**
+     * Returns the entity type name used for permission checks.
+     * By default, returns the simple name of the target class with "Entity" suffix removed.
+     *
+     * @return the entity type name for authorization (e.g., "PriceRow", "Channel")
+     */
+    default String getEntityTypeName() {
+        return getTargetClass().getSimpleName().replace("Entity", "");
+    }
 
     /**
      * Validates the entity using the configured entity validator.
@@ -58,5 +108,163 @@ public interface EntityService<T> {
             }
             auditable.setLastModifiedAt(now);
         }
+    }
+
+    /**
+     * Fetches the existing entity from the database and detaches it from the JPA persistence context.
+     * This is crucial for before/after permission checks to ensure the "before" state is not
+     * modified when the "after" state is changed.
+     *
+     * <p>This method is used in conjunction with
+     * {@link io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService#checkAccessBeforeAndAfter}
+     * to implement dual-state authorization checks on write and delete operations.</p>
+     *
+     * <p><b>Usage in service save() methods:</b></p>
+     * <pre>
+     * public MyEntity save(MyEntity entity) throws EntityValidationException {
+     *     // Fetch and detach existing entity for permission check
+     *     MyEntity existingEntity = fetchAndDetachExistingEntity(
+     *         entity.getId(), myEntityRepository, entityManager);
+     *
+     *     validateEntity(entity);
+     *     updateAuditTimestamps(entity);
+     *
+     *     // Check write permission on both before and after states
+     *     entityAuthorizationService.checkAccessBeforeAndAfter(
+     *         existingEntity, entity, getEntityTypeName(), "write",
+     *         entity.getId() != null ? entity.getId() : "new");
+     *
+     *     return myEntityRepository.save(entity);
+     * }
+     * </pre>
+     *
+     * <p><b>Why this pattern is necessary:</b></p>
+     * <ul>
+     *   <li>JPA's first-level cache (persistence context) returns the same managed instance for repeated queries by ID</li>
+     *   <li>If the incoming entity is already managed and modified, we need the unmodified database state for comparison</li>
+     *   <li>We use a separate EntityManager to bypass the current persistence context</li>
+     *   <li>The fetched entity is immediately detached and the temporary EntityManager is closed</li>
+     * </ul>
+     *
+     * <p><b>Implementation:</b> This method creates a temporary EntityManager from the EntityManagerFactory,
+     * uses it to fetch a fresh copy from the database, detaches the entity, and closes the temporary EntityManager.
+     * This ensures we get database state without affecting other managed entities in the main persistence context.</p>
+     *
+     * @param <T> the entity type
+     * @param <ID> the ID type (typically String for this codebase, but can be Long or composite keys)
+     * @param entityId the ID of the entity to fetch (null returns null)
+     * @param repository the JPA repository for the entity type (not used, kept for API compatibility)
+     * @param entityManager the JPA EntityManager (used to access the EntityManagerFactory)
+     * @return the detached entity from the database, or null if the ID is null or entity not found
+     */
+    default <ID> T fetchAndDetachExistingEntity(ID entityId, JpaRepository<T, ID> repository, EntityManager entityManager) {
+        if (entityId == null) {
+            return null;
+        }
+
+        // Create a temporary EntityManager from the factory to bypass the current persistence context
+        // This ensures we fetch from the database, not from the first-level cache
+        EntityManager tempEm = null;
+        try {
+            tempEm = entityManager.getEntityManagerFactory().createEntityManager();
+            T existingEntity = tempEm.find(getTargetClass(), entityId);
+
+            // Entity fetched in the temporary EntityManager is automatically detached when we close it
+            return existingEntity;
+        } finally {
+            if (tempEm != null && tempEm.isOpen()) {
+                tempEm.close();
+            }
+        }
+    }
+
+    /**
+     * Resolves related entity references before saving.
+     * This is a hook method that services can override to resolve path-based or name-based references
+     * to full managed entities before validation and persistence.
+     *
+     * <p>Examples of when to override:</p>
+     * <ul>
+     *   <li>PriceRowService: Resolve groupRefs from path strings to full GroupEntity objects</li>
+     *   <li>GroupService: Resolve parentRefs and subRefs from path strings</li>
+     *   <li>AppRoleService: Resolve permissionRefs from names to full AppPermissionEntity objects</li>
+     * </ul>
+     *
+     * <p>Default implementation does nothing - override in your service if needed.</p>
+     *
+     * @param entity the entity whose references need resolving
+     */
+    default void resolveRelatedReferences(T entity) {
+        // Default: no-op. Override in service implementations that need reference resolution.
+    }
+
+    /**
+     * Generic save implementation that follows the standard entity save pattern:
+     * 1. Fetch and detach existing entity (for before/after permission check)
+     * 2. Resolve related references (hook method - override if needed)
+     * 3. Validate entity
+     * 4. Update audit timestamps
+     * 5. Check permissions (before and after states)
+     * 6. Save entity to repository
+     *
+     * <p>This method provides a complete, consistent save implementation across all entity services.
+     * Services that need special reference resolution should override {@link #resolveRelatedReferences(Object)}.</p>
+     *
+     * <p><b>Usage in service implementations:</b></p>
+     * <pre>
+     * &#64;Override
+     * public MyEntity save(MyEntity entity) throws EntityValidationException {
+     *     return performGenericSave(entity);
+     * }
+     *
+     * // If you need custom reference resolution:
+     * &#64;Override
+     * protected void resolveRelatedReferences(MyEntity entity) {
+     *     // Custom logic to resolve entity references
+     * }
+     *
+     * // Implement ID extraction:
+     * &#64;Override
+     * public &lt;ID&gt; ID extractEntityId(MyEntity entity) {
+     *     return (ID) entity.getId(); // or entity.getCurrencyKey(), etc.
+     * }
+     * </pre>
+     *
+     * @param entity the entity to save
+     * @param <ID> the ID type for this entity
+     * @return the saved entity
+     * @throws EntityValidationException if validation fails or permission is denied
+     */
+    default <ID> T performGenericSave(T entity) throws EntityValidationException {
+        // 1. Fetch and detach existing entity for permission check
+        ID entityId = extractEntityId(entity);
+        T existingEntity = fetchAndDetachExistingEntity(
+            entityId,
+            getRepository(),
+            getEntityManager()
+        );
+
+        // 2. Resolve related references (hook method - override in subclasses if needed)
+        resolveRelatedReferences(entity);
+
+        // 3. Validate entity
+        validateEntity(entity);
+
+        // 4. Update audit timestamps
+        updateAuditTimestamps(entity);
+
+        // 5. Check write permission on both before (existing) and after (new) states
+        getEntityAuthorizationService().checkAccessBeforeAndAfter(
+            existingEntity,
+            entity,
+            getEntityTypeName(),
+            "write",
+            entityId != null ? entityId.toString() : "new"
+        );
+
+        // 6. Save entity
+        @SuppressWarnings("unchecked")
+        T savedEntity = (T) getRepository().save(entity);
+        return savedEntity;
     }
 }

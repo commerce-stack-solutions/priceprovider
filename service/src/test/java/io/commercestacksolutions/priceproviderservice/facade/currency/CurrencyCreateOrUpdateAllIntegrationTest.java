@@ -1,6 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.facade.currency;
 
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.facade.currency.restentity.CurrencyListRestEntity;
@@ -9,6 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
@@ -24,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @SpringBootTest
 @ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 public class CurrencyCreateOrUpdateAllIntegrationTest {
 
     @Autowired
@@ -34,6 +40,15 @@ public class CurrencyCreateOrUpdateAllIntegrationTest {
 
     @BeforeEach
     public void setup() {
+        // Set up authentication context
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:Currency:write",
+            "priceprovider.admin:Currency:read",
+            "priceprovider.admin:Currency:delete"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         // Clean up test currencies
         currencyRepository.findAll().stream()
             .filter(c -> c.getCurrencyKey().startsWith("TEST-"))

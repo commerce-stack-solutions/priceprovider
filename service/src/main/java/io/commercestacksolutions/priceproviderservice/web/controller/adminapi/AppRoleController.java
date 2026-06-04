@@ -45,7 +45,7 @@ public class AppRoleController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved app roles",
                     content = @Content(schema = @Schema(implementation = AppRoleListRestEntity.class)))
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:read')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'read')")
     @GetMapping
     public AppRoleListRestEntity getAppRoles(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -62,7 +62,7 @@ public class AppRoleController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved app role"),
             @ApiResponse(responseCode = "404", description = "App role not found")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:read')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'read')")
     @GetMapping("/{id}")
     public AppRoleRestEntity getAppRole(
             @PathVariable("id") Long id,
@@ -97,7 +97,7 @@ public class AppRoleController {
             @ApiResponse(responseCode = "400", description = "Validation error"),
             @ApiResponse(responseCode = "404", description = "App role not found")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'write')")
     @PatchMapping("/{id}")
     public AppRoleRestEntity patch(
             @PathVariable("id") Long id,
@@ -110,7 +110,7 @@ public class AppRoleController {
             @ApiResponse(responseCode = "200", description = "Successfully created or updated app role"),
             @ApiResponse(responseCode = "400", description = "Validation error")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'write')")
     @PutMapping("/{id}")
     public AppRoleRestEntity createOrRecreate(
             @PathVariable("id") Long id,
@@ -124,7 +124,7 @@ public class AppRoleController {
             @ApiResponse(responseCode = "400", description = "Validation error"),
             @ApiResponse(responseCode = "409", description = "App role with the same ID already exists")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'write')")
     @PostMapping("/create")
     public AppRoleRestEntity create(
             @RequestBody AppRoleRestEntity restEntity
@@ -136,7 +136,7 @@ public class AppRoleController {
             @ApiResponse(responseCode = "204", description = "Successfully deleted app role"),
             @ApiResponse(responseCode = "404", description = "App role not found")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:delete')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         try {
@@ -153,7 +153,7 @@ public class AppRoleController {
             @ApiResponse(responseCode = "204", description = "Successfully deleted app roles"),
             @ApiResponse(responseCode = "400", description = "Cannot delete - referential integrity constraint violation")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:delete')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'delete')")
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteAppRoles(@RequestBody List<Long> ids) throws DataIntegrityException {
         appRoleFacade.bulkDeleteAppRoles(ids);
@@ -165,7 +165,7 @@ public class AppRoleController {
                     content = @Content(schema = @Schema(implementation = AppRoleListRestEntity.class))),
             @ApiResponse(responseCode = "400", description = "Validation error or request exceeds maximum batch size")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:AppRole:write')")
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('AppRole', 'write')")
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<AppRoleListRestEntity> createOrUpdateAllAppRoles(
             @RequestBody List<AppRoleRestEntity> restEntities

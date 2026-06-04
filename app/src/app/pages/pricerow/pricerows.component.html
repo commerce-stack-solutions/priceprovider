@@ -3,7 +3,7 @@
 <h1>{{ 'pages.pricerows.title' | transloco }}</h1>
 <div>
 @if (selectedPriceRows().size > 0) {
-<button class="btn btn-danger me-2" (click)="deleteSelected()" [disabled]="!permissionService.hasDeletePermission('PriceRow')">
+<button class="btn btn-danger me-2" (click)="deleteSelected()" [disabled]="!canDeleteSelected()">
 <i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedPriceRows().size }})
 </button>
 }
@@ -227,7 +227,7 @@
 }
 </td>
 <td>
-<a [routerLink]="['/' + lang(), 'pricerows', row.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('PriceRow')">
+<a [routerLink]="['/' + lang(), 'pricerows', row.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!canEditRow(row)">
 <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
 </a>
 </td>

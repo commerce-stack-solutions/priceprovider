@@ -10,10 +10,15 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntity
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
+import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -30,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests the new behavior where price rows without IDs are matched by their key fields.
  */
 @SpringBootTest
+@Import(TestSecurityConfig.class)
 @ActiveProfiles("test")
 public class PriceRowBulkCreateOrUpdateIntegrationTest {
 
@@ -54,6 +60,20 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
 
     @BeforeEach
     public void setup() {
+        // Set up authentication context
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:PriceRow:write",
+            "priceprovider.admin:PriceRow:read",
+            "priceprovider.admin:Unit:write",
+            "priceprovider.admin:Unit:read",
+            "priceprovider.admin:Currency:write",
+            "priceprovider.admin:Currency:read",
+            "priceprovider.admin:TaxClass:write",
+            "priceprovider.admin:TaxClass:read"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         // Clean up test price rows
         priceRowRepository.findAll().stream()
             .filter(p -> p.getPricedResourceId() != null && p.getPricedResourceId().startsWith("TEST-"))

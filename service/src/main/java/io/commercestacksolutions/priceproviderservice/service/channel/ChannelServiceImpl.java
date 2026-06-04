@@ -1,13 +1,18 @@
 package io.commercestacksolutions.priceproviderservice.service.channel;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.query.*;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
+import io.commercestacksolutions.commons.query.QueryParser;
+import io.commercestacksolutions.commons.query.QueryReflectionUtil;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.ChannelEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,13 +38,27 @@ public class ChannelServiceImpl implements ChannelService {
     private final ChannelEntityRepository channelEntityRepository;
     private final EntityValidator<ChannelEntity> entityValidator;
     private final QueryParser queryParser;
+    private final SpecificationCombiner specificationCombiner;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
-    public ChannelServiceImpl(ChannelEntityRepository channelEntityRepository, List<ValidationRule<ChannelEntity>> validationRules) {
+    public ChannelServiceImpl(
+            ChannelEntityRepository channelEntityRepository,
+            List<ValidationRule<ChannelEntity>> validationRules,
+            SpecificationCombiner specificationCombiner,
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.channelEntityRepository = channelEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
         this.queryParser = new QueryParser(QueryReflectionUtil.buildFieldTypeMap(ChannelEntity.class));
+        this.specificationCombiner = specificationCombiner;
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -52,15 +72,47 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
+    public <ID> JpaRepository<ChannelEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<ChannelEntity, ID> repo = (JpaRepository<ChannelEntity, ID>) channelEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(ChannelEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
+    @Override
     public ChannelEntity save(ChannelEntity channelEntity) throws EntityValidationException {
-        validateEntity(channelEntity);
-        updateAuditTimestamps(channelEntity);
-        return channelEntityRepository.save(channelEntity);
+        return performGenericSave(channelEntity);
     }
 
     @Override
     public void deleteChannel(String id) {
-        channelEntityRepository.deleteById(id);
+        channelEntityRepository.findById(id).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id
+            );
+            channelEntityRepository.deleteById(id);
+        });
     }
 
     @Override
@@ -77,17 +129,23 @@ public class ChannelServiceImpl implements ChannelService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            Specification<ChannelEntity> spec = SpecificationBuilder.build(expression);
-            return channelEntityRepository.findAll(spec, pageRequest);
-        }
+        // Combine permission-based and query-based filtering
+        Specification<ChannelEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Channel", "read", query, queryParser);
 
-        return channelEntityRepository.findAll(pageRequest);
+        if (combinedSpec != null) {
+            return channelEntityRepository.findAll(combinedSpec, pageRequest);
+        } else {
+            // No filters at all (global permission, no query)
+            return channelEntityRepository.findAll(pageRequest);
+        }
     }
 
     @Override
     public ChannelEntity getChannel(String id) {
-        return channelEntityRepository.findById(id).orElse(null);
+        return channelEntityRepository.findById(id).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", id);
+            return entity;
+        }).orElse(null);
     }
 }

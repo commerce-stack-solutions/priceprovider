@@ -1,8 +1,12 @@
 package io.commercestacksolutions.priceproviderservice.service.group;
 
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,11 +36,39 @@ public class GroupServiceImplResolveRefsTest {
     @Mock
     private ValidationRule<GroupEntity> validationRule;
 
+    @Mock
+    private SpecificationCombiner specificationCombiner;
+
+    @Mock
+    private AuthorizationContext authorizationContext;
+
+    @Mock
+    private EntityAuthorizationService entityAuthorizationService;
+
+    @Mock
+    private EntityManager entityManager;
+
+    @Mock
+    private jakarta.persistence.EntityManagerFactory entityManagerFactory;
+
+    @Mock
+    private EntityManager tempEntityManager;
+
     private GroupServiceImpl groupService;
 
     @BeforeEach
     void setUp() {
-        groupService = new GroupServiceImpl(groupEntityRepository, List.of(validationRule));
+        groupService = new GroupServiceImpl(groupEntityRepository, List.of(validationRule), specificationCombiner, authorizationContext, entityAuthorizationService, entityManager);
+
+        // Setup mocks for permission checks (checkAccessBeforeAndAfter doesn't throw by default)
+        doNothing().when(entityAuthorizationService).checkAccessBeforeAndAfter(any(), any(), any(), any(), any());
+
+        // Setup EntityManager mocks for fetch-and-detach logic
+        lenient().when(entityManager.getEntityManagerFactory()).thenReturn(entityManagerFactory);
+        lenient().when(entityManagerFactory.createEntityManager()).thenReturn(tempEntityManager);
+        lenient().when(tempEntityManager.find(eq(GroupEntity.class), any())).thenReturn(null);  // For new entities by default
+        lenient().when(tempEntityManager.isOpen()).thenReturn(true);
+        lenient().doNothing().when(tempEntityManager).close();
     }
 
     // ---------- helpers ----------

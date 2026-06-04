@@ -69,7 +69,7 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
                           CurrencyRestEntityMapper currencyRestEntityMapper,
                           PatchMapper<CurrencyRestEntity> currencyRestEntityPatchMapper,
                           CurrencyEntityMapper currencyEntityMapper,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
+                          EntityMetaInfoRegistry entityMetaInfoRegistry) {
         this.currencyEntityService = currencyEntityService;
         this.languageEntityService = languageEntityService;
         this.countryEntityRepository = countryEntityRepository;
@@ -91,7 +91,7 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
      * Retrieves the set of mandatory language codes from the database.
      * This method is called dynamically during PATCH validation to ensure
      * the latest mandatory language settings are always used.
-     * 
+     *
      * @return Set of mandatory language ISO codes retrieved from database
      */
     private Set<String> getMandatoryLanguageCodes() {
@@ -127,6 +127,7 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
             params.put("id", currencyKey);
             throw new NotFoundException(MessageKeys.ERROR_CURRENCY_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -157,7 +158,7 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
         CurrencyRestEntity currency = getCurrency(currencyKey, Collections.emptySet());
 
         currency = currencyRestEntityPatchMapper.applyPatch(patch, currency);
-        
+
         // Fetch existing entity to preserve timestamps and update in place
         CurrencyEntity existingCurrency = currencyEntityService.getCurrency(currencyKey);
         if (existingCurrency == null) {
@@ -165,6 +166,7 @@ public class CurrencyFacadeImpl implements CurrencyFacade {
             params.put("id", currencyKey);
             throw new NotFoundException(MessageKeys.ERROR_CURRENCY_NOT_FOUND, params);
         }
+
         currencyEntityMapper.convert(currency, existingCurrency, new RestRequestMappingContext<>(currencyKey));
         CurrencyEntity saved = currencyEntityService.save(existingCurrency);
         return currencyRestEntityMapper.convert(saved, new RestResponseMappingContext());

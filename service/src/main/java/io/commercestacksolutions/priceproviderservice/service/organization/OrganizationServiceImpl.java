@@ -1,17 +1,19 @@
 package io.commercestacksolutions.priceproviderservice.service.organization;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.OrganizationEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,15 +43,27 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final GroupEntityRepository groupEntityRepository;
     private final EntityValidator<OrganizationEntity> entityValidator;
     private final QueryParser queryParser;
+    private final SpecificationCombiner specificationCombiner;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public OrganizationServiceImpl(OrganizationEntityRepository organizationEntityRepository,
                                    GroupEntityRepository groupEntityRepository,
-                                   List<ValidationRule<OrganizationEntity>> validationRules) {
+                                   List<ValidationRule<OrganizationEntity>> validationRules,
+                                   SpecificationCombiner specificationCombiner,
+                                   AuthorizationContext authorizationContext,
+                                   EntityAuthorizationService entityAuthorizationService,
+                                   EntityManager entityManager) {
         this.organizationEntityRepository = organizationEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(OrganizationEntity.class);
+        this.specificationCombiner = specificationCombiner;
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -61,11 +76,37 @@ public class OrganizationServiceImpl implements OrganizationService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<OrganizationEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<OrganizationEntity, ID> repo = (JpaRepository<OrganizationEntity, ID>) organizationEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(OrganizationEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
     public OrganizationEntity save(OrganizationEntity organizationEntity) throws EntityValidationException {
+        return performGenericSave(organizationEntity);
+    }
+
+    @Override
+    public void resolveRelatedReferences(OrganizationEntity organizationEntity) {
         resolvePathBasedRefs(organizationEntity);
-        validateEntity(organizationEntity);
-        updateAuditTimestamps(organizationEntity);
-        return organizationEntityRepository.save(organizationEntity);
     }
 
     /**
@@ -104,13 +145,16 @@ public class OrganizationServiceImpl implements OrganizationService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            Specification<OrganizationEntity> spec = SpecificationBuilder.build(expression);
-            return organizationEntityRepository.findAll(spec, pageRequest);
-        }
+        // Combine permission-based and query-based filtering
+        Specification<OrganizationEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Organization", "read", query, queryParser);
 
-        return organizationEntityRepository.findAll(pageRequest);
+        if (combinedSpec != null) {
+            return organizationEntityRepository.findAll(combinedSpec, pageRequest);
+        } else {
+            // No filters at all (global permission, no query)
+            return organizationEntityRepository.findAll(pageRequest);
+        }
     }
 
     public Optional<OrganizationEntity> getOrganizationById(String id) {
@@ -118,7 +162,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     public OrganizationEntity getOrganization(String id) {
-        return organizationEntityRepository.findById(id).orElse(null);
+        return organizationEntityRepository.findById(id).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", id);
+            return entity;
+        }).orElse(null);
     }
 
     public OrganizationEntity getOrganizationByPath(String path) {
@@ -130,6 +177,16 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     public void deleteOrganization(String id) {
-        organizationEntityRepository.deleteById(id);
+        organizationEntityRepository.findById(id).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id
+            );
+            organizationEntityRepository.deleteById(id);
+        });
     }
 }

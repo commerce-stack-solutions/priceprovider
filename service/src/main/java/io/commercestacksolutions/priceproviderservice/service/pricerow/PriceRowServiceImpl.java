@@ -1,20 +1,21 @@
 package io.commercestacksolutions.priceproviderservice.service.pricerow;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.service.channel.ChannelService;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching.PriceRowMatchingContext;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching.SmartMatchingStrategy;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Implementation of PriceRowService interface.
@@ -43,22 +41,31 @@ public class PriceRowServiceImpl implements PriceRowService {
     private final GroupEntityRepository groupEntityRepository;
     private final EntityValidator<PriceRowEntity> entityValidator;
     private final QueryParser queryParser;
-    private final ChannelService channelService;
     private final SmartMatchingStrategy smartMatchingStrategy;
+    private final SpecificationCombiner specificationCombiner;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public PriceRowServiceImpl(
             PriceRowEntityRepository priceRowEntityRepository,
             GroupEntityRepository groupEntityRepository,
             List<ValidationRule<PriceRowEntity>> validationRules,
-            ChannelService channelService,
-            SmartMatchingStrategy smartMatchingStrategy) {
+            SmartMatchingStrategy smartMatchingStrategy,
+            SpecificationCombiner specificationCombiner,
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.priceRowEntityRepository = priceRowEntityRepository;
         this.groupEntityRepository = groupEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(PriceRowEntity.class);
-        this.channelService = channelService;
         this.smartMatchingStrategy = smartMatchingStrategy;
+        this.specificationCombiner = specificationCombiner;
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -71,11 +78,38 @@ public class PriceRowServiceImpl implements PriceRowService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<PriceRowEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<PriceRowEntity, ID> repo = (JpaRepository<PriceRowEntity, ID>) priceRowEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(PriceRowEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
+    @Override
     public PriceRowEntity save(PriceRowEntity priceRowEntity) throws EntityValidationException {
+        return performGenericSave(priceRowEntity);
+    }
+
+    @Override
+    public void resolveRelatedReferences(PriceRowEntity priceRowEntity) {
         resolvePathBasedGroupRefs(priceRowEntity);
-        validateEntity(priceRowEntity);
-        updateAuditTimestamps(priceRowEntity);
-        return priceRowEntityRepository.save(priceRowEntity);
     }
 
     /**
@@ -107,12 +141,22 @@ public class PriceRowServiceImpl implements PriceRowService {
         priceRowEntity.setGroups(resolved);
     }
 
-    public List<PriceRowEntity> findAll() {
-        return priceRowEntityRepository.findAll();
-    }
-
     public Page<PriceRowEntity> findAll(int page, int pageSize) {
-        return priceRowEntityRepository.findAll(PageRequest.of(page, pageSize));
+        try {
+            Specification<PriceRowEntity> permissionSpec = specificationCombiner.fromPermissions(
+                    authorizationContext.getCurrentPermissions(), "PriceRow", "read");
+
+            PageRequest pageRequest = PageRequest.of(page, pageSize);
+
+            if (permissionSpec != null) {
+                return priceRowEntityRepository.findAll(permissionSpec, pageRequest);
+            } else {
+                return priceRowEntityRepository.findAll(pageRequest);
+            }
+        } catch (InvalidParameterException e) {
+            logger.error("Error applying permission filter", e);
+            return priceRowEntityRepository.findAll(PageRequest.of(page, pageSize));
+        }
     }
 
     @Override
@@ -129,21 +173,43 @@ public class PriceRowServiceImpl implements PriceRowService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            Specification<PriceRowEntity> spec = SpecificationBuilder.build(expression);
-            return priceRowEntityRepository.findAll(spec, pageRequest);
-        }
+        // Combine permission-based and query-based filtering
+        logger.debug("Current user permissions count: {}", authorizationContext.getCurrentPermissions().size());
+        authorizationContext.getCurrentPermissions().forEach(perm ->
+                logger.debug("Permission: {}", perm.getName()));
 
-        return priceRowEntityRepository.findAll(pageRequest);
+        Specification<PriceRowEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "PriceRow", "read", query, queryParser);
+
+        logger.debug("Combined filter built: {}", combinedSpec != null ? "filtering applied" : "no filtering (global permission)");
+
+        if (combinedSpec != null) {
+            return priceRowEntityRepository.findAll(combinedSpec, pageRequest);
+        } else {
+            // No filters at all (global permission, no query)
+            return priceRowEntityRepository.findAll(pageRequest);
+        }
     }
 
     public Optional<PriceRowEntity> findById(String id) {
-        return priceRowEntityRepository.findById(id);
+        Optional<PriceRowEntity> entity = priceRowEntityRepository.findById(id);
+        entity.ifPresent(e -> entityAuthorizationService.checkAccess(e, getEntityTypeName(), "read", e.getId()));
+        return entity;
     }
 
     public void deleteById(String id) {
-        priceRowEntityRepository.deleteById(id);
+        Optional<PriceRowEntity> entity = priceRowEntityRepository.findById(id);
+        if (entity.isPresent()) {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity.get(),
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id
+            );
+            priceRowEntityRepository.deleteById(id);
+        }
     }
 
     @Override

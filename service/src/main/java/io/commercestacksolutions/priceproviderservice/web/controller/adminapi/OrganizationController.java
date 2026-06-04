@@ -48,7 +48,7 @@ public class OrganizationController {
                             content = @Content(schema = @Schema(implementation = OrganizationListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'read')") 
 
     @GetMapping
     public OrganizationListRestEntity getOrganizations(
@@ -86,7 +86,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "404", description = "Organization not found")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'read')") 
 
     @GetMapping("/{id}")
     public OrganizationRestEntity getOrganization(
@@ -129,7 +129,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "404", description = "Organization not found")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'write')") 
 
     @PatchMapping("/{id}")
     public OrganizationRestEntity patch(
@@ -151,7 +151,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "400", description = "Validation error")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'write')") 
 
     @PutMapping("/{id}")
     public OrganizationRestEntity createOrRecreate(
@@ -174,7 +174,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "409", description = "Organization with the same ID already exists")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'write')") 
 
     @PostMapping("/create")
     public OrganizationRestEntity create(
@@ -193,7 +193,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "409", description = "Cannot delete organization - it may be referenced by other entities")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'delete')") 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
@@ -218,7 +218,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "400", description = "Cannot delete - referential integrity constraint violation")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteOrganizations(
@@ -240,7 +240,7 @@ public class OrganizationController {
                             content = @Content(schema = @Schema(implementation = OrganizationListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Organization:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Organization', 'write')") 
 
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<OrganizationListRestEntity> createOrUpdateAllOrganizations(

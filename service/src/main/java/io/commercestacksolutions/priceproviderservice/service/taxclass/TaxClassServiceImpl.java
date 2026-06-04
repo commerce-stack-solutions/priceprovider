@@ -1,14 +1,19 @@
 package io.commercestacksolutions.priceproviderservice.service.taxclass;
 
-import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
+import io.commercestacksolutions.commons.query.QueryParser;
+import io.commercestacksolutions.commons.query.QueryReflectionUtil;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
+import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
-import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,13 +39,27 @@ public class TaxClassServiceImpl implements TaxClassService {
     private final TaxClassEntityRepository taxClassEntityRepository;
     private final EntityValidator<TaxClassEntity> entityValidator;
     private final QueryParser queryParser;
+    private final SpecificationCombiner specificationCombiner;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
-    public TaxClassServiceImpl(TaxClassEntityRepository taxClassEntityRepository, List<ValidationRule<TaxClassEntity>> validationRules) {
+    public TaxClassServiceImpl(
+            TaxClassEntityRepository taxClassEntityRepository,
+            List<ValidationRule<TaxClassEntity>> validationRules,
+            SpecificationCombiner specificationCombiner,
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.taxClassEntityRepository = taxClassEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         // Create a QueryParser configured with the entity's field types so parser can validate types
         this.queryParser = new QueryParser(QueryReflectionUtil.buildFieldTypeMap(TaxClassEntity.class));
+        this.specificationCombiner = specificationCombiner;
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -52,14 +72,46 @@ public class TaxClassServiceImpl implements TaxClassService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<TaxClassEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<TaxClassEntity, ID> repo = (JpaRepository<TaxClassEntity, ID>) taxClassEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(TaxClassEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getTaxClassId();
+        return id;
+    }
+
     public TaxClassEntity save(TaxClassEntity taxClassEntity) throws EntityValidationException {
-        validateEntity(taxClassEntity);
-        updateAuditTimestamps(taxClassEntity);
-        return taxClassEntityRepository.save(taxClassEntity);
+        return performGenericSave(taxClassEntity);
     }
 
     public void deleteTaxClass(String taxClassId) {
-        taxClassEntityRepository.deleteById(taxClassId);
+        taxClassEntityRepository.findById(taxClassId).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                taxClassId
+            );
+            taxClassEntityRepository.deleteById(taxClassId);
+        });
     }
 
 
@@ -77,17 +129,23 @@ public class TaxClassServiceImpl implements TaxClassService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            Specification<TaxClassEntity> spec = SpecificationBuilder.build(expression);
-            return taxClassEntityRepository.findAll(spec, pageRequest);
-        }
+        // Combine permission-based and query-based filtering
+        Specification<TaxClassEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "TaxClass", "read", query, queryParser);
 
-        return taxClassEntityRepository.findAll(pageRequest);
+        if (combinedSpec != null) {
+            return taxClassEntityRepository.findAll(combinedSpec, pageRequest);
+        } else {
+            // No filters at all (global permission, no query)
+            return taxClassEntityRepository.findAll(pageRequest);
+        }
     }
 
     public TaxClassEntity getTaxClass(String taxClassId) {
-        return taxClassEntityRepository.findById(taxClassId).orElse(null);
+        return taxClassEntityRepository.findById(taxClassId).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", taxClassId);
+            return entity;
+        }).orElse(null);
     }
 
 }
