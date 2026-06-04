@@ -10,7 +10,14 @@
     "countries": "Šalys",
     "channels": "Kanalai",
     "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appRoles": "App Roles",
+    "serviceInitialization": "Paslaugos inicijavimas",
+    "categories": {
+      "commerceManagement": "Prekybos valdymas",
+      "organizationsGroups": "Organizacijos ir grupės",
+      "masterData": "Pagrindiniai duomenys",
+      "systemAccessManagement": "Sistema ir prieigos valdymas"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Pasirinkti kalbą",

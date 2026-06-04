@@ -11,7 +11,13 @@
     "channels": "Kanäle",
     "appPermissions": "App Permissions",
     "appRoles": "App Roles",
-    "serviceInitialization": "Service-Initialisierung"
+    "serviceInitialization": "Service-Initialisierung",
+    "categories": {
+      "commerceManagement": "Handelsverwaltung",
+      "organizationsGroups": "Organisationen & Gruppen",
+      "masterData": "Stammdaten",
+      "systemAccessManagement": "System- & Zugriffsverwaltung"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Sprache auswählen",

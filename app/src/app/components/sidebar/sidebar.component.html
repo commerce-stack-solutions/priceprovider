@@ -1,18 +1,47 @@
 <nav id="sidebar" class="sidebar" [class.sidebar-hidden]="!(visible())">
   <div class="list-group list-group-flush mx-3 mt-4">
+    @if (permissionService.hasReadPermission('Channel') || permissionService.hasReadPermission('PriceRow') || permissionService.hasReadPermission('TaxClass')) {
+      <div class="sidebar-category-label">{{ 'components.sidebar.categories.commerceManagement' | transloco }}</div>
+    }
+    @if (permissionService.hasReadPermission('Channel')) {
+      <a [routerLink]="['/' + lang(), 'channels']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
+        <i class="bi bi-broadcast me-3"></i><span>{{ 'components.sidebar.channels' | transloco }}</span>
+      </a>
+    }
     @if (permissionService.hasReadPermission('PriceRow')) {
       <a [routerLink]="['/' + lang(), 'pricerows']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
         <i class="bi bi-card-list me-3"></i><span>{{ 'components.sidebar.priceRows' | transloco }}</span>
       </a>
     }
-    @if (permissionService.hasReadPermission('Currency')) {
-      <a [routerLink]="['/' + lang(), 'currencies']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
-        <i class="bi bi-currency-exchange me-3"></i><span>{{ 'components.sidebar.currencies' | transloco }}</span>
-      </a>
-    }
     @if (permissionService.hasReadPermission('TaxClass')) {
       <a [routerLink]="['/' + lang(), 'taxclasses']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
         <i class="bi bi-percent me-3"></i><span>{{ 'components.sidebar.taxClasses' | transloco }}</span>
+      </a>
+    }
+    @if (permissionService.hasReadPermission('Organization') || permissionService.hasReadPermission('Group')) {
+      <div class="sidebar-category-label">{{ 'components.sidebar.categories.organizationsGroups' | transloco }}</div>
+    }
+    @if (permissionService.hasReadPermission('Organization')) {
+      <a [routerLink]="['/' + lang(), 'organizations']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
+        <i class="bi bi-building me-3"></i><span>{{ 'components.sidebar.organizations' | transloco }}</span>
+      </a>
+    }
+    @if (permissionService.hasReadPermission('Group')) {
+      <a [routerLink]="['/' + lang(), 'groups']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
+        <i class="bi bi-diagram-3 me-3"></i><span>{{ 'components.sidebar.groups' | transloco }}</span>
+      </a>
+    }
+    @if (permissionService.hasReadPermission('Country') || permissionService.hasReadPermission('Currency') || permissionService.hasReadPermission('Unit') || permissionService.hasReadPermission('Language')) {
+      <div class="sidebar-category-label">{{ 'components.sidebar.categories.masterData' | transloco }}</div>
+    }
+    @if (permissionService.hasReadPermission('Country')) {
+      <a [routerLink]="['/' + lang(), 'countries']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
+        <i class="bi bi-flag me-3"></i><span>{{ 'components.sidebar.countries' | transloco }}</span>
+      </a>
+    }
+    @if (permissionService.hasReadPermission('Currency')) {
+      <a [routerLink]="['/' + lang(), 'currencies']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
+        <i class="bi bi-currency-exchange me-3"></i><span>{{ 'components.sidebar.currencies' | transloco }}</span>
       </a>
     }
     @if (permissionService.hasReadPermission('Unit')) {
@@ -25,34 +54,17 @@
         <i class="bi bi-translate me-3"></i><span>{{ 'components.sidebar.languages' | transloco }}</span>
       </a>
     }
-    @if (permissionService.hasReadPermission('Country')) {
-      <a [routerLink]="['/' + lang(), 'countries']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
-        <i class="bi bi-flag me-3"></i><span>{{ 'components.sidebar.countries' | transloco }}</span>
-      </a>
+    @if (permissionService.hasReadPermission('AppRole') || permissionService.hasReadPermission('AppPermission') || permissionService.hasPermission('priceprovider.admin:ServiceInitialization:write')) {
+      <div class="sidebar-category-label">{{ 'components.sidebar.categories.systemAccessManagement' | transloco }}</div>
     }
-    @if (permissionService.hasReadPermission('Channel')) {
-      <a [routerLink]="['/' + lang(), 'channels']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
-        <i class="bi bi-broadcast me-3"></i><span>{{ 'components.sidebar.channels' | transloco }}</span>
-      </a>
-    }
-    @if (permissionService.hasReadPermission('Group')) {
-      <a [routerLink]="['/' + lang(), 'groups']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
-        <i class="bi bi-diagram-3 me-3"></i><span>{{ 'components.sidebar.groups' | transloco }}</span>
-      </a>
-    }
-    @if (permissionService.hasReadPermission('Organization')) {
-      <a [routerLink]="['/' + lang(), 'organizations']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
-        <i class="bi bi-building me-3"></i><span>{{ 'components.sidebar.organizations' | transloco }}</span>
+    @if (permissionService.hasReadPermission('AppRole')) {
+      <a [routerLink]="['/' + lang(), 'app-roles']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
+        <i class="bi bi-person-badge me-3"></i><span>{{ 'components.sidebar.appRoles' | transloco }}</span>
       </a>
     }
     @if (permissionService.hasReadPermission('AppPermission')) {
       <a [routerLink]="['/' + lang(), 'app-permissions']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
         <i class="bi bi-shield-check me-3"></i><span>{{ 'components.sidebar.appPermissions' | transloco }}</span>
-      </a>
-    }
-    @if (permissionService.hasReadPermission('AppRole')) {
-      <a [routerLink]="['/' + lang(), 'app-roles']" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
-        <i class="bi bi-person-badge me-3"></i><span>{{ 'components.sidebar.appRoles' | transloco }}</span>
       </a>
     }
     @if (permissionService.hasPermission('priceprovider.admin:ServiceInitialization:write')) {

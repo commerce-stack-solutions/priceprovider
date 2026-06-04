@@ -10,7 +10,14 @@
     "countries": "Valstis",
     "channels": "Kanāli",
     "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appRoles": "App Roles",
+    "serviceInitialization": "Pakalpojuma inicializācija",
+    "categories": {
+      "commerceManagement": "Komercijas pārvaldība",
+      "organizationsGroups": "Organizācijas un grupas",
+      "masterData": "Pamatdati",
+      "systemAccessManagement": "Sistēma un piekļuves pārvaldība"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Atlasīt valodu",

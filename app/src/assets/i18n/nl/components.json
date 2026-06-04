@@ -10,7 +10,14 @@
     "countries": "Landen",
     "channels": "Kanalen",
     "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appRoles": "App Roles",
+    "serviceInitialization": "Service-initialisatie",
+    "categories": {
+      "commerceManagement": "Commercieel beheer",
+      "organizationsGroups": "Organisaties en groepen",
+      "masterData": "Stamgegevens",
+      "systemAccessManagement": "Systeem- en toegangsbeheer"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Taal selecteren",
