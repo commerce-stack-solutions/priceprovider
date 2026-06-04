@@ -8,7 +8,7 @@ import io.commercestacksolutions.priceproviderservice.facade.currency.mapper.Cur
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.unit.mapper.UnitRestEntityMapper;
-import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxRoundingStrategy;
+import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxCalculationStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,19 +32,19 @@ class PriceRowRestEntityMapperTest {
     @Mock
     private TaxClassRestEntityMapper taxClassRestEntityMapper;
     @Mock
-    private TaxRoundingStrategy taxRoundingStrategy;
+    private TaxCalculationStrategy taxCalculationStrategy;
 
     private PriceRowRestEntityMapper mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new PriceRowRestEntityMapper(unitRestEntityMapper, currencyRestEntityMapper, taxClassRestEntityMapper, taxRoundingStrategy);
+        mapper = new PriceRowRestEntityMapper(unitRestEntityMapper, currencyRestEntityMapper, taxClassRestEntityMapper, taxCalculationStrategy);
     }
 
     @Test
     void convert_taxExcludedTaxation_calculatesTaxValueFromPercentageRate() throws DataMappingException {
         PriceRowEntity source = createPriceRow(new BigDecimal("109.99"), false, new BigDecimal("7.00"));
-        when(taxRoundingStrategy.calculateTaxFromNet(new BigDecimal("109.99"), new BigDecimal("7.00")))
+        when(taxCalculationStrategy.calculateTaxFromNet(new BigDecimal("109.99"), new BigDecimal("7.00")))
                 .thenReturn(new BigDecimal("7.70"));
 
         PriceRowRestEntity target = mapper.convert(source, taxationContext());
@@ -57,7 +57,7 @@ class PriceRowRestEntityMapperTest {
     @Test
     void convert_taxIncludedTaxation_calculatesTaxPortionFromPercentageRate() throws DataMappingException {
         PriceRowEntity source = createPriceRow(new BigDecimal("107.00"), true, new BigDecimal("7.00"));
-        when(taxRoundingStrategy.calculateTaxFromGross(new BigDecimal("107.00"), new BigDecimal("7.00")))
+        when(taxCalculationStrategy.calculateTaxFromGross(new BigDecimal("107.00"), new BigDecimal("7.00")))
                 .thenReturn(new BigDecimal("7.00"));
 
         PriceRowRestEntity target = mapper.convert(source, taxationContext());
@@ -70,7 +70,7 @@ class PriceRowRestEntityMapperTest {
     @Test
     void convert_taxIncludedTaxation_usesPreciseIntermediateNetValue() throws DataMappingException {
         PriceRowEntity source = createPriceRow(new BigDecimal("0.03"), true, new BigDecimal("20.00"));
-        when(taxRoundingStrategy.calculateTaxFromGross(new BigDecimal("0.03"), new BigDecimal("20.00")))
+        when(taxCalculationStrategy.calculateTaxFromGross(new BigDecimal("0.03"), new BigDecimal("20.00")))
                 .thenReturn(new BigDecimal("0.01"));
 
         PriceRowRestEntity target = mapper.convert(source, taxationContext());

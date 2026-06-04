@@ -33,7 +33,7 @@ classDiagram
     PublicPriceService --> GroupHierarchyService
     PriceCandidatesQueryStrategy --> PriceRowRepository
     GroupHierarchyService --> GroupEntityRepository
-    PublicPriceMapper --> TaxRoundingStrategy
+    PublicPriceMapper --> TaxCalculationStrategy
 
     class PublicPriceController {
         +getBestPrice()
@@ -68,7 +68,7 @@ classDiagram
         +findAllAncestorsWithDistance()
     }
 
-    class TaxRoundingStrategy {
+    class TaxCalculationStrategy {
         <<interface>>
         +calculateTaxFromGross()
         +calculateTaxFromNet()

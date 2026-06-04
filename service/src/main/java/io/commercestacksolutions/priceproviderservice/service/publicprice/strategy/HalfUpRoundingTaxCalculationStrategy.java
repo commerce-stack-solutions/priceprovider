@@ -16,7 +16,7 @@ import java.math.RoundingMode;
  * This is the default implementation and can be exchanged with other strategies if needed.
  */
 @Component
-public class HalfUpTaxRoundingStrategy implements TaxRoundingStrategy {
+public class HalfUpRoundingTaxCalculationStrategy implements TaxCalculationStrategy {
     
     private static final int SCALE = 2;
     private static final int DIVISION_SCALE = 10;

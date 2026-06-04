@@ -3,12 +3,12 @@ package io.commercestacksolutions.priceproviderservice.service.publicprice.strat
 import java.math.BigDecimal;
 
 /**
- * Strategy interface for tax rounding operations.
+ * Strategy interface for tax calculation operations.
  * Implementations should follow tax calculation and rounding rules according to tax law requirements.
  * 
  * Following Open-Closed Principle - implementations can be exchanged without modifying existing code.
  */
-public interface TaxRoundingStrategy {
+public interface TaxCalculationStrategy {
     
     /**
      * Calculates the tax value from a price amount with tax included (gross price).
