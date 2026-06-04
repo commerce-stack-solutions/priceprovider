@@ -9,8 +9,15 @@
     "organizations": "组织",
     "countries": "国家",
     "channels": "渠道",
-    "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appPermissions": "应用权限",
+    "appRoles": "应用角色",
+    "serviceInitialization": "服务初始化",
+    "categories": {
+      "commerceManagement": "商业管理",
+      "organizationsGroups": "组织与组",
+      "masterData": "主数据",
+      "systemAccessManagement": "系统与访问管理"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "选择语言",
