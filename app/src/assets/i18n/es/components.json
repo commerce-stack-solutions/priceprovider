@@ -9,8 +9,15 @@
     "organizations": "Organizaciones",
     "countries": "Países",
     "channels": "Canales",
-    "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appPermissions": "Permisos de la aplicación",
+    "appRoles": "Roles de la aplicación",
+    "serviceInitialization": "Inicialización del servicio",
+    "categories": {
+      "commerceManagement": "Gestión comercial",
+      "organizationsGroups": "Organizaciones y grupos",
+      "masterData": "Datos maestros",
+      "systemAccessManagement": "Sistema y gestión de acceso"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Seleccionar idioma",
