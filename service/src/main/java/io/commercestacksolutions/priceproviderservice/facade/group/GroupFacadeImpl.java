@@ -107,16 +107,17 @@ public class GroupFacadeImpl implements GroupFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
         GroupRestEntity result = groupRestEntityMapper.convert(group, context);
-        
+
         // Add metadata if requested
         if (expand != null && expand.contains("$meta")) {
             result.setMeta(entityMetaInfoRegistry.getMetaInfo(GroupEntity.class));
         }
-        
+
         return result;
     }
 
@@ -133,7 +134,7 @@ public class GroupFacadeImpl implements GroupFacade {
         GroupRestEntity group = getGroup(id, Collections.emptySet());
 
         group = groupRestEntityPatchMapper.applyPatch(patch, group);
-        
+
         // Fetch existing entity to preserve timestamps and update in place
         GroupEntity existingGroup = groupEntityService.getGroup(id);
         if (existingGroup == null) {
@@ -142,6 +143,7 @@ public class GroupFacadeImpl implements GroupFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_GROUP_NOT_FOUND, params);
         }
+
         groupEntityMapper.convert(group, existingGroup, new RestRequestMappingContext<>(id));
         GroupEntity saved = groupEntityService.save(existingGroup);
         return groupRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -197,7 +199,7 @@ public class GroupFacadeImpl implements GroupFacade {
 
     public void bulkDeleteGroups(List<String> ids) throws DataIntegrityException {
         List<String> failedDeletes = new java.util.ArrayList<>();
-        
+
         for (String id : ids) {
             GroupEntity group = groupEntityService.getGroup(id);
             if (group != null) {
@@ -222,7 +224,7 @@ public class GroupFacadeImpl implements GroupFacade {
                 }
             }
         }
-        
+
         if (!failedDeletes.isEmpty()) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "Group");

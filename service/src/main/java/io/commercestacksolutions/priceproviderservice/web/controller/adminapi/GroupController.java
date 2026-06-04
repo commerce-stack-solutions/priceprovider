@@ -47,7 +47,7 @@ public class GroupController {
                             content = @Content(schema = @Schema(implementation = GroupListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'read')") 
 
     @GetMapping
     public GroupListRestEntity getGroups(
@@ -86,7 +86,7 @@ public class GroupController {
                     @ApiResponse(responseCode = "404", description = "Group not found")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'read')") 
 
     @GetMapping("/{id}")
     public GroupRestEntity getGroup(
@@ -129,7 +129,7 @@ public class GroupController {
                     @ApiResponse(responseCode = "404", description = "Group not found")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'write')") 
 
     @PatchMapping("/{id}")
     public GroupRestEntity patch(
@@ -151,7 +151,7 @@ public class GroupController {
                     @ApiResponse(responseCode = "400", description = "Validation error")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'write')") 
 
     @PutMapping("/{id}")
     public GroupRestEntity createOrRecreate(
@@ -174,7 +174,7 @@ public class GroupController {
                     @ApiResponse(responseCode = "409", description = "Group with the same ID already exists")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'write')") 
 
     @PostMapping("/create")
     public GroupRestEntity create(
@@ -193,7 +193,7 @@ public class GroupController {
                     @ApiResponse(responseCode = "409", description = "Cannot delete group - it may be referenced by other entities")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'delete')") 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
@@ -218,7 +218,7 @@ public class GroupController {
                     @ApiResponse(responseCode = "400", description = "Cannot delete - referential integrity constraint violation")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteGroups(
@@ -240,7 +240,7 @@ public class GroupController {
                             content = @Content(schema = @Schema(implementation = GroupListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Group:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Group', 'write')") 
 
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<GroupListRestEntity> createOrUpdateAllGroups(

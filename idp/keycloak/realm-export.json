@@ -161,6 +161,10 @@
       {
         "name": "priceprovider.public:PriceRowInspector",
         "description": "Public API price inspector. Includes candidate inspection endpoints. Organization filter is derived from the groups claim."
+      },
+      {
+        "name": "priceprovider.admin:GlobalChannelEURContributor",
+        "description": "Restricted admin: write & delete EUR prices on global-b2b-sales-channel, read EUR/USD prices"
       }
     ]
   },
@@ -432,6 +436,25 @@
       "groups": [
         "/organizations/ORG-RENTAL-GREEN-LAND"
       ]
+    },
+    {
+      "username": "eur-channel-contributor",
+      "email": "eur-contributor@priceprovider.local",
+      "firstName": "EUR Channel",
+      "lastName": "Contributor",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "eurcontributor123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "priceprovider.admin:GlobalChannelEURContributor"
+      ],
+      "groups": []
     }
   ]
 }

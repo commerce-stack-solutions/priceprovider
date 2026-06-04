@@ -3,18 +3,22 @@ package io.commercestacksolutions.priceproviderservice.service.approle;
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppPermissionEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppRoleEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,15 +35,24 @@ public class AppRoleServiceImpl implements AppRoleService {
     private final AppPermissionEntityRepository appPermissionEntityRepository;
     private final EntityValidator<AppRoleEntity> entityValidator;
     private final QueryParser queryParser;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
     public AppRoleServiceImpl(AppRoleEntityRepository appRoleEntityRepository,
                               AppPermissionEntityRepository appPermissionEntityRepository,
-                              List<ValidationRule<AppRoleEntity>> validationRules) {
+                              List<ValidationRule<AppRoleEntity>> validationRules,
+                              AuthorizationContext authorizationContext,
+                              EntityAuthorizationService entityAuthorizationService,
+                              EntityManager entityManager) {
         this.appRoleEntityRepository = appRoleEntityRepository;
         this.appPermissionEntityRepository = appPermissionEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(AppRoleEntity.class);
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -53,8 +66,44 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
+    public <ID> JpaRepository<AppRoleEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<AppRoleEntity, ID> repo = (JpaRepository<AppRoleEntity, ID>) appRoleEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(AppRoleEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getId();
+        return id;
+    }
+
+    @Override
     public AppRoleEntity save(AppRoleEntity roleEntity) throws EntityValidationException {
-        // Resolve permission entities by name to avoid detached entity issues
+        return performGenericSave(roleEntity);
+    }
+
+    @Override
+    public void resolveRelatedReferences(AppRoleEntity roleEntity) {
+        resolvePermissionRefs(roleEntity);
+    }
+
+    /**
+     * Resolves permission references by name or ID to ensure they are managed entities.
+     * This prevents detached entity issues when saving roles.
+     */
+    private void resolvePermissionRefs(AppRoleEntity roleEntity) {
         if (roleEntity.getPermissionRefs() != null && !roleEntity.getPermissionRefs().isEmpty()) {
             Set<AppPermissionEntity> managedPermissions = new HashSet<>();
             for (AppPermissionEntity permRef : roleEntity.getPermissionRefs()) {
@@ -68,9 +117,6 @@ public class AppRoleServiceImpl implements AppRoleService {
             }
             roleEntity.setPermissionRefs(managedPermissions);
         }
-        validateEntity(roleEntity);
-        updateAuditTimestamps(roleEntity);
-        return appRoleEntityRepository.save(roleEntity);
     }
 
     @Override
@@ -140,7 +186,17 @@ public class AppRoleServiceImpl implements AppRoleService {
 
     @Override
     public void deleteAppRole(Long id) {
-        appRoleEntityRepository.deleteById(id);
+        appRoleEntityRepository.findById(id).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                id.toString()
+            );
+            appRoleEntityRepository.deleteById(id);
+        });
     }
 }
 

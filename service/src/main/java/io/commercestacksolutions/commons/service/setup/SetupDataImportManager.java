@@ -1,5 +1,6 @@
 package io.commercestacksolutions.commons.service.setup;
 
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.service.approle.AppPermissionService;
@@ -58,16 +59,23 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
     @PostConstruct
     @Override
     public void loadData() {
-        // Bootstrap: Create minimal permission and role if database is empty
-        bootstrapMinimalAccess();
+        // Enable bootstrap mode to bypass authorization during initial data setup
+        AuthorizationContext.enableBootstrapMode();
+        try {
+            // Bootstrap: Create minimal permission and role if database is empty
+            bootstrapMinimalAccess();
 
-        // Only auto-load if configured to do so
-        if (Boolean.TRUE.equals(essentialDataOn)) {
-            loadEssentialData();
-        }
+            // Only auto-load if configured to do so
+            if (Boolean.TRUE.equals(essentialDataOn)) {
+                loadEssentialData();
+            }
 
-        if (Boolean.TRUE.equals(sampleDataOn)) {
-            loadSampleData();
+            if (Boolean.TRUE.equals(sampleDataOn)) {
+                loadSampleData();
+            }
+        } finally {
+            // Always disable bootstrap mode after data loading
+            AuthorizationContext.disableBootstrapMode();
         }
     }
 
@@ -133,7 +141,8 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
         try {
             logger.info("Starting asynchronous data loading: essential={}, sample={}", loadEssential, loadSample);
 
-            // Set force load flag to override configuration
+            // Enable bootstrap mode and set force load flag to override configuration
+            AuthorizationContext.enableBootstrapMode();
             AbstractSetupDataImporter.setForceLoad(true);
 
             try {
@@ -147,8 +156,9 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
 
                 logger.info("Asynchronous data loading completed successfully");
             } finally {
-                // Always clear the force load flag
+                // Always clear the force load flag and disable bootstrap mode
                 AbstractSetupDataImporter.clearForceLoad();
+                AuthorizationContext.disableBootstrapMode();
             }
         } catch (Exception e) {
             logger.error("Error during asynchronous data loading", e);

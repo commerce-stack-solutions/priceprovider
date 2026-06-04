@@ -15,8 +15,8 @@ import io.commercestacksolutions.commons.mapper.validation.rules.LocalizedFieldV
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
 import io.commercestacksolutions.priceproviderservice.facade.language.mapper.LanguageEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.language.mapper.LanguageRestEntityMapper;
@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +47,10 @@ public class LanguageFacadeImpl implements LanguageFacade {
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
 
     @Autowired
-    public LanguageFacadeImpl(LanguageService languageEntityService, LanguageRestEntityMapper languageRestEntityMapper, PatchMapper<LanguageRestEntity> languageRestEntityPatchMapper, LanguageEntityMapper languageEntityMapper,
+    public LanguageFacadeImpl(LanguageService languageEntityService,
+                              LanguageRestEntityMapper languageRestEntityMapper,
+                              PatchMapper<LanguageRestEntity> languageRestEntityPatchMapper,
+                              LanguageEntityMapper languageEntityMapper,
                               EntityMetaInfoRegistry entityMetaInfoRegistry) {
         this.languageEntityService = languageEntityService;
         this.languageRestEntityMapper = languageRestEntityMapper;
@@ -104,6 +108,7 @@ public class LanguageFacadeImpl implements LanguageFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_LANGUAGE_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         if (includes != null) {
             context.addExpandPaths(includes);
@@ -144,6 +149,7 @@ public class LanguageFacadeImpl implements LanguageFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_LANGUAGE_NOT_FOUND, params);
         }
+
         languageEntityMapper.convert(language, existingLanguage, new RestRequestMappingContext<>(isoKey));
         LanguageEntity saved = languageEntityService.save(existingLanguage);
         return languageRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -154,12 +160,14 @@ public class LanguageFacadeImpl implements LanguageFacade {
         LanguageEntity language = languageEntityService.getLanguage(isoKey);
         if (language != null) {
             // Update existing language
+
             languageEntityMapper.convert(languageRestEntity, language, new RestRequestMappingContext<>(isoKey));
             LanguageEntity saved = languageEntityService.save(language);
             return languageRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new language with the isoKey from the path
             LanguageEntity newLanguage = languageEntityMapper.convert(languageRestEntity, new RestRequestMappingContext<>(isoKey));
+
             LanguageEntity saved = languageEntityService.save(newLanguage);
             return languageRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -261,6 +269,7 @@ public class LanguageFacadeImpl implements LanguageFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_LANGUAGE_NOT_FOUND, params, List.of("isoKey"));
         }
+
         languageEntityService.deleteLanguage(isoKey);
     }
 

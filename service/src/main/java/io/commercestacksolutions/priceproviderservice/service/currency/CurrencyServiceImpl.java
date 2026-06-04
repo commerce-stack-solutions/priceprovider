@@ -1,15 +1,17 @@
 package io.commercestacksolutions.priceproviderservice.service.currency;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.query.QueryExpression;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
 import io.commercestacksolutions.commons.query.QueryParser;
-import io.commercestacksolutions.commons.query.SpecificationBuilder;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,12 +38,26 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final CurrencyEntityRepository currencyEntityRepository;
     private final EntityValidator<CurrencyEntity> entityValidator;
     private final QueryParser queryParser;
+    private final SpecificationCombiner specificationCombiner;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
-    public CurrencyServiceImpl(CurrencyEntityRepository currencyEntityRepository, List<ValidationRule<CurrencyEntity>> validationRules) {
+    public CurrencyServiceImpl(
+            CurrencyEntityRepository currencyEntityRepository,
+            List<ValidationRule<CurrencyEntity>> validationRules,
+            SpecificationCombiner specificationCombiner,
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.currencyEntityRepository = currencyEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(CurrencyEntity.class);
+        this.specificationCombiner = specificationCombiner;
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -53,15 +70,48 @@ public class CurrencyServiceImpl implements CurrencyService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<CurrencyEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<CurrencyEntity, ID> repo = (JpaRepository<CurrencyEntity, ID>) currencyEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(CurrencyEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getCurrencyKey();
+        return id;
+    }
+
+    @Override
     public CurrencyEntity save(CurrencyEntity currencyEntity) throws EntityValidationException {
-        validateEntity(currencyEntity);
-        updateAuditTimestamps(currencyEntity);
-        return currencyEntityRepository.save(currencyEntity);
+        return performGenericSave(currencyEntity);
     }
 
     @Transactional
     public void deleteCurrency(String currencyKey) {
-        currencyEntityRepository.deleteById(currencyKey);
+        currencyEntityRepository.findById(currencyKey).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                currencyKey
+            );
+            currencyEntityRepository.deleteById(currencyKey);
+        });
     }
 
 
@@ -79,17 +129,23 @@ public class CurrencyServiceImpl implements CurrencyService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            Specification<CurrencyEntity> spec = SpecificationBuilder.build(expression);
-            return currencyEntityRepository.findAll(spec, pageRequest);
-        }
+        // Combine permission-based and query-based filtering
+        Specification<CurrencyEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Currency", "read", query, queryParser);
 
-        return currencyEntityRepository.findAll(pageRequest);
+        if (combinedSpec != null) {
+            return currencyEntityRepository.findAll(combinedSpec, pageRequest);
+        } else {
+            // No filters at all (global permission, no query)
+            return currencyEntityRepository.findAll(pageRequest);
+        }
     }
 
     public CurrencyEntity getCurrency(String currencyKey) {
-        return currencyEntityRepository.findById(currencyKey).orElse(null);
+        return currencyEntityRepository.findById(currencyKey).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", currencyKey);
+            return entity;
+        }).orElse(null);
     }
 
 }

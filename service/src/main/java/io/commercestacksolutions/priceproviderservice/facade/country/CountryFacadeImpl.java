@@ -13,8 +13,8 @@ import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFields
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.facade.country.mapper.CountryEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.country.mapper.CountryRestEntityMapper;
@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.Set;
 
 @Service
 public class CountryFacadeImpl implements CountryFacade {
@@ -90,6 +91,7 @@ public class CountryFacadeImpl implements CountryFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_COUNTRY_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -133,6 +135,7 @@ public class CountryFacadeImpl implements CountryFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_COUNTRY_NOT_FOUND, params);
         }
+
         countryEntityMapper.convert(country, existingCountry, new RestRequestMappingContext<>(isoKey));
         CountryEntity saved = countryService.save(existingCountry);
         return countryRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -144,12 +147,14 @@ public class CountryFacadeImpl implements CountryFacade {
         CountryEntity country = countryService.getCountry(isoKey);
         if (country != null) {
             // Update existing country
+
             countryEntityMapper.convert(countryRestEntity, country, new RestRequestMappingContext<>(isoKey));
             CountryEntity saved = countryService.save(country);
             return countryRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new country with isoKey from path
             CountryEntity newCountry = countryEntityMapper.convert(countryRestEntity, new RestRequestMappingContext<>(isoKey));
+
             CountryEntity saved = countryService.save(newCountry);
             return countryRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -188,6 +193,7 @@ public class CountryFacadeImpl implements CountryFacade {
             params.put("isoKey", isoKey);
             throw new NotFoundException(MessageKeys.ERROR_COUNTRY_NOT_FOUND, params);
         }
+
         countryService.deleteCountry(isoKey);
     }
 

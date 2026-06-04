@@ -1,8 +1,11 @@
 package io.commercestacksolutions.priceproviderservice.config;
 
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
+import io.commercestacksolutions.priceproviderservice.config.security.TestAuthorizationContext;
 import jakarta.servlet.Filter;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -23,9 +26,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  *
  * <p>Sets up a fully-authenticated test user with all admin permissions so that
  * both HTTP-level and method-level {@code @PreAuthorize} checks pass in integration tests.</p>
+ *
+ * <p>Also provides a {@link TestAuthorizationContext} bean that extracts permissions from
+ * Spring Security authorities instead of JWT claims.</p>
  */
 @TestConfiguration
 public class TestSecurityConfig {
+
+    @Bean
+    @Primary
+    public AuthorizationContext testAuthorizationContext() {
+        return new TestAuthorizationContext();
+    }
 
     @Bean
     @Order(1)
@@ -43,53 +55,49 @@ public class TestSecurityConfig {
      */
     private Filter testAuthenticationFilter() {
         return (request, response, chain) -> {
-            var authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()
-                    || authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken) {
-                var authorities = AuthorityUtils.createAuthorityList(
-                    "ROLE_ADMIN",
-                    "priceprovider.admin:AppPermission:read",
-                    "priceprovider.admin:AppPermission:write",
-                    "priceprovider.admin:AppPermission:delete",
-                    "priceprovider.admin:AppRole:read",
-                    "priceprovider.admin:AppRole:write",
-                    "priceprovider.admin:AppRole:delete",
-                    "priceprovider.admin:Channel:read",
-                    "priceprovider.admin:Channel:write",
-                    "priceprovider.admin:Channel:delete",
-                    "priceprovider.admin:Country:read",
-                    "priceprovider.admin:Country:write",
-                    "priceprovider.admin:Country:delete",
-                    "priceprovider.admin:Currency:read",
-                    "priceprovider.admin:Currency:write",
-                    "priceprovider.admin:Currency:delete",
-                    "priceprovider.admin:Group:read",
-                    "priceprovider.admin:Group:write",
-                    "priceprovider.admin:Group:delete",
-                    "priceprovider.admin:Language:read",
-                    "priceprovider.admin:Language:write",
-                    "priceprovider.admin:Language:delete",
-                    "priceprovider.admin:Organization:read",
-                    "priceprovider.admin:Organization:write",
-                    "priceprovider.admin:Organization:delete",
-                    "priceprovider.admin:PriceRow:read",
-                    "priceprovider.admin:PriceRow:write",
-                    "priceprovider.admin:PriceRow:delete",
-                    "priceprovider.admin:TaxClass:read",
-                    "priceprovider.admin:TaxClass:write",
-                    "priceprovider.admin:TaxClass:delete",
-                    "priceprovider.admin:Unit:read",
-                    "priceprovider.admin:Unit:write",
-                    "priceprovider.admin:Unit:delete",
-                    "priceprovider.public:PriceRow:read",
-                    "priceprovider.public:PriceRow:inspect"
-                );
-                var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+            // Always set up test authentication, overriding any existing auth
+            var authorities = AuthorityUtils.createAuthorityList(
+                "ROLE_ADMIN",
+                "priceprovider.admin:AppPermission:read",
+                "priceprovider.admin:AppPermission:write",
+                "priceprovider.admin:AppPermission:delete",
+                "priceprovider.admin:AppRole:read",
+                "priceprovider.admin:AppRole:write",
+                "priceprovider.admin:AppRole:delete",
+                "priceprovider.admin:Channel:read",
+                "priceprovider.admin:Channel:write",
+                "priceprovider.admin:Channel:delete",
+                "priceprovider.admin:Country:read",
+                "priceprovider.admin:Country:write",
+                "priceprovider.admin:Country:delete",
+                "priceprovider.admin:Currency:read",
+                "priceprovider.admin:Currency:write",
+                "priceprovider.admin:Currency:delete",
+                "priceprovider.admin:Group:read",
+                "priceprovider.admin:Group:write",
+                "priceprovider.admin:Group:delete",
+                "priceprovider.admin:Language:read",
+                "priceprovider.admin:Language:write",
+                "priceprovider.admin:Language:delete",
+                "priceprovider.admin:Organization:read",
+                "priceprovider.admin:Organization:write",
+                "priceprovider.admin:Organization:delete",
+                "priceprovider.admin:PriceRow:read",
+                "priceprovider.admin:PriceRow:write",
+                "priceprovider.admin:PriceRow:delete",
+                "priceprovider.admin:TaxClass:read",
+                "priceprovider.admin:TaxClass:write",
+                "priceprovider.admin:TaxClass:delete",
+                "priceprovider.admin:Unit:read",
+                "priceprovider.admin:Unit:write",
+                "priceprovider.admin:Unit:delete",
+                "priceprovider.public:PriceRow:read",
+                "priceprovider.public:PriceRow:inspect"
+            );
+            var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+            SecurityContextHolder.getContext().setAuthentication(auth);
             chain.doFilter(request, response);
         };
     }
 }
-
 

@@ -13,8 +13,8 @@ import io.commercestacksolutions.commons.mapper.validation.rules.ImmutableFields
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassEntityMapper;
@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.Set;
 
 @Service
 public class TaxClassFacadeImpl implements TaxClassFacade {
@@ -91,6 +92,7 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             params.put("taxClassId", taxClassId);
             throw new NotFoundException(MessageKeys.ERROR_TAX_CLASS_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -125,7 +127,7 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             throw new NotFoundException(MessageKeys.ERROR_TAX_CLASS_NOT_FOUND, params);
         }
         taxClass = taxClassRestEntityPatchMapper.applyPatch(patch, taxClass);
-        
+
         // Fetch existing entity to preserve timestamps and update in place
         TaxClassEntity existingTaxClass = taxClassEntityService.getTaxClass(taxClassId);
         if (existingTaxClass == null) {
@@ -133,6 +135,7 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
             params.put("taxClassId", taxClassId);
             throw new NotFoundException(MessageKeys.ERROR_TAX_CLASS_NOT_FOUND, params);
         }
+
         taxClassEntityMapper.convert(taxClass, existingTaxClass, new RestRequestMappingContext<>(taxClassId));
         TaxClassEntity saved = taxClassEntityService.save(existingTaxClass);
         return taxClassRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -143,12 +146,14 @@ public class TaxClassFacadeImpl implements TaxClassFacade {
         TaxClassEntity taxClass = taxClassEntityService.getTaxClass(taxClassId);
         if (taxClass != null) {
             // Update existing taxClass
+
             taxClassEntityMapper.convert(taxClassRestEntity, taxClass, new RestRequestMappingContext<>(taxClassId));
             TaxClassEntity saved = taxClassEntityService.save(taxClass);
             return taxClassRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new taxClass with the taxClassId from the path
             TaxClassEntity newTaxClass = taxClassEntityMapper.convert(taxClassRestEntity, new RestRequestMappingContext<>(taxClassId));
+
             TaxClassEntity saved = taxClassEntityService.save(newTaxClass);
             return taxClassRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }

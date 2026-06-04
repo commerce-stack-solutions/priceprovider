@@ -46,7 +46,7 @@ public class CountryController {
                             content = @Content(schema = @Schema(implementation = CountryListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Country:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Country', 'read')") 
 
     @GetMapping
     public CountryListRestEntity getCountries(
@@ -160,7 +160,7 @@ public class CountryController {
                     @ApiResponse(responseCode = "409", description = "Country with the same ISO key already exists")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Country:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Country', 'write')") 
 
     @PostMapping("/create")
     public ResponseEntity<CountryRestEntity> create(
@@ -215,7 +215,7 @@ public class CountryController {
                     @ApiResponse(responseCode = "409", description = "Cannot delete one or more countries - they are referenced by other entities")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Country:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Country', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteCountries(
@@ -234,7 +234,7 @@ public class CountryController {
                             content = @Content(schema = @Schema(implementation = CountryListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Country:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Country', 'write')") 
 
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<CountryListRestEntity> createOrUpdateAllCountries(

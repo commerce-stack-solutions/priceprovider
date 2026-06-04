@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../service/session.service';
 import { AuthService } from '../../service/auth.service';
+import { PermissionService } from '../../service/permission.service';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
@@ -22,8 +23,14 @@ export class HeaderComponent implements OnInit {
   theme = signal(HeaderComponent.LIGHT_THEME);
   sessionService = inject(SessionService);
   authService = inject(AuthService);
+  permissionService = inject(PermissionService);
   showSessionConfig = signal(false);
+  showUserInfo = signal(false);
   selectedLanguage: string = this.sessionService.language();
+
+  // Computed signals for user info
+  userRoles = computed(() => this.authService.userRoles());
+  userPermissions = computed(() => Array.from(this.permissionService.userPermissions()).sort());
 
   ngOnInit(): void {
     // Load theme from localStorage
@@ -58,6 +65,18 @@ export class HeaderComponent implements OnInit {
       if (!show) {
         // Opening panel - reset selected language to current
         this.selectedLanguage = this.sessionService.language();
+        // Close user info panel when opening session config
+        this.showUserInfo.set(false);
+      }
+      return !show;
+    });
+  }
+
+  toggleUserInfo(): void {
+    this.showUserInfo.update(show => {
+      if (!show) {
+        // Close session config panel when opening user info
+        this.showSessionConfig.set(false);
       }
       return !show;
     });

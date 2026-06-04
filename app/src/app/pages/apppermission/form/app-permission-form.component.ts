@@ -11,6 +11,7 @@ import { MetaInfo } from '../../../model/meta-info.model';
 import { MessageTranslationService } from '../../../service/message-translation.service';
 import { Message } from '../../../model/message.model';
 import { IsMandatoryPipe } from '../../../pipes/is-mandatory.pipe';
+import { permissionSelectorValidator } from '../../../validators/permission-selector.validator';
 
 interface JsonPatchOperation {
   op: 'add' | 'remove' | 'replace' | 'move' | 'copy' | 'test';
@@ -103,7 +104,7 @@ export class AppPermissionFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      name: [{ value: '', disabled: this.isEditMode() }, [Validators.required]],
+      name: [{ value: '', disabled: this.isEditMode() }, [Validators.required, permissionSelectorValidator()]],
       description: ['']
     });
   }

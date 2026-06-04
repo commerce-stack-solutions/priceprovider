@@ -12,12 +12,22 @@ import io.commercestacksolutions.priceproviderservice.service.unit.UnitService;
 import io.commercestacksolutions.priceproviderservice.service.taxclass.TaxClassService;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.PriceRowService;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -31,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests that createdAt and lastModifiedAt are correctly set during save operations.
  */
 @SpringBootTest
+@Import(TestSecurityConfig.class)
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
     "service-config.initialize.essential-data-on=false",
@@ -53,6 +64,33 @@ public class AuditableEntityTimestampTest {
 
     @Autowired
     private PriceRowService priceRowEntityService;
+
+    @BeforeEach
+    public void setUp() {
+        // Setup mock HTTP request context for API context resolution
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/admin/api/entities");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
+        // Set up authentication context for direct service method calls
+        var authorities = AuthorityUtils.createAuthorityList(
+            "priceprovider.admin:Language:write",
+            "priceprovider.admin:Currency:write",
+            "priceprovider.admin:Unit:write",
+            "priceprovider.admin:TaxClass:write",
+            "priceprovider.admin:PriceRow:write"
+        );
+        var auth = new UsernamePasswordAuthenticationToken("test-admin", "test", authorities);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    @AfterEach
+    public void cleanup() {
+        // Clear security context
+        SecurityContextHolder.clearContext();
+        // Clear request context
+        RequestContextHolder.resetRequestAttributes();
+    }
 
     @Test
     public void testLanguageEntity_NewEntity_ShouldSetBothTimestamps() throws InterruptedException, EntityValidationException {

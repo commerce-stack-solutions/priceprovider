@@ -31,7 +31,7 @@ public class ServiceInitializationController {
     @Operation(summary = "Get preview of data files", responses = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved file list")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:ServiceInitialization:write')")
+    @PreAuthorize("@permissionSecurityService.hasExactPermission('priceprovider.admin:ServiceInitialization:write')")
     @GetMapping("/preview")
     public ResponseEntity<Map<String, Object>> getDataFilesPreview() {
         Map<String, Object> preview = new HashMap<>();
@@ -48,7 +48,7 @@ public class ServiceInitializationController {
             @ApiResponse(responseCode = "201", description = "Data loading started successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid request - at least one data type must be selected")
     })
-    @PreAuthorize("hasAuthority('priceprovider.admin:ServiceInitialization:write')")
+    @PreAuthorize("@permissionSecurityService.hasExactPermission('priceprovider.admin:ServiceInitialization:write')")
     @PostMapping("/load")
     public ResponseEntity<Map<String, String>> loadData(
             @RequestParam(required = false, defaultValue = "false") boolean essential,

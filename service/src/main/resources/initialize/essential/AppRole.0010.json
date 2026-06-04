@@ -86,20 +86,5 @@
       "priceprovider.admin:TaxClass:read",
       "priceprovider.admin:Unit:read"
     ]
-  },
-  {
-    "name": "priceprovider.public:PriceRowReader",
-    "description": "Public price row reader - organization-scoped price access",
-    "permissionRefs": [
-      "priceprovider.public:PriceRow:read"
-    ]
-  },
-  {
-    "name": "priceprovider.public:PriceRowInspector",
-    "description": "Public price row inspector - organization-scoped candidate inspection access",
-    "permissionRefs": [
-      "priceprovider.public:PriceRow:read",
-      "priceprovider.public:PriceRow:inspect"
-    ]
   }
 ]

@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,6 +96,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -125,7 +127,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
         OrganizationRestEntity organization = getOrganization(id, Collections.emptySet());
 
         organization = organizationRestEntityPatchMapper.applyPatch(patch, organization);
-        
+
         // Fetch existing entity to preserve timestamps and update in place
         OrganizationEntity existingOrganization = organizationEntityService.getOrganization(id);
         if (existingOrganization == null) {
@@ -133,6 +135,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
             params.put("id", id);
             throw new NotFoundException(MessageKeys.ERROR_ORGANIZATION_NOT_FOUND, params);
         }
+
         organizationEntityMapper.convert(organization, existingOrganization, new RestRequestMappingContext<>(id));
         OrganizationEntity saved = organizationEntityService.save(existingOrganization);
         return organizationRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -187,7 +190,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
 
     public void bulkDeleteOrganizations(List<String> ids) throws DataIntegrityException {
         List<String> failedDeletes = new java.util.ArrayList<>();
-        
+
         for (String id : ids) {
             OrganizationEntity organization = organizationEntityService.getOrganization(id);
             if (organization != null) {
@@ -212,7 +215,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
                 }
             }
         }
-        
+
         if (!failedDeletes.isEmpty()) {
             Map<String, String> params = new HashMap<>();
             params.put("ids", String.join(", ", failedDeletes));

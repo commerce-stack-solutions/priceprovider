@@ -1,14 +1,18 @@
 package io.commercestacksolutions.priceproviderservice.service.language;
 
-import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.permissionselector.SpecificationCombiner;
+import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
+import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
+import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
+import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.LanguageEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
-import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
-import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,12 +39,26 @@ public class LanguageServiceImpl implements LanguageService {
     private final LanguageEntityRepository languageEntityRepository;
     private final EntityValidator<LanguageEntity> entityValidator;
     private final QueryParser queryParser;
+    private final SpecificationCombiner specificationCombiner;
+    private final AuthorizationContext authorizationContext;
+    private final EntityAuthorizationService entityAuthorizationService;
+    private final EntityManager entityManager;
 
     @Autowired
-    public LanguageServiceImpl(LanguageEntityRepository languageEntityRepository, List<ValidationRule<LanguageEntity>> validationRules) {
+    public LanguageServiceImpl(
+            LanguageEntityRepository languageEntityRepository,
+            List<ValidationRule<LanguageEntity>> validationRules,
+            SpecificationCombiner specificationCombiner,
+            AuthorizationContext authorizationContext,
+            EntityAuthorizationService entityAuthorizationService,
+            EntityManager entityManager) {
         this.languageEntityRepository = languageEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
         this.queryParser = new QueryParser(LanguageEntity.class);
+        this.specificationCombiner = specificationCombiner;
+        this.authorizationContext = authorizationContext;
+        this.entityAuthorizationService = entityAuthorizationService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -52,10 +71,33 @@ public class LanguageServiceImpl implements LanguageService {
         return entityValidator;
     }
 
+    @Override
+    public <ID> JpaRepository<LanguageEntity, ID> getRepository() {
+        @SuppressWarnings("unchecked")
+        JpaRepository<LanguageEntity, ID> repo = (JpaRepository<LanguageEntity, ID>) languageEntityRepository;
+        return repo;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public EntityAuthorizationService getEntityAuthorizationService() {
+        return entityAuthorizationService;
+    }
+
+    @Override
+    public <ID> ID extractEntityId(LanguageEntity entity) {
+        @SuppressWarnings("unchecked")
+        ID id = (ID) entity.getIsoKey();
+        return id;
+    }
+
+    @Override
     public LanguageEntity save(LanguageEntity languageEntity) throws EntityValidationException {
-        validateEntity(languageEntity);
-        updateAuditTimestamps(languageEntity);
-        return languageEntityRepository.save(languageEntity);
+        return performGenericSave(languageEntity);
     }
 
     public List<LanguageEntity> getAllLanguages() {
@@ -79,7 +121,17 @@ public class LanguageServiceImpl implements LanguageService {
     }
 
     public void deleteLanguage(String isoKey) {
-        languageEntityRepository.deleteById(isoKey);
+        languageEntityRepository.findById(isoKey).ifPresent(entity -> {
+            // Check delete permission on the existing entity (before deletion)
+            entityAuthorizationService.checkAccessBeforeAndAfter(
+                entity,
+                null,  // No "after" state for delete
+                getEntityTypeName(),
+                "delete",
+                isoKey
+            );
+            languageEntityRepository.deleteById(isoKey);
+        });
     }
 
     public LanguageEntity findByIsoKey(String isoKey) {
@@ -101,16 +153,22 @@ public class LanguageServiceImpl implements LanguageService {
             pageRequest = PageRequest.of(page, pageSize);
         }
 
-        if (query != null && !query.trim().isEmpty()) {
-            QueryExpression expression = queryParser.parse(query);
-            Specification<LanguageEntity> spec = SpecificationBuilder.build(expression);
-            return languageEntityRepository.findAll(spec, pageRequest);
-        }
+        // Combine permission-based and query-based filtering
+        Specification<LanguageEntity> combinedSpec = specificationCombiner.combine(
+                authorizationContext.getCurrentPermissions(), "Language", "read", query, queryParser);
 
-        return languageEntityRepository.findAll(pageRequest);
+        if (combinedSpec != null) {
+            return languageEntityRepository.findAll(combinedSpec, pageRequest);
+        } else {
+            // No filters at all (global permission, no query)
+            return languageEntityRepository.findAll(pageRequest);
+        }
     }
 
     public LanguageEntity getLanguage(String isoKey) {
-        return languageEntityRepository.findById(isoKey).orElse(null);
+        return languageEntityRepository.findById(isoKey).map(entity -> {
+            entityAuthorizationService.checkAccess(entity, getEntityTypeName(), "read", isoKey);
+            return entity;
+        }).orElse(null);
     }
 }

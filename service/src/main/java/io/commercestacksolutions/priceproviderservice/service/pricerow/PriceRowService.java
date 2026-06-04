@@ -17,17 +17,10 @@ import java.util.Optional;
  * following Interface Driven Design (IDD) principles.
  */
 public interface PriceRowService extends EntityService<PriceRowEntity> {
-    
-    /**
-     * Retrieves all price rows.
-     * 
-     * @return list of all price row entities
-     */
-    List<PriceRowEntity> findAll();
-    
+
     /**
      * Retrieves a paginated list of price rows.
-     * 
+     *
      * @param page the page number (0-based)
      * @param pageSize the number of items per page
      * @return page of price row entities

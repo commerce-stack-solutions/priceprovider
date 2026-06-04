@@ -35,6 +35,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -60,12 +61,13 @@ public class UnitFacadeImpl implements UnitFacadeService {
                           UnitRestEntityMapper unitRestEntityMapper,
                           PatchMapper<UnitRestEntity> unitRestEntityPatchMapper,
                           UnitEntityMapper unitEntityMapper,
-                              EntityMetaInfoRegistry entityMetaInfoRegistry) {
+                          EntityMetaInfoRegistry entityMetaInfoRegistry) {
         this.unitEntityService = unitEntityService;
         this.languageEntityService = languageEntityService;
         this.unitRestEntityMapper = unitRestEntityMapper;
         this.unitRestEntityPatchMapper = unitRestEntityPatchMapper;
         this.unitEntityMapper = unitEntityMapper;
+        this.entityMetaInfoRegistry = entityMetaInfoRegistry;
 
         // Initialize patch validator with validation rules
         // Note: getMandatoryLanguageCodes is passed as a method reference and will be invoked
@@ -74,7 +76,6 @@ public class UnitFacadeImpl implements UnitFacadeService {
                 new ImmutableFieldsRule(Set.of("symbol")),
                 new LocalizedFieldValidationRule(Set.of("name"), this::getMandatoryLanguageCodes)
         ));
-        this.entityMetaInfoRegistry = entityMetaInfoRegistry;
     }
 
     /**
@@ -117,6 +118,7 @@ public class UnitFacadeImpl implements UnitFacadeService {
             params.put("id", symbol);
             throw new NotFoundException(MessageKeys.ERROR_UNIT_NOT_FOUND, params);
         }
+
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
 
@@ -159,6 +161,7 @@ public class UnitFacadeImpl implements UnitFacadeService {
             params.put("id", symbol);
             throw new NotFoundException(MessageKeys.ERROR_UNIT_NOT_FOUND, params);
         }
+
         unitEntityMapper.convert(unit, existingUnit, new RestRequestMappingContext<>(symbol));
         UnitEntity saved = unitEntityService.save(existingUnit);
         return unitRestEntityMapper.convert(saved, new RestResponseMappingContext());
@@ -170,12 +173,14 @@ public class UnitFacadeImpl implements UnitFacadeService {
 
         if (unit != null) {
             // Update existing unit
+
             unitEntityMapper.convert(unitRestEntity, unit, new RestRequestMappingContext<>(symbol));
             UnitEntity saved = unitEntityService.save(unit);
             return unitRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             // Create new unit with the symbol from the path
             UnitEntity newUnit = unitEntityMapper.convert(unitRestEntity, new RestRequestMappingContext<>(symbol));
+
             UnitEntity saved = unitEntityService.save(newUnit);
             return unitRestEntityMapper.convert(saved, new RestResponseMappingContext());
         }
@@ -209,6 +214,7 @@ public class UnitFacadeImpl implements UnitFacadeService {
             params.put("id", symbol);
             throw new IllegalArgumentException(MessageKeys.ERROR_UNIT_NOT_FOUND);
         }
+
         unitEntityService.deleteUnit(symbol);
     }
 

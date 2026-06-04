@@ -50,7 +50,7 @@ public class UnitController {
                             content = @Content(schema = @Schema(implementation = UnitListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Unit:read')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Unit', 'read')") 
 
     @GetMapping
     public UnitListRestEntity getUnits(
@@ -163,7 +163,7 @@ public class UnitController {
                     @ApiResponse(responseCode = "400", description = "Validation error or unit with the same symbol already exists")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Unit:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Unit', 'write')") 
 
     @PostMapping("/create")
     public UnitRestEntity create(
@@ -203,7 +203,7 @@ public class UnitController {
                     @ApiResponse(responseCode = "409", description = "Cannot delete unit - it is referenced by other entities")
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Unit:delete')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Unit', 'delete')") 
 
     @PostMapping("/bulk-delete")
     public ResponseEntity<Void> bulkDeleteUnits(
@@ -225,7 +225,7 @@ public class UnitController {
                             content = @Content(schema = @Schema(implementation = UnitListRestEntity.class)))
             }
     )
-    @PreAuthorize("hasAuthority('priceprovider.admin:Unit:write')") 
+    @PreAuthorize("@permissionSecurityService.hasPermissionForAction('Unit', 'write')") 
 
     @PostMapping("/bulk-create-or-update")
     public ResponseEntity<UnitListRestEntity> createOrUpdateAllUnits(
