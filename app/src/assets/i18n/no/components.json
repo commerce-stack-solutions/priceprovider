@@ -9,8 +9,15 @@
     "organizations": "Organisasjoner",
     "countries": "Land",
     "channels": "Kanaler",
-    "appPermissions": "App Permissions",
-    "appRoles": "App Roles"
+    "appPermissions": "Apptillatelser",
+    "appRoles": "Approller",
+    "serviceInitialization": "Tjenesteinitialisering",
+    "categories": {
+      "commerceManagement": "Handelsadministrasjon",
+      "organizationsGroups": "Organisasjoner og grupper",
+      "masterData": "Stamdata",
+      "systemAccessManagement": "System og tilgangsstyring"
+    }
   },
   "languageSwitcher": {
     "selectLanguage": "Velg språk",
