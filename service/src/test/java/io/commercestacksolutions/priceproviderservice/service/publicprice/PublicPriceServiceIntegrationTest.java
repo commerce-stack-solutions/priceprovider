@@ -11,7 +11,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEnti
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
@@ -207,10 +207,10 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_BasicScenario() {
-        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceRowRepository.save(price);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         
         PriceRowEntity result = publicPriceService.findBestPrice(criteria);
         
@@ -221,19 +221,19 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_GroupDistancePriority_ChildWins() {
-        PriceRowEntity priceGrandparent = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceGrandparent = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceGrandparent.setGroups(Set.of(testGroupGrandparent));
         priceRowRepository.save(priceGrandparent);
         
-        PriceRowEntity priceParent = createPrice("PROD-001", new BigDecimal("95.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceParent = createPrice("PROD-001", new BigDecimal("95.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceParent.setGroups(Set.of(testGroupParent));
         priceRowRepository.save(priceParent);
         
-        PriceRowEntity priceChild = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceChild = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceChild.setGroups(Set.of(testGroupChild));
         priceRowRepository.save(priceChild);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setGroupId("GROUP-CHILD");
         
         PriceRowEntity result = publicPriceService.findBestPrice(criteria);
@@ -244,15 +244,15 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_GroupDistancePriority_ParentBeatsGrandparent() {
-        PriceRowEntity priceGrandparent = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceGrandparent = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceGrandparent.setGroups(Set.of(testGroupGrandparent));
         priceRowRepository.save(priceGrandparent);
         
-        PriceRowEntity priceParent = createPrice("PROD-001", new BigDecimal("95.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceParent = createPrice("PROD-001", new BigDecimal("95.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceParent.setGroups(Set.of(testGroupParent));
         priceRowRepository.save(priceParent);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setGroupId("GROUP-CHILD");
         
         PriceRowEntity result = publicPriceService.findBestPrice(criteria);
@@ -263,14 +263,14 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_GroupSpecificBeatsGeneric() {
-        PriceRowEntity priceGeneric = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceGeneric = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceRowRepository.save(priceGeneric);
         
-        PriceRowEntity priceGroupSpecific = createPrice("PROD-001", new BigDecimal("85.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceGroupSpecific = createPrice("PROD-001", new BigDecimal("85.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceGroupSpecific.setGroups(Set.of(testGroupChild));
         priceRowRepository.save(priceGroupSpecific);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setGroupId("GROUP-CHILD");
         
         PriceRowEntity result = publicPriceService.findBestPrice(criteria);
@@ -283,17 +283,17 @@ public class PublicPriceServiceIntegrationTest {
     public void testFindBestPrice_DateRangeFiltering() {
         OffsetDateTime now = OffsetDateTime.now();
         
-        PriceRowEntity priceExpired = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceExpired = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceExpired.setValidFrom(now.minusDays(30));
         priceExpired.setValidTo(now.minusDays(1));
         priceRowRepository.save(priceExpired);
         
-        PriceRowEntity priceActive = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceActive = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceActive.setValidFrom(now.minusDays(10));
         priceActive.setValidTo(now.plusDays(10));
         priceRowRepository.save(priceActive);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setReferenceDate(now);
         
         PriceRowEntity result = publicPriceService.findBestPrice(criteria);
@@ -304,19 +304,19 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_QuantityTierMatching() {
-        PriceRowEntity priceTier1 = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceTier1 = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceTier1.setMinQuantity(new BigDecimal("1.00"));
         priceRowRepository.save(priceTier1);
         
-        PriceRowEntity priceTier2 = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceTier2 = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceTier2.setMinQuantity(new BigDecimal("10.00"));
         priceRowRepository.save(priceTier2);
         
-        PriceRowEntity priceTier3 = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceTier3 = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceTier3.setMinQuantity(new BigDecimal("100.00"));
         priceRowRepository.save(priceTier3);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("50.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("50.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         
         PriceRowEntity result = publicPriceService.findBestPrice(criteria);
         
@@ -326,14 +326,14 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_MultipleCurrencies() {
-        PriceRowEntity priceEUR = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceEUR = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceRowRepository.save(priceEUR);
         
-        PriceRowEntity priceUSD = createPrice("PROD-001", new BigDecimal("120.00"), testCurrencyUSD, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceUSD = createPrice("PROD-001", new BigDecimal("120.00"), testCurrencyUSD, testUnitPiece, new PriceType("SALES_PRICE"));
         priceRowRepository.save(priceUSD);
         
-        PriceMatchingCriteria criteriaEUR = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
-        PriceMatchingCriteria criteriaUSD = createCriteria("PROD-001", new BigDecimal("10.00"), "USD", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteriaEUR = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
+        PriceMatchingCriteria criteriaUSD = createCriteria("PROD-001", new BigDecimal("10.00"), "USD", "piece", new PriceType("SALES_PRICE"));
         
         PriceRowEntity resultEUR = publicPriceService.findBestPrice(criteriaEUR);
         PriceRowEntity resultUSD = publicPriceService.findBestPrice(criteriaUSD);
@@ -346,18 +346,18 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_AllPriceTypes() {
-        PriceRowEntity salesPrice = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity salesPrice = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceRowRepository.save(salesPrice);
         
-        PriceRowEntity purchasePrice = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, PriceType.PURCHASE_PRICE);
+        PriceRowEntity purchasePrice = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, new PriceType("PURCHASE_PRICE"));
         priceRowRepository.save(purchasePrice);
         
-        PriceRowEntity materialCost = createPrice("PROD-001", new BigDecimal("60.00"), testCurrencyEUR, testUnitPiece, PriceType.MATERIAL_COST);
+        PriceRowEntity materialCost = createPrice("PROD-001", new BigDecimal("60.00"), testCurrencyEUR, testUnitPiece, new PriceType("MATERIAL_COST"));
         priceRowRepository.save(materialCost);
         
-        PriceMatchingCriteria criteriaSales = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
-        PriceMatchingCriteria criteriaPurchase = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.PURCHASE_PRICE);
-        PriceMatchingCriteria criteriaMaterial = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.MATERIAL_COST);
+        PriceMatchingCriteria criteriaSales = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
+        PriceMatchingCriteria criteriaPurchase = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("PURCHASE_PRICE"));
+        PriceMatchingCriteria criteriaMaterial = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("MATERIAL_COST"));
         
         PriceRowEntity resultSales = publicPriceService.findBestPrice(criteriaSales);
         PriceRowEntity resultPurchase = publicPriceService.findBestPrice(criteriaPurchase);
@@ -373,19 +373,19 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindAllPrices_ReturnsAllMatchesRanked() {
-        PriceRowEntity price1 = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price1 = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         price1.setMinQuantity(new BigDecimal("1.00"));
         priceRowRepository.save(price1);
         
-        PriceRowEntity price2 = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price2 = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         price2.setMinQuantity(new BigDecimal("10.00"));
         priceRowRepository.save(price2);
         
-        PriceRowEntity price3 = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price3 = createPrice("PROD-001", new BigDecimal("80.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         price3.setMinQuantity(new BigDecimal("100.00"));
         priceRowRepository.save(price3);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("150.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("150.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         
         List<PriceRowEntity> results = publicPriceService.findAllPrices(criteria);
         
@@ -398,10 +398,10 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindBestPrice_NoMatch_ReturnsNull() {
-        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceRowRepository.save(price);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-999", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-999", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         
         PriceRowEntity result = publicPriceService.findBestPrice(criteria);
         
@@ -410,10 +410,10 @@ public class PublicPriceServiceIntegrationTest {
     
     @Test
     public void testFindAllPrices_NoMatch_ReturnsEmptyList() {
-        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceRowRepository.save(price);
         
-        PriceMatchingCriteria criteria = createCriteria("PROD-999", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-999", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         
         List<PriceRowEntity> results = publicPriceService.findAllPrices(criteria);
         
@@ -426,12 +426,12 @@ public class PublicPriceServiceIntegrationTest {
     @Test
     public void testFindBestPrice_ChannelFilter_MatchesAssignedChannel() {
         // Price assigned to DACH channel
-        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         price.setTaxClass(testTaxClassDE);
         price.setChannels(Set.of(testChannelDach));
         priceRowRepository.save(price);
 
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setChannelId("test-dach-channel");
         criteria.setCountryKey("DE");
 
@@ -444,12 +444,12 @@ public class PublicPriceServiceIntegrationTest {
     @Test
     public void testFindBestPrice_ChannelFilter_NoMatchForDifferentChannel() {
         // Price assigned only to DACH channel
-        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity price = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         price.setTaxClass(testTaxClassDE);
         price.setChannels(Set.of(testChannelDach));
         priceRowRepository.save(price);
 
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setChannelId("test-global-channel");
         criteria.setCountryKey("DE");
 
@@ -461,12 +461,12 @@ public class PublicPriceServiceIntegrationTest {
     @Test
     public void testFindBestPrice_ChannelFilter_PriceWithNoChannelMatchesAnyChannel() {
         // Price with no channel assignment (generic) - should match any channel
-        PriceRowEntity genericPrice = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity genericPrice = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         genericPrice.setTaxClass(testTaxClassDE);
         genericPrice.setChannels(new HashSet<>());
         priceRowRepository.save(genericPrice);
 
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setChannelId("test-dach-channel");
         criteria.setCountryKey("DE");
 
@@ -479,18 +479,18 @@ public class PublicPriceServiceIntegrationTest {
     @Test
     public void testFindBestPrice_ChannelFilter_SpecificChannelBeatsGenericPrice() {
         // Generic price (no channel) - lower priority than channel-specific
-        PriceRowEntity genericPrice = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity genericPrice = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         genericPrice.setTaxClass(testTaxClassDE);
         genericPrice.setChannels(new HashSet<>());
         priceRowRepository.save(genericPrice);
 
         // Channel-specific price - should win
-        PriceRowEntity channelPrice = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity channelPrice = createPrice("PROD-001", new BigDecimal("90.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         channelPrice.setTaxClass(testTaxClassDE);
         channelPrice.setChannels(Set.of(testChannelDach));
         priceRowRepository.save(channelPrice);
 
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setChannelId("test-dach-channel");
         criteria.setCountryKey("DE");
 
@@ -503,12 +503,12 @@ public class PublicPriceServiceIntegrationTest {
     @Test
     public void testFindBestPrice_CountryFilter_MatchesTaxClassCountry() {
         // Price with DE tax class
-        PriceRowEntity priceDE = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceDE = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceDE.setTaxClass(testTaxClassDE);
         priceDE.setChannels(Set.of(testChannelDach));
         priceRowRepository.save(priceDE);
 
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setChannelId("test-dach-channel");
         criteria.setCountryKey("DE");
 
@@ -521,12 +521,12 @@ public class PublicPriceServiceIntegrationTest {
     @Test
     public void testFindBestPrice_CountryFilter_NoMatchForDifferentCountry() {
         // Price only for DE
-        PriceRowEntity priceDE = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, PriceType.SALES_PRICE);
+        PriceRowEntity priceDE = createPrice("PROD-001", new BigDecimal("100.00"), testCurrencyEUR, testUnitPiece, new PriceType("SALES_PRICE"));
         priceDE.setTaxClass(testTaxClassDE);
         priceDE.setChannels(Set.of(testChannelDach));
         priceRowRepository.save(priceDE);
 
-        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", PriceType.SALES_PRICE);
+        PriceMatchingCriteria criteria = createCriteria("PROD-001", new BigDecimal("10.00"), "EUR", "piece", new PriceType("SALES_PRICE"));
         criteria.setChannelId("test-dach-channel");
         criteria.setCountryKey("US");
 

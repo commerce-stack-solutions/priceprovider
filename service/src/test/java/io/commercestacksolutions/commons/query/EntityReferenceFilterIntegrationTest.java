@@ -4,7 +4,7 @@ import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
@@ -127,7 +127,7 @@ public class EntityReferenceFilterIntegrationTest {
         priceRow1.setUnit(meter);
         priceRow1.setCurrency(eur);
         priceRow1.setTaxClass(taxClass);
-        priceRow1.setPriceType(PriceType.SALES_PRICE);
+        priceRow1.setPriceType(new PriceType("SALES_PRICE"));
         priceRow1.setTaxIncluded(true);
         priceRowRepository.saveAndFlush(priceRow1);
 
@@ -138,7 +138,7 @@ public class EntityReferenceFilterIntegrationTest {
         priceRow2.setUnit(meter);
         priceRow2.setCurrency(eur);
         priceRow2.setTaxClass(taxClass);
-        priceRow2.setPriceType(PriceType.SALES_PRICE);
+        priceRow2.setPriceType(new PriceType("SALES_PRICE"));
         priceRow2.setTaxIncluded(true);
         priceRowRepository.saveAndFlush(priceRow2);
 
@@ -149,7 +149,7 @@ public class EntityReferenceFilterIntegrationTest {
         priceRow3.setUnit(meter);
         priceRow3.setCurrency(usd);
         priceRow3.setTaxClass(taxClass);
-        priceRow3.setPriceType(PriceType.SALES_PRICE);
+        priceRow3.setPriceType(new PriceType("SALES_PRICE"));
         priceRow3.setTaxIncluded(false);
         priceRowRepository.saveAndFlush(priceRow3);
     }

@@ -4,7 +4,7 @@ import io.commercestacksolutions.commons.exception.DataIntegrityException;
 import io.commercestacksolutions.commons.exception.EntityAlreadyExistsException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.Message;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.domain.organizationtype.OrganizationType;
 import io.commercestacksolutions.priceproviderservice.facade.organization.restentity.OrganizationRestEntity;
 import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.OrganizationController;
 import io.commercestacksolutions.priceproviderservice.facade.organization.OrganizationFacade;
@@ -105,7 +105,7 @@ public class OrganizationControllerTest {
         created.setId("CLIENT-ORG-ID-001");
         created.setPath("ORG-PUT-001");
         created.setName("Put Organization");
-        created.setOrganizationType(OrganizationType.COMPANY);
+        created.setOrganizationType("COMPANY");
 
         when(organizationFacade.createOrRecreate(eq("CLIENT-ORG-ID-001"), any())).thenReturn(created);
 
@@ -123,7 +123,7 @@ public class OrganizationControllerTest {
         updated.setId("EXISTING-ORG-ID");
         updated.setPath("ORG-EXISTING");
         updated.setName("Updated Org Name");
-        updated.setOrganizationType(OrganizationType.COMPANY);
+        updated.setOrganizationType("COMPANY");
 
         when(organizationFacade.createOrRecreate(eq("EXISTING-ORG-ID"), any())).thenReturn(updated);
 

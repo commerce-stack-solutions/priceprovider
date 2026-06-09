@@ -6,7 +6,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.currency.Curren
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
@@ -146,7 +146,7 @@ public class UnitBulkDeleteIntegrationTest {
         priceRow.setUnit(unit);
         priceRow.setCurrency(testCurrency);
         priceRow.setTaxClass(testTaxClass);
-        priceRow.setPriceType(PriceType.SALES_PRICE);
+        priceRow.setPriceType(new PriceType("SALES_PRICE"));
         priceRow.setTaxIncluded(false);
         priceRow.setCreatedAt(OffsetDateTime.now());
         priceRow.setLastModifiedAt(OffsetDateTime.now());

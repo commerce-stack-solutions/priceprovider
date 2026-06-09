@@ -10,7 +10,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.currency.Curren
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
@@ -195,7 +195,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         // WHEN: Requesting a price for DE via DACH channel
         PublicPriceRestEntity result = publicPriceFacade.getBestPrice(
                 "facade-test-dach", "DE", null, "FACADE-PROD-001",
-                new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of());
+                new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of());
 
         // THEN: Price is returned correctly
         assertNotNull(result, "Should return a price when country is allowed in channel");
@@ -212,7 +212,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         assertThrows(NotFoundException.class,
                 () -> publicPriceFacade.getBestPrice(
                         "facade-test-dach", "US", null, "FACADE-PROD-002",
-                        new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of()),
+                        new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of()),
                 "Requesting a price for a country not in the channel's allowedCountryRefs must throw NotFoundException");
     }
 
@@ -223,7 +223,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         assertThrows(NotFoundException.class,
                 () -> publicPriceFacade.getBestPrice(
                         "non-existent-channel", "DE", null, "FACADE-PROD-001",
-                        new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of()),
+                        new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of()),
                 "Non-existent channel must throw NotFoundException");
     }
 
@@ -236,7 +236,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         // WHEN: Requesting a price for US via global channel
         PublicPriceRestEntity result = publicPriceFacade.getBestPrice(
                 "facade-test-global", "US", null, "FACADE-PROD-003",
-                new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of());
+                new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of());
 
         // THEN: Price is returned
         assertNotNull(result, "Should return a price for US via global channel");
@@ -253,7 +253,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         assertThrows(NotFoundException.class,
                 () -> publicPriceFacade.getBestPrice(
                         "facade-test-dach", "US", null, "FACADE-PROD-004",
-                        new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of()),
+                        new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of()),
                 "US country should be rejected by DACH channel which only allows DE");
     }
 
@@ -268,7 +268,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         // WHEN: Requesting all prices for DE via DACH channel
         PublicPriceListRestEntity result = publicPriceFacade.getAllPrices(
                 "facade-test-dach", "DE", null, "FACADE-PROD-005",
-                new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of());
+                new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of());
 
         // THEN: Results are returned
         assertNotNull(result);
@@ -285,7 +285,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         assertThrows(NotFoundException.class,
                 () ->  publicPriceFacade.getAllPrices(
                 "facade-test-dach", "US", null, "FACADE-PROD-006",
-                new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of()),
+                new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of()),
                 "A selected country not allowed in channel must throw NotFoundException");
     }
 
@@ -301,7 +301,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         assertThrows(NotFoundException.class,
                 () -> publicPriceFacade.getBestPrice(
                         "facade-test-dach", "US", "some-group", "FACADE-PROD-007",
-                        new BigDecimal("1"), "piece", "EUR", PriceType.SALES_PRICE, Set.of()),
+                        new BigDecimal("1"), "piece", "EUR", new PriceType("SALES_PRICE"), Set.of()),
                 "Group-scoped price request with disallowed country must throw NotFoundException");
     }
 
@@ -314,7 +314,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         priceRow.setPriceValue(value);
         priceRow.setCurrency(currency);
         priceRow.setUnit(unit);
-        priceRow.setPriceType(PriceType.SALES_PRICE);
+        priceRow.setPriceType(new PriceType("SALES_PRICE"));
         priceRow.setMinQuantity(new BigDecimal("1.00"));
         priceRow.setTaxIncluded(false);
         priceRow.setTaxClass(taxClass);

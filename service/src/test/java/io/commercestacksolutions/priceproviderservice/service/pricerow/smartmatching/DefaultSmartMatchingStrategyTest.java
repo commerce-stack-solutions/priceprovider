@@ -3,7 +3,7 @@ package io.commercestacksolutions.priceproviderservice.service.pricerow.smartmat
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ class DefaultSmartMatchingStrategyTest {
         ctx.setCurrencyRef("EUR");
         ctx.setTaxClassRef("STANDARD");
         ctx.setTaxIncluded(false);
-        ctx.setPriceType(PriceType.SALES_PRICE);
+        ctx.setPriceType(new PriceType("SALES_PRICE"));
         return ctx;
     }
 

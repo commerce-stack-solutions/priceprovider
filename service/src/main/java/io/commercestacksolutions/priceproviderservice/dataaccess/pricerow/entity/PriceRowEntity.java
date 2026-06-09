@@ -7,8 +7,11 @@ import io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvi
 import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.converter.PriceTypeConverter;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceTypeDefinition;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import jakarta.persistence.*;
@@ -47,7 +50,8 @@ public class PriceRowEntity implements AuditableEntity {
     @JoinColumn(name = "tax_class_id", nullable = true)
     @MandatoryField
     private TaxClassEntity taxClassRef;
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = PriceTypeConverter.class)
+    @MetaDynamicEnum(beanType = PriceTypeDefinition.class)
     private PriceType priceType;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private OffsetDateTime validFrom;

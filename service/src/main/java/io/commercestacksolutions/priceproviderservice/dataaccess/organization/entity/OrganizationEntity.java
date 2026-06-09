@@ -1,14 +1,18 @@
 package io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity;
 
 import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
+import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.converter.OrganizationTypeConverter;
+import io.commercestacksolutions.priceproviderservice.domain.organizationtype.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.domain.organizationtype.OrganizationTypeDefinition;
 import jakarta.persistence.*;
 
 @Entity
 public class OrganizationEntity extends GroupEntity {
-    
-    @Enumerated(EnumType.STRING)
+
+    @Convert(converter = OrganizationTypeConverter.class)
+    @MetaDynamicEnum(beanType = OrganizationTypeDefinition.class)
     @MandatoryField
     private OrganizationType organizationType;
 

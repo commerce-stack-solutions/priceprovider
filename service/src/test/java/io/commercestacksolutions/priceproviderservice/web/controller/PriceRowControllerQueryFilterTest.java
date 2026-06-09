@@ -3,7 +3,7 @@ package io.commercestacksolutions.priceproviderservice.web.controller;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
@@ -121,7 +121,7 @@ public class PriceRowControllerQueryFilterTest {
         priceRow1.setUnit(piece);
         priceRow1.setCurrency(eur);
         priceRow1.setTaxClass(taxClass19);
-        priceRow1.setPriceType(PriceType.SALES_PRICE);
+        priceRow1.setPriceType(new PriceType("SALES_PRICE"));
         priceRow1.setTaxIncluded(true);
         priceRow1.setValidFrom(OffsetDateTime.now().minusDays(10));
         priceRowRepository.save(priceRow1);
@@ -133,7 +133,7 @@ public class PriceRowControllerQueryFilterTest {
         priceRow2.setUnit(piece);
         priceRow2.setCurrency(eur);
         priceRow2.setTaxClass(taxClass19);
-        priceRow2.setPriceType(PriceType.SALES_PRICE);
+        priceRow2.setPriceType(new PriceType("SALES_PRICE"));
         priceRow2.setTaxIncluded(true);
         Set<GroupEntity> groups2 = new HashSet<>();
         groups2.add(groupA);
@@ -147,7 +147,7 @@ public class PriceRowControllerQueryFilterTest {
         priceRow3.setUnit(piece);
         priceRow3.setCurrency(usd);
         priceRow3.setTaxClass(taxClass19);
-        priceRow3.setPriceType(PriceType.SALES_PRICE);
+        priceRow3.setPriceType(new PriceType("SALES_PRICE"));
         priceRow3.setTaxIncluded(false);
         priceRowRepository.save(priceRow3);
 
@@ -158,7 +158,7 @@ public class PriceRowControllerQueryFilterTest {
         priceRow4.setUnit(piece);
         priceRow4.setCurrency(eur);
         priceRow4.setTaxClass(taxClass19);
-        priceRow4.setPriceType(PriceType.SALES_PRICE);
+        priceRow4.setPriceType(new PriceType("SALES_PRICE"));
         priceRow4.setTaxIncluded(false);
         priceRowRepository.save(priceRow4);
 
@@ -169,7 +169,7 @@ public class PriceRowControllerQueryFilterTest {
         priceRow5.setUnit(piece);
         priceRow5.setCurrency(eur);
         priceRow5.setTaxClass(taxClass19);
-        priceRow5.setPriceType(PriceType.SALES_PRICE);
+        priceRow5.setPriceType(new PriceType("SALES_PRICE"));
         priceRow5.setTaxIncluded(true);
         priceRow5.setValidFrom(OffsetDateTime.now().minusDays(5));
         priceRow5.setValidTo(OffsetDateTime.now().plusDays(30));

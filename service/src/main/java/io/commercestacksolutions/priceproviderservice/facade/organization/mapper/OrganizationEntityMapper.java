@@ -7,6 +7,7 @@ import io.commercestacksolutions.priceproviderservice.commons.messagekeys.Messag
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
+import io.commercestacksolutions.priceproviderservice.domain.organizationtype.OrganizationType;
 import io.commercestacksolutions.priceproviderservice.facade.organization.restentity.OrganizationRestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class OrganizationEntityMapper extends AbstractMapper<OrganizationRestEnt
             target.setPath(source.getPath());
         }
         target.setName(source.getName());
-        target.setOrganizationType(source.getOrganizationType());
+        target.setOrganizationType(source.getOrganizationType() != null ? new OrganizationType(source.getOrganizationType()) : null);
 
         // Convert parent paths to entity references (look up by path)
         if (source.getParentRefs() != null) {

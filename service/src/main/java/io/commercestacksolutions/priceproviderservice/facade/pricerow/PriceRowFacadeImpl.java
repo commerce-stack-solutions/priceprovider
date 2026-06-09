@@ -17,6 +17,7 @@ import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper.PriceRowEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper.PriceRowRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowListRestEntity;
@@ -321,7 +322,7 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         context.setCurrencyRef(restEntity.getCurrencyRef());
         context.setTaxClassRef(restEntity.getTaxClassRef());
         context.setTaxIncluded(restEntity.isTaxIncluded());
-        context.setPriceType(restEntity.getPriceType());
+        context.setPriceType(restEntity.getPriceType() != null ? new PriceType(restEntity.getPriceType()) : null);
         context.setValidFrom(restEntity.getValidFrom());
         context.setValidTo(restEntity.getValidTo());
         context.setGroupRefs(restEntity.getGroupRefs());

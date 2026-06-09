@@ -1,7 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity;
 
 import io.commercestacksolutions.commons.web.rest.RestEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.info.InfoPriceRow;
 import io.commercestacksolutions.priceproviderservice.facade.unit.restentity.UnitRestEntity;
 
@@ -17,7 +16,7 @@ public class PriceRowRestEntity extends RestEntity<InfoPriceRow, IncludesPriceRo
     private String unitRef;
     private String currencyRef;
     private String taxClassRef;
-    private PriceType priceType;
+    private String priceType;
     private OffsetDateTime validFrom;
     private OffsetDateTime validTo;
     private Set<String> groupRefs;
@@ -80,11 +79,11 @@ public class PriceRowRestEntity extends RestEntity<InfoPriceRow, IncludesPriceRo
         this.taxClassRef = taxClassRef;
     }
 
-    public PriceType getPriceType() {
+    public String getPriceType() {
         return priceType;
     }
 
-    public void setPriceType(PriceType priceType) {
+    public void setPriceType(String priceType) {
         this.priceType = priceType;
     }
 

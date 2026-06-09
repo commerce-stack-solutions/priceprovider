@@ -3,7 +3,8 @@ package io.commercestacksolutions.priceproviderservice.web.controller.publicapi;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.exception.NotFoundException;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceTypeRegistry;
 import io.commercestacksolutions.priceproviderservice.config.security.JwtClaimsExtractor;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.PublicPriceFacade;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
@@ -44,11 +45,13 @@ public class PublicPriceController {
 
     private final PublicPriceFacade publicPriceFacade;
     private final JwtClaimsExtractor jwtClaimsExtractor;
+    private final PriceTypeRegistry priceTypeRegistry;
 
     @Autowired
-    public PublicPriceController(PublicPriceFacade publicPriceFacade, JwtClaimsExtractor jwtClaimsExtractor) {
+    public PublicPriceController(PublicPriceFacade publicPriceFacade, JwtClaimsExtractor jwtClaimsExtractor, PriceTypeRegistry priceTypeRegistry) {
         this.publicPriceFacade = publicPriceFacade;
         this.jwtClaimsExtractor = jwtClaimsExtractor;
+        this.priceTypeRegistry = priceTypeRegistry;
     }
 
     @Operation(summary = "Get best matching price for channel and country",
@@ -182,15 +185,16 @@ public class PublicPriceController {
     }
 
     /**
-     * Parses the priceType path parameter into a PriceType enum.
+     * Parses the priceType path parameter into a PriceType.
      */
     private PriceType parsePriceType(String priceType) throws InvalidParameterException {
-        try {
-            return PriceType.valueOf(priceType.trim().toUpperCase());
-        } catch (IllegalArgumentException e) {
+        String code = priceType.trim().toUpperCase();
+        if (priceTypeRegistry.exists(code)) {
+            return new PriceType(code);
+        } else {
             throw new InvalidParameterException(
                     "Invalid priceType value '" + priceType + "'. Valid values are: " +
-                    Arrays.toString(PriceType.values()));
+                    priceTypeRegistry.getCodes());
         }
     }
 }

@@ -8,6 +8,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
@@ -103,8 +104,8 @@ public class PriceRowEntityMapper extends AbstractMapper<PriceRowRestEntity, Pri
         } else {
             throw new DataMappingException(MessageKeys.ERROR_MAPPING_TAX_CLASS_MANDATORY);
         }
-        
-        target.setPriceType(source.getPriceType());
+
+        target.setPriceType(source.getPriceType() != null ? new PriceType(source.getPriceType()) : null);
         target.setValidFrom(source.getValidFrom());
         target.setValidTo(source.getValidTo());
 

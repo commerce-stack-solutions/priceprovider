@@ -6,7 +6,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEnti
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
@@ -118,7 +118,7 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow1.setUnit(piece);
         priceRow1.setCurrency(eur);
         priceRow1.setTaxClass(taxClass);
-        priceRow1.setPriceType(PriceType.SALES_PRICE);
+        priceRow1.setPriceType(new PriceType("SALES_PRICE"));
         priceRow1.setTaxIncluded(true);
         priceRowRepository.save(priceRow1);
 
@@ -130,7 +130,7 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow2.setUnit(piece);
         priceRow2.setCurrency(eur);
         priceRow2.setTaxClass(taxClass);
-        priceRow2.setPriceType(PriceType.SALES_PRICE);
+        priceRow2.setPriceType(new PriceType("SALES_PRICE"));
         priceRow2.setTaxIncluded(true);
         Set<GroupEntity> groupsA = new HashSet<>();
         groupsA.add(groupA);
@@ -145,7 +145,7 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow3.setUnit(piece);
         priceRow3.setCurrency(eur);
         priceRow3.setTaxClass(taxClass);
-        priceRow3.setPriceType(PriceType.SALES_PRICE);
+        priceRow3.setPriceType(new PriceType("SALES_PRICE"));
         priceRow3.setTaxIncluded(false);
         Set<GroupEntity> groupsB = new HashSet<>();
         groupsB.add(groupB);
@@ -160,7 +160,7 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow4.setUnit(piece);
         priceRow4.setCurrency(eur);
         priceRow4.setTaxClass(taxClass);
-        priceRow4.setPriceType(PriceType.SALES_PRICE);
+        priceRow4.setPriceType(new PriceType("SALES_PRICE"));
         priceRow4.setTaxIncluded(true);
         Set<GroupEntity> groupsAB = new HashSet<>();
         groupsAB.add(groupA);
@@ -176,7 +176,7 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow5.setUnit(piece);
         priceRow5.setCurrency(eur);
         priceRow5.setTaxClass(taxClass);
-        priceRow5.setPriceType(PriceType.SALES_PRICE);
+        priceRow5.setPriceType(new PriceType("SALES_PRICE"));
         priceRow5.setTaxIncluded(false);
         priceRowRepository.save(priceRow5);
 
@@ -188,7 +188,7 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow6.setUnit(piece);
         priceRow6.setCurrency(eur);
         priceRow6.setTaxClass(taxClass);
-        priceRow6.setPriceType(PriceType.SALES_PRICE);
+        priceRow6.setPriceType(new PriceType("SALES_PRICE"));
         priceRow6.setTaxIncluded(true);
         Set<GroupEntity> groupsSlash = new HashSet<>();
         groupsSlash.add(groupSlash);
@@ -203,7 +203,7 @@ public class PriceRowControllerHasAnyHasAllTest {
         priceRow7.setUnit(piece);
         priceRow7.setCurrency(eur);
         priceRow7.setTaxClass(taxClass);
-        priceRow7.setPriceType(PriceType.SALES_PRICE);
+        priceRow7.setPriceType(new PriceType("SALES_PRICE"));
         priceRow7.setTaxIncluded(true);
         Set<GroupEntity> groupsSlashA = new HashSet<>();
         groupsSlashA.add(groupSlash);

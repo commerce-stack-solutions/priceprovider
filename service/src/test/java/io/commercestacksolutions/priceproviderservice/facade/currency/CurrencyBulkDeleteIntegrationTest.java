@@ -6,7 +6,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.currency.Curren
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -211,7 +211,7 @@ public class CurrencyBulkDeleteIntegrationTest {
         priceRow.setMinQuantity(new BigDecimal("1.0"));
         priceRow.setCurrency(currency);
         priceRow.setTaxClass(testTaxClass);
-        priceRow.setPriceType(PriceType.SALES_PRICE);
+        priceRow.setPriceType(new PriceType("SALES_PRICE"));
         priceRow.setTaxIncluded(false);
         return priceRowRepository.save(priceRow);
     }

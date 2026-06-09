@@ -1,7 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity;
 
 import io.commercestacksolutions.commons.web.rest.RestEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.info.InfoPublicPrice;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -42,10 +41,10 @@ public class PublicPriceRestEntity extends RestEntity<InfoPublicPrice, IncludesP
     
     @Schema(description = "Tax class reference", example = "STANDARD")
     private String taxClassRef;
-    
+
     @Schema(description = "Price type", example = "SALES_PRICE")
-    private PriceType priceType;
-    
+    private String priceType;
+
     @Schema(description = "Valid from date (ISO 8601)", example = "2024-01-01T00:00:00Z")
     private OffsetDateTime validFrom;
     
@@ -116,15 +115,15 @@ public class PublicPriceRestEntity extends RestEntity<InfoPublicPrice, IncludesP
     public void setTaxClassRef(String taxClassRef) {
         this.taxClassRef = taxClassRef;
     }
-    
-    public PriceType getPriceType() {
+
+    public String getPriceType() {
         return priceType;
     }
-    
-    public void setPriceType(PriceType priceType) {
+
+    public void setPriceType(String priceType) {
         this.priceType = priceType;
     }
-    
+
     public OffsetDateTime getValidFrom() {
         return validFrom;
     }
