@@ -1,13 +1,13 @@
-package io.commercestacksolutions.priceproviderservice.domain.pricetype;
+package io.commercestacksolutions.priceproviderservice.dataaccess.organization.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Objects;
 
-public record PriceType(@JsonValue String code) {
+public record OrganizationType(@JsonValue String code) {
     @JsonCreator
-    public PriceType {
+    public OrganizationType {
         Objects.requireNonNull(code, "code must not be null");
     }
 

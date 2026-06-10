@@ -8,7 +8,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxCla
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;

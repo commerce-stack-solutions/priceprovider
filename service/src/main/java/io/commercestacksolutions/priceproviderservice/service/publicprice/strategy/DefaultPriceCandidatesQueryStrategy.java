@@ -3,7 +3,7 @@ package io.commercestacksolutions.priceproviderservice.service.publicprice.strat
 import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

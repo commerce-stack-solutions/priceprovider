@@ -3,7 +3,7 @@ package io.commercestacksolutions.priceproviderservice.service.organization.vali
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.web.rest.Message;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
-import io.commercestacksolutions.priceproviderservice.domain.organizationtype.OrganizationTypeRegistry;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.type.OrganizationTypeRegistry;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

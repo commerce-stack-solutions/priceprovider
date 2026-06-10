@@ -1,4 +1,4 @@
-package io.commercestacksolutions.priceproviderservice.domain.organizationtype;
+package io.commercestacksolutions.priceproviderservice.dataaccess.organization.type;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

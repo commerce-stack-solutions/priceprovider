@@ -10,8 +10,8 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity
 import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.converter.PriceTypeConverter;
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceTypeDefinition;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceTypeDefinition;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import jakarta.persistence.*;

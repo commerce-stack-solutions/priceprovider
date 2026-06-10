@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice.model;
 
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

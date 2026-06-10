@@ -11,7 +11,7 @@ import io.commercestacksolutions.priceproviderservice.service.currency.CurrencyS
 import io.commercestacksolutions.priceproviderservice.service.unit.UnitService;
 import io.commercestacksolutions.priceproviderservice.service.taxclass.TaxClassService;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.PriceRowService;
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

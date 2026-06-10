@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.converter;
 
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

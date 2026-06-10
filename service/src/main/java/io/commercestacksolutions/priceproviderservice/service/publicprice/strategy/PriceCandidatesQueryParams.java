@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice.strategy;
 
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
 
 import java.math.BigDecimal;

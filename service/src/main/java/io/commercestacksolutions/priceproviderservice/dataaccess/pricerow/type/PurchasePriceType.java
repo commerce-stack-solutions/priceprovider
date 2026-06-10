@@ -1,4 +1,4 @@
-package io.commercestacksolutions.priceproviderservice.domain.pricetype;
+package io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type;
 
 import org.springframework.stereotype.Component;
 

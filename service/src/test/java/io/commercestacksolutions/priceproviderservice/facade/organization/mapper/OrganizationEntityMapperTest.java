@@ -5,7 +5,7 @@ import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
-import io.commercestacksolutions.priceproviderservice.domain.organizationtype.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.type.OrganizationType;
 import io.commercestacksolutions.priceproviderservice.facade.organization.restentity.OrganizationRestEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

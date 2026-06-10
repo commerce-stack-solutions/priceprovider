@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.facade.publicprice;
 
 import io.commercestacksolutions.commons.exception.NotFoundException;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceRestEntity;
 

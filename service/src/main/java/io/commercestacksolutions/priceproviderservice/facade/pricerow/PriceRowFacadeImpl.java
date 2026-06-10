@@ -17,7 +17,7 @@ import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.domain.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper.PriceRowEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper.PriceRowRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowListRestEntity;
