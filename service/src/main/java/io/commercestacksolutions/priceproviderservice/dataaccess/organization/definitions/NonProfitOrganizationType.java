@@ -1,4 +1,4 @@
-package io.commercestacksolutions.priceproviderservice.dataaccess.organization.type;
+package io.commercestacksolutions.priceproviderservice.dataaccess.organization.definitions;
 
 import org.springframework.stereotype.Component;
 

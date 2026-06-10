@@ -4,8 +4,8 @@ import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.converter.OrganizationTypeConverter;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.type.OrganizationType;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.type.OrganizationTypeDefinition;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.definitions.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.definitions.OrganizationTypeDefinition;
 import jakarta.persistence.*;
 
 @Entity

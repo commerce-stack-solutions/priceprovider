@@ -7,7 +7,7 @@ import io.commercestacksolutions.priceproviderservice.commons.messagekeys.Messag
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.type.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.definitions.OrganizationType;
 import io.commercestacksolutions.priceproviderservice.facade.organization.restentity.OrganizationRestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

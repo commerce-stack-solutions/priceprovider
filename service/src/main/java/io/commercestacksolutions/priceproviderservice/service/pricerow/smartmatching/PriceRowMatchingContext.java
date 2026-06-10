@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.type.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
