@@ -1,0 +1,24 @@
+{
+  "name": "priceprovider-public-api",
+  "api_id": "priceprovider-public-api",
+  "org_id": "default",
+  "use_keyless": true,
+  "active": true,
+  "definition": {
+    "location": "header",
+    "key": "x-api-version"
+  },
+  "version_data": {
+    "not_versioned": true,
+    "versions": {
+      "Default": {
+        "name": "Default"
+      }
+    }
+  },
+  "proxy": {
+    "listen_path": "/commerce/prices/",
+    "target_url": "http://service:8080/public/api/",
+    "strip_listen_path": true
+  }
+}

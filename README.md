@@ -40,6 +40,9 @@ The script will:
 5. Start the full stack with `docker compose` (PostgreSQL, Keycloak, service, app).
 6. If Node.js / npm is available, install dependencies and start the example frontends in the background.
 
+For a dedicated infrastructure integration example using **Tyk + Next.js Commerce + Keycloak + Public Price API**, see:
+`examples/nextjs-commerce/README.md`.
+
 After the script completes the following endpoints are available:
 
 | Service                 | URL                      |
@@ -51,4 +54,3 @@ After the script completes the following endpoints are available:
 | Rental Frontend (demo)  | http://localhost:3001 *(requires Node.js)* |
 
 To stop the stack run `docker compose down`.
-
