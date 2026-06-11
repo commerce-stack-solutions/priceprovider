@@ -8,7 +8,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;

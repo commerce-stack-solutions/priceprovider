@@ -1,6 +1,6 @@
-package io.commercestacksolutions.priceproviderservice.dataaccess.organization.converter;
+package io.commercestacksolutions.priceproviderservice.dataaccess.organization.organizationtype.converter;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.definitions.OrganizationType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.organization.organizationtype.OrganizationType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

@@ -1,7 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice;
 
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
 import io.commercestacksolutions.priceproviderservice.service.group.GroupHierarchyService;
 import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

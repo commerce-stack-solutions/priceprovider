@@ -1,8 +1,8 @@
 package io.commercestacksolutions.priceproviderservice.web.controller.publicapi;
 
 import io.commercestacksolutions.commons.exception.NotFoundException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceTypeRegistry;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceTypeRegistry;
 import io.commercestacksolutions.priceproviderservice.config.security.JwtClaimsExtractor;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.PublicPriceFacade;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;

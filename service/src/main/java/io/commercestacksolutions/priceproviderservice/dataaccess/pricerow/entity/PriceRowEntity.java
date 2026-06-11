@@ -9,9 +9,9 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.converter.PriceTypeConverter;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceTypeDefinition;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.converter.PriceTypeConverter;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceTypeDefinition;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import jakarta.persistence.*;

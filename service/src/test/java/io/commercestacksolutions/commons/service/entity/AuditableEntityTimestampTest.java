@@ -5,13 +5,11 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.service.language.LanguageService;
 import io.commercestacksolutions.priceproviderservice.service.currency.CurrencyService;
 import io.commercestacksolutions.priceproviderservice.service.unit.UnitService;
 import io.commercestacksolutions.priceproviderservice.service.taxclass.TaxClassService;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.PriceRowService;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

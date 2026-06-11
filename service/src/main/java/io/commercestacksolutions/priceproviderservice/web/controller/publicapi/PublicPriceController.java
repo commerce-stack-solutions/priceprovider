@@ -3,8 +3,8 @@ package io.commercestacksolutions.priceproviderservice.web.controller.publicapi;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.exception.NotFoundException;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceTypeRegistry;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceTypeRegistry;
 import io.commercestacksolutions.priceproviderservice.config.security.JwtClaimsExtractor;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.PublicPriceFacade;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Set;
 
 /**

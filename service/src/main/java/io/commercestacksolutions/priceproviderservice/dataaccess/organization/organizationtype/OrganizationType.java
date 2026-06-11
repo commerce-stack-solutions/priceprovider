@@ -1,4 +1,4 @@
-package io.commercestacksolutions.priceproviderservice.dataaccess.organization.definitions;
+package io.commercestacksolutions.priceproviderservice.dataaccess.organization.organizationtype;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

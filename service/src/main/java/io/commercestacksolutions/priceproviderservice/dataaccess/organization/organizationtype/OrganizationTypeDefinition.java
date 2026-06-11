@@ -1,4 +1,4 @@
-package io.commercestacksolutions.priceproviderservice.dataaccess.organization.definitions;
+package io.commercestacksolutions.priceproviderservice.dataaccess.organization.organizationtype;
 
 public interface OrganizationTypeDefinition {
     OrganizationType getOrganizationType();

@@ -6,7 +6,7 @@ import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.definitions.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.mapper.PublicPriceMapper;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceRestEntity;
