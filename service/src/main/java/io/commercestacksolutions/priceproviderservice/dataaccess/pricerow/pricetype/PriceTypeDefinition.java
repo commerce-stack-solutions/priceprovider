@@ -2,5 +2,4 @@ package io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.price
 
 public interface PriceTypeDefinition {
     PriceType getPriceType();
-    String getDisplayName();
 }

@@ -17,22 +17,25 @@ public class OrganizationTypeRegistry {
 
     public OrganizationTypeRegistry(List<OrganizationTypeDefinition> definitions) {
         this.definitions = new HashMap<>();
-        if (definitions != null) {
-            for (OrganizationTypeDefinition d : definitions) {
-                if (d == null || d.getOrganizationType() == null || d.getOrganizationType().code() == null) {
-                    logger.error("OrganizationTypeDefinition or its code is null, skipping: {}", d);
-                    continue;
-                }
-                String code = d.getOrganizationType().code().toUpperCase();
-                if (this.definitions.containsKey(code)) {
-                    logger.error("Duplicate OrganizationType code found: {}. Skipping bean: {}", code, d);
-                } else {
-                    this.definitions.put(code, d);
-                }
+        if (definitions == null) {
+            logger.warn("OrganizationTypeRegistry initialized with no definitions (null/ no definitions provided).");
+            return;
+        }
+        for (OrganizationTypeDefinition d : definitions) {
+            if (d == null || d.getOrganizationType() == null || d.getOrganizationType().code() == null) {
+                logger.error("OrganizationTypeDefinition or its code is null, skipping: {}", d);
+                continue;
+            }
+            String code = d.getOrganizationType().code().toUpperCase();
+            if (this.definitions.containsKey(code)) {
+                logger.error("Duplicate OrganizationType code found: {}. Skipping bean: {}", code, d);
+            } else {
+                this.definitions.put(code, d);
             }
         }
+
         if (this.definitions.isEmpty()) {
-            logger.warn("OrganizationTypeRegistry initialized with no definitions.");
+            logger.warn("OrganizationTypeRegistry initialized with no definitions (no definitions added).");
         }
     }
 
@@ -42,16 +45,5 @@ public class OrganizationTypeRegistry {
 
     public OrganizationTypeDefinition get(String code) {
         return definitions.get(code);
-    }
-
-    public void validate(OrganizationType organizationType) {
-        if (organizationType == null || !exists(organizationType.code())) {
-            throw new IllegalArgumentException(
-                    "Unknown organization type: " + (organizationType != null ? organizationType.code() : "null"));
-        }
-    }
-
-    public List<String> getCodes() {
-        return List.copyOf(definitions.keySet());
     }
 }

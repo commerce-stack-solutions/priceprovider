@@ -17,20 +17,23 @@ public class PriceTypeRegistry {
 
     public PriceTypeRegistry(List<PriceTypeDefinition> definitions) {
         this.definitions = new HashMap<>();
-        if (definitions != null) {
-            for (PriceTypeDefinition d : definitions) {
-                if (d == null || d.getPriceType() == null || d.getPriceType().code() == null) {
-                    logger.error("PriceTypeDefinition or its code is null, skipping: {}", d);
-                    continue;
-                }
-                String code = d.getPriceType().code().toUpperCase();
-                if (this.definitions.containsKey(code)) {
-                    logger.error("Duplicate PriceType code found: {}. Skipping bean: {}", code, d);
-                } else {
-                    this.definitions.put(code, d);
-                }
+        if (definitions == null) {
+            logger.warn("PriceTypeRegistry initialized with no definitions (null/ no definitions provided).");
+            return;
+        }
+        for (PriceTypeDefinition d : definitions) {
+            if (d == null || d.getPriceType() == null || d.getPriceType().code() == null) {
+                logger.error("PriceTypeDefinition or its code is null, skipping: {}", d);
+                continue;
+            }
+            String code = d.getPriceType().code().toUpperCase();
+            if (this.definitions.containsKey(code)) {
+                logger.error("Duplicate PriceType code found: {}. Skipping bean: {}", code, d);
+            } else {
+                this.definitions.put(code, d);
             }
         }
+
         if (this.definitions.isEmpty()) {
             logger.warn("PriceTypeRegistry initialized with no definitions.");
         }
@@ -42,13 +45,6 @@ public class PriceTypeRegistry {
 
     public PriceTypeDefinition get(String code) {
         return definitions.get(code);
-    }
-
-    public void validate(PriceType priceType) {
-        if (priceType == null || !exists(priceType.code())) {
-            throw new IllegalArgumentException(
-                    "Unknown price type: " + (priceType != null ? priceType.code() : "null"));
-        }
     }
 
     public List<String> getCodes() {

@@ -2,5 +2,4 @@ package io.commercestacksolutions.priceproviderservice.dataaccess.organization.o
 
 public interface OrganizationTypeDefinition {
     OrganizationType getOrganizationType();
-    String getDisplayName();
 }
