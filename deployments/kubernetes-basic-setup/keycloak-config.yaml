@@ -1,0 +1,467 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm-config
+  namespace: price-provider
+data:
+  realm-export.json: |
+    {
+      "realm": "priceprovider",
+      "displayName": "Price Provider",
+      "enabled": true,
+      "loginTheme": "keycloak",
+      "internationalizationEnabled": false,
+      "defaultLocale": "en",
+      "registrationAllowed": false,
+      "resetPasswordAllowed": true,
+      "rememberMe": true,
+      "bruteForceProtected": true,
+      "ssoSessionIdleTimeout": 1800,
+      "ssoSessionMaxLifespan": 36000,
+      "accessTokenLifespan": 300,
+      "accessCodeLifespan": 60,
+      "clients": [
+        {
+          "clientId": "priceprovider-service",
+          "name": "Price Provider Service",
+          "description": "Backend service resource server",
+          "enabled": true,
+          "publicClient": false,
+          "bearerOnly": true,
+          "standardFlowEnabled": false,
+          "directAccessGrantsEnabled": false,
+          "serviceAccountsEnabled": false,
+          "protocol": "openid-connect"
+        },
+        {
+          "clientId": "priceprovider-app",
+          "name": "Price Provider App",
+          "description": "Price Manager frontend admin application",
+          "enabled": true,
+          "publicClient": true,
+          "standardFlowEnabled": true,
+          "implicitFlowEnabled": false,
+          "directAccessGrantsEnabled": true,
+          "serviceAccountsEnabled": false,
+          "protocol": "openid-connect",
+          "redirectUris": [
+            "http://localhost/*",
+            "http://localhost:4200/*",
+            "http://localhost:80/*"
+          ],
+          "webOrigins": [
+            "http://localhost",
+            "http://localhost:4200",
+            "http://localhost:80"
+          ],
+          "protocolMappers": [
+            {
+              "name": "groups",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-group-membership-mapper",
+              "consentRequired": false,
+              "config": {
+                "full.path": "true",
+                "id.token.claim": "true",
+                "access.token.claim": "true",
+                "claim.name": "groups",
+                "userinfo.token.claim": "true"
+              }
+            }
+          ]
+        },
+        {
+          "clientId": "shopfrontend",
+          "name": "Shop Frontend Demo",
+          "description": "Example shop frontend (public price API consumer)",
+          "enabled": true,
+          "publicClient": true,
+          "standardFlowEnabled": true,
+          "implicitFlowEnabled": false,
+          "directAccessGrantsEnabled": true,
+          "serviceAccountsEnabled": false,
+          "protocol": "openid-connect",
+          "redirectUris": [
+            "http://localhost:3000/*",
+            "http://localhost:3000"
+          ],
+          "webOrigins": [
+            "http://localhost:3000"
+          ],
+          "protocolMappers": [
+            {
+              "name": "groups",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-group-membership-mapper",
+              "consentRequired": false,
+              "config": {
+                "full.path": "true",
+                "id.token.claim": "true",
+                "access.token.claim": "true",
+                "claim.name": "groups",
+                "userinfo.token.claim": "true"
+              }
+            }
+          ]
+        },
+        {
+          "clientId": "rentalfrontend",
+          "name": "Rental Frontend Demo",
+          "description": "Example rental service frontend",
+          "enabled": true,
+          "publicClient": true,
+          "standardFlowEnabled": true,
+          "implicitFlowEnabled": false,
+          "directAccessGrantsEnabled": true,
+          "serviceAccountsEnabled": false,
+          "protocol": "openid-connect",
+          "redirectUris": [
+            "http://localhost:3001/*",
+            "http://localhost:3001"
+          ],
+          "webOrigins": [
+            "http://localhost:3001"
+          ],
+          "protocolMappers": [
+            {
+              "name": "groups",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-group-membership-mapper",
+              "consentRequired": false,
+              "config": {
+                "full.path": "true",
+                "id.token.claim": "true",
+                "access.token.claim": "true",
+                "claim.name": "groups",
+                "userinfo.token.claim": "true"
+              }
+            }
+          ]
+        }
+      ],
+      "roles": {
+        "realm": [
+          {
+            "name": "priceprovider.admin:Superuser",
+            "description": "All permissions including AppPermission management"
+          },
+          {
+            "name": "priceprovider.admin:Admin",
+            "description": "Full admin access: read, write, delete all data types in the admin API"
+          },
+          {
+            "name": "priceprovider.admin:Contributor",
+            "description": "Contributor: read, write, delete all data types in the admin API"
+          },
+          {
+            "name": "priceprovider.admin:Reader",
+            "description": "Reader: read-only access to all data types in the admin API"
+          },
+          {
+            "name": "priceprovider.admin:ChannelContributor",
+            "description": "Channel contributor: read, write, delete on channels only"
+          },
+          {
+            "name": "priceprovider.public:PriceRowReader",
+            "description": "Public API price reader. Organization filter is derived from the groups claim."
+          },
+          {
+            "name": "priceprovider.public:PriceRowInspector",
+            "description": "Public API price inspector. Includes candidate inspection endpoints. Organization filter is derived from the groups claim."
+          },
+          {
+            "name": "priceprovider.admin:GlobalChannelEURContributor",
+            "description": "Restricted admin: write & delete EUR prices on global-b2b-sales-channel, read EUR/USD prices"
+          }
+        ]
+      },
+      "groups": [
+        {
+          "name": "organizations",
+          "path": "/organizations",
+          "subGroups": [
+            {
+              "name": "ORG-CITY-COUNCIL",
+              "path": "/organizations/ORG-CITY-COUNCIL",
+              "subGroups": [
+                {
+                  "name": "ORG-CITY-HEALTH",
+                  "path": "/organizations/ORG-CITY-COUNCIL/ORG-CITY-HEALTH",
+                  "subGroups": []
+                }
+              ]
+            },
+            {
+              "name": "ORG-TECHCORP-EU",
+              "path": "/organizations/ORG-TECHCORP-EU",
+              "subGroups": []
+            },
+            {
+              "name": "ORG-RENTAL-BUILDER-PRO",
+              "path": "/organizations/ORG-RENTAL-BUILDER-PRO",
+              "subGroups": [
+                {
+                  "name": "CONSTRUCTION-DEPARTMENT",
+                  "path": "/organizations/ORG-RENTAL-BUILDER-PRO/CONSTRUCTION-DEPARTMENT",
+                  "subGroups": []
+                }
+              ]
+            },
+            {
+              "name": "ORG-RENTAL-GREEN-LAND",
+              "path": "/organizations/ORG-RENTAL-GREEN-LAND",
+              "subGroups": [
+                {
+                  "name": "Outdoor Facilities Department",
+                  "path": "/organizations/ORG-RENTAL-GREEN-LAND/OUTDOOR-FACILITIES-DEPARTMENT",
+                  "subGroups": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "users": [
+        {
+          "username": "super-user",
+          "email": "superuser@priceprovider.local",
+          "firstName": "Super",
+          "lastName": "User",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "superuser123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.admin:Superuser"
+          ],
+          "groups": []
+        },
+        {
+          "username": "admin-user",
+          "email": "admin@priceprovider.local",
+          "firstName": "Admin",
+          "lastName": "User",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "admin123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.admin:Admin"
+          ],
+          "groups": []
+        },
+        {
+          "username": "contributor-user",
+          "email": "contributor@priceprovider.local",
+          "firstName": "Contributor",
+          "lastName": "User",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "contributor123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.admin:Contributor"
+          ],
+          "groups": []
+        },
+        {
+          "username": "reader-user",
+          "email": "reader@priceprovider.local",
+          "firstName": "Reader",
+          "lastName": "User",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "reader123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.admin:Reader"
+          ],
+          "groups": []
+        },
+        {
+          "username": "channel-user",
+          "email": "channel@priceprovider.local",
+          "firstName": "Reader",
+          "lastName": "User",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "channel123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.admin:ChannelContributor"
+          ],
+          "groups": []
+        },
+        {
+          "username": "customer-city-council-inspector",
+          "email": "customer-inspector@org-city-council.local",
+          "firstName": "Customer",
+          "lastName": "CityCouncilInspector",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "customer123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.public:PriceRowInspector"
+          ],
+          "groups": [
+            "/organizations/ORG-CITY-COUNCIL"
+          ]
+        },
+        {
+          "username": "customer-city-council",
+          "email": "customer@org-city-council.local",
+          "firstName": "Customer",
+          "lastName": "CityCouncil",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "customer123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.public:PriceRowReader"
+          ],
+          "groups": [
+            "/organizations/ORG-CITY-COUNCIL"
+          ]
+        },
+        {
+          "username": "customer-city-health",
+          "email": "customer@org-city-health.local",
+          "firstName": "Customer",
+          "lastName": "CityHealth",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "customer123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.public:PriceRowReader"
+          ],
+          "groups": [
+            "/organizations/ORG-CITY-COUNCIL",
+            "/organizations/ORG-CITY-COUNCIL/ORG-CITY-HEALTH"
+          ]
+        },
+        {
+          "username": "customer-techcorp",
+          "email": "customer@org-techcorp-eu.local",
+          "firstName": "Customer",
+          "lastName": "TechCorp",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "customer123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.public:PriceRowReader"
+          ],
+          "groups": [
+            "/organizations/ORG-TECHCORP-EU"
+          ]
+        },
+        {
+          "username": "rental-builder-pro",
+          "email": "rental-builder-pro@rental.local",
+          "firstName": "Rental",
+          "lastName": "Builder Pro",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "rental123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.public:PriceRowReader"
+          ],
+          "groups": [
+            "/organizations/ORG-RENTAL-BUILDER-PRO"
+          ]
+        },
+        {
+          "username": "rental-green-land",
+          "email": "rental-green-land@rental.local",
+          "firstName": "Rental",
+          "lastName": "Green Land",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "rental123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.public:PriceRowReader"
+          ],
+          "groups": [
+            "/organizations/ORG-RENTAL-GREEN-LAND"
+          ]
+        },
+        {
+          "username": "eur-channel-contributor",
+          "email": "eur-contributor@priceprovider.local",
+          "firstName": "EUR Channel",
+          "lastName": "Contributor",
+          "enabled": true,
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "eurcontributor123",
+              "temporary": false
+            }
+          ],
+          "realmRoles": [
+            "priceprovider.admin:GlobalChannelEURContributor"
+          ],
+          "groups": []
+        }
+      ]
+    }
