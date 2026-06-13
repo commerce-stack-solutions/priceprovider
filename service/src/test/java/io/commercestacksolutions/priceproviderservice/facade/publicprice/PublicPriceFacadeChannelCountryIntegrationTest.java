@@ -17,6 +17,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntity
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceRestEntity;
+import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationModeType;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -157,7 +158,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         channelDACH = new ChannelEntity();
         channelDACH.setId("facade-test-dach");
         channelDACH.setAllowedCountryRefs(Set.of(countryDE)); // DE only
-        channelDACH.setPriceRepresentationMode("FORCE_GROSS");
+        channelDACH.setPriceRepresentationMode(new PriceRepresentationModeType("FORCE_GROSS"));
         channelDACH.setCreatedAt(OffsetDateTime.now());
         channelDACH.setLastModifiedAt(OffsetDateTime.now());
         channelDACH = channelRepository.save(channelDACH);
@@ -165,7 +166,7 @@ public class PublicPriceFacadeChannelCountryIntegrationTest {
         channelGlobal = new ChannelEntity();
         channelGlobal.setId("facade-test-global");
         channelGlobal.setAllowedCountryRefs(new HashSet<>(Set.of(countryDE, countryUS))); // DE + US
-        channelGlobal.setPriceRepresentationMode("FORCE_GROSS");
+        channelGlobal.setPriceRepresentationMode(new PriceRepresentationModeType("FORCE_GROSS"));
         channelGlobal.setCreatedAt(OffsetDateTime.now());
         channelGlobal.setLastModifiedAt(OffsetDateTime.now());
         channelGlobal = channelRepository.save(channelGlobal);

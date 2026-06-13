@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ReferenceDataSourceResult, ReferenceEditComponent } from '../../../components/reference-edit/reference-edit.component';
 import { ReferenceListEditComponent } from '../../../components/referencelist-edit/referencelist-edit.component';
+import { EnumSelectorComponent } from '../../../components/enum-selector/enum-selector.component';
 import { PriceRow } from '../../../model/pricerow/price-row.model';
 import { CurrenciesService } from '../../../service/currency/currencies.service';
 import { GroupsService } from '../../../service/group/groups.service';
@@ -31,7 +32,7 @@ const OPTIONS_PAGESIZE = 30;
   templateUrl: './pricerow-form.component.html',
   styleUrls: ['./pricerow-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, ReferenceEditComponent, ReferenceListEditComponent, TranslocoModule, IsMandatoryPipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, ReferenceEditComponent, ReferenceListEditComponent, EnumSelectorComponent, TranslocoModule, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }
@@ -172,6 +173,7 @@ export class PricerowFormComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
+      priceType: ['', Validators.required],
       pricedResourceId: ['', Validators.required],
       channelRefs: [[]],
       priceValue: ['', [Validators.required, Validators.pattern(/^\d*\.?\d*$/)]],
@@ -193,6 +195,7 @@ export class PricerowFormComponent implements OnInit {
       next: (priceRow: PriceRow) => {
         if ((priceRow as any).$meta) { this.meta.set((priceRow as any).$meta); }
         const formData = {
+          priceType: priceRow.priceType || '',
           pricedResourceId: priceRow.pricedResourceId,
           channelRefs: priceRow.channelRefs || [],
           priceValue: priceRow.priceValue?.toString() || '',
@@ -327,6 +330,7 @@ export class PricerowFormComponent implements OnInit {
     } else {
       // Use POST for creates
       const basePriceRow = {
+        priceType: formValue.priceType,
         pricedResourceId: formValue.pricedResourceId,
         channelRefs: formValue.channelRefs || [],
         priceValue: parseFloat(formValue.priceValue),

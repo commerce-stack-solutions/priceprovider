@@ -6,11 +6,16 @@ import org.springframework.stereotype.Component;
 /**
  * {@link PriceRepresentationMode} that publishes only gross prices.
  *
- * <p>Prices already declared as net are excluded from the Public Price API response.
+ * <p>Prices declared as net are excluded from the Public Price API response.
  * Prices declared as gross are returned as-is (no conversion applied).</p>
  */
 @Component("GROSS_ONLY")
 public class GrossOnlyPriceRepresentationMode implements PriceRepresentationMode {
+
+    @Override
+    public PriceRepresentationModeType getModeType() {
+        return new PriceRepresentationModeType("GROSS_ONLY");
+    }
 
     @Override
     public PriceMatchingCriteria.TaxationMode getTaxationMode() {

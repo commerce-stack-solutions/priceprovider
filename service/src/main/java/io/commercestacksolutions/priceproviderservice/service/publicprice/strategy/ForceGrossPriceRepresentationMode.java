@@ -4,13 +4,18 @@ import io.commercestacksolutions.priceproviderservice.service.publicprice.model.
 import org.springframework.stereotype.Component;
 
 /**
- * {@link PriceRepresentationMode} that converts all prices to gross before publishing.
+ * {@link PriceRepresentationMode} that publishes all prices as gross.
  *
- * <p>All prices — regardless of how they are declared — are returned as gross prices
- * (tax included).  Net prices are converted using the channel's tax rounding strategy.</p>
+ * <p>Prices declared as net are converted to gross before being returned.
+ * Prices declared as gross are returned as-is.</p>
  */
 @Component("FORCE_GROSS")
 public class ForceGrossPriceRepresentationMode implements PriceRepresentationMode {
+
+    @Override
+    public PriceRepresentationModeType getModeType() {
+        return new PriceRepresentationModeType("FORCE_GROSS");
+    }
 
     @Override
     public PriceMatchingCriteria.TaxationMode getTaxationMode() {
@@ -24,6 +29,6 @@ public class ForceGrossPriceRepresentationMode implements PriceRepresentationMod
 
     @Override
     public String getDescription() {
-        return "Publish all prices as gross. Any net prices are converted to gross before publishing.";
+        return "Convert all prices to gross (tax included) if necessary. Net prices are recalculated using the applicable tax rate.";
     }
 }

@@ -8,6 +8,7 @@ import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationMode;
+import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationModeType;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -33,7 +34,7 @@ public class ChannelEntity implements AuditableEntity {
 
     @MetaDynamicEnum(beanType = PriceRepresentationMode.class)
     @MandatoryField
-    private String priceRepresentationMode;
+    private PriceRepresentationModeType priceRepresentationMode;
 
     private OffsetDateTime createdAt;
 
@@ -62,11 +63,11 @@ public class ChannelEntity implements AuditableEntity {
         this.allowedCountryRefs = allowedCountryRefs;
     }
 
-    public String getPriceRepresentationMode() {
+    public PriceRepresentationModeType getPriceRepresentationMode() {
         return priceRepresentationMode;
     }
 
-    public void setPriceRepresentationMode(String priceRepresentationMode) {
+    public void setPriceRepresentationMode(PriceRepresentationModeType priceRepresentationMode) {
         this.priceRepresentationMode = priceRepresentationMode;
     }
 

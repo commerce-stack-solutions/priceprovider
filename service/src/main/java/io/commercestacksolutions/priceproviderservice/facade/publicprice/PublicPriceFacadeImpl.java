@@ -55,10 +55,10 @@ public class PublicPriceFacadeImpl implements PublicPriceFacade {
         ChannelEntity channel = channelService.getChannel(channelId);
         if (channel != null
                 && channel.getPriceRepresentationMode() != null
-                && !channel.getPriceRepresentationMode().isBlank()) {
+                && channel.getPriceRepresentationMode().code() != null) {
             try {
                 return applicationContext.getBean(
-                        channel.getPriceRepresentationMode(), PriceRepresentationMode.class);
+                        channel.getPriceRepresentationMode().code(), PriceRepresentationMode.class);
             } catch (Exception ignored) {
             }
         }

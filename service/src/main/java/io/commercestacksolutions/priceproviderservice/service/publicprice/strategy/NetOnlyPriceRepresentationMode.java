@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 public class NetOnlyPriceRepresentationMode implements PriceRepresentationMode {
 
     @Override
+    public PriceRepresentationModeType getModeType() {
+        return new PriceRepresentationModeType("NET_ONLY");
+    }
+
+    @Override
     public PriceMatchingCriteria.TaxationMode getTaxationMode() {
         return PriceMatchingCriteria.TaxationMode.AS_DECLARED;
     }

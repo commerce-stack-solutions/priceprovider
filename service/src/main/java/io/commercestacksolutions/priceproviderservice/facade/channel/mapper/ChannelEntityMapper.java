@@ -7,6 +7,7 @@ import io.commercestacksolutions.priceproviderservice.commons.messagekeys.Messag
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.facade.channel.restentity.ChannelRestEntity;
+import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationModeType;
 import io.commercestacksolutions.priceproviderservice.service.country.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +55,6 @@ public class ChannelEntityMapper extends AbstractMapper<ChannelRestEntity, Chann
             target.setAllowedCountryRefs(new HashSet<>());
         }
 
-        target.setPriceRepresentationMode(source.getPriceRepresentationMode());
+        target.setPriceRepresentationMode(source.getPriceRepresentationMode() != null ? new PriceRepresentationModeType(source.getPriceRepresentationMode()) : null);
     }
 }
