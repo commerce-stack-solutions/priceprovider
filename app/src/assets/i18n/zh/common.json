@@ -81,6 +81,8 @@
     "pricedResourceId": "定价资源ID",
     "priceValue": "价格值",
     "priceValuePlaceholder": "例如，19.99",
+    "priceType": "价格类型",
+    "priceTypePlaceholder": "选择价格类型...",
     "minQuantity": "最小数量",
     "minQuantityPlaceholder": "例如，1",
     "unit": "单位",

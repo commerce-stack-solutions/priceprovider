@@ -81,6 +81,8 @@
     "pricedResourceId": "Hinnastatud ressursi ID",
     "priceValue": "Hind",
     "priceValuePlaceholder": "nt 19,99",
+    "priceType": "Hinna tüüp",
+    "priceTypePlaceholder": "Vali hinna tüüp...",
     "minQuantity": "Miinimumkogus",
     "minQuantityPlaceholder": "nt 1",
     "unit": "Ühik",

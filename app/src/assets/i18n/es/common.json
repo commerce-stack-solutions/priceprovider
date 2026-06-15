@@ -81,6 +81,8 @@
     "pricedResourceId": "ID de recurso con precio",
     "priceValue": "Valor del precio",
     "priceValuePlaceholder": "ej. 19,99",
+    "priceType": "Tipo de precio",
+    "priceTypePlaceholder": "Seleccionar un tipo de precio...",
     "minQuantity": "Cantidad mínima",
     "minQuantityPlaceholder": "ej. 1",
     "unit": "Unidad",

@@ -81,6 +81,8 @@
     "pricedResourceId": "ID cjenovnog resursa",
     "priceValue": "Vrijednost cijene",
     "priceValuePlaceholder": "npr. 19.99",
+    "priceType": "Vrsta cijene",
+    "priceTypePlaceholder": "Odaberite vrstu cijene...",
     "minQuantity": "Minimalna količina",
     "minQuantityPlaceholder": "npr. 1",
     "unit": "Jedinica",

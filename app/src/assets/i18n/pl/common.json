@@ -81,6 +81,8 @@
     "pricedResourceId": "ID wycenianego zasobu",
     "priceValue": "Wartość ceny",
     "priceValuePlaceholder": "np. 19.99",
+    "priceType": "Typ ceny",
+    "priceTypePlaceholder": "Wybierz typ ceny...",
     "minQuantity": "Minimalna ilość",
     "minQuantityPlaceholder": "np. 1",
     "unit": "Jednostka",

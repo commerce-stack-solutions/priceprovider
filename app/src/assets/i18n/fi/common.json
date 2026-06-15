@@ -81,6 +81,8 @@
     "pricedResourceId": "Hinnoiteltavan resurssin tunnus",
     "priceValue": "Hinta",
     "priceValuePlaceholder": "esim. 19.99",
+    "priceType": "Hintatyyppi",
+    "priceTypePlaceholder": "Valitse hintatyyppi...",
     "minQuantity": "Vähimmäismäärä",
     "minQuantityPlaceholder": "esim. 1",
     "unit": "Yksikkö",

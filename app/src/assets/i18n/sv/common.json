@@ -81,6 +81,8 @@
     "pricedResourceId": "ID för prissatt resurs",
     "priceValue": "Prisbelopp",
     "priceValuePlaceholder": "t.ex. 19.99",
+    "priceType": "Pristyp",
+    "priceTypePlaceholder": "Välj en pristyp...",
     "minQuantity": "Minsta kvantitet",
     "minQuantityPlaceholder": "t.ex. 1",
     "unit": "Enhet",

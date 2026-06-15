@@ -81,6 +81,8 @@
     "pricedResourceId": "価格対象ID",
     "priceValue": "価格",
     "priceValuePlaceholder": "例: 19.99",
+    "priceType": "価格タイプ",
+    "priceTypePlaceholder": "価格タイプを選択...",
     "minQuantity": "最小数量",
     "minQuantityPlaceholder": "例: 1",
     "unit": "単位",

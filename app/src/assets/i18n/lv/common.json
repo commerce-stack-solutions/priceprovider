@@ -81,6 +81,8 @@
     "pricedResourceId": "Cenu resursa ID",
     "priceValue": "Cenas vērtība",
     "priceValuePlaceholder": "piem., 19.99",
+    "priceType": "Cenas veids",
+    "priceTypePlaceholder": "Atlasiet cenas veidu...",
     "minQuantity": "Minimālais daudzums",
     "minQuantityPlaceholder": "piem., 1",
     "unit": "Vienība",

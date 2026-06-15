@@ -81,6 +81,8 @@
     "pricedResourceId": "Geprijsde resource-ID",
     "priceValue": "Prijswaarde",
     "priceValuePlaceholder": "bijv. 19,99",
+    "priceType": "Prijstype",
+    "priceTypePlaceholder": "Selecteer een prijstype...",
     "minQuantity": "Minimumhoeveelheid",
     "minQuantityPlaceholder": "bijv. 1",
     "unit": "Eenheid",

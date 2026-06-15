@@ -81,6 +81,8 @@
     "pricedResourceId": "Prisressurs-ID",
     "priceValue": "Prisverdi",
     "priceValuePlaceholder": "e.g., 19.99",
+    "priceType": "Pristype",
+    "priceTypePlaceholder": "Velg en pristype...",
     "minQuantity": "Minimum Quantity",
     "minQuantityPlaceholder": "e.g., 1",
     "unit": "Enhet",

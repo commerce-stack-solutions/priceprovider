@@ -81,6 +81,8 @@
     "pricedResourceId": "Priced Resource ID",
     "priceValue": "Hodnota ceny",
     "priceValuePlaceholder": "např. 19.99",
+    "priceType": "Typ ceny",
+    "priceTypePlaceholder": "Vyberte typ ceny...",
     "minQuantity": "Minimální množství",
     "minQuantityPlaceholder": "např. 1",
     "unit": "Jednotka",

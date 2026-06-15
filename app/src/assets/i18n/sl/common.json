@@ -81,6 +81,8 @@
     "pricedResourceId": "ID cenovnega vira",
     "priceValue": "Vrednost cene",
     "priceValuePlaceholder": "npr. 19.99",
+    "priceType": "Vrsta cene",
+    "priceTypePlaceholder": "Izberite vrsto cene...",
     "minQuantity": "Najmanjša količina",
     "minQuantityPlaceholder": "npr. 1",
     "unit": "Enota",

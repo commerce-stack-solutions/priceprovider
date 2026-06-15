@@ -81,6 +81,8 @@
     "pricedResourceId": "Įkainoto ištekliaus ID",
     "priceValue": "Kainos vertė",
     "priceValuePlaceholder": "pvz., 19.99",
+    "priceType": "Kainos tipas",
+    "priceTypePlaceholder": "Pasirinkite kainos tipą...",
     "minQuantity": "Mažiausias kiekis",
     "minQuantityPlaceholder": "pvz., 1",
     "unit": "Vienetas",
