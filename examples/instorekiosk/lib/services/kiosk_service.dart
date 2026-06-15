@@ -1,23 +1,17 @@
 import 'package:flutter/foundation.dart';
-import 'package:openid_client/openid_client_browser.dart';
 import '../models/models.dart';
 import '../repositories/price_repository.dart';
+import 'auth/auth_service.dart';
 
 class KioskService extends ChangeNotifier {
   final PriceRepository _priceRepository;
+  final _authService = createAuthService();
 
   Product? _selectedProduct;
   int _quantity = 1;
   Price? _currentPrice;
   bool _isLoading = false;
   String? _error;
-
-  // Auth state
-  Authenticator? _authenticator;
-  Credential? _credential;
-  bool _isLoggedIn = false;
-  String? _userName;
-  String? _organization;
 
   KioskService(this._priceRepository);
 
@@ -26,9 +20,9 @@ class KioskService extends ChangeNotifier {
   Price? get currentPrice => _currentPrice;
   bool get isLoading => _isLoading;
   String? get error => _error;
-  bool get isLoggedIn => _isLoggedIn;
-  String? get userName => _userName;
-  String? get organization => _organization;
+  bool get isLoggedIn => _authService.isLoggedIn;
+  String? get userName => _authService.userName;
+  String? get organization => _authService.organization;
 
   final List<Product> products = [
     Product(
@@ -53,38 +47,8 @@ class KioskService extends ChangeNotifier {
 
   Future<void> init() async {
     _selectedProduct = products.first;
-    await _initAuth();
+    await _authService.init();
     await updatePrice();
-  }
-
-  Future<void> _initAuth() async {
-    if (kIsWeb) {
-      final issuer = await Issuer.discover(Uri.parse('http://localhost:8081/realms/priceprovider'));
-      final client = Client(issuer, 'instorekiosk');
-      _authenticator = Authenticator(client, scopes: ['openid', 'profile', 'email']);
-
-      _credential = await _authenticator!.credential;
-      if (_credential != null) {
-        final userInfo = await _credential!.getUserInfo();
-        _isLoggedIn = true;
-        _userName = userInfo.preferredUsername ?? userInfo.name;
-
-        // Extract organization from groups
-        final groups = userInfo['groups'] as List?;
-        if (groups != null) {
-          final prefix = '/organizations/';
-          final orgGroups = groups
-              .whereType<String>()
-              .where((g) => g.startsWith(prefix))
-              .toList();
-          orgGroups.sort((a, b) => b.split('/').length - a.split('/').length);
-          if (orgGroups.isNotEmpty) {
-            _organization = orgGroups.first.substring(prefix.length);
-          }
-        }
-        notifyListeners();
-      }
-    }
   }
 
   void selectProduct(Product product) {
@@ -107,11 +71,7 @@ class KioskService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      String? token;
-      if (_credential != null) {
-        final t = await _credential!.getTokenResponse();
-        token = t.accessToken;
-      }
+      final token = await _authService.getAccessToken();
 
       _currentPrice = await _priceRepository.fetchPrice(
         _selectedProduct!.sku,
@@ -128,15 +88,11 @@ class KioskService extends ChangeNotifier {
   }
 
   void login() {
-    _authenticator?.authorize();
+    _authService.login();
   }
 
   void logout() {
-    // Simple local logout, Keycloak logout would need a redirect
-    _credential = null;
-    _isLoggedIn = false;
-    _userName = null;
-    _organization = null;
+    _authService.logout();
     updatePrice();
   }
 }

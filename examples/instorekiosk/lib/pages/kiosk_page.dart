@@ -13,8 +13,8 @@ class KioskPage extends StatelessWidget {
         title: const Text('🛒 In-Store Kiosk'),
         backgroundColor: const Color(0xFF1A1A2E),
         foregroundColor: Colors.white,
-        actions: [
-          const _UserInfo(),
+        actions: const [
+          _UserInfo(),
         ],
       ),
       body: SingleChildScrollView(
@@ -45,6 +45,7 @@ class _UserInfo extends StatelessWidget {
     final service = context.watch<KioskService>();
     if (service.isLoggedIn) {
       return Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text('👤 ${service.userName}', style: const TextStyle(fontSize: 14)),
           const SizedBox(width: 8),
