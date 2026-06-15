@@ -6,12 +6,63 @@ Unlike standard Java enums, Dynamic Enums are implemented as Spring-managed bean
 
 ## Core Components
 
-A Dynamic Enum consists of four main parts:
+A Dynamic Enum consists of several interconnected parts that ensure extensibility and consistency.
 
-1.  **Value Object**: A Java `record` (or class) representing the type (e.g., `PriceType`).
-2.  **Definition Interface**: An interface extending `EnumTypeValueDefinition<T>` that defines the bean type.
-3.  **Registry**: A class extending `EnumTypeValueRegistry<T, D>` that manages the available definitions.
-4.  **JPA Converter**: An `AttributeConverter` to store the value object in the database as a string.
+```mermaid
+classDiagram
+    class Entity {
+        -ColorType color
+    }
+    class ColorType {
+        <<record>>
+        +String code
+    }
+    class ColorTypeConverter {
+        <<AttributeConverter>>
+        +convertToDatabaseColumn()
+        +convertToEntityAttribute()
+    }
+    class ColorTypeDefinition {
+        <<interface>>
+        +getColorType() ColorType
+    }
+    class ColorTypeRegistry {
+        +exists(String code) boolean
+        +get(String code) ColorTypeDefinition
+    }
+    class ColorTypeValidationRule {
+        +validate(Entity) List~Message~
+    }
+    class EntityService {
+        +save(Entity)
+    }
+    class EntityValidator {
+        +validate(Entity)
+    }
+
+    Entity --> ColorType : uses
+    Entity .. ColorTypeConverter : persisted by
+    ColorTypeRegistry "1" o-- "*" ColorTypeDefinition : registers
+    ColorTypeRegistry ..> ColorType : checks
+    ColorTypeValidationRule ..> ColorTypeRegistry : uses
+    EntityService ..> EntityValidator : triggers
+    EntityValidator ..> ColorTypeValidationRule : executes
+```
+
+### 1. Value Object
+A Java `record` (or class) representing the type (e.g., `PriceType`). It provides type safety and a clear domain model.
+
+### 2. Definition Interface
+An interface extending `EnumTypeValueDefinition<T>` that defines the bean type. Specific values are implemented as Spring beans of this type.
+
+### 3. Registry
+A class extending `EnumTypeValueRegistry<T, D>` that manages the available definitions. It handles case-insensitive lookups and duplicate detection during initialization.
+
+### 4. JPA Converter
+An `AttributeConverter` to store the value object in the database as a plain string.
+
+### 5. Validation
+A `ValidationRule<T>` that uses the registry to verify that the value provided to the service is valid before saving.
 
 ---
 
