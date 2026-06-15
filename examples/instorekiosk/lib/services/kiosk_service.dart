@@ -10,6 +10,7 @@ class KioskService extends ChangeNotifier {
   Product? _selectedProduct;
   int _quantity = 1;
   Price? _currentPrice;
+  String? _rawPriceData;
   bool _isLoading = false;
   String? _error;
 
@@ -18,6 +19,7 @@ class KioskService extends ChangeNotifier {
   Product? get selectedProduct => _selectedProduct;
   int get quantity => _quantity;
   Price? get currentPrice => _currentPrice;
+  String? get rawPriceData => _rawPriceData;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isLoggedIn => _authService.isLoggedIn;
@@ -73,14 +75,17 @@ class KioskService extends ChangeNotifier {
     try {
       final token = await _authService.getAccessToken();
 
-      _currentPrice = await _priceRepository.fetchPrice(
+      final response = await _priceRepository.fetchPrice(
         _selectedProduct!.sku,
         _quantity,
         token: token,
       );
+      _currentPrice = response.price;
+      _rawPriceData = response.rawJson;
     } catch (e) {
       _error = e.toString();
       _currentPrice = null;
+      _rawPriceData = null;
     } finally {
       _isLoading = false;
       notifyListeners();

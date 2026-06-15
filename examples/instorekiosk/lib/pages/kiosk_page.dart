@@ -182,6 +182,18 @@ class _ProductCardState extends State<_ProductCard> {
                             },
                           ),
                         ),
+                        const SizedBox(width: 12),
+                        OutlinedButton(
+                          onPressed: () {
+                            final q = int.tryParse(_quantityController.text);
+                            if (q != null) service.setQuantity(q);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF1A1A2E),
+                            side: const BorderSide(color: Color(0xFF1A1A2E)),
+                          ),
+                          child: const Text('Update Price'),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -276,7 +288,7 @@ class _PriceBox extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Your Price', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500)),
+          const Text('Your Price (per piece)', style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500)),
           if (service.isLoading)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -347,7 +359,22 @@ class _StatusBar extends StatelessWidget {
             Text('User: ${service.userName}', style: const TextStyle(fontSize: 12)),
             if (service.organization != null)
               Text('Org: ${service.organization}', style: const TextStyle(fontSize: 12)),
-          ]
+          ],
+          if (service.rawPriceData != null) ...[
+            const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: SelectableText(
+                service.rawPriceData!,
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
+              ),
+            ),
+          ],
         ],
       ),
     );
