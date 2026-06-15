@@ -12,3 +12,13 @@ service/logs/
 *.bak2
 *.bak*
 
+# Flutter related
+.metadata
+.packages
+.pub/
+.dart_tool/
+**/android/
+**/ios/
+**/linux/
+**/windows/
+**/*.iml

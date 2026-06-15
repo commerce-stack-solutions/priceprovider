@@ -87,7 +87,7 @@ class AuthServiceImpl implements AuthService {
       client,
       scopes: ['openid', 'profile', 'email'],
       port: 4000,
-      urlLauncher: (url) async {
+      urlLancher: (url) async {
         final uri = Uri.parse(url);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
