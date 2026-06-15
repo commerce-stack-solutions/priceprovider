@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:openid_client/openid_client_io.dart' as openid;
+import 'package:url_launcher/url_launcher.dart';
 import 'auth_service_base.dart';
 
 class AuthServiceImpl implements AuthService {
@@ -52,21 +54,58 @@ class AuthServiceImpl implements AuthService {
            foundation.defaultTargetPlatform == foundation.TargetPlatform.windows ||
            foundation.defaultTargetPlatform == foundation.TargetPlatform.macOS);
 
-      final AuthorizationTokenResponse? result = await _appAuth.authorizeAndExchangeCode(
-        AuthorizationTokenRequest(
-          _clientId,
-          isDesktop ? _desktopRedirectUri : _redirectUri,
-          discoveryUrl: _discoveryUrl,
-          scopes: ['openid', 'profile', 'email'],
-        ),
-      );
-
-      if (result != null) {
-        await _processAuthResult(result);
+      if (isDesktop) {
+        await _loginDesktop();
+      } else {
+        await _loginMobile();
       }
     } catch (e) {
       developer.log('Login error', error: e);
     }
+  }
+
+  Future<void> _loginMobile() async {
+    final AuthorizationTokenResponse? result = await _appAuth.authorizeAndExchangeCode(
+      AuthorizationTokenRequest(
+        _clientId,
+        _redirectUri,
+        discoveryUrl: _discoveryUrl,
+        scopes: ['openid', 'profile', 'email'],
+      ),
+    );
+
+    if (result != null) {
+      await _processAuthResult(result);
+    }
+  }
+
+  Future<void> _loginDesktop() async {
+    final issuer = await openid.Issuer.discover(Uri.parse('http://localhost:8081/realms/priceprovider'));
+    final client = openid.Client(issuer, _clientId);
+
+    final authenticator = openid.Authenticator(
+      client,
+      scopes: ['openid', 'profile', 'email'],
+      port: 4000,
+      urlLaucher: (url) async {
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          developer.log('Could not launch $url');
+        }
+      },
+    );
+
+    final credential = await authenticator.authorize();
+    final tokenResponse = await credential.getTokenResponse();
+
+    _accessToken = tokenResponse.accessToken;
+    _refreshToken = tokenResponse.refreshToken;
+    _accessTokenExpiration = tokenResponse.expiresAt;
+
+    await _saveTokens();
+    await _fetchUserInfo();
   }
 
   @override

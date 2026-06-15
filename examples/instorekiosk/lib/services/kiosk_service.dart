@@ -92,12 +92,15 @@ class KioskService extends ChangeNotifier {
     }
   }
 
-  void login() {
-    _authService.login();
+  Future<void> login() async {
+    await _authService.login();
+    notifyListeners();
+    await updatePrice();
   }
 
-  void logout() {
-    _authService.logout();
-    updatePrice();
+  Future<void> logout() async {
+    await _authService.logout();
+    notifyListeners();
+    await updatePrice();
   }
 }
