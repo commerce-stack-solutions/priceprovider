@@ -130,6 +130,40 @@
           }
         }
       ]
+    },
+    {
+      "clientId": "instorekiosk",
+      "name": "In-Store Kiosk Demo",
+      "description": "Example Flutter in-store kiosk (public price API consumer)",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:3002/*",
+        "http://localhost:3002"
+      ],
+      "webOrigins": [
+        "http://localhost:3002"
+      ],
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "full.path": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "groups",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
     }
   ],
   "roles": {
