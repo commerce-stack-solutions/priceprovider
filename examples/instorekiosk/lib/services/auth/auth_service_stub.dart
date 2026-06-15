@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +20,7 @@ class AuthServiceImpl implements AuthService {
 
   static const String _clientId = 'instorekiosk';
   static const String _redirectUri = 'io.commercestacksolutions.instorekiosk://login-callback';
+  static const String _desktopRedirectUri = 'http://localhost:4000/';
   static const String _discoveryUrl = 'http://localhost:8081/realms/priceprovider/.well-known/openid-configuration';
 
   @override
@@ -45,10 +47,15 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<void> login() async {
     try {
+      final bool isDesktop = !foundation.kIsWeb &&
+          (foundation.defaultTargetPlatform == foundation.TargetPlatform.linux ||
+           foundation.defaultTargetPlatform == foundation.TargetPlatform.windows ||
+           foundation.defaultTargetPlatform == foundation.TargetPlatform.macOS);
+
       final AuthorizationTokenResponse? result = await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(
           _clientId,
-          _redirectUri,
+          isDesktop ? _desktopRedirectUri : _redirectUri,
           discoveryUrl: _discoveryUrl,
           scopes: ['openid', 'profile', 'email'],
         ),
@@ -93,10 +100,15 @@ class AuthServiceImpl implements AuthService {
     if (_refreshToken == null) return;
 
     try {
+      final bool isDesktop = !foundation.kIsWeb &&
+          (foundation.defaultTargetPlatform == foundation.TargetPlatform.linux ||
+           foundation.defaultTargetPlatform == foundation.TargetPlatform.windows ||
+           foundation.defaultTargetPlatform == foundation.TargetPlatform.macOS);
+
       final TokenResponse? result = await _appAuth.token(
         TokenRequest(
           _clientId,
-          _redirectUri,
+          isDesktop ? _desktopRedirectUri : _redirectUri,
           discoveryUrl: _discoveryUrl,
           refreshToken: _refreshToken,
           scopes: ['openid', 'profile', 'email'],
