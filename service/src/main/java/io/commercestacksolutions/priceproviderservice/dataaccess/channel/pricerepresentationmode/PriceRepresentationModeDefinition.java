@@ -1,4 +1,4 @@
-package io.commercestacksolutions.priceproviderservice.service.publicprice.strategy;
+package io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode;
 
 import io.commercestacksolutions.commons.dataaccess.meta.EnumTypeValueDefinition;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
@@ -6,7 +6,7 @@ import io.commercestacksolutions.priceproviderservice.service.publicprice.model.
 /**
  * Strategy interface for the price representation mode of a channel.
  */
-public interface PriceRepresentationMode extends EnumTypeValueDefinition<PriceRepresentationModeType> {
+public interface PriceRepresentationModeDefinition extends EnumTypeValueDefinition<PriceRepresentationModeType> {
 
     PriceRepresentationModeType getModeType();
 

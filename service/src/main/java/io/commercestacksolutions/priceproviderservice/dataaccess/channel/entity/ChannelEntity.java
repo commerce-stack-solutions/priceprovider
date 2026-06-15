@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.commons.dataaccess.meta.MandatoryField;
+import io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeDefinition;
+import io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
-import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationMode;
-import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationModeType;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -32,7 +32,7 @@ public class ChannelEntity implements AuditableEntity {
     )
     private Set<CountryEntity> allowedCountryRefs = new HashSet<>();
 
-    @MetaDynamicEnum(beanType = PriceRepresentationMode.class)
+    @MetaDynamicEnum(beanType = PriceRepresentationModeDefinition.class)
     @MandatoryField
     private PriceRepresentationModeType priceRepresentationMode;
 

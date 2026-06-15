@@ -1,16 +1,18 @@
-package io.commercestacksolutions.priceproviderservice.service.publicprice.strategy;
+package io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.definition;
 
+import io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeDefinition;
+import io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeType;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link PriceRepresentationMode} that publishes all prices as net.
+ * {@link PriceRepresentationModeDefinition} that publishes all prices as net.
  *
  * <p>Prices declared as gross are converted to net before being returned.
  * Prices declared as net are returned as-is.</p>
  */
 @Component("FORCE_NET")
-public class ForceNetPriceRepresentationMode implements PriceRepresentationMode {
+public class ForceNetPriceRepresentationMode implements PriceRepresentationModeDefinition {
 
     @Override
     public PriceRepresentationModeType getModeType() {

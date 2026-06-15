@@ -1,4 +1,4 @@
-package io.commercestacksolutions.priceproviderservice.service.publicprice.strategy;
+package io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

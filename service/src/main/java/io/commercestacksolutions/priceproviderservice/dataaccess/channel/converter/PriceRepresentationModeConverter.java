@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.dataaccess.channel.converter;
 
-import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationModeType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
