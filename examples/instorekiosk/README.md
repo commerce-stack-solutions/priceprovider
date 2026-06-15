@@ -16,6 +16,13 @@ A minimal Flutter-based in-store kiosk example that consumes the Price Provider 
 - Running Price Provider service (localhost:8080)
 - Running Keycloak (localhost:8081)
 
+### Linux Dependencies
+For Linux builds, the `libsecret` library is required for secure storage:
+```bash
+sudo apt-get update
+sudo apt-get install libsecret-1-dev
+```
+
 ## Running the Web Demo
 
 You can run this demo as a web application:
