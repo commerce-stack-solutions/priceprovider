@@ -3,7 +3,9 @@
     "login": "Zaloguj się",
     "logout": "Wyloguj się",
     "loginRequired": "Wymagane logowanie",
-    "loginRequiredMessage": "Zaloguj się, aby uzyskać dostęp do panelu administracyjnego"
+    "loginRequiredMessage": "Zaloguj się, aby uzyskać dostęp do panelu administracyjnego",
+    "noAdminAccess": "Brak dostępu administratora",
+    "noAdminAccessMessage": "Twoje konto ne posiada uprawnień wymaganych do dostępu do obszaru administracyjnego. Jeśli uważasz, že to błąd, skontaktuj się z administratorem."
   },
   "actions": {
     "add": "Dodaj",

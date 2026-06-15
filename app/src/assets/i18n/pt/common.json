@@ -3,7 +3,9 @@
     "login": "Entrar",
     "logout": "Sair",
     "loginRequired": "Login necessário",
-    "loginRequiredMessage": "Por favor, faça login para acessar o painel de administração"
+    "loginRequiredMessage": "Por favor, faça login para acessar o painel de administração",
+    "noAdminAccess": "Sem acesso de administrador",
+    "noAdminAccessMessage": "A sua conta não tem as permissões necessárias para aceder à área de administração. Contacte o seu administrador se considerar que se trata de um erro."
   },
   "actions": {
     "add": "Adicionar",

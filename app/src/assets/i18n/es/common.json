@@ -3,7 +3,9 @@
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
     "loginRequired": "Inicio de sesión requerido",
-    "loginRequiredMessage": "Por favor, inicia sesión para acceder al panel de administración"
+    "loginRequiredMessage": "Por favor, inicia sesión para acceder al panel de administración",
+    "noAdminAccess": "Sin acceso de administrador",
+    "noAdminAccessMessage": "Su cuenta no tiene los permisos necesarios para acceder al área de administración. Póngase en contacto con su administrador si cree que se trata de un error."
   },
   "actions": {
     "add": "Agregar",

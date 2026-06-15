@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Dodaj uprawnienie aplikacji"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Inicjalizacja usługi",
+    "description": "Ręczna inicjalizacja danych usługi. Wybierz dane, które chcesz załadowatć, i kliknij przycisk Wczytaj dane.",
+    "selectDataTitle": "Wybierz dane do wczytania",
+    "essentialData": "Dane podstawowe",
+    "essentialDataDescription": "Podstawowe dane wymagane do działania usługi (języki, waluty, kraje, jednostki, klasy podatkowe, uprawnienia, role)",
+    "sampleData": "Przykładowe dane",
+    "sampleDataDescription": "Przykładowe dane do testowania i demonstracji (organizacje, grupy, kanały, wiersze cen)",
+    "loadButton": "Wczytaj dane",
+    "loading": "Wczytywanie...",
+    "previewTitle": "Podgląd plików danych",
+    "essentialFiles": "Podstawowe pliki danych",
+    "sampleFiles": "Przykładowe pliki danych",
+    "directory": "Katalog",
+    "noFiles": "Nie znaleziono plików",
+    "loadingPreview": "Wczytywanie podglądu...",
+    "refreshPermissions": "Odśwież uprawnienia",
+    "refreshPermissionsHint": "Wczytaj ponownie swoje uprawnienia po wczytaniu nowych danych"
   }
 }

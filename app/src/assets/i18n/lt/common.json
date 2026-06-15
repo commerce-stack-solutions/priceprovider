@@ -3,7 +3,9 @@
     "login": "Prisijungti",
     "logout": "Atsijungti",
     "loginRequired": "Reikalingas prisijungimas",
-    "loginRequiredMessage": "Prisijunkite, kad galėtumėte pasiekti administratoriaus skydelį"
+    "loginRequiredMessage": "Prisijunkite, kad galėtumėte pasiekti administratoriaus skydelį",
+    "noAdminAccess": "Nėra administratoriaus prieigos",
+    "noAdminAccessMessage": "Jūsų paskyra neturi reikiamų leidimų pasiekti administravimo sritį. Jei manote, kad tai klaida, susisiekite su administratoriumi."
   },
   "actions": {
     "add": "Pridėti",

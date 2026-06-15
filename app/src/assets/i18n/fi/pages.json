@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Lisää sovellusoikeus"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Palvelun alustus",
+    "description": "Alusta palvelun tiedot manuaalisesti. Valitse ladattavat tiedot ja napsauta Lataa tiedot -painiketta.",
+    "selectDataTitle": "Valitse ladattavat tiedot",
+    "essentialData": "Välttämättömät tiedot",
+    "essentialDataDescription": "Palvelun toiminnan edellyttämät ydintiedot (kielet, valuutat, maat, yksiköt, veroluokat, oikeudet, roolit)",
+    "sampleData": "Esimerkkitiedot",
+    "sampleDataDescription": "Esimerkkitiedot testausta ja esittelyä varten (organisaatiot, ryhmät, kanavat, hintarivit)",
+    "loadButton": "Lataa tiedot",
+    "loading": "Ladataan...",
+    "previewTitle": "Datatiedostojen esikatselu",
+    "essentialFiles": "Välttämättömät datatiedostot",
+    "sampleFiles": "Esimerkkidatatiedostot",
+    "directory": "Hakemisto",
+    "noFiles": "Tiedostoja ei löytynyt",
+    "loadingPreview": "Ladataan esikatselua...",
+    "refreshPermissions": "Päivitä oikeudet",
+    "refreshPermissionsHint": "Lataa oikeutesi uudelleen uusien tietojen lataamisen jälkeen"
   }
 }

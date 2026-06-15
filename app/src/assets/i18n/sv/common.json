@@ -3,7 +3,9 @@
     "login": "Logga in",
     "logout": "Logga ut",
     "loginRequired": "Inloggning krävs",
-    "loginRequiredMessage": "Vänligen logga in för att komma åt adminpanelen"
+    "loginRequiredMessage": "Vänligen logga in för att komma åt adminpanelen",
+    "noAdminAccess": "Ingen administratörsåtkomst",
+    "noAdminAccessMessage": "Ditt konto har inte de behörigheter som krävs för att komma åt administrationsområdet. Kontakta din administratör om du tror att detta är ett fel."
   },
   "actions": {
     "add": "Lägg till",

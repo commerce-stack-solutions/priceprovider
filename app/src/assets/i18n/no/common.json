@@ -3,7 +3,9 @@
     "login": "Logg inn",
     "logout": "Logg ut",
     "loginRequired": "Innlogging kreves",
-    "loginRequiredMessage": "Vennligst logg inn for å få tilgang til administrasjonspanelet"
+    "loginRequiredMessage": "Vennligst logg inn for å få tilgang til administrasjonspanelet",
+    "noAdminAccess": "Ingen administratortilgang",
+    "noAdminAccessMessage": "Kontoen din har ikke de nødvendige tillatelsene for å få tilgang til administrasjonsområdet. Vennligst kontakt administratoren din hvis du mener dette er en feil."
   },
   "actions": {
     "add": "Legg til",

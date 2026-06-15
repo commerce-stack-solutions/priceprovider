@@ -3,7 +3,9 @@
     "login": "Prijava",
     "logout": "Odjava",
     "loginRequired": "Potrebna prijava",
-    "loginRequiredMessage": "Molimo prijavite se za pristup administratorskoj ploči"
+    "loginRequiredMessage": "Molimo prijavite se za pristup administratorskoj ploči",
+    "noAdminAccess": "Nema administratorskog pristupa",
+    "noAdminAccessMessage": "Vaš račun nema potrebne ovlasti za pristup administratorskom području. Obratite se svom administratoru ako smatrate da je ovo pogreška."
   },
   "actions": {
     "add": "Dodaj",

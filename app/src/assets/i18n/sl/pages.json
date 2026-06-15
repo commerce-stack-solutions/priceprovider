@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Dodaj dovoljenje aplikacije"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Inicializacija storitve",
+    "description": "Ročno inicializirajte podatke storitve. Izberite podatke, ki jih želite naložiti, in kliknite gumb Naloži podatke.",
+    "selectDataTitle": "Izberite podatke za nalaganje",
+    "essentialData": "Bistveni podatki",
+    "essentialDataDescription": "Ključni podatki, potrebni za delovanje storitve (jeziki, valute, države, enote, davčni razredi, dovoljenja, vloge)",
+    "sampleData": "Vzorčni podatki",
+    "sampleDataDescription": "Vzorčni podatki za testiranje in predstavitev (organizacije, skupine, kanali, vrstice cen)",
+    "loadButton": "Naloži podatke",
+    "loading": "Nalaganje...",
+    "previewTitle": "Predogled podatkovnih datotek",
+    "essentialFiles": "Bistvene podatkovne datoteke",
+    "sampleFiles": "Vzorčne podatkovne datoteke",
+    "directory": "Imenik",
+    "noFiles": "Ni najdenih datotek",
+    "loadingPreview": "Nalaganje predogleda...",
+    "refreshPermissions": "Osveži dovoljenja",
+    "refreshPermissionsHint": "Po nalaganju novih podatkov ponovno naložite svoja dovoljenja"
   }
 }

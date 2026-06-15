@@ -3,7 +3,9 @@
     "login": "Inloggen",
     "logout": "Uitloggen",
     "loginRequired": "Inloggen vereist",
-    "loginRequiredMessage": "Meld u aan om toegang te krijgen tot het beheerpaneel"
+    "loginRequiredMessage": "Meld u aan om toegang te krijgen tot het beheerpaneel",
+    "noAdminAccess": "Geen beheerderstoegang",
+    "noAdminAccessMessage": "Uw account heeft niet de vereiste machtigingen om toegang te krijgen tot het beheergedeelte. Neem contact op met uw beheerder als u denkt dat dit een fout is."
   },
   "actions": {
     "add": "Toevoegen",

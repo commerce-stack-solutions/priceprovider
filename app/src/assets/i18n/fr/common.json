@@ -3,7 +3,9 @@
     "login": "Connexion",
     "logout": "Déconnexion",
     "loginRequired": "Connexion requise",
-    "loginRequiredMessage": "Veuillez vous connecter pour accéder au panneau d'administration"
+    "loginRequiredMessage": "Veuillez vous connecter pour accéder au panneau d'administration",
+    "noAdminAccess": "Pas d'accès administrateur",
+    "noAdminAccessMessage": "Votre compte ne dispose pas des autorisations nécessaires pour accéder à la zone d'administration. Veuillez contacter votre administrateur si vous pensez qu'il s'agit d'une erreur."
   },
   "actions": {
     "add": "Ajouter",

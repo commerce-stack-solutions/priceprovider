@@ -3,7 +3,9 @@
     "login": "Logi sisse",
     "logout": "Logi välja",
     "loginRequired": "Sisselogimine nõutav",
-    "loginRequiredMessage": "Administraatori paneelile juurdepääsuks palun logige sisse"
+    "loginRequiredMessage": "Administraatori paneelile juurdepääsuks palun logige sisse",
+    "noAdminAccess": "Administraatori juurdepääs puudub",
+    "noAdminAccessMessage": "Teie kontol puuduvad vajalikud õigused haldusosale juurdepääsuks. Kui usute, že see on viga, võtke ühendust oma administraatoriga."
   },
   "actions": {
     "add": "Lisa",
