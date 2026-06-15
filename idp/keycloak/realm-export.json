@@ -144,7 +144,8 @@
       "protocol": "openid-connect",
       "redirectUris": [
         "http://localhost:3002/*",
-        "http://localhost:3002"
+        "http://localhost:3002",
+        "io.commercestacksolutions.instorekiosk://login-callback"
       ],
       "webOrigins": [
         "http://localhost:3002"

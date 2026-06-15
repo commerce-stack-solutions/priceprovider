@@ -61,6 +61,11 @@ class AuthServiceImpl implements AuthService {
     final t = await _credential!.getTokenResponse();
     return t.accessToken;
   }
+
+  @override
+  Future<void> refresh() async {
+    // openid_client handles refresh automatically when calling getTokenResponse if needed
+  }
 }
 
 AuthService createAuthService() => AuthServiceImpl();
