@@ -3,7 +3,9 @@
     "login": "Kirjaudu sisään",
     "logout": "Kirjaudu ulos",
     "loginRequired": "Kirjautuminen vaaditaan",
-    "loginRequiredMessage": "Kirjaudu sisään käyttääksesi hallintapaneelia"
+    "loginRequiredMessage": "Kirjaudu sisään käyttääksesi hallintapaneelia",
+    "noAdminAccess": "Ei järjestelmänvalvojan oikeuksia",
+    "noAdminAccessMessage": "Tililläsi ei ole tarvittavia oikeuksia hallinta-alueelle pääsyyn. Ota yhteyttä järjestelmänvalvojaan, jos uskot tämän olevan virhe."
   },
   "actions": {
     "add": "Lisää",
@@ -81,6 +83,8 @@
     "pricedResourceId": "Hinnoiteltavan resurssin tunnus",
     "priceValue": "Hinta",
     "priceValuePlaceholder": "esim. 19.99",
+    "priceType": "Hintatyyppi",
+    "priceTypePlaceholder": "Valitse hintatyyppi...",
     "minQuantity": "Vähimmäismäärä",
     "minQuantityPlaceholder": "esim. 1",
     "unit": "Yksikkö",

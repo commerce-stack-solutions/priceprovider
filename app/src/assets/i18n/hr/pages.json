@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Dodaj dopuštenje aplikacije"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Inicijalizacija usluge",
+    "description": "Ručno inicijalizirajte podatke usluge. Odaberite podatke koje želite učitati i kliknite gumb Učitaj podatke.",
+    "selectDataTitle": "Odaberite podatke za učitavanje",
+    "essentialData": "Bitni podaci",
+    "essentialDataDescription": "Osnovni podaci potrebni za rad usluge (jezici, valute, zemlje, jedinice, porezni razredi, dopuštenja, uloge)",
+    "sampleData": "Ogledni podaci",
+    "sampleDataDescription": "Ogledni podaci za testiranje i demonstraciju (organizacije, grupe, kanali, reci cijena)",
+    "loadButton": "Učitaj podatke",
+    "loading": "Učitavanje...",
+    "previewTitle": "Pregled podatkovnih datoteka",
+    "essentialFiles": "Bitne podatkovne datoteke",
+    "sampleFiles": "Ogledne podatkovne datoteke",
+    "directory": "Direktorij",
+    "noFiles": "Nisu pronađene datoteke",
+    "loadingPreview": "Učitavanje pregleda...",
+    "refreshPermissions": "Osvježi dopuštenja",
+    "refreshPermissionsHint": "Ponovno učitajte svoja dopuštenja nakon učitavanja novih podataka"
   }
 }

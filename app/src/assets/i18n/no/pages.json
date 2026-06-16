@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Legg til app-tillatelse"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Tjenesteinitialisering",
+    "description": "Initialiser tjenestedata manuelt. Velg dataene du vil laste inn, og klikk på knappen Last inn data.",
+    "selectDataTitle": "Velg data som skal lastes inn",
+    "essentialData": "Essensielle data",
+    "essentialDataDescription": "Kjernedata som kreves for at tjenesten skal fungere (språk, valutaer, land, enheter, skatteklasser, tillatelser, roller)",
+    "sampleData": "Eksempeldata",
+    "sampleDataDescription": "Eksempeldata for testing og demonstrasjon (organisasjoner, grupper, kanaler, prisrader)",
+    "loadButton": "Last inn data",
+    "loading": "Laster inn...",
+    "previewTitle": "Forhåndsvisning av datafiler",
+    "essentialFiles": "Essensielle datafiler",
+    "sampleFiles": "Eksempeldatafiler",
+    "directory": "Mappe",
+    "noFiles": "Ingen filer funnet",
+    "loadingPreview": "Laster inn forhåndsvisning...",
+    "refreshPermissions": "Oppdater tillatelser",
+    "refreshPermissionsHint": "Last inn tillatelsene dine på nytt etter at du har lastet inn nye data"
   }
 }

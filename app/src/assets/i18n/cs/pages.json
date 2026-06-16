@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Přidat oprávnění aplikace"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Inicializace služby",
+    "description": "Ruční inicializace dat služby. Vyberte data, která chcete načíst, a klikněte na tlačítko Načíst data.",
+    "selectDataTitle": "Vyberte data k načtení",
+    "essentialData": "Základní data",
+    "essentialDataDescription": "Základní data vyžadovaná pro fungování služby (jazyky, měny, země, jednotky, daňové třídy, oprávnění, role)",
+    "sampleData": "Ukázková data",
+    "sampleDataDescription": "Ukázková data pro testování a předvádění (organizace, skupiny, kanály, cenové řádky)",
+    "loadButton": "Načíst data",
+    "loading": "Načítání...",
+    "previewTitle": "Náhled datových souborů",
+    "essentialFiles": "Základní datové soubory",
+    "sampleFiles": "Ukázkové datové soubory",
+    "directory": "Adresář",
+    "noFiles": "Nenalezeny žádné soubory",
+    "loadingPreview": "Načítání náhledu...",
+    "refreshPermissions": "Obnovit oprávnění",
+    "refreshPermissionsHint": "Po načtení nových dat znovu načtěte svá oprávnění"
   }
 }

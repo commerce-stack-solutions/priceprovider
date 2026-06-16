@@ -1,6 +1,8 @@
 package io.commercestacksolutions.commons.dataaccess.config;
 
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
+import io.commercestacksolutions.commons.dataaccess.meta.EnumTypeValueDefinition;
+import io.commercestacksolutions.commons.dataaccess.meta.EnumTypeValueRegistry;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaInfoBuilder;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
@@ -79,8 +81,8 @@ public class MetaInfoRegistryConfig {
                 MetaDynamicEnum annotation = field.getAnnotation(MetaDynamicEnum.class);
                 if (annotation != null) {
                     Class<?> beanType = annotation.beanType();
-                    List<String> beanNames = new ArrayList<>(applicationContext.getBeansOfType(beanType).keySet());
-                    enumValues.put(field.getName(), beanNames);
+                    List<String> keys = resolveDynamicEnumValues(beanType);
+                    enumValues.put(field.getName(), keys);
                 }
             }
             clazz = clazz.getSuperclass();
@@ -90,5 +92,46 @@ public class MetaInfoRegistryConfig {
             metaInfo.setEnumValues(enumValues);
         }
         return metaInfo;
+    }
+
+    private List<String> resolveDynamicEnumValues(Class<?> beanType) {
+        // Try to find a registry for this bean type first
+        Map<String, EnumTypeValueRegistry> registries = applicationContext.getBeansOfType(EnumTypeValueRegistry.class);
+        for (EnumTypeValueRegistry<?, ?> registry : registries.values()) {
+            // Check if the registry manages this bean type (definition type)
+            // This is a bit tricky with generics at runtime, so we look at the definitions
+            List<?> definitions = registry.getDefinitions();
+            if (!definitions.isEmpty() && beanType.isAssignableFrom(definitions.get(0).getClass())) {
+                return registry.getCodes().stream().map(code -> code.toUpperCase()).toList();
+            }
+        }
+
+        // Fallback: collect from all beans of the given type
+        Map<String, ?> beans = applicationContext.getBeansOfType(beanType);
+        return beans.values().stream()
+                .map(bean -> {
+                    if (bean instanceof EnumTypeValueDefinition<?> definition) {
+                        Object value = definition.getValue();
+                        if (value != null) {
+                            // Use reflection to call code() if it's a record or has a code() method
+                            try {
+                                return (String) value.getClass().getMethod("code").invoke(value);
+                            } catch (Exception e) {
+                                // Fallback to toString()
+                                return value.toString();
+                            }
+                        }
+                    }
+                    // If not an EnumTypeValueDefinition, use the bean name (original behavior)
+                    // Find the bean name for this bean instance
+                    return beans.entrySet().stream()
+                            .filter(entry -> entry.getValue() == bean)
+                            .map(Map.Entry::getKey)
+                            .findFirst()
+                            .orElse(bean.toString());
+                })
+                .map(String::toUpperCase)
+                .distinct()
+                .toList();
     }
 }

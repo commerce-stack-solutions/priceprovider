@@ -334,3 +334,22 @@ private Long id;             // → identityField ONLY — NOT mandatory (DB-gen
 ```
 
 > Do not add `@MandatoryField` to an `@Id` field — the auto-mandatory rule already covers it.
+
+### Dynamic Enum Types
+
+For extensible types that follow the Open-Closed Principle (e.g., `PriceType`, `OrganizationType`), we use a special **Dynamic Enum** pattern instead of standard Java enums. This allows external modules to contribute new values without modifying the core code.
+
+When defining a field with a dynamic enum type:
+1. Use the specific **Value Object** (record) as the field type.
+2. Use `@Convert` to specify the corresponding JPA converter.
+3. Use `@MetaDynamicEnum` to make values available in `$meta` responses.
+
+Example:
+```java
+@Convert(converter = PriceTypeConverter.class)
+@MetaDynamicEnum(beanType = PriceTypeDefinition.class)
+@MandatoryField
+private PriceType priceType;
+```
+
+For a detailed implementation guide, see the [Dynamic Enums Guide](015-dynamic-enums-guide.md).

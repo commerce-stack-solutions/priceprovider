@@ -1,7 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.facade.organization.restentity;
 
 import io.commercestacksolutions.commons.web.rest.RestEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
 import io.commercestacksolutions.priceproviderservice.facade.organization.info.InfoOrganization;
 
 import java.util.Set;
@@ -10,7 +9,7 @@ public class OrganizationRestEntity extends RestEntity<InfoOrganization, Include
     private String id;
     private String path;
     private String name;
-    private OrganizationType organizationType;
+    private String organizationType;
     private Set<String> parentRefs;
     private Set<String> subRefs;
 
@@ -38,11 +37,11 @@ public class OrganizationRestEntity extends RestEntity<InfoOrganization, Include
         this.name = name;
     }
 
-    public OrganizationType getOrganizationType() {
+    public String getOrganizationType() {
         return organizationType;
     }
 
-    public void setOrganizationType(OrganizationType organizationType) {
+    public void setOrganizationType(String organizationType) {
         this.organizationType = organizationType;
     }
 

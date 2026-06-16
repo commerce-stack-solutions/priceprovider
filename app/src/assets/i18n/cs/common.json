@@ -3,7 +3,9 @@
     "login": "Přihlásit se",
     "logout": "Odhlásit se",
     "loginRequired": "Vyžadováno přihlášení",
-    "loginRequiredMessage": "Pro přístup do administračního panelu se přihlaste"
+    "loginRequiredMessage": "Pro přístup do administračního panelu se přihlaste",
+    "noAdminAccess": "Žádný přístup správce",
+    "noAdminAccessMessage": "Váš účet nemá potřebná oprávnění pro přístup do oblasti správy. Pokud se domníváte, že se jedná o chybu, obraťte se na svého správce."
   },
   "actions": {
     "add": "Přidat",
@@ -81,6 +83,8 @@
     "pricedResourceId": "Priced Resource ID",
     "priceValue": "Hodnota ceny",
     "priceValuePlaceholder": "např. 19.99",
+    "priceType": "Typ ceny",
+    "priceTypePlaceholder": "Vyberte typ ceny...",
     "minQuantity": "Minimální množství",
     "minQuantityPlaceholder": "např. 1",
     "unit": "Jednotka",

@@ -36,7 +36,7 @@ public class ChannelRestEntityMapper extends AbstractMapper<ChannelEntity, Chann
             target.setAllowedCountryRefs(new HashSet<>());
         }
 
-        target.setPriceRepresentationMode(source.getPriceRepresentationMode());
+        target.setPriceRepresentationMode(source.getPriceRepresentationMode() != null ? source.getPriceRepresentationMode().code() : null);
 
         if (context.shouldExpand("$info")) {
             addInfoSection(source, target, context);

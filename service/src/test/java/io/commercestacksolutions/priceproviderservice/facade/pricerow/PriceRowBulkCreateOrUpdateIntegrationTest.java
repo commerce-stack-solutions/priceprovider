@@ -8,6 +8,7 @@ import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxCla
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
@@ -356,21 +357,21 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         existingEntity.setCurrency(testCurrency);
         existingEntity.setTaxClass(testTaxClass);
         existingEntity.setTaxIncluded(false);
-        existingEntity.setPriceType(io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType.SALES_PRICE);
+        existingEntity.setPriceType(new PriceType("SALES_PRICE"));
         priceRowRepository.save(existingEntity);
 
         // ACT - Send request with same fields but different priceType
         List<PriceRowRestEntity> priceRows = new ArrayList<>();
-        PriceRowRestEntity createRequest = new PriceRowRestEntity();
-        createRequest.setPricedResourceId("TEST-PRODUCT-010");
-        createRequest.setPriceValue(new BigDecimal("150.00"));
-        createRequest.setMinQuantity(new BigDecimal("1"));
-        createRequest.setUnitRef("kg");
-        createRequest.setCurrencyRef("EUR");
-        createRequest.setTaxClassRef(testTaxClass.getTaxClassId());
-        createRequest.setTaxIncluded(false);
-        createRequest.setPriceType(io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType.PURCHASE_PRICE); // Different!
-        priceRows.add(createRequest);
+        PriceRowRestEntity updateRequest = new PriceRowRestEntity();
+        updateRequest.setPricedResourceId("TEST-PRODUCT-010");
+        updateRequest.setPriceValue(new BigDecimal("150.00"));
+        updateRequest.setMinQuantity(new BigDecimal("1"));
+        updateRequest.setUnitRef("kg");
+        updateRequest.setCurrencyRef("EUR");
+        updateRequest.setTaxClassRef(testTaxClass.getTaxClassId());
+        updateRequest.setTaxIncluded(false);
+        updateRequest.setPriceType("PURCHASE_PRICE"); // Different!
+        priceRows.add(updateRequest);
 
         PriceRowListRestEntity result = priceRowFacade.createOrUpdateAllPriceRows(priceRows);
 
@@ -380,7 +381,7 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         List<PriceRowRestEntity> items = new ArrayList<>(result.getItems());
         PriceRowRestEntity resultEntity = items.get(0);
         assertNotNull(resultEntity.getId());
-        assertEquals(io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType.PURCHASE_PRICE, resultEntity.getPriceType());
+        assertEquals("PURCHASE_PRICE", resultEntity.getPriceType());
         
         // Verify two entities exist in database
         List<PriceRowEntity> dbEntities = priceRowRepository.findAll().stream()
@@ -456,7 +457,7 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         existingEntity.setCurrency(testCurrency);
         existingEntity.setTaxClass(testTaxClass);
         existingEntity.setTaxIncluded(false);
-        existingEntity.setPriceType(io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType.SALES_PRICE);
+        existingEntity.setPriceType(new PriceType("SALES_PRICE"));
         existingEntity.setValidFrom(validFrom);
         existingEntity.setValidTo(validTo);
         // Not setting groupRefs to avoid constraint issues
@@ -473,7 +474,7 @@ public class PriceRowBulkCreateOrUpdateIntegrationTest {
         updateRequest.setCurrencyRef("EUR");
         updateRequest.setTaxClassRef(testTaxClass.getTaxClassId());
         updateRequest.setTaxIncluded(false);
-        updateRequest.setPriceType(io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType.SALES_PRICE);
+        updateRequest.setPriceType("SALES_PRICE");
         updateRequest.setValidFrom(validFrom);
         updateRequest.setValidTo(validTo);
         // Not setting groupRefs

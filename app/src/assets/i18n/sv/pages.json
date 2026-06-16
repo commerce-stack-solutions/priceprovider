@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Lägg till appbehörighet"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Tjänsteinitialisering",
+    "description": "Initialisera tjänstedata manuellt. Välj de data du vill läsa in och klicka på knappen Läs in data.",
+    "selectDataTitle": "Välj data att läsa in",
+    "essentialData": "Viktiga data",
+    "essentialDataDescription": "Kärndata som krävs för att tjänsten ska fungera (språk, valutor, länder, enheter, skatteklasser, behörigheter, roller)",
+    "sampleData": "Exempeldata",
+    "sampleDataDescription": "Exempeldata för testning och demonstration (organisationer, grupper, kanaler, prisrader)",
+    "loadButton": "Läs in data",
+    "loading": "Läser in...",
+    "previewTitle": "Förhandsgranskning av datafiler",
+    "essentialFiles": "Viktiga datafiler",
+    "sampleFiles": "Exempeldatafiler",
+    "directory": "Katalog",
+    "noFiles": "Inga filer hittades",
+    "loadingPreview": "Läser in förhandsgranskning...",
+    "refreshPermissions": "Uppdatera behörigheter",
+    "refreshPermissionsHint": "Läs in dina behörigheter igen efter att ha läst in nya data"
   }
 }

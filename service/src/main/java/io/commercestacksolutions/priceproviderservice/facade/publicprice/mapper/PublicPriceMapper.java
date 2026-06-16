@@ -79,8 +79,8 @@ public class PublicPriceMapper extends AbstractMapper<PriceRowEntity, PublicPric
         target.setUnitRef(source.getUnit() != null ? source.getUnit().getSymbol() : null);
         target.setCurrencyRef(source.getCurrency() != null ? source.getCurrency().getCurrencyKey() : null);
         target.setTaxClassRef(source.getTaxClass() != null ? source.getTaxClass().getTaxClassId() : null);
-        
-        target.setPriceType(source.getPriceType());
+
+        target.setPriceType(source.getPriceType() != null ? source.getPriceType().code() : null);
         target.setValidFrom(source.getValidFrom());
         target.setValidTo(source.getValidTo());
         

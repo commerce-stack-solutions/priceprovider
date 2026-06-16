@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Adicionar permissão de aplicação"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Inicialização do serviço",
+    "description": "Inicialize os dados do serviço manualmente. Selecione os dados que deseja carregar e clique no botão Carregar Dados.",
+    "selectDataTitle": "Selecionar dados para carregar",
+    "essentialData": "Dados essenciais",
+    "essentialDataDescription": "Dados principais necessários para o funcionamento do serviço (idiomas, moedas, países, unidades, classes de impostos, permissões, funções)",
+    "sampleData": "Dados de amostra",
+    "sampleDataDescription": "Dados de amostra para testes e demonstração (organizações, grupos, canais, linhas de preços)",
+    "loadButton": "Carregar dados",
+    "loading": "Carregando...",
+    "previewTitle": "Pré-visualização de ficheiros de dados",
+    "essentialFiles": "Ficheiros de dados essenciais",
+    "sampleFiles": "Ficheiros de dados de amostra",
+    "directory": "Diretório",
+    "noFiles": "Nenhum ficheiro encontrado",
+    "loadingPreview": "Carregando pré-visualização...",
+    "refreshPermissions": "Atualizar permissões",
+    "refreshPermissionsHint": "Recarregue as suas permissões após carregar novos dados"
   }
 }

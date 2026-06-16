@@ -4,9 +4,10 @@ import io.commercestacksolutions.commons.exception.NotFoundException;
 import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeDefinition;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.mapper.PublicPriceMapper;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceRestEntity;
@@ -14,7 +15,6 @@ import io.commercestacksolutions.priceproviderservice.service.channel.ChannelSer
 import io.commercestacksolutions.priceproviderservice.service.country.CountryService;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.PublicPriceService;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
-import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceRepresentationMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -51,18 +51,18 @@ public class PublicPriceFacadeImpl implements PublicPriceFacade {
         this.applicationContext = applicationContext;
     }
 
-    private PriceRepresentationMode resolvePriceRepresentationMode(String channelId) {
+    private PriceRepresentationModeDefinition resolvePriceRepresentationMode(String channelId) {
         ChannelEntity channel = channelService.getChannel(channelId);
         if (channel != null
                 && channel.getPriceRepresentationMode() != null
-                && !channel.getPriceRepresentationMode().isBlank()) {
+                && channel.getPriceRepresentationMode().code() != null) {
             try {
                 return applicationContext.getBean(
-                        channel.getPriceRepresentationMode(), PriceRepresentationMode.class);
+                        channel.getPriceRepresentationMode().code(), PriceRepresentationModeDefinition.class);
             } catch (Exception ignored) {
             }
         }
-        return applicationContext.getBean("FORCE_GROSS", PriceRepresentationMode.class);
+        return applicationContext.getBean("FORCE_GROSS", PriceRepresentationModeDefinition.class);
     }
 
     /**
@@ -97,7 +97,7 @@ public class PublicPriceFacadeImpl implements PublicPriceFacade {
     private PriceMatchingCriteria buildCriteria(
             String channelId, String countryKey, String groupId, String pricedResourceId,
             BigDecimal quantity, String unitRef, String currencyRef,
-            PriceType priceType, PriceRepresentationMode mode
+            PriceType priceType, PriceRepresentationModeDefinition mode
     ) {
         PriceMatchingCriteria criteria = new PriceMatchingCriteria();
         criteria.setPricedResourceId(pricedResourceId);
@@ -122,7 +122,7 @@ public class PublicPriceFacadeImpl implements PublicPriceFacade {
             throws NotFoundException, DataMappingException {
         channelCountryGuard.assertCountryAllowedInChannel(channelId, countryKey);
         String resolvedCurrency = resolveCurrency(currencyRef, countryKey);
-        PriceRepresentationMode mode = resolvePriceRepresentationMode(channelId);
+        PriceRepresentationModeDefinition mode = resolvePriceRepresentationMode(channelId);
         PriceMatchingCriteria criteria = buildCriteria(
                 channelId, countryKey, groupId, pricedResourceId, quantity, unitRef, resolvedCurrency, priceType, mode);
         PriceRowEntity bestPrice = publicPriceService.findBestPrice(criteria);
@@ -141,7 +141,7 @@ public class PublicPriceFacadeImpl implements PublicPriceFacade {
         channelCountryGuard.assertCountryAllowedInChannel(channelId, countryKey);
 
         String resolvedCurrency = resolveCurrency(currencyRef, countryKey);
-        PriceRepresentationMode mode = resolvePriceRepresentationMode(channelId);
+        PriceRepresentationModeDefinition mode = resolvePriceRepresentationMode(channelId);
         PriceMatchingCriteria criteria = buildCriteria(
                 channelId, countryKey, groupId, pricedResourceId, quantity, unitRef, resolvedCurrency, priceType, mode);
         return mapToListRestEntity(publicPriceService.findAllPrices(criteria), criteria.getTaxationMode(), expand);
@@ -158,7 +158,7 @@ public class PublicPriceFacadeImpl implements PublicPriceFacade {
         channelCountryGuard.assertCountryAllowedInChannel(channelId, countryKey);
 
         String resolvedCurrency = resolveCurrency(currencyRef, countryKey);
-        PriceRepresentationMode mode = resolvePriceRepresentationMode(channelId);
+        PriceRepresentationModeDefinition mode = resolvePriceRepresentationMode(channelId);
         PriceMatchingCriteria criteria = buildCriteria(
                 channelId, countryKey, groupId, pricedResourceId, null, unitRef, resolvedCurrency, priceType, mode);
         return mapToListRestEntity(publicPriceService.findAllQuantityBestPrices(criteria), criteria.getTaxationMode(), expand);
@@ -175,7 +175,7 @@ public class PublicPriceFacadeImpl implements PublicPriceFacade {
         channelCountryGuard.assertCountryAllowedInChannel(channelId, countryKey);
 
         String resolvedCurrency = resolveCurrency(currencyRef, countryKey);
-        PriceRepresentationMode mode = resolvePriceRepresentationMode(channelId);
+        PriceRepresentationModeDefinition mode = resolvePriceRepresentationMode(channelId);
         List<PriceRowEntity> bestPrices = pricedResourceIds.stream()
                 .map(id -> {
                     PriceMatchingCriteria criteria = buildCriteria(

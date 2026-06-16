@@ -1,7 +1,8 @@
 package io.commercestacksolutions.priceproviderservice.web.controller.publicapi;
 
 import io.commercestacksolutions.commons.exception.NotFoundException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceTypeRegistry;
 import io.commercestacksolutions.priceproviderservice.config.security.JwtClaimsExtractor;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.PublicPriceFacade;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceListRestEntity;
@@ -43,6 +44,9 @@ public class PublicPriceControllerTest {
     @MockBean
     private JwtClaimsExtractor jwtClaimsExtractor;
 
+    @MockBean
+    private PriceTypeRegistry priceTypeRegistry;
+
     // ---- getBestPrice (channel + country) ----
 
     @Test
@@ -52,11 +56,12 @@ public class PublicPriceControllerTest {
         mockResponse.setPricedResourceId("DEMO-PRODUCT-001");
         mockResponse.setPriceValue(new BigDecimal("100.00"));
 
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(null);
         when(publicPriceFacade.getBestPrice(
                 eq("dach-sales-channel"), eq("DE"), isNull(), eq("DEMO-PRODUCT-001"),
                 any(BigDecimal.class), eq("piece"), eq("EUR"),
-                eq(PriceType.SALES_PRICE), any()
+                eq(new PriceType("SALES_PRICE")), any()
         )).thenReturn(mockResponse);
 
         mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001")
@@ -77,12 +82,13 @@ public class PublicPriceControllerTest {
         mockResponse.setPricedResourceId("DEMO-PRODUCT-001");
         mockResponse.setPriceValue(new BigDecimal("90.00"));
 
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         String groupPath = "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM";
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(groupPath);
         when(publicPriceFacade.getBestPrice(
                 eq("dach-sales-channel"), eq("DE"), eq(groupPath), eq("DEMO-PRODUCT-001"),
                 any(BigDecimal.class), eq("piece"), eq("EUR"),
-                eq(PriceType.SALES_PRICE), any()
+                eq(new PriceType("SALES_PRICE")), any()
         )).thenReturn(mockResponse);
 
         mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001")
@@ -97,6 +103,7 @@ public class PublicPriceControllerTest {
 
     @Test
     public void testGetBestPrice_NotFound() throws Exception {
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(null);
         when(publicPriceFacade.getBestPrice(
                 anyString(), anyString(), any(), anyString(),
@@ -113,6 +120,7 @@ public class PublicPriceControllerTest {
 
     @Test
     public void testGetBestPrice_InvalidPriceType() throws Exception {
+        when(priceTypeRegistry.exists("INVALID_TYPE")).thenReturn(false);
         mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/INVALID_TYPE/of/DEMO-PRODUCT-001")
                         .param("quantity", "10.00")
                         .param("unit", "piece")
@@ -135,6 +143,7 @@ public class PublicPriceControllerTest {
         mockResponse.setId("1");
         mockResponse.setPriceValue(new BigDecimal("100.00"));
 
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(null);
         when(publicPriceFacade.getBestPrice(
                 anyString(), anyString(), any(), anyString(),
@@ -156,11 +165,12 @@ public class PublicPriceControllerTest {
         PublicPriceListRestEntity mockResponse = new PublicPriceListRestEntity();
         mockResponse.setItems(new ArrayList<>());
 
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(null);
         when(publicPriceFacade.getAllPrices(
                 eq("dach-sales-channel"), eq("DE"), isNull(), eq("DEMO-PRODUCT-001"),
                 any(BigDecimal.class), eq("piece"), eq("EUR"),
-                eq(PriceType.SALES_PRICE), any()
+                eq(new PriceType("SALES_PRICE")), any()
         )).thenReturn(mockResponse);
 
         mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates")
@@ -177,12 +187,13 @@ public class PublicPriceControllerTest {
         PublicPriceListRestEntity mockResponse = new PublicPriceListRestEntity();
         mockResponse.setItems(new ArrayList<>());
 
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         String groupPath = "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM";
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(groupPath);
         when(publicPriceFacade.getAllPrices(
                 eq("dach-sales-channel"), eq("DE"), eq(groupPath), eq("DEMO-PRODUCT-001"),
                 any(BigDecimal.class), eq("piece"), eq("EUR"),
-                eq(PriceType.SALES_PRICE), any()
+                eq(new PriceType("SALES_PRICE")), any()
         )).thenReturn(mockResponse);
 
         mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates")
@@ -199,6 +210,7 @@ public class PublicPriceControllerTest {
         PublicPriceListRestEntity mockResponse = new PublicPriceListRestEntity();
         mockResponse.setItems(new ArrayList<>());
 
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(null);
         when(publicPriceFacade.getAllPrices(
                 anyString(), anyString(), any(), anyString(),
@@ -221,10 +233,11 @@ public class PublicPriceControllerTest {
         PublicPriceListRestEntity mockResponse = new PublicPriceListRestEntity();
         mockResponse.setItems(new ArrayList<>());
 
+        when(priceTypeRegistry.exists(anyString())).thenReturn(true);
         when(jwtClaimsExtractor.extractEffectiveOrganization(any())).thenReturn(null);
         when(publicPriceFacade.getAllQuantityBestPrices(
                 eq("dach-sales-channel"), eq("DE"), isNull(), eq("DEMO-PRODUCT-001"),
-                eq("piece"), eq("EUR"), eq(PriceType.SALES_PRICE), any()
+                eq("piece"), eq("EUR"), eq(new PriceType("SALES_PRICE")), any()
         )).thenReturn(mockResponse);
 
         mockMvc.perform(get("/public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/all-quantity-breaks")
