@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Ajouter une autorisation d'application"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Initialisation du service",
+    "description": "Initialisez manuellement les données du service. Sélectionnez les données que vous souhaitez charger et cliquez sur le bouton Charger les données.",
+    "selectDataTitle": "Sélectionner les données à charger",
+    "essentialData": "Données essentielles",
+    "essentialDataDescription": "Données de base nécessaires au fonctionnement du service (langues, devises, pays, unités, classes d'imposition, autorisations, rôles)",
+    "sampleData": "Données d'exemple",
+    "sampleDataDescription": "Données d'exemple pour les tests et la démonstration (organisations, groupes, canaux, lignes de prix)",
+    "loadButton": "Charger les données",
+    "loading": "Chargement...",
+    "previewTitle": "Aperçu des fichiers de données",
+    "essentialFiles": "Fichiers de données essentiels",
+    "sampleFiles": "Fichiers de données d'exemple",
+    "directory": "Répertoire",
+    "noFiles": "Aucun fichier trouvé",
+    "loadingPreview": "Chargement de l'aperçu...",
+    "refreshPermissions": "Actualiser les autorisations",
+    "refreshPermissionsHint": "Rechargez vos autorisations après avoir chargé de nouvelles données"
   }
 }

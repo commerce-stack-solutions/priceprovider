@@ -3,7 +3,9 @@
     "login": "Inloggen",
     "logout": "Uitloggen",
     "loginRequired": "Inloggen vereist",
-    "loginRequiredMessage": "Meld u aan om toegang te krijgen tot het beheerpaneel"
+    "loginRequiredMessage": "Meld u aan om toegang te krijgen tot het beheerpaneel",
+    "noAdminAccess": "Geen beheerderstoegang",
+    "noAdminAccessMessage": "Uw account heeft niet de vereiste machtigingen om toegang te krijgen tot het beheergedeelte. Neem contact op met uw beheerder als u denkt dat dit een fout is."
   },
   "actions": {
     "add": "Toevoegen",
@@ -81,6 +83,8 @@
     "pricedResourceId": "Geprijsde resource-ID",
     "priceValue": "Prijswaarde",
     "priceValuePlaceholder": "bijv. 19,99",
+    "priceType": "Prijstype",
+    "priceTypePlaceholder": "Selecteer een prijstype...",
     "minQuantity": "Minimumhoeveelheid",
     "minQuantityPlaceholder": "bijv. 1",
     "unit": "Eenheid",

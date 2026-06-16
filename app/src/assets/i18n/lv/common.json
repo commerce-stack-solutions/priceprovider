@@ -3,7 +3,9 @@
     "login": "Pieteikties",
     "logout": "Atteikties",
     "loginRequired": "Nepieciešama pieteikšanās",
-    "loginRequiredMessage": "Lūdzu, piesakieties, lai piekļūtu administratora panelim"
+    "loginRequiredMessage": "Lūdzu, piesakieties, lai piekļūtu administratora panelim",
+    "noAdminAccess": "Nav administratora piekļuves",
+    "noAdminAccessMessage": "Jūsu kontam nav nepieciešamo atļauju, lai piekļūtu administrēšanas zonai. Ja uzskatāt, ka tā ir kļūda, lūdzu, sazinieties ar savu administratoru."
   },
   "actions": {
     "add": "Pievienot",
@@ -81,6 +83,8 @@
     "pricedResourceId": "Cenu resursa ID",
     "priceValue": "Cenas vērtība",
     "priceValuePlaceholder": "piem., 19.99",
+    "priceType": "Cenas veids",
+    "priceTypePlaceholder": "Atlasiet cenas veidu...",
     "minQuantity": "Minimālais daudzums",
     "minQuantityPlaceholder": "piem., 1",
     "unit": "Vienība",

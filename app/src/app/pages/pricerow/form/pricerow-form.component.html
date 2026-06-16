@@ -33,6 +33,30 @@
       <div class="card">
         <div class="card-body">
           <div class="row mb-3">
+            <label for="priceType" class="col-sm-3 col-form-label">{{ 'common.fields.priceType' | transloco }} @if ('priceType' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <app-enum-selector
+                formControlName="priceType"
+                [values]="meta()?.enumValues?.['priceType'] || []"
+                placeholder="{{ 'common.fields.priceTypePlaceholder' | transloco }}"
+                [isInvalid]="(form.get('priceType')?.invalid && form.get('priceType')?.touched) || hasFieldError('priceType')">
+              </app-enum-selector>
+              @if (form.get('priceType')?.invalid && form.get('priceType')?.touched) {
+                <div class="invalid-feedback d-block">
+                  {{ 'common.messages.requiredField' | transloco }}
+                </div>
+              }
+              @if (hasFieldError('priceType')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('priceType'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="row mb-3">
             <label for="pricedResourceId" class="col-sm-3 col-form-label">{{ 'common.fields.pricedResourceId' | transloco }} @if ('pricedResourceId' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
             <div class="col-sm-9">
               <input

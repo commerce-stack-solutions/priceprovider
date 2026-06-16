@@ -3,7 +3,9 @@
     "login": "Prijava",
     "logout": "Odjava",
     "loginRequired": "Potrebna prijava",
-    "loginRequiredMessage": "Molimo prijavite se za pristup administratorskoj ploči"
+    "loginRequiredMessage": "Molimo prijavite se za pristup administratorskoj ploči",
+    "noAdminAccess": "Nema administratorskog pristupa",
+    "noAdminAccessMessage": "Vaš račun nema potrebne ovlasti za pristup administratorskom području. Obratite se svom administratoru ako smatrate da je ovo pogreška."
   },
   "actions": {
     "add": "Dodaj",
@@ -81,6 +83,8 @@
     "pricedResourceId": "ID cjenovnog resursa",
     "priceValue": "Vrijednost cijene",
     "priceValuePlaceholder": "npr. 19.99",
+    "priceType": "Vrsta cijene",
+    "priceTypePlaceholder": "Odaberite vrstu cijene...",
     "minQuantity": "Minimalna količina",
     "minQuantityPlaceholder": "npr. 1",
     "unit": "Jedinica",

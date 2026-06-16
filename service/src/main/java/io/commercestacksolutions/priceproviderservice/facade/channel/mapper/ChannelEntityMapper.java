@@ -5,6 +5,7 @@ import io.commercestacksolutions.commons.mapper.RestRequestMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
 import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.facade.channel.restentity.ChannelRestEntity;
 import io.commercestacksolutions.priceproviderservice.service.country.CountryService;
@@ -54,6 +55,6 @@ public class ChannelEntityMapper extends AbstractMapper<ChannelRestEntity, Chann
             target.setAllowedCountryRefs(new HashSet<>());
         }
 
-        target.setPriceRepresentationMode(source.getPriceRepresentationMode());
+        target.setPriceRepresentationMode(source.getPriceRepresentationMode() != null ? new PriceRepresentationModeType(source.getPriceRepresentationMode()) : null);
     }
 }

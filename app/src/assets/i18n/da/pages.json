@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Tilføj app-tilladelse"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Serviceinitialisering",
+    "description": "Initialiser servicedata manuelt. Vælg de data, du vil indlæse, og klik på knappen Indlæs data.",
+    "selectDataTitle": "Vælg data, der skal indlæses",
+    "essentialData": "Essentielle data",
+    "essentialDataDescription": "Kerndata krævet for at tjenesten kan fungere (sprog, valutaer, lande, enheder, skatteklasser, tilladelser, roller)",
+    "sampleData": "Stikprøvedata",
+    "sampleDataDescription": "Stikprøvedata til test og demonstration (organisationer, grupper, kanaler, prisrækker)",
+    "loadButton": "Indlæs data",
+    "loading": "Indlæser...",
+    "previewTitle": "Forhåndsvisning af datafiler",
+    "essentialFiles": "Essentielle datafiler",
+    "sampleFiles": "Stikprøvedatafiler",
+    "directory": "Mappe",
+    "noFiles": "Ingen filer fundet",
+    "loadingPreview": "Indlæser forhåndsvisning...",
+    "refreshPermissions": "Opdater tilladelser",
+    "refreshPermissionsHint": "Indlæs dine tilladelser igen efter indlæsning af nye data"
   }
 }
