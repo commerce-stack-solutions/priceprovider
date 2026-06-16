@@ -97,7 +97,7 @@ echo ""
 # Ensure the example frontend origins are allowed by the service (CORS).
 # The dev profile in application-dev.yaml already lists these; here we set
 # the same value via env-var so the Dockerised service honours them too.
-export PPS_CORS_ALLOWED_ORIGINS="${PPS_CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001,http://localhost:8081}"
+export PPS_CORS_ALLOWED_ORIGINS="${PPS_CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:4200,http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:8081}"
 export VERSION
 cd "${SCRIPT_DIR}"
 docker compose up -d
@@ -112,7 +112,7 @@ if [ "${NODE_AVAILABLE}" = "true" ]; then
     echo "Starting example frontends..."
     echo ""
 
-    for FRONTEND in shopfrontend rentalfrontend; do
+    for FRONTEND in shopfrontend rentalfrontend instorekiosk; do
         FRONTEND_DIR="${SCRIPT_DIR}/examples/${FRONTEND}"
         echo "  Installing dependencies for ${FRONTEND}..."
         (cd "${FRONTEND_DIR}" && npm install --silent)
@@ -139,6 +139,7 @@ echo "  Keycloak (IdP)         ->  $(link 'http://localhost:8081')"
 if [ "${NODE_AVAILABLE}" = "true" ]; then
 echo "  Shop Frontend (demo)   ->  $(link 'http://localhost:3000')"
 echo "  Rental Frontend (demo) ->  $(link 'http://localhost:3001')"
+echo "  In-Store Kiosk (demo)  ->  $(link 'http://localhost:3002')"
 fi
 echo ""
 echo "  Default Users (Keycloak realm: priceprovider):"
@@ -160,6 +161,7 @@ echo "  Service README         ->  $(link "file://${SCRIPT_DIR}/service/README.m
 echo "  App README             ->  $(link "file://${SCRIPT_DIR}/app/README.md")"
 echo "  Shop Frontend README   ->  $(link "file://${SCRIPT_DIR}/examples/shopfrontend/README.md")"
 echo "  Rental Frontend README ->  $(link "file://${SCRIPT_DIR}/examples/rentalfrontend/README.md")"
+  In-Store Kiosk README  ->  $(link "file://${SCRIPT_DIR}/examples/instorekiosk/README.md")"
 echo ""
 echo "  To stream logs:  docker compose logs -f"
 echo "  To stop:         docker compose down"
