@@ -57,4 +57,4 @@ To stop the stack run `docker compose down`.
 
 - [Shop Frontend (HTML/JS)](examples/shopfrontend/README.md) – A minimal shop demo using standard web technologies.
 - [Rental Frontend (HTML/JS)](examples/rentalfrontend/README.md) – A demo for rental-specific pricing.
-- [In-Store Kiosk (Flutter)](examples/instorekiosk/README.md) – A cross-platform kiosk application built with Flutter.
+- [In-Store Kiosk (Flutter, experimental)](examples/instorekiosk/README.md) – A cross-platform kiosk application built with Flutter. (Linux, Windows, Mac?)
