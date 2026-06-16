@@ -44,7 +44,7 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> login() async {
-    await _authenticator?.authorize();
+    _authenticator?.authorize();
   }
 
   @override
