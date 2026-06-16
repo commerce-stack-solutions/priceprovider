@@ -1,4 +1,4 @@
-# In-Store Kiosk Demo (Flutter)
+# In-Store Kiosk Demo (Flutter, experimental)
 
 A minimal Flutter-based in-store kiosk example that consumes the Price Provider public API.
 
@@ -23,26 +23,13 @@ sudo apt-get update
 sudo apt-get install libsecret-1-dev
 ```
 
-## Running the Web Demo
+## Run The App
 
-You can run this demo as a web application:
-
-```bash
-flutter run -d chrome --web-port 3002
-```
-
-Alternatively, use the provided Node.js server to serve a production build:
+You can run this demo as a Linux (tested), Windows (tested) or Mac (maybe, not tested) application:
 
 ```bash
-# Build the web version
-flutter build web
-
-# Install dependencies and start server
-npm install
-npm start
+flutter run
 ```
-
-Then open [http://localhost:3002](http://localhost:3002) in your browser.
 
 ## Project Structure
 
