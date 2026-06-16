@@ -39,11 +39,10 @@ public abstract class EnumTypeValueRegistry<T, D extends EnumTypeValueDefinition
                 continue;
             }
 
-            String normalizedCode = code.toUpperCase();
-            if (this.definitions.containsKey(normalizedCode)) {
-                logger.error("Duplicate code found: {}. Skipping bean: {}", normalizedCode, d);
+            if (this.definitions.containsKey(code)) {
+                logger.error("Duplicate code found: {}. Skipping bean: {}", code, d);
             } else {
-                this.definitions.put(normalizedCode, d);
+                this.definitions.put(code, d);
             }
         }
 
