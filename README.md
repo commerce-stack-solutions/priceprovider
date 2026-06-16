@@ -49,6 +49,12 @@ After the script completes the following endpoints are available:
 | Keycloak (IdP)          | http://localhost:8081    |
 | Shop Frontend (demo)    | http://localhost:3000 *(requires Node.js)* |
 | Rental Frontend (demo)  | http://localhost:3001 *(requires Node.js)* |
+| In-Store Kiosk (demo)   | http://localhost:3002 *(requires Flutter / Node.js)* |
 
 To stop the stack run `docker compose down`.
 
+## Examples
+
+- [Shop Frontend (HTML/JS)](examples/shopfrontend/README.md) – A minimal shop demo using standard web technologies.
+- [Rental Frontend (HTML/JS)](examples/rentalfrontend/README.md) – A demo for rental-specific pricing.
+- [In-Store Kiosk (Flutter)](examples/instorekiosk/README.md) – A cross-platform kiosk application built with Flutter.
