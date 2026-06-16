@@ -8,6 +8,22 @@ Unlike standard Java enums, Dynamic Enums are implemented as Spring-managed bean
 
 A Dynamic Enum consists of several interconnected parts that ensure extensibility and consistency.
 
+### 1. Value Object
+A Java `record` (or class) representing the type (e.g., `PriceType`). It provides type safety and a clear domain model.
+
+### 2. Definition Interface
+An interface extending `EnumTypeValueDefinition<T>` that defines the bean type. Specific values are implemented as Spring beans of this type.
+
+### 3. Registry
+A class extending `EnumTypeValueRegistry<T, D>` that manages the available definitions. It handles case-insensitive lookups and duplicate detection during initialization.
+
+### 4. JPA Converter
+An `AttributeConverter` to store the value object in the database as a plain string.
+
+### 5. Validation
+A `ValidationRule<T>` that uses the registry to verify that the value provided to the service is valid before saving.
+
+### Overview
 ```mermaid
 classDiagram
     class Entity {
@@ -49,22 +65,6 @@ classDiagram
     EntityValidator ..> ColorTypeValidationRule : executes
 ```
 
-### 1. Value Object
-A Java `record` (or class) representing the type (e.g., `PriceType`). It provides type safety and a clear domain model.
-
-### 2. Definition Interface
-An interface extending `EnumTypeValueDefinition<T>` that defines the bean type. Specific values are implemented as Spring beans of this type.
-
-### 3. Registry
-A class extending `EnumTypeValueRegistry<T, D>` that manages the available definitions. It handles case-insensitive lookups and duplicate detection during initialization.
-
-### 4. JPA Converter
-An `AttributeConverter` to store the value object in the database as a plain string.
-
-### 5. Validation
-A `ValidationRule<T>` that uses the registry to verify that the value provided to the service is valid before saving.
-
----
 
 ## How to Implement a New Dynamic Enum
 
