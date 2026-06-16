@@ -6,23 +6,13 @@ import io.commercestacksolutions.commons.dataaccess.meta.EnumTypeValueRegistry;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaInfoBuilder;
 import io.commercestacksolutions.commons.web.rest.MetaInfo;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.EntityType;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,25 +33,22 @@ public class MetaInfoRegistryConfig {
 
     private final EntityMetaInfoRegistry entityMetaInfoRegistry;
     private final ApplicationContext applicationContext;
+    private final EntityManager entityManager;
 
-    public MetaInfoRegistryConfig(EntityMetaInfoRegistry entityMetaInfoRegistry, ApplicationContext applicationContext) {
+    public MetaInfoRegistryConfig(EntityMetaInfoRegistry entityMetaInfoRegistry, ApplicationContext applicationContext, EntityManager entityManager) {
         this.entityMetaInfoRegistry = entityMetaInfoRegistry;
         this.applicationContext = applicationContext;
+        this.entityManager = entityManager;
     }
 
     @PostConstruct
     public void registerEntityMetaInfos() {
-        entityMetaInfoRegistry.register(AppPermissionEntity.class, build(AppPermissionEntity.class));
-        entityMetaInfoRegistry.register(AppRoleEntity.class,       build(AppRoleEntity.class));
-        entityMetaInfoRegistry.register(GroupEntity.class,        build(GroupEntity.class));
-        entityMetaInfoRegistry.register(OrganizationEntity.class, build(OrganizationEntity.class));
-        entityMetaInfoRegistry.register(UnitEntity.class,         build(UnitEntity.class));
-        entityMetaInfoRegistry.register(ChannelEntity.class,      build(ChannelEntity.class));
-        entityMetaInfoRegistry.register(CurrencyEntity.class,     build(CurrencyEntity.class));
-        entityMetaInfoRegistry.register(LanguageEntity.class,     build(LanguageEntity.class));
-        entityMetaInfoRegistry.register(CountryEntity.class,      build(CountryEntity.class));
-        entityMetaInfoRegistry.register(TaxClassEntity.class,     build(TaxClassEntity.class));
-        entityMetaInfoRegistry.register(PriceRowEntity.class,     build(PriceRowEntity.class));
+        for (EntityType<?> entityType : entityManager.getMetamodel().getEntities()) {
+            Class<?> entityClass = entityType.getJavaType();
+            if (entityClass != null) {
+                entityMetaInfoRegistry.register(entityClass, build(entityClass));
+            }
+        }
     }
 
     /**
