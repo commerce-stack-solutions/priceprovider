@@ -3,7 +3,9 @@
     "login": "Logga in",
     "logout": "Logga ut",
     "loginRequired": "Inloggning krävs",
-    "loginRequiredMessage": "Vänligen logga in för att komma åt adminpanelen"
+    "loginRequiredMessage": "Vänligen logga in för att komma åt adminpanelen",
+    "noAdminAccess": "Ingen administratörsåtkomst",
+    "noAdminAccessMessage": "Ditt konto har inte de behörigheter som krävs för att komma åt administrationsområdet. Kontakta din administratör om du tror att detta är ett fel."
   },
   "actions": {
     "add": "Lägg till",
@@ -81,6 +83,8 @@
     "pricedResourceId": "ID för prissatt resurs",
     "priceValue": "Prisbelopp",
     "priceValuePlaceholder": "t.ex. 19.99",
+    "priceType": "Pristyp",
+    "priceTypePlaceholder": "Välj en pristyp...",
     "minQuantity": "Minsta kvantitet",
     "minQuantityPlaceholder": "t.ex. 1",
     "unit": "Enhet",

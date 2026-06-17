@@ -1,7 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.dataaccess;
 
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
@@ -45,7 +45,7 @@ public class BigDecimalPrecisionTest {
         priceRow.setPriceValue(new BigDecimal("19.999"));
         priceRow.setMinQuantity(new BigDecimal("0.001"));
         priceRow.setTaxClass(taxClass);
-        priceRow.setPriceType(PriceType.SALES_PRICE);
+        priceRow.setPriceType(new PriceType("SALES_PRICE"));
         priceRow.setTaxIncluded(false);
 
         PriceRowEntity saved = priceRowRepository.save(priceRow);
@@ -141,7 +141,7 @@ public class BigDecimalPrecisionTest {
         priceRow.setPriceValue(new BigDecimal("99999.9999")); // Max 4 decimals
         priceRow.setMinQuantity(new BigDecimal("0.0001")); // Min 4 decimals
         priceRow.setTaxClass(taxClass);
-        priceRow.setPriceType(PriceType.SALES_PRICE);
+        priceRow.setPriceType(new PriceType("SALES_PRICE"));
         priceRow.setTaxIncluded(false);
 
         PriceRowEntity savedPrice = priceRowRepository.save(priceRow);

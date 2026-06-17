@@ -25,7 +25,7 @@ public class OrganizationRestEntityMapper extends AbstractMapper<OrganizationEnt
         target.setId(source.getId());
         target.setPath(source.getPath());
         target.setName(source.getName());
-        target.setOrganizationType(source.getOrganizationType());
+        target.setOrganizationType(source.getOrganizationType() != null ? source.getOrganizationType().code() : null);
 
         // Convert parent entities to paths
         if (source.getParentRefs() != null) {

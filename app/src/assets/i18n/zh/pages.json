@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "添加应用权限"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "服务初始化",
+    "description": "手动初始化服务数据。选择要加载的数据，然后点击“加载数据”按钮。",
+    "selectDataTitle": "选择要加载的数据",
+    "essentialData": "基本数据",
+    "essentialDataDescription": "服务运行所需的核心数据（语言、货币、国家、单位、税类、权限、角色）",
+    "sampleData": "示例数据",
+    "sampleDataDescription": "用于测试和演示的示例数据（组织、组、渠道、价格行）",
+    "loadButton": "加载数据",
+    "loading": "正在加载...",
+    "previewTitle": "数据文件预览",
+    "essentialFiles": "基本数据文件",
+    "sampleFiles": "示例数据文件",
+    "directory": "目录",
+    "noFiles": "未找到文件",
+    "loadingPreview": "正在加载预览...",
+    "refreshPermissions": "刷新权限",
+    "refreshPermissionsHint": "加载新数据后重新加载您的权限"
   }
 }

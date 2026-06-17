@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Pridėti programos leidimą"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Paslaugos inicijavimas",
+    "description": "Inicijuokite paslaugos duomenis rankiniu būdu. Pasirinkite duomenis, kuriuos norite įkelti, ir spustelėkite mygtuką Įkelti duomenis.",
+    "selectDataTitle": "Pasirinkite įkeliamus duomenis",
+    "essentialData": "Esminiai duomenys",
+    "essentialDataDescription": "Pagrindiniai duomenys, reikalingi paslaugai veikti (kalbos, valiutos, šalys, vienetai, mokesčių klasės, leidimai, vaidmenys)",
+    "sampleData": "Pavyzdiniai duomenys",
+    "sampleDataDescription": "Pavyzdiniai duomenys testavimui ir demonstravimui (organizacijos, grupės, kanalai, kainų eilutės)",
+    "loadButton": "Įkelti duomenis",
+    "loading": "Kraunama...",
+    "previewTitle": "Duomenų failų peržiūra",
+    "essentialFiles": "Esminiai duomenų failai",
+    "sampleFiles": "Pavyzdiniai duomenų failai",
+    "directory": "Katalogas",
+    "noFiles": "Failų nerasta",
+    "loadingPreview": "Kraunama peržiūra...",
+    "refreshPermissions": "Atnaujinti leidimus",
+    "refreshPermissionsHint": "Įkėlę naujus duomenis, iš naujo įkelkite savo leidimus"
   }
 }

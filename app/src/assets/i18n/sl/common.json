@@ -3,7 +3,9 @@
     "login": "Prijava",
     "logout": "Odjava",
     "loginRequired": "Prijava je potrebna",
-    "loginRequiredMessage": "Prosimo, prijavite se za dostop do skrbniškega panela"
+    "loginRequiredMessage": "Prosimo, prijavite se za dostop do skrbniškega panela",
+    "noAdminAccess": "Ni administratorskega dostopa",
+    "noAdminAccessMessage": "Vaš račun nima potrebných dovoljenj za dostop do skrbniškega območja. Če menite, da je to napaka, se obrnite na skrbnika."
   },
   "actions": {
     "add": "Dodaj",
@@ -81,6 +83,8 @@
     "pricedResourceId": "ID cenovnega vira",
     "priceValue": "Vrednost cene",
     "priceValuePlaceholder": "npr. 19.99",
+    "priceType": "Vrsta cene",
+    "priceTypePlaceholder": "Izberite vrsto cene...",
     "minQuantity": "Najmanjša količina",
     "minQuantityPlaceholder": "npr. 1",
     "unit": "Enota",

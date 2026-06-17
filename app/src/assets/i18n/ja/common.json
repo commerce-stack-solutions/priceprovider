@@ -3,7 +3,9 @@
     "login": "ログイン",
     "logout": "ログアウト",
     "loginRequired": "ログインが必要です",
-    "loginRequiredMessage": "管理パネルにアクセスするにはログインしてください"
+    "loginRequiredMessage": "管理パネルにアクセスするにはログインしてください",
+    "noAdminAccess": "管理者アクセス権がありません",
+    "noAdminAccessMessage": "お使いのアカウントには、管理エリアにアクセスするために必要な権限がありません。これがエラーであると思われる場合は、管理者に連絡してください。"
   },
   "actions": {
     "add": "追加",
@@ -81,6 +83,8 @@
     "pricedResourceId": "価格対象ID",
     "priceValue": "価格",
     "priceValuePlaceholder": "例: 19.99",
+    "priceType": "価格タイプ",
+    "priceTypePlaceholder": "価格タイプを選択...",
     "minQuantity": "最小数量",
     "minQuantityPlaceholder": "例: 1",
     "unit": "単位",

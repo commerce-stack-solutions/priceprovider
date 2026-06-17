@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Pievienot lietotnes atļauju"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Pakalpojuma inicializēšana",
+    "description": "Manuāli inicializējiet pakalpojuma datus. Atlasiet datus, kurus vēlaties ielādēt, un noklikšķiniet uz pogas Ielādēt datus.",
+    "selectDataTitle": "Atlasiet ielādējamos datus",
+    "essentialData": "Būtiskie dati",
+    "essentialDataDescription": "Pakalpojuma darbībai nepieciešamie pamatdati (valodas, valūtas, valstis, vienības, nodokļu klases, atļaujas, lomas)",
+    "sampleData": "Paraugdati",
+    "sampleDataDescription": "Paraugdati testēšanai un demonstrēšanai (organizācijas, grupas, kanāli, cenu rindas)",
+    "loadButton": "Ielādēt datus",
+    "loading": "Notiek ielāde...",
+    "previewTitle": "Datu failu priekšskatījums",
+    "essentialFiles": "Būtiskie datu faili",
+    "sampleFiles": "Paraugdatu faili",
+    "directory": "Direktorijs",
+    "noFiles": "Faili netika atrasti",
+    "loadingPreview": "Notiek priekšskatījuma ielāde...",
+    "refreshPermissions": "Atsvaidzināt atļaujas",
+    "refreshPermissionsHint": "Pēc jaunu datu ielādes atkārtoti ielādējiet savas atļaujas"
   }
 }

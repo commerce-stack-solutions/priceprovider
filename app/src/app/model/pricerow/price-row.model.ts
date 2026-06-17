@@ -8,7 +8,7 @@ export interface PriceRow {
   unitRef: string;
   currencyRef?: string;
   taxClassRef?: string;
-  priceType?: 'SALES_PRICE' | 'PURCHASE_PRICE' | 'MATERIAL_COST';
+  priceType?: string;
   taxIncluded: boolean;
   validFrom?: string;
   validTo?: string;

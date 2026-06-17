@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Lisa rakenduse õigus"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Teenuse initsialiseerimine",
+    "description": "Teenuse andmete käsitsi initsialiseerimine. Valige andmed, mida soovite laadida, ja klõpsake nuppu Laadi andmed.",
+    "selectDataTitle": "Vali laaditavad andmed",
+    "essentialData": "Olulised andmed",
+    "essentialDataDescription": "Teenuse toimimiseks vajalikud põhiandmed (keeled, valuutad, riigid, ühikud, maksuklassid, õigused, rollid)",
+    "sampleData": "Näidisandmed",
+    "sampleDataDescription": "Näidisandmed testimiseks ja demonstreerimiseks (organisatsioonid, grupid, kanalid, hinnaread)",
+    "loadButton": "Laadi andmed",
+    "loading": "Laadimine...",
+    "previewTitle": "Andmefailide eelvaade",
+    "essentialFiles": "Olulised andmefailid",
+    "sampleFiles": "Näidisandmefailid",
+    "directory": "Kataloog",
+    "noFiles": "Faile ei leitud",
+    "loadingPreview": "Eelvaate laadimine...",
+    "refreshPermissions": "Värskenda õigusi",
+    "refreshPermissionsHint": "Laadi oma õigused pärast uute andmete laadimist uuesti"
   }
 }

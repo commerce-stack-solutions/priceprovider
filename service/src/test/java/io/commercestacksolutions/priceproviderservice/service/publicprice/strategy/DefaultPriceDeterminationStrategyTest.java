@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.service.publicprice.strat
 
 import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.enums.PriceType;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
 import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
@@ -115,16 +115,16 @@ public class DefaultPriceDeterminationStrategyTest {
         // This test verifies ranking works when types match
         PriceRowEntity price1 = createTestPrice("PROD-001", new BigDecimal("100.00"));
         price1.setId("1");
-        price1.setPriceType(PriceType.SALES_PRICE);
+        price1.setPriceType(new PriceType("SALES_PRICE"));
         price1.setMinQuantity(new BigDecimal("1.00"));
         
         PriceRowEntity price2 = createTestPrice("PROD-001", new BigDecimal("90.00"));
         price2.setId("2");
-        price2.setPriceType(PriceType.SALES_PRICE);
+        price2.setPriceType(new PriceType("SALES_PRICE"));
         price2.setMinQuantity(new BigDecimal("10.00"));
         
         PriceMatchingCriteria criteria = createTestCriteria("PROD-001", new BigDecimal("15.00"));
-        criteria.setPriceType(PriceType.SALES_PRICE);
+        criteria.setPriceType(new PriceType("SALES_PRICE"));
         
         // Both prices have same type, ranking by minQuantity (nearest higher wins)
         PriceRowEntity result = strategy.determineBestPrice(criteria, Arrays.asList(price1, price2), List.of());
@@ -297,7 +297,7 @@ public class DefaultPriceDeterminationStrategyTest {
         price.setPricedResourceId(pricedResourceId);
         price.setPriceValue(priceValue);
         price.setMinQuantity(new BigDecimal("1.00"));
-        price.setPriceType(PriceType.SALES_PRICE);
+        price.setPriceType(new PriceType("SALES_PRICE"));
         price.setTaxIncluded(false);
         price.setValidFrom(OffsetDateTime.now().minusDays(365));
         price.setValidTo(null); // No expiration
@@ -331,7 +331,7 @@ public class DefaultPriceDeterminationStrategyTest {
         criteria.setQuantity(quantity);
         criteria.setUnitRef("pcs");
         criteria.setCurrencyRef("EUR");
-        criteria.setPriceType(PriceType.SALES_PRICE);
+        criteria.setPriceType(new PriceType("SALES_PRICE"));
         criteria.setReferenceDate(OffsetDateTime.now());
         criteria.setTaxationMode(PriceMatchingCriteria.TaxationMode.GROSS);
         return criteria;

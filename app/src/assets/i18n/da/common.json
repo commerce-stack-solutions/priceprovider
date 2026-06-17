@@ -3,7 +3,9 @@
     "login": "Log ind",
     "logout": "Log ud",
     "loginRequired": "Login påkrævet",
-    "loginRequiredMessage": "Log venligst ind for at få adgang til administrationspanelet"
+    "loginRequiredMessage": "Log venligst ind for at få adgang til administrationspanelet",
+    "noAdminAccess": "Ingen administratoradgang",
+    "noAdminAccessMessage": "Din konto har ikke de nødvendige tilladelser til at få adgang til administrationsområdet. Kontakt din administrator, hvis du mener, at dette er en fejl."
   },
   "actions": {
     "add": "Tilføj",
@@ -81,6 +83,8 @@
     "pricedResourceId": "Prissat ressource-ID",
     "priceValue": "Pris",
     "priceValuePlaceholder": "f.eks. 19.99",
+    "priceType": "Pristype",
+    "priceTypePlaceholder": "Vælg en pristype...",
     "minQuantity": "Mindste mængde",
     "minQuantityPlaceholder": "f.eks. 1",
     "unit": "Enhed",

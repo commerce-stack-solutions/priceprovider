@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "アプリ権限を追加"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "サービス初期化",
+    "description": "サービスデータを手動で初期化します。ロードするデータを選択し、[データをロード]ボタンをクリックしてください。",
+    "selectDataTitle": "ロードするデータを選択",
+    "essentialData": "基本データ",
+    "essentialDataDescription": "サービスの機能に必要なコアデータ（言語、通貨、国、単位、税区分、権限、ロール）",
+    "sampleData": "サンプルデータ",
+    "sampleDataDescription": "テストおよびデモンストレーション用のサンプルデータ（組織、グループ、チャネル、価格行）",
+    "loadButton": "データをロード",
+    "loading": "ロード中...",
+    "previewTitle": "データファイルのプレビュー",
+    "essentialFiles": "基本データファイル",
+    "sampleFiles": "サンプルデータファイル",
+    "directory": "ディレクトリ",
+    "noFiles": "ファイルが見つかりません",
+    "loadingPreview": "プレビューをロード中...",
+    "refreshPermissions": "権限を更新",
+    "refreshPermissionsHint": "新しいデータをロードした後、権限を再ロードしてください"
   }
 }

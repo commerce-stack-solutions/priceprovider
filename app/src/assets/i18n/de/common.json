@@ -83,6 +83,8 @@
     "pricedResourceId": "Preis-Ressourcen-ID",
     "priceValue": "Preiswert",
     "priceValuePlaceholder": "z.B. 19,99",
+    "priceType": "Preistyp",
+    "priceTypePlaceholder": "Preistyp auswählen...",
     "minQuantity": "Mindestmenge",
     "minQuantityPlaceholder": "z.B. 1",
     "unit": "Einheit",

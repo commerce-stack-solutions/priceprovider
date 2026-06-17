@@ -82,7 +82,8 @@
     "editAppPermission": "Edit App Permission",
     "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
     "deleteWarning": "Deleting this permission can break application access. Continue?",
-    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?"
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "App-machtiging toevoegen"
   },
   "appRoles": {
     "title": "App Roles",
@@ -93,5 +94,24 @@
     "permissions": "Permissions",
     "permissionId": "Permission ID",
     "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Service-initialisatie",
+    "description": "Initialiseer servicegegevens handmatig. Selecteer de gegevens die u wilt laden en klik op de knop Gegevens laden.",
+    "selectDataTitle": "Selecteer de te laden gegevens",
+    "essentialData": "Essentiële gegevens",
+    "essentialDataDescription": "Kerngegevens die vereist zijn voor het functioneren van de service (talen, valuta's, landen, eenheden, belastingklassen, machtigingen, rollen)",
+    "sampleData": "Voorbeeldgegevens",
+    "sampleDataDescription": "Voorbeeldgegevens voor testen en demonstratie (organisaties, groepen, kanalen, prijsregels)",
+    "loadButton": "Gegevens laden",
+    "loading": "Laden...",
+    "previewTitle": "Voorbeeld van gegevensbestanden",
+    "essentialFiles": "Essentiële gegevensbestanden",
+    "sampleFiles": "Voorbeeldgegevensbestanden",
+    "directory": "Map",
+    "noFiles": "Geen bestanden gevonden",
+    "loadingPreview": "Voorbeeld laden...",
+    "refreshPermissions": "Machtigingen vernieuwen",
+    "refreshPermissionsHint": "Laad uw machtigingen opnieuw nadat u nieuwe gegevens hebt geladen"
   }
 }

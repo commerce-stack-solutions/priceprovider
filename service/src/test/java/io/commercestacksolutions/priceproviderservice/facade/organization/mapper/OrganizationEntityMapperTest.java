@@ -5,7 +5,6 @@ import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.GroupEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.organization.enums.OrganizationType;
 import io.commercestacksolutions.priceproviderservice.facade.organization.restentity.OrganizationRestEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +54,7 @@ public class OrganizationEntityMapperTest {
         OrganizationRestEntity re = new OrganizationRestEntity();
         re.setPath(path);
         re.setName("Org " + path);
-        re.setOrganizationType(OrganizationType.COMPANY);
+        re.setOrganizationType("COMPANY");
         re.setParentRefs(parentRefs);
         re.setSubRefs(subRefs);
         return re;
