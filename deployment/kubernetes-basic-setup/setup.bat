@@ -13,6 +13,16 @@ kubectl apply -f service.yaml
 kubectl apply -f app.yaml
 kubectl apply -f ingress.yaml
 
+echo Configuring internal host aliases...
+for /f "tokens=*" %%i in ('kubectl get svc keycloak -n price-provider -o jsonpath^="{.spec.clusterIP}"') do set KEYCLOAK_IP=%%i
+for /f "tokens=*" %%i in ('kubectl get svc service -n price-provider -o jsonpath^="{.spec.clusterIP}"') do set SERVICE_IP=%%i
+
+# Patch service to find keycloak
+kubectl patch deployment service -n price-provider --type="json" -p="[{\"op\": \"add\", \"path\": \"/spec/template/spec/hostAliases\", \"value\": [{\"ip\": \"%KEYCLOAK_IP%\", \"hostnames\": [\"keycloak.priceprovider.local\"]}]}]"
+
+# Patch app to find keycloak and service
+kubectl patch deployment app -n price-provider --type="json" -p="[{\"op\": \"add\", \"path\": \"/spec/template/spec/hostAliases\", \"value\": [{\"ip\": \"%KEYCLOAK_IP%\", \"hostnames\": [\"keycloak.priceprovider.local\"]}, {\"ip\": \"%SERVICE_IP%\", \"hostnames\": [\"service.priceprovider.local\"]}]}]"
+
 echo Waiting for deployments...
 kubectl rollout status deployment/db -n price-provider
 kubectl rollout status deployment/keycloak -n price-provider
