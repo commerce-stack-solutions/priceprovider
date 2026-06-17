@@ -27,9 +27,9 @@ spec:
             - containerPort: 80
           env:
             - name: PPS_BASEURL
-              value: http://service:8080/
+              value: http://service.priceprovider.local/
             - name: PPS_OIDC_ISSUER_URI
-              value: http://keycloak:8080/realms/priceprovider
+              value: http://keycloak.priceprovider.local/realms/priceprovider
             - name: PPS_OIDC_REQUIRE_HTTPS
               value: "false"
 ---
@@ -45,7 +45,7 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler

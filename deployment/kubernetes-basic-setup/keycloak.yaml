@@ -24,6 +24,12 @@ spec:
               value: admin
             - name: KC_HTTP_RELATIVE_PATH
               value: /
+            - name: KC_HOSTNAME
+              value: keycloak.priceprovider.local
+            - name: KC_HOSTNAME_STRICT_HTTPS
+              value: "false"
+            - name: KC_PROXY
+              value: edge
           ports:
             - containerPort: 8080
           volumeMounts:
@@ -45,6 +51,6 @@ spec:
     app: keycloak
   ports:
     - protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
-  type: LoadBalancer
+  type: ClusterIP
