@@ -47,12 +47,14 @@ data:
           "redirectUris": [
             "http://localhost/*",
             "http://localhost:4200/*",
-            "http://localhost:80/*"
+            "http://localhost:80/*",
+            "http://app.priceprovider.local/*"
           ],
           "webOrigins": [
             "http://localhost",
             "http://localhost:4200",
-            "http://localhost:80"
+            "http://localhost:80",
+            "http://app.priceprovider.local"
           ],
           "protocolMappers": [
             {
@@ -83,10 +85,12 @@ data:
           "protocol": "openid-connect",
           "redirectUris": [
             "http://localhost:3000/*",
-            "http://localhost:3000"
+            "http://localhost:3000",
+            "http://shop.priceprovider.local/*"
           ],
           "webOrigins": [
-            "http://localhost:3000"
+            "http://localhost:3000",
+            "http://shop.priceprovider.local"
           ],
           "protocolMappers": [
             {
@@ -117,10 +121,12 @@ data:
           "protocol": "openid-connect",
           "redirectUris": [
             "http://localhost:3001/*",
-            "http://localhost:3001"
+            "http://localhost:3001",
+            "http://rental.priceprovider.local/*"
           ],
           "webOrigins": [
-            "http://localhost:3001"
+            "http://localhost:3001",
+            "http://rental.priceprovider.local"
           ],
           "protocolMappers": [
             {
