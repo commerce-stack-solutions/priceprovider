@@ -28,7 +28,7 @@ The setup includes the following components:
 
 - `kubectl` configured to point to your Kubernetes cluster.
 - A Kubernetes cluster (e.g., Docker Desktop, Minikube).
-- Note: The setup script will attempt to install the Nginx Ingress Controller if it's not present and remove any conflicting Nginx deployment in the `default` namespace.
+- Note: The setup script will attempt to install the Nginx Ingress Controller if it's not present. Ensure no other service is listening on port 80/443 on your host machine.
 
 ## How to Run
 

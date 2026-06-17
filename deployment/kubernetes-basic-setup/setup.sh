@@ -3,11 +3,6 @@
 # Create namespace
 kubectl apply -f namespace.yaml
 
-# Cleanup conflicting default nginx if present
-echo "Checking for conflicting Nginx in default namespace..."
-kubectl delete service nginx --namespace default 2>/dev/null || true
-kubectl delete deployment nginx --namespace default 2>/dev/null || true
-
 # Install Nginx Ingress Controller (Docker Desktop / Cloud provider style)
 echo "Installing Nginx Ingress Controller..."
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml

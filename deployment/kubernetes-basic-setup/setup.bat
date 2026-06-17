@@ -3,10 +3,6 @@
 echo Creating namespace...
 kubectl apply -f namespace.yaml
 
-echo Checking for conflicting Nginx in default namespace...
-kubectl delete service nginx --namespace default 2>NUL
-kubectl delete deployment nginx --namespace default 2>NUL
-
 echo Installing Nginx Ingress Controller...
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 
