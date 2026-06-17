@@ -3,6 +3,15 @@
 # Create namespace
 kubectl apply -f namespace.yaml
 
+# Cleanup conflicting default nginx if present
+echo "Checking for conflicting Nginx in default namespace..."
+kubectl delete service nginx --namespace default 2>/dev/null || true
+kubectl delete deployment nginx --namespace default 2>/dev/null || true
+
+# Install Nginx Ingress Controller (Docker Desktop / Cloud provider style)
+echo "Installing Nginx Ingress Controller..."
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+
 # Create ConfigMap
 kubectl apply -f keycloak-config.yaml
 
@@ -35,9 +44,10 @@ kubectl rollout status deployment/service -n price-provider
 echo "Waiting for Frontend App to be ready..."
 kubectl rollout status deployment/app -n price-provider
 
+echo "Waiting for Ingress Controller to be ready..."
+kubectl rollout status deployment/ingress-nginx-controller -n ingress-nginx
+
 echo "Waiting for Ingress to be ready (this might take a minute)..."
-# In some environments, the Ingress might take a while to get an address.
-# For Docker Desktop, it usually binds to localhost immediately.
 
 echo "Setup complete! Resources in 'price-provider' namespace:"
 kubectl get all -n price-provider

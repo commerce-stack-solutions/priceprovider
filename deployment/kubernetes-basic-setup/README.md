@@ -27,8 +27,8 @@ The setup includes the following components:
 ## Prerequisites
 
 - `kubectl` configured to point to your Kubernetes cluster.
-- A Kubernetes cluster with an **Ingress Controller** enabled (e.g., Docker Desktop, Minikube with `minikube addons enable ingress`).
-- Metrics Server installed in the cluster (required for HorizontalPodAutoscaler).
+- A Kubernetes cluster (e.g., Docker Desktop, Minikube).
+- Note: The setup script will attempt to install the Nginx Ingress Controller if it's not present and remove any conflicting Nginx deployment in the `default` namespace.
 
 ## How to Run
 
@@ -64,6 +64,3 @@ In this basic setup, the OIDC issuer URI is set to `http://keycloak.priceprovide
 1. Update the `PPS_OIDC_ISSUER_URI` and other OIDC-related environment variables in `service.yaml` and `app.yaml` to use the actual public DNS or IP of the Keycloak LoadBalancer.
 2. Update the `redirectUris` and `webOrigins` in the Keycloak realm configuration (via the UI or by updating `keycloak-config.yaml` before deployment).
 
-## Auto-scaling
-
-Both the `service` and `app` deployments are configured with a `HorizontalPodAutoscaler` that targets 50% CPU utilization. They will scale between 1 and 5 (for service) or 3 (for app) replicas based on load.
