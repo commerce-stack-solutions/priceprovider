@@ -83,5 +83,11 @@
   <folder name="Physical" id="id-folder-physical" type="physical"/>
   <folder name="Implementation &amp; Migration" id="id-folder-implementation" type="implementation_migration"/>
   <folder name="Other" id="id-folder-other" type="other"/>
-  <folder name="Views" id="id-folder-views" type="diagrams"/>
+  <folder name="Views" id="id-folder-views" type="diagrams">
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Business Process View" id="id-view-business-process"/>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Application Cooperation View" id="id-view-application-cooperation"/>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Import Processing View" id="id-view-import-processing"/>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Deployment View" id="id-view-deployment"/>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Security View" id="id-view-security"/>
+  </folder>
 </archimate:model>

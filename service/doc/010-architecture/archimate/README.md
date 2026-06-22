@@ -7,10 +7,79 @@ This directory contains the ArchiMate model for the Price Provider project, prov
 - **File**: `price-provider.archimate`
 - **Format**: Archi tool native XML format (compatible with [Archi](https://www.archimatetool.com/)).
 
+## Architectural Views
+
+The ArchiMate model includes the following architectural views. Mermaid diagrams are provided below as a visual reference for each.
+
+### 1. Business Process View
+Focuses on how stakeholders interact with pricing processes and services.
+
+```mermaid
+graph TD
+    PM[Pricing Manager] --> WPU[Weekly Price Update Process]
+    PrM[Product Manager] --> WPU
+    WPU --> UP[Update and Publish Prices Process]
+    UP --> AdminAPI[Protected Price Management API]
+    Shop[Shop System] --> PublicAPI[Public Price API]
+```
+
+### 2. Application Cooperation View
+Shows how the different application components interact to provide the pricing solution.
+
+```mermaid
+graph LR
+    Kiosk[Instore Kiosk Flutter] -- Get Price --> PublicAPI[REST API Public]
+    Shop[Webshop] -- Get Price --> PublicAPI
+    PublicAPI --- Service[Price Provider Service]
+    Manager[Price Manager App] -- Manage --> AdminAPI[REST API Admin]
+    AdminAPI --- Service
+    Service -- Authenticate --> Keycloak[Identity Provider Keycloak]
+    Manager -- Authenticate --> Keycloak
+```
+
+### 3. Import Processing View
+Details the flow of data from external pricing tools into the system.
+
+```mermaid
+graph LR
+    ExtTool[Pricing Tool External] -- Push Updates --> AdminAPI[REST API Admin]
+    AdminAPI --> Service[Price Provider Service]
+    Service -- Write --> DB[(PostgreSQL)]
+    DB --- PriceRow[PriceRow Data]
+```
+
+### 4. Deployment View
+Models the cloud-native infrastructure setup in Kubernetes.
+
+```mermaid
+graph TD
+    subgraph K8s[Kubernetes Cluster]
+        LB[Load Balancer] --> Ingress[Nginx Ingress]
+        Ingress --> ServicePod[Priceprovider API Pod]
+        Ingress --> WebPod[WebApp Pod]
+        Ingress --> IDPPod[Keycloak Pod]
+        ServicePod --> DBPod[Database Pod]
+        DBPod --- PV[Persistent Volume]
+    end
+```
+
+### 5. Security View
+Highlights the authentication and authorization mechanisms.
+
+```mermaid
+graph TD
+    User[Pricing Manager] -- Login --> ManagerApp[Price Manager App]
+    ManagerApp -- OIDC Auth --> Keycloak[Keycloak]
+    Keycloak -- JWT Token --> ManagerApp
+    ManagerApp -- API Call + JWT --> AdminAPI[Admin REST API]
+    AdminAPI -- Validate Token --> Keycloak
+    AdminAPI --> Backend[Price Provider Service]
+```
+
 ## Architectural Analysis
 
 ### 1. Motivation Layer & NFRs
-The architecture is driven by explicit Non-Functional Requirements (NFRs) and Stakeholder needs:
+The architecture is driven by explicit Non-Functional Requirements (NFRs):
 
 | Area | Goal / Requirement | Description |
 |------|--------------------|-------------|
@@ -21,55 +90,19 @@ The architecture is driven by explicit Non-Functional Requirements (NFRs) and St
 | **Reliability** | At-least-once | Guaranteed import processing via robust service logic. |
 | **Auditability** | Change History | Full tracking of price changes via auditable entities. |
 
-**Key Actors**:
-- **Pricing Manager**: Responsible for weekly price updates.
-- **Product Manager**: Oversees segment-specific pricing strategy.
-- **Shop System**: Automated consumer of the Public Price API.
-- **Administrator**: Manages the infrastructure and identity provider.
-
 ### 2. Strategy Layer
-- **Weekly Price Update**: A business process initiated by Pricing Managers of respective product segments.
-- **Price Import Flow**: The sequence of events where pricing data is ingested from external systems (like the Customer's Pricing Tool).
-- **Agentic Engineering**: Continuous improvement and adaptation of the microservice using AI-driven engineering practices.
+- **Manage Pricing Strategy**: Agile price updates to react to market dynamics.
+- **Weekly Price Update**: Business process for scheduled price adjustments by product segment.
+- **Price Import Flow**: Automated ingestion from customer-owned vendor tools.
 
 ### 3. Business Layer & Data Model
-The service divides its business interfaces into two primary domains:
-- **Public Price API**: For anonymous or logged-in buyers (Webshop, Kiosk).
-- **Protected Price Management API (Admin)**: For price updates and management, consumed by internal tools.
-
-**Data Architecture**:
-The core of the service is its data model, optimized for pricing:
-- **PriceRow**: The central entity containing `priceValue`, `minQuantity`, and validity periods.
-- **Unit & Currency**: Master data for normalizing prices.
-- **TaxClass**: Defines VAT and tax rules.
-- **Channel & Group**: Allows for contextual pricing (e.g., B2B vs B2C, Web vs Store).
+- **Public Price API**: For consumers (Webshop, Kiosk).
+- **Admin API**: Protected interface for management and ingestion.
+- **Data Model**: Optimized entities including `PriceRow`, `TaxClass`, `Currency`, `Unit`, `Channel`, and `Group`.
 
 ### 4. Application Layer & Integration
-- **Price Provider Service**: The Spring Boot backend.
-- **Instore Kiosk (Flutter)**: A showcase application for instore price checks, integrating with the Price Provider for pricing and a PIM for product info.
-- **Pricing Tool (External)**: A customer-owned tool managed by a third-party vendor that integrates with the Admin API for automated updates.
+- **Observability**: Prometheus, Grafana, Loki, and OpenTelemetry provide full stack monitoring.
+- **Integration**: Seamless connection to external PIM systems and vendor-managed Pricing Tools.
 
-**Observability Stack**:
-- **Prometheus**: Collects metrics from the service.
-- **Grafana**: Visualizes performance and health dashboards.
-- **Loki & OpenTelemetry**: For centralized logging and distributed tracing.
-
-### 5. Technology & Deployment Layer
-The deployment follows a cloud-native pattern in a Kubernetes environment:
-
-**Deployment View**:
-- **API Pod**: Runs the Price Provider Service.
-- **WebApp Pod**: Runs the Price Manager Angular App.
-- **Database Pod**: Runs PostgreSQL.
-- **Keycloak Pod**: Runs the Identity Provider.
-
-**Infrastructure**:
-- **Load Balancer & Ingress**: Routes traffic from domain names (e.g., `app.priceprovider.local`).
-- **Persistent Volumes**: Options for storage redundancy (Locally Redundant recommended for dev, Zone Redundant for production).
-- **Network Integration**: Secure connection to the Customer's Kubernetes Cluster where the external Pricing Tool resides.
-
-## Software Solution Analysis
-The Price Provider acts as a **Specialized Pricing Hub**. By decoupling pricing from the ERP/Monolith, it provides the agility needed for modern retail:
-- **Agility**: Rapidly update prices via the Admin API without full catalog deployments.
-- **Scalability**: Handle high-traffic "buy" events independently of the catalog or checkout services.
-- **Integrity**: Centralized pricing truth across Webshops, Mobile Apps, and Instore Kiosks.
+### 5. Technology Layer
+The deployment is a "basic extendable template" for K8s, featuring automated ingress, load balancing, and redundant storage options.
