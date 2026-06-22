@@ -80,4 +80,8 @@
     <element xsi:type="archimate:RealizationRelationship" id="id-rel-19" source="id-bus-proc-update-prices" target="id-bus-service-admin-api"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-20" source="id-mot-act-prod-mgr" target="id-strat-proc-weekly-update"/>
   </folder>
+  <folder name="Physical" id="id-folder-physical" type="physical"/>
+  <folder name="Implementation &amp; Migration" id="id-folder-implementation" type="implementation_migration"/>
+  <folder name="Other" id="id-folder-other" type="other"/>
+  <folder name="Views" id="id-folder-views" type="diagrams"/>
 </archimate:model>
