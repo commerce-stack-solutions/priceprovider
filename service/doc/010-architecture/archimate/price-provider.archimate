@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Price Provider" id="id-price-provider-model" version="4.9.1">
+  <folder name="Strategy" id="id-folder-strategy" type="strategy">
+    <element xsi:type="archimate:Capability" name="Manage Pricing Strategy" id="id-cap-manage-pricing-strategy" documentation="Ability to update and publish prices faster to react quickly to market changes."/>
+    <element xsi:type="archimate:Resource" name="Agentic Engineering" id="id-res-agentic-engineering" documentation="Leveraging agentic engineering for optimized software development and operation."/>
+  </folder>
+  <folder name="Business" id="id-folder-business" type="business">
+    <element xsi:type="archimate:BusinessService" name="Price Management API" id="id-bus-service-api" documentation="Exposes pricing data and management capabilities to consumers."/>
+    <element xsi:type="archimate:BusinessProcess" name="Update and Publish Prices" id="id-bus-proc-update-prices" documentation="The process of importing new pricing data and making it available to frontends."/>
+  </folder>
+  <folder name="Application" id="id-folder-application" type="application">
+    <element xsi:type="archimate:ApplicationComponent" name="Price Provider Service" id="id-app-comp-service" documentation="Java/Spring Boot backend managing the pricing domain logic and persistence."/>
+    <element xsi:type="archimate:ApplicationComponent" name="Price Manager App" id="id-app-comp-manager" documentation="Angular frontend for managing pricing data."/>
+    <element xsi:type="archimate:ApplicationComponent" name="Identity Provider (Keycloak)" id="id-app-comp-keycloak" documentation="Handles authentication and authorization."/>
+    <element xsi:type="archimate:ApplicationService" name="Price Retrieval Service" id="id-app-service-retrieval"/>
+    <element xsi:type="archimate:ApplicationInterface" name="REST API" id="id-app-iface-rest"/>
+  </folder>
+  <folder name="Technology" id="id-folder-technology" type="technology">
+    <element xsi:type="archimate:Node" name="Kubernetes Cluster" id="id-tech-node-k8s"/>
+    <element xsi:type="archimate:SystemSoftware" name="PostgreSQL" id="id-tech-sw-postgres"/>
+    <element xsi:type="archimate:SystemSoftware" name="Docker" id="id-tech-sw-docker"/>
+    <element xsi:type="archimate:SystemSoftware" name="Nginx Ingress Controller" id="id-tech-sw-ingress"/>
+    <element xsi:type="archimate:Artifact" name="Price Provider Docker Image" id="id-tech-art-service-image"/>
+  </folder>
+  <folder name="Motivation" id="id-folder-motivation" type="motivation">
+    <element xsi:type="archimate:Driver" name="Large Volume of Price Updates" id="id-mot-driver-volume"/>
+    <element xsi:type="archimate:Driver" name="Long Import Times" id="id-mot-driver-latency"/>
+    <element xsi:type="archimate:Goal" name="Optimized Import Performance" id="id-mot-goal-imports"/>
+    <element xsi:type="archimate:Goal" name="High Traffic Scalability" id="id-mot-goal-traffic"/>
+    <element xsi:type="archimate:Driver" name="Monolith to Microservice Migration" id="id-mot-driver-migration"/>
+    <element xsi:type="archimate:Assessment" name="Current system cannot handle peak update volumes" id="id-mot-assess-pains"/>
+  </folder>
+  <folder name="Relations" id="id-folder-relations" type="relations">
+    <element xsi:type="archimate:RealizationRelationship" id="id-rel-1" source="id-app-comp-service" target="id-bus-service-api"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-rel-2" source="id-bus-proc-update-prices" target="id-bus-service-api"/>
+    <element xsi:type="archimate:AssignmentRelationship" id="id-rel-3" source="id-app-comp-service" target="id-app-service-retrieval"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-rel-4" source="id-app-comp-service" target="id-app-iface-rest"/>
+    <element xsi:type="archimate:ServingRelationship" id="id-rel-5" source="id-app-service-retrieval" target="id-app-comp-manager"/>
+    <element xsi:type="archimate:ServingRelationship" id="id-rel-6" source="id-app-comp-keycloak" target="id-app-comp-service"/>
+    <element xsi:type="archimate:ServingRelationship" id="id-rel-7" source="id-app-comp-keycloak" target="id-app-comp-manager"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-rel-8" source="id-mot-driver-volume" target="id-mot-assess-pains"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-rel-9" source="id-mot-driver-latency" target="id-mot-assess-pains"/>
+    <element xsi:type="archimate:InfluenceRelationship" id="id-rel-10" source="id-mot-assess-pains" target="id-mot-goal-imports"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-rel-11" source="id-app-comp-service" target="id-mot-goal-imports"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-rel-12" source="id-app-comp-service" target="id-mot-goal-traffic"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-rel-13" source="id-mot-driver-migration" target="id-cap-manage-pricing-strategy"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-rel-14" source="id-app-comp-service" target="id-cap-manage-pricing-strategy"/>
+    <element xsi:type="archimate:AccessRelationship" id="id-rel-15" source="id-app-comp-service" target="id-tech-sw-postgres" accessType="Write"/>
+    <element xsi:type="archimate:ServingRelationship" id="id-rel-16" source="id-tech-sw-ingress" target="id-app-iface-rest"/>
+    <element xsi:type="archimate:AssignmentRelationship" id="id-rel-17" source="id-tech-node-k8s" target="id-app-comp-service"/>
+  </folder>
+  <folder name="Views" id="id-folder-views" type="diagrams">
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Full Stack Layered View" id="id-view-layered">
+      <child xsi:type="archimate:DiagramObject" id="id-do-1" archimateElement="id-bus-service-api">
+        <bounds x="200" y="20" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-do-2" archimateElement="id-bus-proc-update-prices">
+        <bounds x="340" y="20" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-do-3" archimateElement="id-app-comp-service">
+        <bounds x="200" y="120" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-do-4" archimateElement="id-app-comp-manager">
+        <bounds x="40" y="120" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-do-5" archimateElement="id-app-comp-keycloak">
+        <bounds x="360" y="120" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-do-6" archimateElement="id-tech-node-k8s">
+        <bounds x="40" y="240" width="440" height="100"/>
+        <child xsi:type="archimate:DiagramObject" id="id-do-7" archimateElement="id-tech-sw-postgres">
+          <bounds x="20" y="30" width="100" height="50"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-do-8" archimateElement="id-tech-sw-ingress">
+          <bounds x="140" y="30" width="100" height="50"/>
+        </child>
+      </child>
+    </element>
+  </folder>
+</archimate:model>
