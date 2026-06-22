@@ -12,6 +12,7 @@ concurrency:
 
 env:
   BASE_URL: http://localhost:4200
+  NODE_ENV: test
 
 jobs:
   test:
@@ -29,7 +30,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install app dependencies
         working-directory: app
         run: npm ci
 
@@ -39,14 +40,21 @@ jobs:
           npm ci
           npx playwright install --with-deps
 
-      - name: Start application
+      - name: Build application
+        working-directory: app
+        run: npm run build -- --configuration production
+        env:
+          NODE_ENV: test
+
+      - name: Start application server
         working-directory: app
         run: |
-          npm run build -- --configuration production
-          npm run start &
+          nohup npm run start -- --port 4200 > /tmp/app.log 2>&1 &
+          sleep 10
           npx wait-on http://localhost:4200
         env:
           NODE_ENV: test
+          PORT: 4200
 
       - name: Run Playwright tests
         working-directory: app/tests/e2e
@@ -55,12 +63,3 @@ jobs:
           CI: true
           BASE_URL: http://localhost:4200
 
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-test-results
-          path: |
-            app/tests/e2e/playwright-report/
-            app/tests/e2e/test-results/
-          retention-days: 30
