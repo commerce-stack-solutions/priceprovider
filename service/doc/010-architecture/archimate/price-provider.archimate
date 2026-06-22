@@ -58,6 +58,9 @@
     <element xsi:type="archimate:Principle" name="Cloud-Native" id="id-mot-princ-cloud"/>
     <element xsi:type="archimate:Constraint" name="Customer Managed Vendor Tool" id="id-mot-con-ext-tool"/>
   </folder>
+  <folder name="Implementation &amp; Migration" id="id-folder-implementation" type="implementation_migration"/>
+  <folder name="Other" id="id-folder-other" type="other"/>
+  <folder name="Physical" id="id-folder-physical" type="physical"/>
   <folder name="Relations" id="id-folder-relations" type="relations">
     <element xsi:type="archimate:RealizationRelationship" id="id-rel-1" source="id-app-comp-service" target="id-bus-service-public-api"/>
     <element xsi:type="archimate:RealizationRelationship" id="id-rel-2" source="id-app-comp-service" target="id-bus-service-admin-api"/>
@@ -80,14 +83,106 @@
     <element xsi:type="archimate:RealizationRelationship" id="id-rel-19" source="id-bus-proc-update-prices" target="id-bus-service-admin-api"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-20" source="id-mot-act-prod-mgr" target="id-strat-proc-weekly-update"/>
   </folder>
-  <folder name="Physical" id="id-folder-physical" type="physical"/>
-  <folder name="Implementation &amp; Migration" id="id-folder-implementation" type="implementation_migration"/>
-  <folder name="Other" id="id-folder-other" type="other"/>
   <folder name="Views" id="id-folder-views" type="diagrams">
-    <element xsi:type="archimate:ArchimateDiagramModel" name="Business Process View" id="id-view-business-process"/>
-    <element xsi:type="archimate:ArchimateDiagramModel" name="Application Cooperation View" id="id-view-application-cooperation"/>
-    <element xsi:type="archimate:ArchimateDiagramModel" name="Import Processing View" id="id-view-import-processing"/>
-    <element xsi:type="archimate:ArchimateDiagramModel" name="Deployment View" id="id-view-deployment"/>
-    <element xsi:type="archimate:ArchimateDiagramModel" name="Security View" id="id-view-security"/>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Business Process View" id="id-view-business-process">
+      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-1" archimateElement="id-mot-act-price-mgr">
+        <bounds x="20" y="20" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-2" archimateElement="id-mot-act-prod-mgr">
+        <bounds x="20" y="100" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-3" archimateElement="id-strat-proc-weekly-update">
+        <bounds x="180" y="60" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-4" archimateElement="id-bus-proc-update-prices">
+        <bounds x="360" y="60" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-5" archimateElement="id-bus-service-admin-api">
+        <bounds x="540" y="60" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-6" archimateElement="id-mot-act-shop">
+        <bounds x="20" y="180" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-7" archimateElement="id-bus-service-public-api">
+        <bounds x="180" y="180" width="140" height="55"/>
+      </child>
+    </element>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Application Cooperation View" id="id-view-application-cooperation">
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-1" archimateElement="id-app-comp-service">
+        <bounds x="200" y="120" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-2" archimateElement="id-app-comp-manager">
+        <bounds x="20" y="120" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-3" archimateElement="id-app-comp-keycloak">
+        <bounds x="110" y="220" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-4" archimateElement="id-app-comp-kiosk">
+        <bounds x="380" y="120" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-5" archimateElement="id-app-iface-public">
+        <bounds x="290" y="20" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-6" archimateElement="id-app-iface-admin">
+        <bounds x="110" y="20" width="120" height="55"/>
+      </child>
+    </element>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Import Processing View" id="id-view-import-processing">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1" archimateElement="id-app-comp-ext-pricing-tool">
+        <bounds x="20" y="20" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-2" archimateElement="id-app-iface-admin">
+        <bounds x="180" y="20" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-3" archimateElement="id-app-comp-service">
+        <bounds x="320" y="20" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-4" archimateElement="id-tech-sw-postgres">
+        <bounds x="480" y="20" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-5" archimateElement="id-bus-data-pricerow">
+        <bounds x="480" y="100" width="140" height="55"/>
+      </child>
+    </element>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Deployment View" id="id-view-deployment">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-1" archimateElement="id-tech-node-k8s">
+        <bounds x="20" y="100" width="500" height="250"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-2" archimateElement="id-tech-pod-api">
+        <bounds x="40" y="140" width="100" height="50"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-3" archimateElement="id-tech-pod-webapp">
+        <bounds x="160" y="140" width="100" height="50"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-4" archimateElement="id-tech-pod-keycloak">
+        <bounds x="280" y="140" width="100" height="50"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-5" archimateElement="id-tech-pod-db">
+        <bounds x="400" y="140" width="100" height="50"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-7" archimateElement="id-tech-node-lb">
+        <bounds x="200" y="20" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-8" archimateElement="id-tech-art-pv">
+        <bounds x="400" y="360" width="120" height="55"/>
+      </child>
+    </element>
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Security View" id="id-view-security">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-1" archimateElement="id-mot-act-price-mgr">
+        <bounds x="20" y="20" width="120" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-2" archimateElement="id-app-comp-manager">
+        <bounds x="20" y="120" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-3" archimateElement="id-app-comp-keycloak">
+        <bounds x="180" y="120" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-4" archimateElement="id-app-iface-admin">
+        <bounds x="340" y="120" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-5" archimateElement="id-app-comp-service">
+        <bounds x="340" y="220" width="140" height="55"/>
+      </child>
+    </element>
   </folder>
 </archimate:model>
