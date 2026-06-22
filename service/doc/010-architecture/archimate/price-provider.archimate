@@ -16,6 +16,10 @@
     <element xsi:type="archimate:DataObject" name="TaxClass" id="id-bus-data-taxclass"/>
     <element xsi:type="archimate:DataObject" name="Channel" id="id-bus-data-channel"/>
     <element xsi:type="archimate:DataObject" name="Group" id="id-bus-data-group"/>
+    <element xsi:type="archimate:BusinessActor" name="Administrator" id="id-mot-act-admin"/>
+    <element xsi:type="archimate:BusinessActor" name="Product Manager" id="id-mot-act-prod-mgr"/>
+    <element xsi:type="archimate:BusinessActor" name="Pricing Manager" id="id-mot-act-price-mgr"/>
+    <element xsi:type="archimate:BusinessActor" name="Shop System" id="id-mot-act-shop"/>
   </folder>
   <folder name="Application" id="id-folder-application" type="application">
     <element xsi:type="archimate:ApplicationComponent" name="Price Provider Service" id="id-app-comp-service"/>
@@ -52,15 +56,11 @@
     <element xsi:type="archimate:Requirement" name="Reliability At-least-once" id="id-mot-req-reliability"/>
     <element xsi:type="archimate:Requirement" name="Auditability Change History" id="id-mot-req-audit"/>
     <element xsi:type="archimate:Principle" name="Cloud-Native" id="id-mot-princ-cloud"/>
-    <element xsi:type="archimate:Actor" name="Administrator" id="id-mot-act-admin"/>
-    <element xsi:type="archimate:Actor" name="Product Manager" id="id-mot-act-prod-mgr"/>
-    <element xsi:type="archimate:Actor" name="Pricing Manager" id="id-mot-act-price-mgr"/>
-    <element xsi:type="archimate:Actor" name="Shop System" id="id-mot-act-shop"/>
     <element xsi:type="archimate:Constraint" name="Customer Managed Vendor Tool" id="id-mot-con-ext-tool"/>
   </folder>
   <folder name="Relations" id="id-folder-relations" type="relations">
-    <element xsi:type="archimate:ServingRelationship" id="id-rel-1" source="id-app-comp-service" target="id-bus-service-public-api"/>
-    <element xsi:type="archimate:ServingRelationship" id="id-rel-2" source="id-app-comp-service" target="id-bus-service-admin-api"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-rel-1" source="id-app-comp-service" target="id-bus-service-public-api"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-rel-2" source="id-app-comp-service" target="id-bus-service-admin-api"/>
     <element xsi:type="archimate:AccessRelationship" id="id-rel-3" source="id-app-comp-service" target="id-bus-data-pricerow" accessType="1"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-4" source="id-app-comp-keycloak" target="id-app-comp-service"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-5" source="id-app-comp-keycloak" target="id-app-comp-manager"/>
@@ -74,7 +74,7 @@
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-13" source="id-app-comp-prometheus" target="id-app-comp-grafana"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-14" source="id-app-comp-ext-pricing-tool" target="id-app-iface-admin"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-15" source="id-tech-node-cust-k8s" target="id-app-comp-ext-pricing-tool"/>
-    <element xsi:type="archimate:AccessRelationship" id="id-rel-16" source="id-mot-act-shop" target="id-bus-service-public-api"/>
+    <element xsi:type="archimate:ServingRelationship" id="id-rel-16" source="id-bus-service-public-api" target="id-mot-act-shop"/>
     <element xsi:type="archimate:CompositionRelationship" id="id-rel-17" source="id-app-comp-service" target="id-app-iface-public"/>
     <element xsi:type="archimate:CompositionRelationship" id="id-rel-18" source="id-app-comp-service" target="id-app-iface-admin"/>
     <element xsi:type="archimate:RealizationRelationship" id="id-rel-19" source="id-bus-proc-update-prices" target="id-bus-service-admin-api"/>
@@ -82,21 +82,21 @@
   </folder>
   <folder name="Views" id="id-folder-views" type="diagrams">
     <element xsi:type="archimate:ArchimateDiagramModel" name="Detailed Layered View" id="id-view-detailed">
-      <child xsi:type="archimate:DiagramObject" id="id-do-1" archimateElement="id-bus-service-public-api">
+      <child xsi:type="archimate:DiagramModelArchimateObject" id="id-do-1" archimateElement="id-bus-service-public-api">
         <bounds x="20" y="20" width="140" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-do-2" archimateElement="id-bus-service-admin-api">
+      <child xsi:type="archimate:DiagramModelArchimateObject" id="id-do-2" archimateElement="id-bus-service-admin-api">
         <bounds x="180" y="20" width="140" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-do-3" archimateElement="id-app-comp-service">
+      <child xsi:type="archimate:DiagramModelArchimateObject" id="id-do-3" archimateElement="id-app-comp-service">
         <bounds x="100" y="120" width="140" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-do-4" archimateElement="id-tech-node-k8s">
+      <child xsi:type="archimate:DiagramModelArchimateObject" id="id-do-4" archimateElement="id-tech-node-k8s">
         <bounds x="20" y="240" width="460" height="150"/>
-        <child xsi:type="archimate:DiagramObject" id="id-do-5" archimateElement="id-tech-pod-api">
+        <child xsi:type="archimate:DiagramModelArchimateObject" id="id-do-5" archimateElement="id-tech-pod-api">
           <bounds x="20" y="40" width="100" height="50"/>
         </child>
-        <child xsi:type="archimate:DiagramObject" id="id-do-6" archimateElement="id-tech-pod-db">
+        <child xsi:type="archimate:DiagramModelArchimateObject" id="id-do-6" archimateElement="id-tech-pod-db">
           <bounds x="130" y="40" width="100" height="50"/>
         </child>
       </child>
