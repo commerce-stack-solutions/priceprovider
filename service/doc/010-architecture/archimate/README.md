@@ -76,6 +76,64 @@ graph TD
     AdminAPI --> Backend[Price Provider Service]
 ```
 
+### 6. Data Model View
+Details the core entities and their relationships within the Price Provider service.
+
+```mermaid
+classDiagram
+    class PriceRow {
+        String id
+        String pricedResourceId
+        BigDecimal priceValue
+        BigDecimal minQuantity
+        DateTime validFrom
+        DateTime validTo
+        Boolean taxIncluded
+    }
+    class Unit {
+        String symbol
+        Map name
+        String measure
+        BigDecimal factor
+    }
+    class Currency {
+        String currencyKey
+        String symbol
+        Map name
+    }
+    class TaxClass {
+        String taxClassId
+        BigDecimal taxRate
+    }
+    class Country {
+        String isoKey
+        Map name
+    }
+    class Channel {
+        String id
+        Enum representationMode
+    }
+    class Group {
+        String id
+        String path
+        String name
+    }
+    class Organization {
+        Enum organizationType
+    }
+
+    PriceRow --> Unit : unitRef
+    PriceRow --> Currency : currencyRef
+    PriceRow --> TaxClass : taxClassRef
+    PriceRow "n" -- "m" Group : groupRefs
+    PriceRow "n" -- "m" Channel : channelRefs
+    TaxClass --> Country : countryRef
+    Channel "n" -- "m" Country : allowedCountryRefs
+    Country --> Currency : primaryCurrencyRef
+    Organization --|> Group : extends
+    Group "1" -- "*" Group : parentRefs/subRefs
+```
+
 ## Architectural Analysis
 
 ### 1. Motivation Layer & NFRs
@@ -96,13 +154,18 @@ The architecture is driven by explicit Non-Functional Requirements (NFRs):
 - **Price Import Flow**: Automated ingestion from customer-owned vendor tools.
 
 ### 3. Business Layer & Data Model
-- **Public Price API**: For consumers (Webshop, Kiosk).
-- **Admin API**: Protected interface for management and ingestion.
-- **Data Model**: Optimized entities including `PriceRow`, `TaxClass`, `Currency`, `Unit`, `Channel`, and `Group`.
+The service operates on a specialized data model optimized for high-performance pricing lookups.
+
+**Core Entities**:
+- **PriceRow**: The central transactional record. It decouples pricing from products, allowing for complex rules based on quantity, time, and customer context.
+- **Master Data**: `Unit`, `Currency`, and `Country` provide the normalization required for multi-national operations.
+- **Contextual Pricing**: `Channel` and `Group` (with `Organization` as a specialization) allow for targeted pricing strategies (e.g., store-specific, B2B-segment-specific).
 
 ### 4. Application Layer & Integration
 - **Observability**: Prometheus, Grafana, Loki, and OpenTelemetry provide full stack monitoring.
-- **Integration**: Seamless connection to external PIM systems and vendor-managed Pricing Tools.
+- **Integration**:
+    - **Admin API**: Consumed by the **Customer Pricing Tool** (vendor-managed) for bulk updates.
+    - **Public API**: Consumed by the **Shop System** and the **Instore Kiosk**.
 
 ### 5. Technology Layer
-The deployment is a "basic extendable template" for K8s, featuring automated ingress, load balancing, and redundant storage options.
+The Kubernetes-based deployment architecture ensures that the Price Provider remains highly available and scalable. Each component (API, WebApp, DB, Keycloak) runs in isolated Pods with appropriate resource limits and health probes.
