@@ -7,42 +7,69 @@ This directory contains the ArchiMate model for the Price Provider project, prov
 - **File**: `price-provider.archimate`
 - **Format**: Archi tool native XML format (compatible with [Archi](https://www.archimatetool.com/)).
 
-> **Note**: To ensure maximum compatibility with the Archi tool across different versions and platforms, the `.archimate` file contains the structural model and relationships. Detailed textual descriptions are maintained in this `README.md`.
-
 ## Architectural Analysis
 
-### 1. Motivation Layer
-The project addresses significant "pains" in enterprise pricing management:
-- **Large Volume of Price Updates**: Handling gigantic amounts of price updates (hundreds of thousands or millions) that can overwhelm traditional ERP/monolith systems.
-- **Long Import Times**: Legacy systems often suffer from long-running batch processes; this project aims for high-performance ingestion.
-- **Monolith to Microservice Migration**: Customers can use this software as a strategic component to decouple pricing logic from their legacy monoliths.
-- **Gains**: A dedicated, optimized pricing solution that scales independently and provides low-latency retrieval.
+### 1. Motivation Layer & NFRs
+The architecture is driven by explicit Non-Functional Requirements (NFRs) and Stakeholder needs:
+
+| Area | Goal / Requirement | Description |
+|------|--------------------|-------------|
+| **Availability** | 99.9% | Ensured by Kubernetes orchestration and pod redundancy. |
+| **Scalability** | 5000 req/sec | Horizontal scaling of the API Pods. |
+| **Performance** | < 100ms | Optimized database queries and read-side caching. |
+| **Security** | OAuth2 / OIDC | Identity management via Keycloak and JWT-based authorization. |
+| **Reliability** | At-least-once | Guaranteed import processing via robust service logic. |
+| **Auditability** | Change History | Full tracking of price changes via auditable entities. |
+
+**Key Actors**:
+- **Pricing Manager**: Responsible for weekly price updates.
+- **Product Manager**: Oversees segment-specific pricing strategy.
+- **Shop System**: Automated consumer of the Public Price API.
+- **Administrator**: Manages the infrastructure and identity provider.
 
 ### 2. Strategy Layer
-- **Manage Pricing Strategy**: The core capability to update and publish prices faster, allowing businesses to react almost instantly to market changes and competitor pricing.
-- **Agentic Engineering**: A strategic resource where AI-assisted development (like the use of Jules/AI agents) is leveraged for rapid feature implementation and robust architectural design.
+- **Weekly Price Update**: A business process initiated by Pricing Managers of respective product segments.
+- **Price Import Flow**: The sequence of events where pricing data is ingested from external systems (like the Customer's Pricing Tool).
+- **Agentic Engineering**: Continuous improvement and adaptation of the microservice using AI-driven engineering practices.
 
-### 3. Business Layer
-- **Price Management API**: The primary business service exposed to consumers (web shops, mobile apps, kiosks).
-- **Update and Publish Prices**: The critical business process that ensures price updates are validated, stored, and made available to the API.
+### 3. Business Layer & Data Model
+The service divides its business interfaces into two primary domains:
+- **Public Price API**: For anonymous or logged-in buyers (Webshop, Kiosk).
+- **Protected Price Management API (Admin)**: For price updates and management, consumed by internal tools.
 
-### 4. Application Layer
-- **Price Provider Service**: The backend engine (Java 21 / Spring Boot 3.x) that encapsulates the pricing domain logic, persistence, and REST API.
-- **Price Manager App**: The administrative Angular application for managing pricing rules and data.
-- **Identity Provider (Keycloak)**: A shared application component providing OIDC-compliant security and user management.
-- **Price Retrieval Service**: An internal application service specifically tuned for high-speed read access.
+**Data Architecture**:
+The core of the service is its data model, optimized for pricing:
+- **PriceRow**: The central entity containing `priceValue`, `minQuantity`, and validity periods.
+- **Unit & Currency**: Master data for normalizing prices.
+- **TaxClass**: Defines VAT and tax rules.
+- **Channel & Group**: Allows for contextual pricing (e.g., B2B vs B2C, Web vs Store).
 
-### 5. Technology Layer
-- **Kubernetes Cluster**: The primary deployment target for the cloud-native basic template.
-- **PostgreSQL**: The relational database used for structured pricing data storage.
-- **Docker**: The containerization technology used for building portable service images.
-- **Nginx Ingress Controller**: Handles host-based routing and traffic management for the cluster.
-- **Price Provider Docker Image**: The primary technical artifact delivered by the build process.
+### 4. Application Layer & Integration
+- **Price Provider Service**: The Spring Boot backend.
+- **Instore Kiosk (Flutter)**: A showcase application for instore price checks, integrating with the Price Provider for pricing and a PIM for product info.
+- **Pricing Tool (External)**: A customer-owned tool managed by a third-party vendor that integrates with the Admin API for automated updates.
+
+**Observability Stack**:
+- **Prometheus**: Collects metrics from the service.
+- **Grafana**: Visualizes performance and health dashboards.
+- **Loki & OpenTelemetry**: For centralized logging and distributed tracing.
+
+### 5. Technology & Deployment Layer
+The deployment follows a cloud-native pattern in a Kubernetes environment:
+
+**Deployment View**:
+- **API Pod**: Runs the Price Provider Service.
+- **WebApp Pod**: Runs the Price Manager Angular App.
+- **Database Pod**: Runs PostgreSQL.
+- **Keycloak Pod**: Runs the Identity Provider.
+
+**Infrastructure**:
+- **Load Balancer & Ingress**: Routes traffic from domain names (e.g., `app.priceprovider.local`).
+- **Persistent Volumes**: Options for storage redundancy (Locally Redundant recommended for dev, Zone Redundant for production).
+- **Network Integration**: Secure connection to the Customer's Kubernetes Cluster where the external Pricing Tool resides.
 
 ## Software Solution Analysis
-
-The Price Provider is designed as a **Specialized Microservice**. Unlike general-purpose e-commerce platforms, it focuses intensely on the **Pricing Domain**.
-
-- **Performance-First**: By separating pricing from the main product monolith, it allows for independent scaling and optimization of database schemas specifically for pricing lookups and bulk imports.
-- **Extensibility**: Using "Dynamic Enums" and Interface Driven Design (IDD), the service is built to be a template that developers can adapt to complex pricing rules (e.g., contract pricing, promotion-based logic) without re-architecting the core.
-- **Cloud-Native by Design**: The inclusion of K8s manifests, health probes, and standard OIDC integration makes it ready for modern DevOps pipelines.
+The Price Provider acts as a **Specialized Pricing Hub**. By decoupling pricing from the ERP/Monolith, it provides the agility needed for modern retail:
+- **Agility**: Rapidly update prices via the Admin API without full catalog deployments.
+- **Scalability**: Handle high-traffic "buy" events independently of the catalog or checkout services.
+- **Integrity**: Centralized pricing truth across Webshops, Mobile Apps, and Instore Kiosks.
