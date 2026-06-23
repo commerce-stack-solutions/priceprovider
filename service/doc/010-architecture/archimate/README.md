@@ -76,7 +76,32 @@ graph TD
     AdminAPI --> Backend[Price Provider Service]
 ```
 
-### 6. Data Model View
+### 6. Strategy & Motivation View
+Traces the business drivers through goals and requirements to strategic capabilities.
+
+```mermaid
+graph TD
+    Volume[Large Volume of Price Updates] -- Association --> Goal[Optimized Import Performance]
+    Goal -- Realization --> Perf[Performance < 100ms]
+    Goal -- Realization --> Scale[Scalability 5000 req/sec]
+    Cloud[Cloud-Native Principle] -- Influence --> Avail[Availability 99.9%]
+    Tool[Customer Managed Vendor Tool] -- Association --> Flow[Price Import Flow]
+    Cap[Manage Pricing Strategy] -- Realization --> Weekly[Weekly Price Update]
+    Res[Agentic Engineering] -- Association --> Cap
+```
+
+### 7. Observability View
+Shows the monitoring and logging infrastructure.
+
+```mermaid
+graph LR
+    Service[Price Provider Service] -- Association --> Prometheus[Prometheus]
+    Prometheus -- Association --> Grafana[Grafana]
+    Service -- Association --> OTEL[OpenTelemetry]
+    OTEL -- Association --> Loki[Loki]
+```
+
+### 8. Data Model View
 Details the core entities and their relationships within the Price Provider service.
 
 ```mermaid
