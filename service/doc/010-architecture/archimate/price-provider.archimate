@@ -3,21 +3,21 @@
   <folder name="Strategy" id="id-folder-strategy" type="strategy">
     <element xsi:type="archimate:Capability" name="Manage Pricing Strategy" id="id-cap-manage-pricing-strategy"/>
     <element xsi:type="archimate:Resource" name="Agentic Engineering" id="id-res-agentic-engineering"/>
-    <element xsi:type="archimate:BusinessProcess" name="Weekly Price Update" id="id-strat-proc-weekly-update"/>
-    <element xsi:type="archimate:BusinessProcess" name="Price Import Flow" id="id-strat-proc-import-flow"/>
+    <element xsi:type="archimate:CourseOfAction" name="Weekly Price Update" id="id-strat-proc-weekly-update"/>
+    <element xsi:type="archimate:CourseOfAction" name="Price Import Flow" id="id-strat-proc-import-flow"/>
   </folder>
   <folder name="Business" id="id-folder-business" type="business">
     <element xsi:type="archimate:BusinessService" name="Public Price API" id="id-bus-service-public-api"/>
     <element xsi:type="archimate:BusinessService" name="Protected Price Management API (Admin)" id="id-bus-service-admin-api"/>
     <element xsi:type="archimate:BusinessProcess" name="Update and Publish Prices" id="id-bus-proc-update-prices"/>
-    <element xsi:type="archimate:DataObject" name="PriceRow" id="id-bus-data-pricerow"/>
-    <element xsi:type="archimate:DataObject" name="Unit" id="id-bus-data-unit"/>
-    <element xsi:type="archimate:DataObject" name="Currency" id="id-bus-data-currency"/>
-    <element xsi:type="archimate:DataObject" name="TaxClass" id="id-bus-data-taxclass"/>
-    <element xsi:type="archimate:DataObject" name="Channel" id="id-bus-data-channel"/>
-    <element xsi:type="archimate:DataObject" name="Group" id="id-bus-data-group"/>
-    <element xsi:type="archimate:DataObject" name="Country" id="id-bus-data-country"/>
-    <element xsi:type="archimate:DataObject" name="Organization" id="id-bus-data-organization"/>
+    <element xsi:type="archimate:BusinessObject" name="PriceRow" id="id-bus-data-pricerow"/>
+    <element xsi:type="archimate:BusinessObject" name="Unit" id="id-bus-data-unit"/>
+    <element xsi:type="archimate:BusinessObject" name="Currency" id="id-bus-data-currency"/>
+    <element xsi:type="archimate:BusinessObject" name="TaxClass" id="id-bus-data-taxclass"/>
+    <element xsi:type="archimate:BusinessObject" name="Channel" id="id-bus-data-channel"/>
+    <element xsi:type="archimate:BusinessObject" name="Group" id="id-bus-data-group"/>
+    <element xsi:type="archimate:BusinessObject" name="Country" id="id-bus-data-country"/>
+    <element xsi:type="archimate:BusinessObject" name="Organization" id="id-bus-data-organization"/>
     <element xsi:type="archimate:BusinessActor" name="Administrator" id="id-mot-act-admin"/>
     <element xsi:type="archimate:BusinessActor" name="Product Manager" id="id-mot-act-prod-mgr"/>
     <element xsi:type="archimate:BusinessActor" name="Pricing Manager" id="id-mot-act-price-mgr"/>
