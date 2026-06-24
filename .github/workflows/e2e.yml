@@ -35,10 +35,8 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        working-directory: app/tests/e2e
-        run: |
-          npm ci
-          npx playwright install --with-deps
+        working-directory: app
+        run: npx playwright install --with-deps
 
       - name: Build application
         working-directory: app
@@ -50,14 +48,14 @@ jobs:
         working-directory: app
         run: |
           nohup npm run start -- --port 4200 > /tmp/app.log 2>&1 &
-          sleep 10
+          sleep 15
           npx wait-on http://localhost:4200
         env:
           NODE_ENV: test
           PORT: 4200
 
       - name: Run Playwright tests
-        working-directory: app/tests/e2e
+        working-directory: app
         run: npm run test:e2e
         env:
           CI: true
