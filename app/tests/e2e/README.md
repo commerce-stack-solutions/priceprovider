@@ -11,7 +11,8 @@ Install dependencies from the `app` directory:
 ```bash
 cd app
 npm install
-npx playwright install --with-deps
+# Note: You may need root/admin permissions to install system dependencies
+sudo npx playwright install --with-deps
 ```
 
 ### Configuration
