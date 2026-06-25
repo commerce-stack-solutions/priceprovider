@@ -6,13 +6,12 @@ This directory contains the Playwright-based end-to-end tests for the PriceProvi
 
 ### Installation
 
-Install Playwright and its dependencies:
+Install dependencies from the `app` directory:
 
 ```bash
 cd app
 npm install
-cd tests/e2e
-npm install
+npx playwright install --with-deps
 ```
 
 ### Configuration
@@ -25,7 +24,7 @@ BASE_URL=http://localhost:4200
 
 ### Running Tests
 
-Run all tests:
+Run all tests from the `app` directory:
 ```bash
 npm run test:e2e
 ```
@@ -45,28 +44,31 @@ npm run test:e2e:headed
 ```
 tests/e2e/
 ├── specs/                  # Test specification files
-│   ├── login.spec.ts
-│   ├── dashboard.spec.ts
-│   └── navigation.spec.ts
+│   ├── authentication.spec.ts
+│   ├── authenticated.spec.ts
+│   └── pricerows.spec.ts
 ├── pages/                 # Page Object Model classes
 │   ├── BasePage.ts
-│   ├── LoginPage.ts
-│   └── DashboardPage.ts
-├── fixtures/              # Test data
+│   ├── HomePage.ts
+│   ├── PriceRowsPage.ts
+│   └── PriceRowFormPage.ts
+├── fixtures/              # Test fixtures and data
+│   ├── auth.fixture.ts    # Mock authentication logic
 │   └── testUsers.ts
-├── playwright.config.ts   # Configuration
+├── playwright.config.ts   # Playwright configuration
 └── README.md
 ```
 
+## Authentication Mocking
+
+The tests use a custom fixture in `fixtures/auth.fixture.ts` to mock the OIDC/Keycloak authentication. This allows testing authenticated states without requiring a running Keycloak instance. It intercepts OIDC discovery requests and pre-populates `sessionStorage` with mock JWT tokens.
+
 ## Test Coverage
 
-- Login flow (valid, invalid, empty credentials)
-- Dashboard functionality
-- Application navigation
-- Session management
+- Authentication states (unauthenticated vs. authenticated)
+- Price Row management (listing and adding price rows)
+- Basic navigation and layout verification
 
 ## CI/CD
 
-Tests run automatically in GitHub Actions on push and pull requests to develop/main branches.
-
-Artifacts (reports, screenshots, videos, traces) are uploaded on test completion.
+Tests run automatically in GitHub Actions on push and pull requests to develop/main branches. The workflow is defined in `.github/workflows/e2e.yml`.
