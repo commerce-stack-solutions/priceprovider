@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Price Provider Detailed" id="id-price-provider-detailed" version="4.6.0">
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Price Provider Detailed" id="id-price-provider-detailed" version="5.0.0">
   <folder name="Strategy" id="id-folder-strategy" type="strategy">
     <element xsi:type="archimate:Capability" name="Manage Pricing Strategy" id="id-cap-manage-pricing-strategy"/>
     <element xsi:type="archimate:Resource" name="Agentic Engineering" id="id-res-agentic-engineering"/>
@@ -99,8 +99,10 @@
     <element xsi:type="archimate:ServingRelationship" id="id-rel-tech-2" source="id-tech-pod-api" target="id-app-comp-service"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-tech-3" source="id-tech-pod-webapp" target="id-app-comp-manager"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-tech-4" source="id-tech-pod-keycloak" target="id-app-comp-keycloak"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-f2b7edb64840437d83c9626261d62861" source="id-bus-data-pricerow" target="id-bus-data-channel"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-807b6ee759614542a05a6c4885d98949" source="id-bus-data-pricerow" target="id-bus-data-group"/>
   </folder>
-  <folder name="Physical" id="id-folder-physical" type="physical"/>
+  <folder name="Physical" id="id-folder-physical"/>
   <folder name="Implementation &amp; Migration" id="id-folder-implementation" type="implementation_migration"/>
   <folder name="Other" id="id-folder-other" type="other"/>
   <folder name="Views" id="id-folder-views" type="diagrams">
@@ -134,23 +136,23 @@
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Application Cooperation View" id="id-view-application-cooperation">
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-1" archimateElement="id-app-comp-service">
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-1" archimateElement="id-app-comp-service" type="1">
         <bounds x="240" y="140" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-17-view" source="id-acv-do-1" target="id-acv-do-5" archimateRelationship="id-rel-17"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-18-view" source="id-acv-do-1" target="id-acv-do-6" archimateRelationship="id-rel-18"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-1-view" source="id-acv-do-1" target="id-bus-service-public-api-acv" archimateRelationship="id-rel-1"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-2-view" source="id-acv-do-1" target="id-bus-service-admin-api-acv" archimateRelationship="id-rel-2"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-2" archimateElement="id-app-comp-manager">
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-2" archimateElement="id-app-comp-manager" type="1">
         <bounds x="40" y="140" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-6-view" source="id-acv-do-2" target="id-mot-act-price-mgr-acv" archimateRelationship="id-rel-6"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-3" archimateElement="id-app-comp-keycloak">
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-3" archimateElement="id-app-comp-keycloak" type="1">
         <bounds x="140" y="240" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-4-view" source="id-acv-do-3" target="id-acv-do-1" archimateRelationship="id-rel-4"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-5-view" source="id-acv-do-3" target="id-acv-do-2" archimateRelationship="id-rel-5"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-4" archimateElement="id-app-comp-kiosk">
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-4" archimateElement="id-app-comp-kiosk" type="1">
         <bounds x="440" y="140" width="160" height="55"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-acv-do-5" archimateElement="id-app-iface-public">
@@ -170,14 +172,14 @@
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Import Processing View" id="id-view-import-processing">
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1" archimateElement="id-app-comp-ext-pricing-tool">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1" archimateElement="id-app-comp-ext-pricing-tool" type="1">
         <bounds x="20" y="20" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-14-view" source="id-ipv-do-1" target="id-ipv-do-2" archimateRelationship="id-rel-14"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-ipv-do-2" archimateElement="id-app-iface-admin">
         <bounds x="220" y="20" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-3" archimateElement="id-app-comp-service">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-3" archimateElement="id-app-comp-service" type="1">
         <bounds x="420" y="20" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-3-view" source="id-ipv-do-3" target="id-ipv-do-5" archimateRelationship="id-rel-3"/>
       </child>
@@ -185,59 +187,59 @@
         <bounds x="620" y="20" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-11-view" source="id-ipv-do-4" target="id-ipv-do-3" archimateRelationship="id-rel-11"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-5" archimateElement="id-bus-data-pricerow">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-5" archimateElement="id-bus-data-pricerow" type="1">
         <bounds x="620" y="100" width="160" height="55"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Deployment View" id="id-view-deployment">
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-1" archimateElement="id-tech-node-k8s">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-1" archimateElement="id-tech-node-k8s" type="1">
         <bounds x="20" y="100" width="620" height="300"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-2" archimateElement="id-tech-pod-api">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-2" archimateElement="id-tech-pod-api" type="1">
         <bounds x="40" y="160" width="130" height="60"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-8-view" source="id-depv-do-1" target="id-depv-do-2" archimateRelationship="id-rel-8"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-2-view" source="id-depv-do-2" target="id-depv-do-api-comp" archimateRelationship="id-rel-tech-2"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-api-comp" archimateElement="id-app-comp-service">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-api-comp" archimateElement="id-app-comp-service" type="1">
         <bounds x="40" y="280" width="130" height="60"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-3" archimateElement="id-tech-pod-webapp">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-3" archimateElement="id-tech-pod-webapp" type="1">
         <bounds x="190" y="160" width="130" height="60"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-9-view" source="id-depv-do-1" target="id-depv-do-3" archimateRelationship="id-rel-9"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-3-view" source="id-depv-do-3" target="id-depv-do-webapp-comp" archimateRelationship="id-rel-tech-3"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-webapp-comp" archimateElement="id-app-comp-manager">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-webapp-comp" archimateElement="id-app-comp-manager" type="1">
         <bounds x="190" y="280" width="130" height="60"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-4" archimateElement="id-tech-pod-keycloak">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-4" archimateElement="id-tech-pod-keycloak" type="1">
         <bounds x="340" y="160" width="130" height="60"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-4-view" source="id-depv-do-4" target="id-depv-do-keycloak-comp" archimateRelationship="id-rel-tech-4"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-keycloak-comp" archimateElement="id-app-comp-keycloak">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-keycloak-comp" archimateElement="id-app-comp-keycloak" type="1">
         <bounds x="340" y="280" width="130" height="60"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-5" archimateElement="id-tech-pod-db">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-5" archimateElement="id-tech-pod-db" type="1">
         <bounds x="490" y="160" width="130" height="60"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-1-view" source="id-depv-do-5" target="id-depv-do-db-sw" archimateRelationship="id-rel-tech-1"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-depv-do-db-sw" archimateElement="id-tech-sw-postgres">
         <bounds x="490" y="280" width="130" height="60"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-7" archimateElement="id-tech-node-lb">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-7" archimateElement="id-tech-node-lb" type="1">
         <bounds x="260" y="20" width="140" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-10-view" source="id-depv-do-7" target="id-depv-do-9" archimateRelationship="id-rel-10"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-8" archimateElement="id-tech-art-pv">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-8" archimateElement="id-tech-art-pv" type="1">
         <bounds x="490" y="420" width="130" height="55"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-depv-do-9" archimateElement="id-tech-sw-ingress">
         <bounds x="260" y="110" width="140" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-10" archimateElement="id-tech-node-cust-k8s">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-10" archimateElement="id-tech-node-cust-k8s" type="1">
         <bounds x="660" y="160" width="160" height="60"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-15-view" source="id-depv-do-10" target="id-ipv-do-1-dep" archimateRelationship="id-rel-15"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1-dep" archimateElement="id-app-comp-ext-pricing-tool">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1-dep" archimateElement="id-app-comp-ext-pricing-tool" type="1">
         <bounds x="660" y="280" width="160" height="60"/>
       </child>
     </element>
@@ -245,20 +247,20 @@
       <child xsi:type="archimate:DiagramObject" id="id-secv-do-1" archimateElement="id-mot-act-price-mgr">
         <bounds x="20" y="20" width="120" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-2" archimateElement="id-app-comp-manager">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-2" archimateElement="id-app-comp-manager" type="1">
         <bounds x="20" y="120" width="140" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-7-view" source="id-secv-do-2" target="id-secv-do-3" archimateRelationship="id-rel-7"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-3" archimateElement="id-app-comp-keycloak">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-3" archimateElement="id-app-comp-keycloak" type="1">
         <bounds x="180" y="120" width="140" height="55"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-secv-do-4" archimateElement="id-app-iface-admin">
         <bounds x="340" y="120" width="140" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-5" archimateElement="id-app-comp-service">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-5" archimateElement="id-app-comp-service" type="1">
         <bounds x="340" y="220" width="140" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-4-sec-view" source="id-secv-do-3" target="id-secv-do-5" archimateRelationship="id-rel-4">
-          <bendpoint startX="80" startY="100" endX="-80" endY="0"/>
+          <bendpoint startX="80" startY="100" endX="-80"/>
         </sourceConnection>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-secv-do-6" archimateElement="id-mot-req-security">
@@ -266,33 +268,35 @@
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Data Model View" id="id-view-data-model">
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-1" archimateElement="id-bus-data-pricerow">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-1" archimateElement="id-bus-data-pricerow" type="1">
         <bounds x="240" y="140" width="160" height="55"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-3-view" source="id-dmv-do-1" target="id-dmv-do-4" archimateRelationship="id-rel-dm-3"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-1-view" source="id-dmv-do-1" target="id-dmv-do-2" archimateRelationship="id-rel-dm-1"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-2-view" source="id-dmv-do-1" target="id-dmv-do-3" archimateRelationship="id-rel-dm-2"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-3-view" source="id-dmv-do-1" target="id-dmv-do-4" archimateRelationship="id-rel-dm-3"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-25ae361b581b4514bfe661aad6708df3" source="id-dmv-do-1" target="id-dmv-do-5" archimateRelationship="id-f2b7edb64840437d83c9626261d62861"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-d4b2894fbb864d8eaa330700d5833043" source="id-dmv-do-1" target="id-dmv-do-8" archimateRelationship="id-807b6ee759614542a05a6c4885d98949"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-2" archimateElement="id-bus-data-unit">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-2" targetConnections="id-rel-dm-1-view" archimateElement="id-bus-data-unit" type="1">
         <bounds x="40" y="140" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-3" archimateElement="id-bus-data-currency">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-3" targetConnections="id-rel-dm-2-view" archimateElement="id-bus-data-currency" type="1">
         <bounds x="240" y="20" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-4" archimateElement="id-bus-data-taxclass">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-4" targetConnections="id-rel-dm-3-view" archimateElement="id-bus-data-taxclass" type="1">
         <bounds x="440" y="140" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-5" archimateElement="id-bus-data-channel">
-        <bounds x="240" y="240" width="160" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-5" targetConnections="id-25ae361b581b4514bfe661aad6708df3" archimateElement="id-bus-data-channel" type="1">
+        <bounds x="440" y="240" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-4-view" source="id-dmv-do-5" target="id-dmv-do-6" archimateRelationship="id-rel-dm-4"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-6" archimateElement="id-bus-data-country">
-        <bounds x="440" y="240" width="160" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-6" targetConnections="id-rel-dm-4-view" archimateElement="id-bus-data-country" type="1">
+        <bounds x="640" y="240" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-7" archimateElement="id-bus-data-organization">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-7" archimateElement="id-bus-data-organization" type="1">
         <bounds x="40" y="340" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-5-view" source="id-dmv-do-7" target="id-dmv-do-8" archimateRelationship="id-rel-dm-5"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-8" archimateElement="id-bus-data-group">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-8" targetConnections="id-rel-dm-5-view id-d4b2894fbb864d8eaa330700d5833043" archimateElement="id-bus-data-group" type="1">
         <bounds x="240" y="340" width="160" height="55"/>
       </child>
     </element>
@@ -348,22 +352,22 @@
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Observability View" id="id-view-observability">
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-1" archimateElement="id-app-comp-service">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-1" archimateElement="id-app-comp-service" type="1">
         <bounds x="40" y="100" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-12-view" source="id-obsv-do-1" target="id-obsv-do-2" archimateRelationship="id-rel-12"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-obs-1-view" source="id-obsv-do-1" target="id-obsv-do-5" archimateRelationship="id-rel-obs-1"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-2" archimateElement="id-app-comp-prometheus">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-2" archimateElement="id-app-comp-prometheus" type="1">
         <bounds x="240" y="100" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-13-view" source="id-obsv-do-2" target="id-obsv-do-3" archimateRelationship="id-rel-13"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-3" archimateElement="id-app-comp-grafana">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-3" archimateElement="id-app-comp-grafana" type="1">
         <bounds x="440" y="100" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-4" archimateElement="id-app-comp-loki">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-4" archimateElement="id-app-comp-loki" type="1">
         <bounds x="240" y="200" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-5" archimateElement="id-app-comp-otel">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-5" archimateElement="id-app-comp-otel" type="1">
         <bounds x="40" y="200" width="160" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-obs-2-view" source="id-obsv-do-5" target="id-obsv-do-4" archimateRelationship="id-rel-obs-2"/>
       </child>
