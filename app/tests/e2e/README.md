@@ -15,18 +15,28 @@ npm install
 sudo npx playwright install --with-deps
 ```
 
-### Configuration
+### Preparation
 
-Create a `.env.test` file in the `app` directory with the following variables:
+Before running the tests, ensure both the backend and frontend are running.
 
-```env
-BASE_URL=http://localhost:4200
-```
+1. **Start the Backend Service** (in `dev` profile for in-memory DB and sample data):
+   ```bash
+   cd service
+   ./gradlew bootRun --args='--spring.profiles.active=dev'
+   ```
+
+2. **Start the Angular Frontend**:
+   ```bash
+   cd app
+   npm start
+   ```
 
 ### Running Tests
 
-Run all tests from the `app` directory:
+Once the services are up, run the tests from the `app` directory:
+
 ```bash
+cd app
 npm run test:e2e
 ```
 
@@ -40,14 +50,32 @@ Run with visible browser:
 npm run test:e2e:headed
 ```
 
+## Authentication Mocking
+
+The tests use a custom fixture in `fixtures/auth.fixture.ts` to mock the OIDC/Keycloak authentication.
+
+- **How it works**: It intercepts OIDC discovery requests and pre-populates the browser's `sessionStorage` with mock JWT tokens.
+- **Usage**: To use it in a test, import `test` from `../fixtures/auth.fixture` instead of `@playwright/test` and use the `authenticatedPage` fixture.
+- **Benefit**: This allows testing authenticated states without needing a running Keycloak instance or real user credentials.
+
+Example usage:
+```typescript
+import { test, expect } from '../fixtures/auth.fixture';
+
+test('my test', async ({ authenticatedPage }) => {
+  await authenticatedPage.goto('/en/home');
+  // ...
+});
+```
+
 ## Project Structure
 
 ```
 tests/e2e/
 ├── specs/                  # Test specification files
-│   ├── authentication.spec.ts
-│   ├── authenticated.spec.ts
-│   └── pricerows.spec.ts
+│   ├── authentication.spec.ts # Tests for unauthenticated state
+│   ├── authenticated.spec.ts  # Tests for authenticated state (using mock)
+│   └── pricerows.spec.ts      # Complex workflow tests (using mock)
 ├── pages/                 # Page Object Model classes
 │   ├── BasePage.ts
 │   ├── HomePage.ts
@@ -59,16 +87,6 @@ tests/e2e/
 ├── playwright.config.ts   # Playwright configuration
 └── README.md
 ```
-
-## Authentication Mocking
-
-The tests use a custom fixture in `fixtures/auth.fixture.ts` to mock the OIDC/Keycloak authentication. This allows testing authenticated states without requiring a running Keycloak instance. It intercepts OIDC discovery requests and pre-populates `sessionStorage` with mock JWT tokens.
-
-## Test Coverage
-
-- Authentication states (unauthenticated vs. authenticated)
-- Price Row management (listing and adding price rows)
-- Basic navigation and layout verification
 
 ## CI/CD
 
