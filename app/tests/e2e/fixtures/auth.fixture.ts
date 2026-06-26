@@ -17,42 +17,85 @@ export const test = base.extend({
       });
     });
 
+    // Mock the permissions API call from PermissionService
+    await page.route('**/admin/api/app-roles/by-name/**', async (route) => {
+      const url = route.request().url();
+      const roleName = decodeURIComponent(url.split('/').pop() || '');
+
+      let permissions: string[] = [];
+      if (roleName === 'priceprovider.admin:Admin' || roleName === 'priceprovider.admin:Superuser') {
+        permissions = [
+          'priceprovider.admin:PriceRow:read',
+          'priceprovider.admin:PriceRow:write',
+          'priceprovider.admin:PriceRow:delete',
+          'priceprovider.admin:Channel:read',
+          'priceprovider.admin:Unit:read',
+          'priceprovider.admin:Currency:read',
+          'priceprovider.admin:TaxClass:read',
+          'priceprovider.admin:Group:read',
+          'priceprovider.admin:Organization:read',
+          'priceprovider.admin:Country:read',
+          'priceprovider.admin:Language:read',
+          'priceprovider.admin:AppRole:read',
+          'priceprovider.admin:AppPermission:read'
+        ];
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          name: roleName,
+          permissionRefs: permissions
+        }),
+      });
+    });
+
     // Mock the session storage to simulate an authenticated state
     await page.addInitScript(() => {
       const mockClaims = {
         sub: '1234567890',
-        preferred_username: 'admin',
+        preferred_username: 'admin-user',
         name: 'Admin User',
-        email: 'admin@priceprovider.com',
+        email: 'admin@priceprovider.local',
         realm_access: {
-          roles: ['admin', 'offline_access', 'uma_authorization']
+          roles: ['priceprovider.admin:Admin', 'offline_access', 'uma_authorization']
         },
         resource_access: {
           'priceprovider-app': {
-            roles: ['admin']
-          },
-          'priceproviderservice': {
-            roles: ['admin']
+            roles: ['priceprovider.admin:Admin']
           }
         },
-        groups: ['/organizations/main-dept']
+        groups: ['/organizations/ORG-TECHCORP-EU']
       };
 
-      // Helper to generate a b64 token part
-      const toBase64 = (obj: any) => btoa(JSON.stringify(obj)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-      const mockToken = `header.${toBase64(mockClaims)}.signature`;
+      const toBase64 = (obj: any) => btoa(JSON.stringify(obj))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
 
-      // These keys must match what angular-oauth2-oidc uses (default is sessionStorage)
-      sessionStorage.setItem('access_token', mockToken);
-      sessionStorage.setItem('id_token', mockToken);
-      sessionStorage.setItem('id_token_claims_obj', JSON.stringify(mockClaims));
-      sessionStorage.setItem('access_token_stored_at', Date.now().toString());
-      sessionStorage.setItem('id_token_stored_at', Date.now().toString());
-      sessionStorage.setItem('expires_at', (Date.now() + 3600000).toString()); // 1 hour later
-      sessionStorage.setItem('granted_scopes', JSON.stringify(['openid', 'profile', 'email']));
+      const header = toBase64({ alg: 'RS256', typ: 'JWT' });
+      const payload = toBase64(mockClaims);
+      const mockToken = `${header}.${payload}.signature`;
+
+      // keys used by angular-oauth2-oidc
+      const storage = sessionStorage; // can also try localStorage if needed
+      storage.setItem('access_token', mockToken);
+      storage.setItem('id_token', mockToken);
+      storage.setItem('id_token_claims_obj', JSON.stringify(mockClaims));
+      storage.setItem('access_token_stored_at', Date.now().toString());
+      storage.setItem('id_token_stored_at', Date.now().toString());
+      storage.setItem('expires_at', (Date.now() + 3600000).toString());
+      storage.setItem('granted_scopes', JSON.stringify(['openid', 'profile', 'email']));
+
+      // Also set in localStorage just in case
+      localStorage.setItem('access_token', mockToken);
+      localStorage.setItem('id_token', mockToken);
+      localStorage.setItem('id_token_claims_obj', JSON.stringify(mockClaims));
+      localStorage.setItem('expires_at', (Date.now() + 3600000).toString());
     });
 
-    // Navigate to a blank page first to ensure sessionStorage is set for the domain
+    // Navigate to establish domain
     await page.goto('/');
 
     await use(page);
