@@ -18,10 +18,7 @@ export const test = base.extend({
     });
 
     // Mock the session storage to simulate an authenticated state
-    // We need to set this before the application initializes the AuthService
     await page.addInitScript(() => {
-      const mockToken = 'mock-access-token';
-      const mockIdToken = 'mock-id-token';
       const mockClaims = {
         sub: '1234567890',
         preferred_username: 'admin',
@@ -33,19 +30,30 @@ export const test = base.extend({
         resource_access: {
           'priceprovider-app': {
             roles: ['admin']
+          },
+          'priceproviderservice': {
+            roles: ['admin']
           }
-        }
+        },
+        groups: ['/organizations/main-dept']
       };
 
-      // These keys might depend on angular-oauth2-oidc implementation details
-      // but usually it uses sessionStorage
+      // Helper to generate a b64 token part
+      const toBase64 = (obj: any) => btoa(JSON.stringify(obj)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const mockToken = `header.${toBase64(mockClaims)}.signature`;
+
+      // These keys must match what angular-oauth2-oidc uses (default is sessionStorage)
       sessionStorage.setItem('access_token', mockToken);
-      sessionStorage.setItem('id_token', mockIdToken);
+      sessionStorage.setItem('id_token', mockToken);
       sessionStorage.setItem('id_token_claims_obj', JSON.stringify(mockClaims));
       sessionStorage.setItem('access_token_stored_at', Date.now().toString());
       sessionStorage.setItem('id_token_stored_at', Date.now().toString());
       sessionStorage.setItem('expires_at', (Date.now() + 3600000).toString()); // 1 hour later
+      sessionStorage.setItem('granted_scopes', JSON.stringify(['openid', 'profile', 'email']));
     });
+
+    // Navigate to a blank page first to ensure sessionStorage is set for the domain
+    await page.goto('/');
 
     await use(page);
   },

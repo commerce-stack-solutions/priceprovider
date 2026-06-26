@@ -6,11 +6,14 @@ test.describe('Authenticated State', () => {
 
   test.beforeEach(async ({ authenticatedPage }) => {
     homePage = new HomePage(authenticatedPage);
-    await homePage.navigate('/en/home');
+    await homePage.navigateToHome();
+    // Wait for the app to recognize the authenticated state from sessionStorage
+    await authenticatedPage.waitForLoadState('networkidle');
   });
 
   test('should not display login button when authenticated', async ({ authenticatedPage }) => {
-    await expect(homePage.loginButton).not.toBeVisible();
+    // Increased timeout for stabilization
+    await expect(homePage.loginButton.first()).not.toBeVisible({ timeout: 10000 });
   });
 
   test('should display logout button when authenticated', async ({ authenticatedPage }) => {

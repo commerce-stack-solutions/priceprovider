@@ -15,10 +15,11 @@ export class HomePage extends BasePage {
     this.header = page.locator('app-header');
     this.sidebar = page.locator('app-sidebar');
     this.routerOutlet = page.locator('router-outlet');
-    this.loginButton = page.locator('button:has-text("Login")');
-    this.logoutButton = page.locator('button:has-text("Logout")');
-    this.loginRequiredMessage = page.locator('text=/login required/i');
-    this.noAdminAccessMessage = page.locator('text=/no admin access/i');
+    // More specific locators to avoid strict mode violations (multiple buttons/text)
+    this.loginButton = page.locator('.login-required-container button:has-text("Login"), app-header button[title="Login"]');
+    this.logoutButton = page.locator('.no-admin-access-container button:has-text("Logout"), app-header button[title="Logout"]');
+    this.loginRequiredMessage = page.locator('.login-required-container h2');
+    this.noAdminAccessMessage = page.locator('.no-admin-access-container h2');
   }
 
   async navigateToHome(lang: string = 'en'): Promise<void> {
@@ -26,18 +27,18 @@ export class HomePage extends BasePage {
   }
 
   async isAuthenticated(): Promise<boolean> {
-    return this.isVisible('router-outlet');
+    return this.routerOutlet.isVisible();
   }
 
   async isNotAuthenticated(): Promise<boolean> {
-    return this.isVisible('button:has-text("Login")');
+    return this.loginButton.first().isVisible();
   }
 
   async clickLogin(): Promise<void> {
-    await this.click('button:has-text("Login")');
+    await this.loginButton.first().click();
   }
 
   async clickLogout(): Promise<void> {
-    await this.click('button:has-text("Logout")');
+    await this.logoutButton.first().click();
   }
 }

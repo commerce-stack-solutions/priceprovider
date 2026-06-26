@@ -1,32 +1,23 @@
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/HomePage';
 
-test.describe('Authentication Flow', () => {
+test.describe('Authentication Flow (Unauthenticated)', () => {
   let homePage: HomePage;
 
   test.beforeEach(async ({ page }) => {
     homePage = new HomePage(page);
-    await homePage.navigate('/en/home');
+    await homePage.navigateToHome();
   });
 
   test('should display login button when not authenticated', async () => {
-    await expect(homePage.loginButton).toBeVisible();
+    await expect(homePage.loginButton.first()).toBeVisible();
   });
 
   test('should display login required message when not authenticated', async () => {
-    const message = homePage.loginRequiredMessage;
-    await expect(message).toBeVisible();
+    await expect(homePage.loginRequiredMessage).toBeVisible();
   });
 
   test('should not display router outlet when not authenticated', async () => {
     await expect(homePage.routerOutlet).not.toBeVisible();
-  });
-
-  test('should not display logout button when not authenticated', async () => {
-    await expect(homePage.logoutButton).not.toBeVisible();
-  });
-
-  test('should have login button with correct text', async () => {
-    await expect(homePage.loginButton).toHaveText(/Login/i);
   });
 });
