@@ -14,7 +14,7 @@ export class HomePage extends BasePage {
     super(page);
     this.header = page.locator('app-header');
     this.sidebar = page.locator('app-sidebar');
-    this.routerOutlet = page.locator('router-outlet');
+    this.routerOutlet = page.locator('main .container');
     // More specific locators to avoid strict mode violations (multiple buttons/text)
     this.loginButton = page.locator('.login-required-container button:has-text("Login"), app-header button[title="Login"]');
     this.logoutButton = page.locator('.no-admin-access-container button:has-text("Logout"), app-header button[title="Logout"]');

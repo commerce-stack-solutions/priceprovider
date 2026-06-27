@@ -16,13 +16,16 @@ export class PriceRowFormPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.priceTypeSelector = page.locator('app-enum-selector');
+    this.priceTypeSelector = page.locator('app-enum-selector select');
     this.pricedResourceIdInput = page.locator('#pricedResourceId');
     this.priceValueInput = page.locator('#priceValue');
     this.minQuantityInput = page.locator('#minQuantity');
-    this.unitRefInput = page.locator('app-reference-edit').first().locator('input');
-    this.currencyInput = page.locator('app-reference-edit').nth(1).locator('input');
-    this.taxClassRefInput = page.locator('app-reference-edit').nth(2).locator('input');
+
+    // Improved locators using ARIA or specific hierarchy
+    this.unitRefInput = page.locator('div.row:has(label:has-text("Unit")) app-reference-edit input');
+    this.currencyInput = page.locator('div.row:has(label:has-text("Currency")) app-reference-edit input');
+    this.taxClassRefInput = page.locator('div.row:has(label:has-text("Tax Class")) app-reference-edit input');
+
     this.taxIncludedTrue = page.locator('#taxIncludedTrue');
     this.taxIncludedFalse = page.locator('#taxIncludedFalse');
     this.saveButton = page.locator('button[type="submit"]');
@@ -39,22 +42,23 @@ export class PriceRowFormPage extends BasePage {
     taxClassRef: string;
     taxIncluded: boolean;
   }): Promise<void> {
-    // Handling app-enum-selector might be tricky, let's assume it's clickable
-    await this.priceTypeSelector.click();
-    await this.page.locator(`text=${data.priceType}`).click();
+    await this.priceTypeSelector.selectOption({ value: data.priceType });
 
     await this.pricedResourceIdInput.fill(data.pricedResourceId);
     await this.priceValueInput.fill(data.priceValue);
     await this.minQuantityInput.fill(data.minQuantity);
 
+    // Fill Unit
     await this.unitRefInput.fill(data.unitRef);
-    await this.page.keyboard.press('Enter');
+    await this.page.locator(`.dropdown-item:has-text("${data.unitRef}")`).first().click();
 
+    // Fill Currency
     await this.currencyInput.fill(data.currency);
-    await this.page.keyboard.press('Enter');
+    await this.page.locator(`.dropdown-item:has-text("${data.currency}")`).first().click();
 
+    // Fill Tax Class
     await this.taxClassRefInput.fill(data.taxClassRef);
-    await this.page.keyboard.press('Enter');
+    await this.page.locator(`.dropdown-item:has-text("${data.taxClassRef}")`).first().click();
 
     if (data.taxIncluded) {
       await this.taxIncludedTrue.check();

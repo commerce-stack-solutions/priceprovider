@@ -10,14 +10,14 @@ test.describe('Price Row Management', () => {
     priceRowsPage = new PriceRowsPage(authenticatedPage);
     priceRowFormPage = new PriceRowFormPage(authenticatedPage);
     await priceRowsPage.navigateTo();
-    await authenticatedPage.waitForLoadState('networkidle');
+    // Wait for the heading to be visible as a minimum baseline
+    await expect(priceRowsPage.page.locator('h1')).toBeVisible();
   });
 
   test('should display price rows list', async () => {
-    await expect(priceRowsPage.page.locator('h1')).toContainText('Price Rows', { timeout: 10000 });
+    await expect(priceRowsPage.page.locator('h1')).toContainText('Price Rows');
     const rowCount = await priceRowsPage.getRowCount();
-    // Assuming there might be some data or it's just an empty table
-    expect(rowCount).toBeGreaterThanOrEqual(0);
+    expect(rowCount).toBeGreaterThan(0); // Our mock returns 1 item
   });
 
   test('should navigate to add price row form', async () => {
@@ -25,13 +25,11 @@ test.describe('Price Row Management', () => {
     await expect(priceRowFormPage.page.locator('h1')).toContainText('Add Price Row');
   });
 
-  // This test might fail if the backend is not responding or data is missing,
-  // but it demonstrates the "click" flow.
   test('should fill and submit add price row form', async () => {
     await priceRowsPage.clickAddPriceRow();
 
-    // We need to mock the API responses for the selectors to work reliably if backend is down
-    // but for now let's assume it works with the dev profile
+    // Ensure form is loaded
+    await expect(priceRowFormPage.priceTypeSelector).toBeVisible();
 
     await priceRowFormPage.fillForm({
       priceType: 'DEFAULT',
@@ -46,13 +44,13 @@ test.describe('Price Row Management', () => {
 
     await priceRowFormPage.save();
 
-    // Check for success message or navigation back to list
-    await expect(priceRowFormPage.successMessage.or(priceRowsPage.page.locator('h1'))).toBeVisible();
+    // In our mock, create returns a PriceRow with id 'PR-NEW'.
+    // The component navigates to /pricerows/PR-NEW
+    await expect(priceRowsPage.page).toHaveURL(/.*\/pricerows\/PR-NEW/);
   });
 
   test('should navigate to edit price row form', async () => {
-    // Wait for data to load
-    await expect(priceRowsPage.tableRows.first()).toBeVisible({ timeout: 10000 });
+    await expect(priceRowsPage.tableRows.first()).toBeVisible();
     await priceRowsPage.clickEditRow(0);
     await expect(priceRowFormPage.page.locator('h1')).toContainText('Edit Price Row');
   });

@@ -8,7 +8,7 @@ test.describe('Authenticated State', () => {
     homePage = new HomePage(authenticatedPage);
     await homePage.navigateToHome();
     // Wait for the app to recognize the authenticated state from sessionStorage
-    await authenticatedPage.waitForLoadState('networkidle');
+    await authenticatedPage.waitForLoadState('domcontentloaded');
   });
 
   test('should not display login button when authenticated', async ({ authenticatedPage }) => {
@@ -21,7 +21,8 @@ test.describe('Authenticated State', () => {
   });
 
   test('should display content (router outlet) when authenticated', async ({ authenticatedPage }) => {
-    await expect(homePage.routerOutlet).toBeVisible();
+    // Increased timeout to allow permissions to load and spinner to disappear
+    await expect(homePage.routerOutlet).toBeVisible({ timeout: 15000 });
   });
 
   test('should not display login required message when authenticated', async ({ authenticatedPage }) => {

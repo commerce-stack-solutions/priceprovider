@@ -44,18 +44,12 @@ jobs:
         env:
           NODE_ENV: test
 
-      - name: Start Backend Service
-        run: |
-          cd service
-          ./gradlew bootRun --args='--spring.profiles.active=dev' > /tmp/backend.log 2>&1 &
-
       - name: Start application server
         working-directory: app
         run: |
           nohup npm run start -- --port 4200 > /tmp/app.log 2>&1 &
           sleep 15
           npx wait-on http://localhost:4200
-          npx wait-on http://localhost:8080/actuator/health
         env:
           NODE_ENV: test
           PORT: 4200
@@ -66,4 +60,3 @@ jobs:
         env:
           CI: true
           BASE_URL: http://localhost:4200
-
