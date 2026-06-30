@@ -6,27 +6,37 @@ This directory contains the Playwright-based end-to-end tests for the PriceProvi
 
 ### Installation
 
-Install Playwright and its dependencies:
+Install dependencies from the `app` directory:
 
 ```bash
 cd app
 npm install
-cd tests/e2e
-npm install
+# Note: You may need root/admin permissions to install system dependencies
+sudo npx playwright install --with-deps
 ```
 
-### Configuration
+### Preparation
 
-Create a `.env.test` file in the `app` directory with the following variables:
+Before running the tests, ensure both the backend and frontend are running.
 
-```env
-BASE_URL=http://localhost:4200
-```
+1. **Start the Backend Service** (in `dev` profile for in-memory DB and sample data):
+   ```bash
+   cd service
+   ./gradlew bootRun --args='--spring.profiles.active=dev'
+   ```
+
+2. **Start the Angular Frontend**:
+   ```bash
+   cd app
+   npm start
+   ```
 
 ### Running Tests
 
-Run all tests:
+Once the services are up, run the tests from the `app` directory:
+
 ```bash
+cd app
 npm run test:e2e
 ```
 
@@ -40,33 +50,44 @@ Run with visible browser:
 npm run test:e2e:headed
 ```
 
+## Authentication Mocking
+
+The tests use a custom fixture in `fixtures/auth.fixture.ts` to mock the OIDC/Keycloak authentication.
+
+- **How it works**: It intercepts OIDC discovery requests and pre-populates the browser's `sessionStorage` with mock JWT tokens.
+- **Usage**: To use it in a test, import `test` from `../fixtures/auth.fixture` instead of `@playwright/test` and use the `authenticatedPage` fixture.
+- **Benefit**: This allows testing authenticated states without needing a running Keycloak instance or real user credentials.
+
+Example usage:
+```typescript
+import { test, expect } from '../fixtures/auth.fixture';
+
+test('my test', async ({ authenticatedPage }) => {
+  await authenticatedPage.goto('/en/home');
+  // ...
+});
+```
+
 ## Project Structure
 
 ```
 tests/e2e/
 ├── specs/                  # Test specification files
-│   ├── login.spec.ts
-│   ├── dashboard.spec.ts
-│   └── navigation.spec.ts
+│   ├── authentication.spec.ts # Tests for unauthenticated state
+│   ├── authenticated.spec.ts  # Tests for authenticated state (using mock)
+│   └── pricerows.spec.ts      # Complex workflow tests (using mock)
 ├── pages/                 # Page Object Model classes
 │   ├── BasePage.ts
-│   ├── LoginPage.ts
-│   └── DashboardPage.ts
-├── fixtures/              # Test data
+│   ├── HomePage.ts
+│   ├── PriceRowsPage.ts
+│   └── PriceRowFormPage.ts
+├── fixtures/              # Test fixtures and data
+│   ├── auth.fixture.ts    # Mock authentication logic
 │   └── testUsers.ts
-├── playwright.config.ts   # Configuration
+├── playwright.config.ts   # Playwright configuration
 └── README.md
 ```
 
-## Test Coverage
-
-- Login flow (valid, invalid, empty credentials)
-- Dashboard functionality
-- Application navigation
-- Session management
-
 ## CI/CD
 
-Tests run automatically in GitHub Actions on push and pull requests to develop/main branches.
-
-Artifacts (reports, screenshots, videos, traces) are uploaded on test completion.
+Tests run automatically in GitHub Actions on push and pull requests to develop/main branches. The workflow is defined in `.github/workflows/e2e.yml`.
