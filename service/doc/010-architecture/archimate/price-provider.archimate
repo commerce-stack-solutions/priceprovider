@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Price Provider Detailed" id="id-price-provider-detailed" version="5.0.0">
-  <folder name="Strategy" id="id-folder-strategy" type="strategy">
+  <folder name="Strategy" id="id-43792b03dd29426ca058bb389dc77c5e" type="strategy">
     <element xsi:type="archimate:Capability" name="Manage Pricing Strategy" id="id-cap-manage-pricing-strategy"/>
     <element xsi:type="archimate:Resource" name="Agentic Engineering" id="id-res-agentic-engineering"/>
     <element xsi:type="archimate:CourseOfAction" name="Weekly Price Update" id="id-strat-proc-weekly-update"/>
     <element xsi:type="archimate:CourseOfAction" name="Price Import Flow" id="id-strat-proc-import-flow"/>
   </folder>
-  <folder name="Business" id="id-folder-business" type="business">
+  <folder name="Business" id="id-bc2dd386a4e245b9b674cf577c0f7b12" type="business">
     <element xsi:type="archimate:BusinessService" name="Public Price API" id="id-bus-service-public-api"/>
-    <element xsi:type="archimate:BusinessService" name="Protected Price Management API (Admin)" id="id-bus-service-admin-api"/>
+    <element xsi:type="archimate:BusinessService" name="Price Management API" id="id-bus-service-admin-api"/>
     <element xsi:type="archimate:BusinessProcess" name="Update and Publish Prices" id="id-bus-proc-update-prices"/>
     <element xsi:type="archimate:BusinessObject" name="PriceRow" id="id-bus-data-pricerow"/>
     <element xsi:type="archimate:BusinessObject" name="Unit" id="id-bus-data-unit"/>
@@ -21,9 +21,13 @@
     <element xsi:type="archimate:BusinessActor" name="Administrator" id="id-mot-act-admin"/>
     <element xsi:type="archimate:BusinessActor" name="Product Manager" id="id-mot-act-prod-mgr"/>
     <element xsi:type="archimate:BusinessActor" name="Pricing Manager" id="id-mot-act-price-mgr"/>
-    <element xsi:type="archimate:BusinessActor" name="Shop System" id="id-mot-act-shop"/>
+    <element xsi:type="archimate:BusinessActor" name="E-Commerce User" id="id-mot-act-shop"/>
+    <element xsi:type="archimate:BusinessActor" name="Store Visitor" id="id-7d2893ea58514ddfbeb5fc82f0fb9a3c"/>
+    <element xsi:type="archimate:BusinessProcess" name="Calculate Prices" id="id-4633ffa5633648d4ad66b433cdae54ff"/>
+    <element xsi:type="archimate:BusinessEvent" name="last business day of week " id="id-a9e9d1c680f4475dab445b33402d118c"/>
+    <element xsi:type="archimate:BusinessInteraction" name="Product Selection" id="id-f546138c02a542c18503dc33637099b6"/>
   </folder>
-  <folder name="Application" id="id-folder-application" type="application">
+  <folder name="Application" id="id-a56fe847d14244aa88daa3371a74d01b" type="application">
     <element xsi:type="archimate:ApplicationComponent" name="Price Provider Service" id="id-app-comp-service"/>
     <element xsi:type="archimate:ApplicationComponent" name="Price Manager App" id="id-app-comp-manager"/>
     <element xsi:type="archimate:ApplicationComponent" name="Identity Provider (Keycloak)" id="id-app-comp-keycloak"/>
@@ -33,22 +37,25 @@
     <element xsi:type="archimate:ApplicationComponent" name="Grafana" id="id-app-comp-grafana"/>
     <element xsi:type="archimate:ApplicationComponent" name="Loki" id="id-app-comp-loki"/>
     <element xsi:type="archimate:ApplicationComponent" name="OpenTelemetry" id="id-app-comp-otel"/>
-    <element xsi:type="archimate:ApplicationInterface" name="REST API (Public)" id="id-app-iface-public"/>
-    <element xsi:type="archimate:ApplicationInterface" name="REST API (Admin)" id="id-app-iface-admin"/>
+    <element xsi:type="archimate:ApplicationInterface" name="Public REST API" id="id-app-iface-public"/>
+    <element xsi:type="archimate:ApplicationInterface" name="Admin REST API" id="id-app-iface-admin"/>
+    <element xsi:type="archimate:ApplicationComponent" name="E-Commerce-System" id="id-069f1f92888741578459fd3ad39c7501"/>
   </folder>
-  <folder name="Technology" id="id-folder-technology" type="technology">
-    <element xsi:type="archimate:Node" name="Kubernetes Cluster (Production)" id="id-tech-node-k8s"/>
-    <element xsi:type="archimate:Node" name="Customer Kubernetes Cluster" id="id-tech-node-cust-k8s"/>
-    <element xsi:type="archimate:SystemSoftware" name="PostgreSQL" id="id-tech-sw-postgres"/>
-    <element xsi:type="archimate:SystemSoftware" name="Nginx Ingress Controller" id="id-tech-sw-ingress"/>
-    <element xsi:type="archimate:Node" name="Load Balancer" id="id-tech-node-lb"/>
-    <element xsi:type="archimate:Artifact" name="Persistent Volume (Locally Redundant)" id="id-tech-art-pv"/>
-    <element xsi:type="archimate:Node" name="Priceprovider API Pod" id="id-tech-pod-api"/>
-    <element xsi:type="archimate:Node" name="WebApp Pod" id="id-tech-pod-webapp"/>
-    <element xsi:type="archimate:Node" name="Keycloak Pod" id="id-tech-pod-keycloak"/>
-    <element xsi:type="archimate:Node" name="Database Pod" id="id-tech-pod-db"/>
+  <folder name="Technology &amp; Physical" id="id-8bc6d1eeb173431ea543156c99d2fbf6" type="technology">
+    <folder name="Technology" id="id-ff908c4f6ae7417ea271c472d4063c89">
+      <element xsi:type="archimate:Node" name="Kubernetes Cluster (Production)" id="id-tech-node-k8s"/>
+      <element xsi:type="archimate:Node" name="Customer Kubernetes Cluster" id="id-tech-node-cust-k8s"/>
+      <element xsi:type="archimate:SystemSoftware" name="PostgreSQL" id="id-tech-sw-postgres"/>
+      <element xsi:type="archimate:SystemSoftware" name="Nginx Ingress Controller" id="id-tech-sw-ingress"/>
+      <element xsi:type="archimate:Node" name="Load Balancer" id="id-tech-node-lb"/>
+      <element xsi:type="archimate:Artifact" name="Persistent Volume (Locally Redundant)" id="id-tech-art-pv"/>
+      <element xsi:type="archimate:Node" name="Priceprovider API Pod" id="id-tech-pod-api"/>
+      <element xsi:type="archimate:Node" name="WebApp Pod" id="id-tech-pod-webapp"/>
+      <element xsi:type="archimate:Node" name="Keycloak Pod" id="id-tech-pod-keycloak"/>
+      <element xsi:type="archimate:Node" name="Database Pod" id="id-tech-pod-db"/>
+    </folder>
   </folder>
-  <folder name="Motivation" id="id-folder-motivation" type="motivation">
+  <folder name="Motivation" id="id-0720559611db4f7ca59eb15b24126d31" type="motivation">
     <element xsi:type="archimate:Driver" name="Large Volume of Price Updates" id="id-mot-driver-volume"/>
     <element xsi:type="archimate:Goal" name="Optimized Import Performance" id="id-mot-goal-imports"/>
     <element xsi:type="archimate:Requirement" name="Availability 99.9%" id="id-mot-req-availability"/>
@@ -60,13 +67,19 @@
     <element xsi:type="archimate:Principle" name="Cloud-Native" id="id-mot-princ-cloud"/>
     <element xsi:type="archimate:Constraint" name="Customer Managed Vendor Tool" id="id-mot-con-ext-tool"/>
   </folder>
-  <folder name="Relations" id="id-folder-relations" type="relations">
-    <element xsi:type="archimate:RealizationRelationship" id="id-rel-1" source="id-app-comp-service" target="id-bus-service-public-api"/>
-    <element xsi:type="archimate:RealizationRelationship" id="id-rel-2" source="id-app-comp-service" target="id-bus-service-admin-api"/>
+  <folder name="Implementation &amp; Migration" id="id-562bbf18d9cb4c1a9eb5928e73221abe" type="implementation_migration"/>
+  <folder name="Other" id="id-35b3b34f17194317a580531fcb0d3b1f" type="other">
+    <element xsi:type="archimate:Grouping" name="Business Layer: Weekly Price Update Process" id="id-2639c8e1bd594830bd0e380575389248"/>
+    <element xsi:type="archimate:Grouping" name="Business Layer: Services" id="id-27c1cfdcb0ce408da5632e1cea8e589c"/>
+    <element xsi:type="archimate:Grouping" name="Strategy Layer: Up-To-Date Market Prices" id="id-8fea8a9cd50c469fbb92b4e44dd4370e"/>
+    <element xsi:type="archimate:Grouping" name="Application Layer" id="id-429ad02921ea48759281470648f196a3"/>
+    <element xsi:type="archimate:Grouping" name="Infrastructure Layer" id="id-b377ef8158af49ddb43525433d68fb64"/>
+  </folder>
+  <folder name="Relations" id="id-0087eb8192c14a8eb91ca1cf7534269d" type="relations">
     <element xsi:type="archimate:AccessRelationship" id="id-rel-3" source="id-app-comp-service" target="id-bus-data-pricerow" accessType="1"/>
-    <element xsi:type="archimate:ServingRelationship" id="id-rel-4" source="id-app-comp-keycloak" target="id-app-comp-service"/>
+    <element xsi:type="archimate:ServingRelationship" name="provides identity infromation" id="id-rel-4" source="id-app-comp-keycloak" target="id-app-comp-service"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-5" source="id-app-comp-keycloak" target="id-app-comp-manager"/>
-    <element xsi:type="archimate:ServingRelationship" id="id-rel-6" source="id-app-comp-manager" target="id-mot-act-price-mgr"/>
+    <element xsi:type="archimate:ServingRelationship" name="price information management" id="id-rel-6" source="id-bus-service-admin-api" target="id-app-comp-manager"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-7" source="id-app-comp-manager" target="id-app-comp-keycloak"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-8" source="id-tech-node-k8s" target="id-tech-pod-api"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-9" source="id-tech-node-k8s" target="id-tech-pod-webapp"/>
@@ -76,19 +89,16 @@
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-13" source="id-app-comp-prometheus" target="id-app-comp-grafana"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-14" source="id-app-comp-ext-pricing-tool" target="id-app-iface-admin"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-15" source="id-tech-node-cust-k8s" target="id-app-comp-ext-pricing-tool"/>
-    <element xsi:type="archimate:ServingRelationship" id="id-rel-16" source="id-bus-service-public-api" target="id-mot-act-shop"/>
-    <element xsi:type="archimate:CompositionRelationship" id="id-rel-17" source="id-app-comp-service" target="id-app-iface-public"/>
-    <element xsi:type="archimate:CompositionRelationship" id="id-rel-18" source="id-app-comp-service" target="id-app-iface-admin"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-rel-17" source="id-app-comp-service" target="id-app-iface-admin"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-rel-18" source="id-app-comp-service" target="id-app-iface-public"/>
     <element xsi:type="archimate:RealizationRelationship" id="id-rel-19" source="id-bus-proc-update-prices" target="id-bus-service-admin-api"/>
-    <element xsi:type="archimate:AssociationRelationship" id="id-rel-20" source="id-mot-act-prod-mgr" target="id-strat-proc-weekly-update"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-rel-20" source="id-mot-act-prod-mgr" target="id-f546138c02a542c18503dc33637099b6"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-dm-1" source="id-bus-data-pricerow" target="id-bus-data-unit"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-dm-2" source="id-bus-data-pricerow" target="id-bus-data-currency"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-dm-3" source="id-bus-data-pricerow" target="id-bus-data-taxclass"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-dm-4" source="id-bus-data-channel" target="id-bus-data-country"/>
     <element xsi:type="archimate:SpecializationRelationship" id="id-rel-dm-5" source="id-bus-data-organization" target="id-bus-data-group"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-mot-1" source="id-mot-driver-volume" target="id-mot-goal-imports"/>
-    <element xsi:type="archimate:RealizationRelationship" id="id-rel-mot-2" source="id-mot-goal-imports" target="id-mot-req-performance"/>
-    <element xsi:type="archimate:RealizationRelationship" id="id-rel-mot-3" source="id-mot-goal-imports" target="id-mot-req-scalability"/>
     <element xsi:type="archimate:InfluenceRelationship" id="id-rel-mot-4" source="id-mot-princ-cloud" target="id-mot-req-availability"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-rel-mot-5" source="id-mot-con-ext-tool" target="id-strat-proc-import-flow"/>
     <element xsi:type="archimate:RealizationRelationship" id="id-rel-mot-6" source="id-cap-manage-pricing-strategy" target="id-strat-proc-weekly-update"/>
@@ -101,275 +111,363 @@
     <element xsi:type="archimate:ServingRelationship" id="id-rel-tech-4" source="id-tech-pod-keycloak" target="id-app-comp-keycloak"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-f2b7edb64840437d83c9626261d62861" source="id-bus-data-pricerow" target="id-bus-data-channel"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-807b6ee759614542a05a6c4885d98949" source="id-bus-data-pricerow" target="id-bus-data-group"/>
+    <element xsi:type="archimate:FlowRelationship" id="id-1c7c752468d44bd8a189437eb50a838e" source="id-mot-act-price-mgr" target="id-app-comp-manager"/>
+    <element xsi:type="archimate:ServingRelationship" name="price information" id="id-cede74a96130466384d2ba59778aafd2" source="id-bus-service-public-api" target="id-app-comp-kiosk"/>
+    <element xsi:type="archimate:ServingRelationship" id="id-cf28b29931294468889279e68963ad22" source="id-app-comp-keycloak" target="id-app-comp-kiosk"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-fd67af2932c24e979eb3b88c41c7e2fc" source="id-app-iface-public" target="id-bus-service-public-api"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-838e15d076da4fd68aa3fe0e6932c5ec" source="id-app-iface-admin" target="id-bus-service-admin-api"/>
+    <element xsi:type="archimate:FlowRelationship" id="id-80e5dbf1244641c1aef6035ed1f516a1" source="id-7d2893ea58514ddfbeb5fc82f0fb9a3c" target="id-app-comp-kiosk"/>
+    <element xsi:type="archimate:FlowRelationship" id="id-ebbf3f325d98469895150dbc4b44d2b6" source="id-bus-service-public-api" target="id-069f1f92888741578459fd3ad39c7501"/>
+    <element xsi:type="archimate:ServingRelationship" name="price information" id="id-60fc8858d15a4785acb94efdd6560d11" source="id-bus-service-public-api" target="id-069f1f92888741578459fd3ad39c7501"/>
+    <element xsi:type="archimate:ServingRelationship" id="id-77b97fc7dedd4ab1a3d6c258dedcec4a" source="id-app-comp-keycloak" target="id-069f1f92888741578459fd3ad39c7501"/>
+    <element xsi:type="archimate:FlowRelationship" id="id-14c7263117c242c68f382480611098fb" source="id-mot-act-shop" target="id-069f1f92888741578459fd3ad39c7501"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-246489404be74858b92144377fc6e9b5" source="id-f546138c02a542c18503dc33637099b6" target="id-mot-act-price-mgr"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-d3614324a0da4c6aa96a2b2051fa4643" source="id-2639c8e1bd594830bd0e380575389248" target="id-mot-act-price-mgr"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-842b28ef1df940f182423d7a2e88731d" source="id-2639c8e1bd594830bd0e380575389248" target="id-mot-act-prod-mgr"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-2365934072544c4189ec16b86c93ea32" source="id-2639c8e1bd594830bd0e380575389248" target="id-bus-proc-update-prices"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-77f2ac174b874c47a6ceda712cc730ef" source="id-27c1cfdcb0ce408da5632e1cea8e589c" target="id-bus-service-admin-api"/>
+    <element xsi:type="archimate:FlowRelationship" id="id-1fddebc6f0aa4658926d4cda440041df" source="id-bus-proc-update-prices" target="id-bus-service-admin-api"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-ba3f5280d22146cabff09b52b247c73a" source="id-2639c8e1bd594830bd0e380575389248" target="id-4633ffa5633648d4ad66b433cdae54ff"/>
+    <element xsi:type="archimate:TriggeringRelationship" id="id-2d79b06118a24cb0bd34433c3f085c96" source="id-4633ffa5633648d4ad66b433cdae54ff" target="id-bus-proc-update-prices"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-d9f48aa22b67458dae53235cb8aad5b3" source="id-2639c8e1bd594830bd0e380575389248" target="id-a9e9d1c680f4475dab445b33402d118c"/>
+    <element xsi:type="archimate:TriggeringRelationship" id="id-a21f5f96f6ae481883d8d0dd162458db" source="id-a9e9d1c680f4475dab445b33402d118c" target="id-f546138c02a542c18503dc33637099b6"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-6429f2f0d7ef4527a4164c64de9a8d30" source="id-2639c8e1bd594830bd0e380575389248" target="id-strat-proc-weekly-update"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-4123fb47a98f4364a6e80320d8f7a1bc" source="id-2639c8e1bd594830bd0e380575389248" target="id-f546138c02a542c18503dc33637099b6"/>
+    <element xsi:type="archimate:TriggeringRelationship" id="id-5664824c0770413793e9b229f979317b" source="id-f546138c02a542c18503dc33637099b6" target="id-4633ffa5633648d4ad66b433cdae54ff"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-2feabdc1766f484d8b27068c662e22e8" source="id-8fea8a9cd50c469fbb92b4e44dd4370e" target="id-strat-proc-weekly-update"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-5613c03c3a0845ea860823adaf46d343" source="id-429ad02921ea48759281470648f196a3" target="id-app-comp-service"/>
+    <element xsi:type="archimate:RealizationRelationship" id="id-6a6d5ea878d74960a9fb75f8a4b26fa1" source="id-app-comp-service" target="id-bus-service-admin-api"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-604504c6452043ec9abcb02ee59bcede" source="id-b377ef8158af49ddb43525433d68fb64" target="id-tech-node-cust-k8s"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-e2fdaf3aa81441768fb02bac9b1f3299" source="id-b377ef8158af49ddb43525433d68fb64" target="id-tech-node-k8s"/>
+    <element xsi:type="archimate:CompositionRelationship" id="id-1cde6339529e4051ba9485ac6f5d78aa" source="id-tech-node-k8s" target="id-tech-pod-api"/>
   </folder>
-  <folder name="Physical" id="id-folder-physical"/>
-  <folder name="Implementation &amp; Migration" id="id-folder-implementation" type="implementation_migration"/>
-  <folder name="Other" id="id-folder-other" type="other"/>
-  <folder name="Views" id="id-folder-views" type="diagrams">
+  <folder name="Views" id="id-4d9b6b8674d341129214d9153dc3e99a" type="diagrams">
     <element xsi:type="archimate:ArchimateDiagramModel" name="Business Process View" id="id-view-business-process">
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-1" archimateElement="id-mot-act-price-mgr">
-        <bounds x="20" y="20" width="140" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-da4cbe937dd84e6281e3b31f87609a95" textAlignment="1" fillColor="#ffbe6f" archimateElement="id-8fea8a9cd50c469fbb92b4e44dd4370e">
+        <bounds x="24" y="36" width="913" height="121"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-940fdebda6874430b6877bf8563ceea5" source="id-da4cbe937dd84e6281e3b31f87609a95" target="id-bpv-do-3" archimateRelationship="id-2feabdc1766f484d8b27068c662e22e8"/>
+        <child xsi:type="archimate:DiagramObject" id="id-bpv-do-3" targetConnections="id-d88dbe9f7b8a4ed29467054aca8b1538 id-940fdebda6874430b6877bf8563ceea5" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#f5deaa" archimateElement="id-strat-proc-weekly-update">
+          <bounds x="288" y="36" width="160" height="55"/>
+        </child>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-2" archimateElement="id-mot-act-prod-mgr">
-        <bounds x="20" y="100" width="140" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-20-view" source="id-bpv-do-2" target="id-bpv-do-3" archimateRelationship="id-rel-20"/>
+      <child xsi:type="archimate:DiagramObject" id="id-fac815b55d1f4c7e97b010876e3d09e4" textAlignment="1" fillColor="#f9f06b" archimateElement="id-2639c8e1bd594830bd0e380575389248">
+        <bounds x="24" y="168" width="913" height="229"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-c68985d39ef648239672cb1d831daffe" source="id-fac815b55d1f4c7e97b010876e3d09e4" target="id-bpv-do-1" archimateRelationship="id-d3614324a0da4c6aa96a2b2051fa4643"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-45b77448741b4b8e872e78bccaf61bc7" source="id-fac815b55d1f4c7e97b010876e3d09e4" target="id-bpv-do-2" archimateRelationship="id-842b28ef1df940f182423d7a2e88731d"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-6b497fb863b445b68f77da816394c0a0" source="id-fac815b55d1f4c7e97b010876e3d09e4" target="id-bpv-do-4" archimateRelationship="id-2365934072544c4189ec16b86c93ea32"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-b1701f3380f04d4a840ff9ea2b5a9472" source="id-fac815b55d1f4c7e97b010876e3d09e4" target="id-bd36359dace94c858662bda7e868e34a" archimateRelationship="id-ba3f5280d22146cabff09b52b247c73a"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-310d2974e16e4f6d8bd9efe939c42a17" source="id-fac815b55d1f4c7e97b010876e3d09e4" target="id-8b51a6c7c2a7474b92a9a342e546d099" archimateRelationship="id-d9f48aa22b67458dae53235cb8aad5b3"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-d88dbe9f7b8a4ed29467054aca8b1538" source="id-fac815b55d1f4c7e97b010876e3d09e4" target="id-bpv-do-3" archimateRelationship="id-6429f2f0d7ef4527a4164c64de9a8d30"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-23c29c3c8fd14cf29ee6a87c22e8269d" source="id-fac815b55d1f4c7e97b010876e3d09e4" target="id-eced96304b86472a80274f5f5baa9cb2" archimateRelationship="id-4123fb47a98f4364a6e80320d8f7a1bc"/>
+        <child xsi:type="archimate:DiagramObject" id="id-bpv-do-1" targetConnections="id-c68985d39ef648239672cb1d831daffe id-3cb2709341614e35a4fcc35c65c61259" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-mot-act-price-mgr">
+          <bounds x="120" y="156" width="140" height="55"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-bpv-do-2" targetConnections="id-45b77448741b4b8e872e78bccaf61bc7" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-mot-act-prod-mgr">
+          <bounds x="288" y="156" width="140" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-rel-20-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-bpv-do-2" target="id-eced96304b86472a80274f5f5baa9cb2" archimateRelationship="id-rel-20"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-bpv-do-4" targetConnections="id-6b497fb863b445b68f77da816394c0a0 id-50caab2a81524b5990a0024876496637" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-proc-update-prices">
+          <bounds x="672" y="60" width="160" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-29e7ad535a1c496c93df6de40ffb4a73" source="id-bpv-do-4" target="id-bpv-do-5" archimateRelationship="id-1fddebc6f0aa4658926d4cda440041df"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-bd36359dace94c858662bda7e868e34a" targetConnections="id-b1701f3380f04d4a840ff9ea2b5a9472 id-f0817f0799274420b701ff391c337fdb" archimateElement="id-4633ffa5633648d4ad66b433cdae54ff">
+          <bounds x="444" y="60" width="157" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-50caab2a81524b5990a0024876496637" source="id-bd36359dace94c858662bda7e868e34a" target="id-bpv-do-4" archimateRelationship="id-2d79b06118a24cb0bd34433c3f085c96"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-8b51a6c7c2a7474b92a9a342e546d099" targetConnections="id-310d2974e16e4f6d8bd9efe939c42a17" archimateElement="id-a9e9d1c680f4475dab445b33402d118c">
+          <bounds x="36" y="60" width="120" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-57cc41d975b34ac9a35b6f572add38c3" source="id-8b51a6c7c2a7474b92a9a342e546d099" target="id-eced96304b86472a80274f5f5baa9cb2" archimateRelationship="id-a21f5f96f6ae481883d8d0dd162458db"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-eced96304b86472a80274f5f5baa9cb2" targetConnections="id-23c29c3c8fd14cf29ee6a87c22e8269d id-57cc41d975b34ac9a35b6f572add38c3 id-rel-20-view" archimateElement="id-f546138c02a542c18503dc33637099b6">
+          <bounds x="204" y="60" width="156" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-f0817f0799274420b701ff391c337fdb" source="id-eced96304b86472a80274f5f5baa9cb2" target="id-bd36359dace94c858662bda7e868e34a" archimateRelationship="id-5664824c0770413793e9b229f979317b"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-3cb2709341614e35a4fcc35c65c61259" source="id-eced96304b86472a80274f5f5baa9cb2" target="id-bpv-do-1" archimateRelationship="id-246489404be74858b92144377fc6e9b5"/>
+        </child>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-3" archimateElement="id-strat-proc-weekly-update">
-        <bounds x="220" y="60" width="160" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-2544391056fd4ba091b5b24506d84ae6" textAlignment="1" fillColor="#fff9a8" archimateElement="id-27c1cfdcb0ce408da5632e1cea8e589c">
+        <bounds x="24" y="408" width="913" height="109"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-65fbc678f23e4006afdc6929d74f91e4" source="id-2544391056fd4ba091b5b24506d84ae6" target="id-bpv-do-5" archimateRelationship="id-77f2ac174b874c47a6ceda712cc730ef"/>
+        <child xsi:type="archimate:DiagramObject" id="id-bpv-do-5" targetConnections="id-65fbc678f23e4006afdc6929d74f91e4 id-29e7ad535a1c496c93df6de40ffb4a73 id-9a38b385213e4d18969262007bcd4012" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-service-admin-api">
+          <bounds x="672" y="24" width="160" height="55"/>
+        </child>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-4" archimateElement="id-bus-proc-update-prices">
-        <bounds x="440" y="60" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-19-view" source="id-bpv-do-4" target="id-bpv-do-5" archimateRelationship="id-rel-19"/>
+      <child xsi:type="archimate:DiagramObject" id="id-701335940fd6463bacb6acb0881fb044" textAlignment="1" fillColor="#b5ffff" archimateElement="id-429ad02921ea48759281470648f196a3">
+        <bounds x="24" y="528" width="913" height="109"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-529b0d7085114be4849407a03beee563" source="id-701335940fd6463bacb6acb0881fb044" target="id-5178677f4b914a30abc3f19af712fa06" archimateRelationship="id-5613c03c3a0845ea860823adaf46d343"/>
+        <child xsi:type="archimate:DiagramObject" id="id-5178677f4b914a30abc3f19af712fa06" targetConnections="id-529b0d7085114be4849407a03beee563 id-a25d1e9d5bb54183b8a0e3e34e608f31" archimateElement="id-app-comp-service">
+          <bounds x="672" y="36" width="157" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-9a38b385213e4d18969262007bcd4012" source="id-5178677f4b914a30abc3f19af712fa06" target="id-bpv-do-5" archimateRelationship="id-6a6d5ea878d74960a9fb75f8a4b26fa1"/>
+        </child>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-5" archimateElement="id-bus-service-admin-api">
-        <bounds x="660" y="60" width="160" height="55"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-6" archimateElement="id-mot-act-shop">
-        <bounds x="20" y="200" width="140" height="55"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-7" archimateElement="id-bus-service-public-api">
-        <bounds x="220" y="200" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-16-view" source="id-bpv-do-7" target="id-bpv-do-6" archimateRelationship="id-rel-16"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bpv-do-8" archimateElement="id-mot-act-admin">
-        <bounds x="20" y="280" width="140" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-2ddade29e65446de83a92f2334b39fe3" textAlignment="1" fillColor="#d6f2c6" archimateElement="id-b377ef8158af49ddb43525433d68fb64">
+        <bounds x="24" y="648" width="913" height="169"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-264856ca4d6c4a0e8746e093cb890315" source="id-2ddade29e65446de83a92f2334b39fe3" target="id-38606bea849544e8a3a80a1823fa8e69" archimateRelationship="id-e2fdaf3aa81441768fb02bac9b1f3299"/>
+        <child xsi:type="archimate:DiagramObject" id="id-38606bea849544e8a3a80a1823fa8e69" targetConnections="id-264856ca4d6c4a0e8746e093cb890315" archimateElement="id-tech-node-k8s">
+          <bounds x="636" y="36" width="217" height="121"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-6d5069e067724276ac2feda46b8b6aca" source="id-38606bea849544e8a3a80a1823fa8e69" target="id-ec2e17e8c201480c94e584dbf577d931" archimateRelationship="id-rel-8"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-17e9a8507b2c4055aeee0f2a91cbf244" source="id-38606bea849544e8a3a80a1823fa8e69" target="id-ec2e17e8c201480c94e584dbf577d931" archimateRelationship="id-1cde6339529e4051ba9485ac6f5d78aa"/>
+          <child xsi:type="archimate:DiagramObject" id="id-ec2e17e8c201480c94e584dbf577d931" targetConnections="id-6d5069e067724276ac2feda46b8b6aca id-17e9a8507b2c4055aeee0f2a91cbf244" archimateElement="id-tech-pod-api">
+            <bounds x="48" y="48" width="120" height="55"/>
+            <sourceConnection xsi:type="archimate:Connection" id="id-a25d1e9d5bb54183b8a0e3e34e608f31" source="id-ec2e17e8c201480c94e584dbf577d931" target="id-5178677f4b914a30abc3f19af712fa06" archimateRelationship="id-rel-tech-2"/>
+          </child>
+        </child>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Application Cooperation View" id="id-view-application-cooperation">
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-1" archimateElement="id-app-comp-service" type="1">
-        <bounds x="240" y="140" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-17-view" source="id-acv-do-1" target="id-acv-do-5" archimateRelationship="id-rel-17"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-18-view" source="id-acv-do-1" target="id-acv-do-6" archimateRelationship="id-rel-18"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-1-view" source="id-acv-do-1" target="id-bus-service-public-api-acv" archimateRelationship="id-rel-1"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-2-view" source="id-acv-do-1" target="id-bus-service-admin-api-acv" archimateRelationship="id-rel-2"/>
+      <child xsi:type="archimate:DiagramObject" id="id-bus-service-public-api-acv" targetConnections="id-4810f9d3ef224b3ba5f0344461dc14b3" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-service-public-api">
+        <bounds x="456" y="216" width="207" height="109"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-e6469e220bf4487f9cd9379f103b0ec7" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-bus-service-public-api-acv" target="id-acv-do-4" archimateRelationship="id-cede74a96130466384d2ba59778aafd2"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-668f6f50c1a54316bb13a672efecabbe" source="id-bus-service-public-api-acv" target="id-e051423e343e424bb77b05143f0a07a1" archimateRelationship="id-60fc8858d15a4785acb94efdd6560d11"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-2" archimateElement="id-app-comp-manager" type="1">
-        <bounds x="40" y="140" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-6-view" source="id-acv-do-2" target="id-mot-act-price-mgr-acv" archimateRelationship="id-rel-6"/>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-1" targetConnections="id-rel-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-service">
+        <bounds x="168" y="360" width="373" height="145"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-18-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-acv-do-1" target="id-acv-do-5" archimateRelationship="id-rel-18"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-17-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-acv-do-1" target="id-acv-do-6" archimateRelationship="id-rel-17"/>
+        <child xsi:type="archimate:DiagramObject" id="id-acv-do-5" targetConnections="id-rel-18-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-iface-public">
+          <bounds x="204" y="48" width="140" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-4810f9d3ef224b3ba5f0344461dc14b3" source="id-acv-do-5" target="id-bus-service-public-api-acv" archimateRelationship="id-fd67af2932c24e979eb3b88c41c7e2fc"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-acv-do-6" targetConnections="id-rel-17-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-iface-admin">
+          <bounds x="24" y="48" width="140" height="55"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-56d8b3536dd8415a9770189a63675343" source="id-acv-do-6" target="id-bus-service-admin-api-acv" archimateRelationship="id-838e15d076da4fd68aa3fe0e6932c5ec"/>
+        </child>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-3" archimateElement="id-app-comp-keycloak" type="1">
-        <bounds x="140" y="240" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-4-view" source="id-acv-do-3" target="id-acv-do-1" archimateRelationship="id-rel-4"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-5-view" source="id-acv-do-3" target="id-acv-do-2" archimateRelationship="id-rel-5"/>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-2" targetConnections="id-rel-5-view id-77f1fb6d06c942558a5f60e2f88f0a29 id-rel-6-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-manager">
+        <bounds x="24" y="72" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-4" archimateElement="id-app-comp-kiosk" type="1">
-        <bounds x="440" y="140" width="160" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-3" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-keycloak">
+        <bounds x="264" y="72" width="160" height="55"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-acv-do-3" target="id-acv-do-1" archimateRelationship="id-rel-4">
+          <bendpoint startX="4" startY="69" endX="4" endY="-212"/>
+        </sourceConnection>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-5-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-acv-do-3" target="id-acv-do-2" archimateRelationship="id-rel-5"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-46f7033a767b4b58b60fda40f8fc8b1a" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-acv-do-3" target="id-acv-do-4" archimateRelationship="id-cf28b29931294468889279e68963ad22"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-9e5e62dafee642218af92bab2f832af4" source="id-acv-do-3" target="id-e051423e343e424bb77b05143f0a07a1" archimateRelationship="id-77b97fc7dedd4ab1a3d6c258dedcec4a">
+          <bendpoint startX="232" startY="-50" endX="-238" endY="-50"/>
+        </sourceConnection>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-5" archimateElement="id-app-iface-public">
-        <bounds x="340" y="20" width="140" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-acv-do-4" targetConnections="id-46f7033a767b4b58b60fda40f8fc8b1a id-e6469e220bf4487f9cd9379f103b0ec7 id-3b8449631dfa46f2bb3757e745183558" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-kiosk">
+        <bounds x="503" y="72" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-acv-do-6" archimateElement="id-app-iface-admin">
-        <bounds x="140" y="20" width="140" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-mot-act-price-mgr-acv" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-mot-act-price-mgr">
+        <bounds x="24" y="-36" width="160" height="55"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-77f1fb6d06c942558a5f60e2f88f0a29" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-mot-act-price-mgr-acv" target="id-acv-do-2" archimateRelationship="id-1c7c752468d44bd8a189437eb50a838e"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-mot-act-price-mgr-acv" archimateElement="id-mot-act-price-mgr">
-        <bounds x="40" y="20" width="160" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-bus-service-admin-api-acv" targetConnections="id-56d8b3536dd8415a9770189a63675343" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-service-admin-api">
+        <bounds x="24" y="216" width="217" height="109"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-6-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-bus-service-admin-api-acv" target="id-acv-do-2" archimateRelationship="id-rel-6">
+          <bendpoint startX="-94" startY="-99" endX="-20" endY="81"/>
+        </sourceConnection>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bus-service-public-api-acv" archimateElement="id-bus-service-public-api">
-        <bounds x="340" y="340" width="160" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-1879afcdbc4b4ad0b101d94262e8012b" archimateElement="id-7d2893ea58514ddfbeb5fc82f0fb9a3c">
+        <bounds x="516" y="-36" width="120" height="55"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-3b8449631dfa46f2bb3757e745183558" source="id-1879afcdbc4b4ad0b101d94262e8012b" target="id-acv-do-4" archimateRelationship="id-80e5dbf1244641c1aef6035ed1f516a1"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-bus-service-admin-api-acv" archimateElement="id-bus-service-admin-api">
-        <bounds x="140" y="340" width="160" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-e051423e343e424bb77b05143f0a07a1" targetConnections="id-668f6f50c1a54316bb13a672efecabbe id-9e5e62dafee642218af92bab2f832af4 id-83e7af8b812146c38b9096dca00eec01" archimateElement="id-069f1f92888741578459fd3ad39c7501">
+        <bounds x="743" y="72" width="145" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-577e5dadd4564db997c4bef6a0bb4a7a" archimateElement="id-mot-act-shop">
+        <bounds x="768" y="-36" width="120" height="55"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-83e7af8b812146c38b9096dca00eec01" source="id-577e5dadd4564db997c4bef6a0bb4a7a" target="id-e051423e343e424bb77b05143f0a07a1" archimateRelationship="id-14c7263117c242c68f382480611098fb"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Import Processing View" id="id-view-import-processing">
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1" archimateElement="id-app-comp-ext-pricing-tool" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-ext-pricing-tool">
         <bounds x="20" y="20" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-14-view" source="id-ipv-do-1" target="id-ipv-do-2" archimateRelationship="id-rel-14"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-14-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-ipv-do-1" target="id-ipv-do-2" archimateRelationship="id-rel-14"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-2" archimateElement="id-app-iface-admin">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-2" targetConnections="id-rel-14-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-iface-admin">
         <bounds x="220" y="20" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-3" archimateElement="id-app-comp-service" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-3" targetConnections="id-rel-11-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-service">
         <bounds x="420" y="20" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-3-view" source="id-ipv-do-3" target="id-ipv-do-5" archimateRelationship="id-rel-3"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-3-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-ipv-do-3" target="id-ipv-do-5" archimateRelationship="id-rel-3"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-4" archimateElement="id-tech-sw-postgres">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-4" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-sw-postgres">
         <bounds x="620" y="20" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-11-view" source="id-ipv-do-4" target="id-ipv-do-3" archimateRelationship="id-rel-11"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-11-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-ipv-do-4" target="id-ipv-do-3" archimateRelationship="id-rel-11"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-5" archimateElement="id-bus-data-pricerow" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-5" targetConnections="id-rel-3-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-pricerow">
         <bounds x="620" y="100" width="160" height="55"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Deployment View" id="id-view-deployment">
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-1" archimateElement="id-tech-node-k8s" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-1" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-node-k8s">
         <bounds x="20" y="100" width="620" height="300"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-8-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-1" target="id-depv-do-2" archimateRelationship="id-rel-8"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-9-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-1" target="id-depv-do-3" archimateRelationship="id-rel-9"/>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-keycloak-comp" targetConnections="id-rel-tech-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-keycloak">
+          <bounds x="324" y="216" width="130" height="60"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-api-comp" targetConnections="id-rel-tech-2-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-service">
+          <bounds x="24" y="216" width="130" height="60"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-db-sw" targetConnections="id-rel-tech-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-sw-postgres">
+          <bounds x="474" y="216" width="130" height="60"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-3" targetConnections="id-rel-9-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-pod-webapp">
+          <bounds x="174" y="96" width="130" height="60"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-3-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-3" target="id-depv-do-webapp-comp" archimateRelationship="id-rel-tech-3"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-5" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-pod-db">
+          <bounds x="474" y="96" width="130" height="60"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-5" target="id-depv-do-db-sw" archimateRelationship="id-rel-tech-1"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-2" targetConnections="id-rel-8-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-pod-api">
+          <bounds x="24" y="96" width="130" height="60"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-2-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-2" target="id-depv-do-api-comp" archimateRelationship="id-rel-tech-2"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-webapp-comp" targetConnections="id-rel-tech-3-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-manager">
+          <bounds x="174" y="216" width="130" height="60"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-4" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-pod-keycloak">
+          <bounds x="324" y="96" width="130" height="60"/>
+          <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-4" target="id-depv-do-keycloak-comp" archimateRelationship="id-rel-tech-4"/>
+        </child>
+        <child xsi:type="archimate:DiagramObject" id="id-depv-do-8" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-art-pv">
+          <bounds x="474" y="356" width="130" height="55"/>
+        </child>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-2" archimateElement="id-tech-pod-api" type="1">
-        <bounds x="40" y="160" width="130" height="60"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-8-view" source="id-depv-do-1" target="id-depv-do-2" archimateRelationship="id-rel-8"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-2-view" source="id-depv-do-2" target="id-depv-do-api-comp" archimateRelationship="id-rel-tech-2"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-api-comp" archimateElement="id-app-comp-service" type="1">
-        <bounds x="40" y="280" width="130" height="60"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-3" archimateElement="id-tech-pod-webapp" type="1">
-        <bounds x="190" y="160" width="130" height="60"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-9-view" source="id-depv-do-1" target="id-depv-do-3" archimateRelationship="id-rel-9"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-3-view" source="id-depv-do-3" target="id-depv-do-webapp-comp" archimateRelationship="id-rel-tech-3"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-webapp-comp" archimateElement="id-app-comp-manager" type="1">
-        <bounds x="190" y="280" width="130" height="60"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-4" archimateElement="id-tech-pod-keycloak" type="1">
-        <bounds x="340" y="160" width="130" height="60"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-4-view" source="id-depv-do-4" target="id-depv-do-keycloak-comp" archimateRelationship="id-rel-tech-4"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-keycloak-comp" archimateElement="id-app-comp-keycloak" type="1">
-        <bounds x="340" y="280" width="130" height="60"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-5" archimateElement="id-tech-pod-db" type="1">
-        <bounds x="490" y="160" width="130" height="60"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-tech-1-view" source="id-depv-do-5" target="id-depv-do-db-sw" archimateRelationship="id-rel-tech-1"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-db-sw" archimateElement="id-tech-sw-postgres">
-        <bounds x="490" y="280" width="130" height="60"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-7" archimateElement="id-tech-node-lb" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-7" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-node-lb">
         <bounds x="260" y="20" width="140" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-10-view" source="id-depv-do-7" target="id-depv-do-9" archimateRelationship="id-rel-10"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-10-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-7" target="id-depv-do-9" archimateRelationship="id-rel-10"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-8" archimateElement="id-tech-art-pv" type="1">
-        <bounds x="490" y="420" width="130" height="55"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-9" archimateElement="id-tech-sw-ingress">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-9" targetConnections="id-rel-10-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-sw-ingress">
         <bounds x="260" y="110" width="140" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-depv-do-10" archimateElement="id-tech-node-cust-k8s" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-depv-do-10" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#c9e7b7" archimateElement="id-tech-node-cust-k8s">
         <bounds x="660" y="160" width="160" height="60"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-15-view" source="id-depv-do-10" target="id-ipv-do-1-dep" archimateRelationship="id-rel-15"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-15-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-depv-do-10" target="id-ipv-do-1-dep" archimateRelationship="id-rel-15"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1-dep" archimateElement="id-app-comp-ext-pricing-tool" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-ipv-do-1-dep" targetConnections="id-rel-15-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-ext-pricing-tool">
         <bounds x="660" y="280" width="160" height="60"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Security View" id="id-view-security">
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-1" archimateElement="id-mot-act-price-mgr">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-1" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-mot-act-price-mgr">
         <bounds x="20" y="20" width="120" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-2" archimateElement="id-app-comp-manager" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-2" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-manager">
         <bounds x="20" y="120" width="140" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-7-view" source="id-secv-do-2" target="id-secv-do-3" archimateRelationship="id-rel-7"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-7-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-secv-do-2" target="id-secv-do-3" archimateRelationship="id-rel-7"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-3" archimateElement="id-app-comp-keycloak" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-3" targetConnections="id-rel-7-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-keycloak">
         <bounds x="180" y="120" width="140" height="55"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-4" archimateElement="id-app-iface-admin">
-        <bounds x="340" y="120" width="140" height="55"/>
-      </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-5" archimateElement="id-app-comp-service" type="1">
-        <bounds x="340" y="220" width="140" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-4-sec-view" source="id-secv-do-3" target="id-secv-do-5" archimateRelationship="id-rel-4">
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-4-sec-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-secv-do-3" target="id-secv-do-5" archimateRelationship="id-rel-4">
           <bendpoint startX="80" startY="100" endX="-80"/>
         </sourceConnection>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-6" archimateElement="id-mot-req-security">
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-4" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-iface-admin">
+        <bounds x="340" y="120" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-5" targetConnections="id-rel-4-sec-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-service">
+        <bounds x="340" y="220" width="140" height="55"/>
+      </child>
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-6" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-security">
         <bounds x="20" y="220" width="140" height="55"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Data Model View" id="id-view-data-model">
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-1" archimateElement="id-bus-data-pricerow" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-1" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-pricerow">
         <bounds x="240" y="140" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-3-view" source="id-dmv-do-1" target="id-dmv-do-4" archimateRelationship="id-rel-dm-3"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-1-view" source="id-dmv-do-1" target="id-dmv-do-2" archimateRelationship="id-rel-dm-1"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-2-view" source="id-dmv-do-1" target="id-dmv-do-3" archimateRelationship="id-rel-dm-2"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-25ae361b581b4514bfe661aad6708df3" source="id-dmv-do-1" target="id-dmv-do-5" archimateRelationship="id-f2b7edb64840437d83c9626261d62861"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-d4b2894fbb864d8eaa330700d5833043" source="id-dmv-do-1" target="id-dmv-do-8" archimateRelationship="id-807b6ee759614542a05a6c4885d98949"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-3-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-dmv-do-1" target="id-dmv-do-4" archimateRelationship="id-rel-dm-3"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-dmv-do-1" target="id-dmv-do-2" archimateRelationship="id-rel-dm-1"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-2-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-dmv-do-1" target="id-dmv-do-3" archimateRelationship="id-rel-dm-2"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-25ae361b581b4514bfe661aad6708df3" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-dmv-do-1" target="id-dmv-do-5" archimateRelationship="id-f2b7edb64840437d83c9626261d62861"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-d4b2894fbb864d8eaa330700d5833043" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-dmv-do-1" target="id-dmv-do-8" archimateRelationship="id-807b6ee759614542a05a6c4885d98949"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-2" targetConnections="id-rel-dm-1-view" archimateElement="id-bus-data-unit" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-2" targetConnections="id-rel-dm-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-unit">
         <bounds x="40" y="140" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-3" targetConnections="id-rel-dm-2-view" archimateElement="id-bus-data-currency" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-3" targetConnections="id-rel-dm-2-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-currency">
         <bounds x="240" y="20" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-4" targetConnections="id-rel-dm-3-view" archimateElement="id-bus-data-taxclass" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-4" targetConnections="id-rel-dm-3-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-taxclass">
         <bounds x="440" y="140" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-5" targetConnections="id-25ae361b581b4514bfe661aad6708df3" archimateElement="id-bus-data-channel" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-5" targetConnections="id-25ae361b581b4514bfe661aad6708df3" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-channel">
         <bounds x="440" y="240" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-4-view" source="id-dmv-do-5" target="id-dmv-do-6" archimateRelationship="id-rel-dm-4"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-dmv-do-5" target="id-dmv-do-6" archimateRelationship="id-rel-dm-4"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-6" targetConnections="id-rel-dm-4-view" archimateElement="id-bus-data-country" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-6" targetConnections="id-rel-dm-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-country">
         <bounds x="640" y="240" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-7" archimateElement="id-bus-data-organization" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-7" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-organization">
         <bounds x="40" y="340" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-5-view" source="id-dmv-do-7" target="id-dmv-do-8" archimateRelationship="id-rel-dm-5"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-dm-5-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-dmv-do-7" target="id-dmv-do-8" archimateRelationship="id-rel-dm-5"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-8" targetConnections="id-rel-dm-5-view id-d4b2894fbb864d8eaa330700d5833043" archimateElement="id-bus-data-group" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-dmv-do-8" targetConnections="id-d4b2894fbb864d8eaa330700d5833043 id-rel-dm-5-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-bus-data-group">
         <bounds x="240" y="340" width="160" height="55"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Strategy &amp; Motivation View" id="id-view-strategy-motivation">
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-1" archimateElement="id-mot-driver-volume">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-1" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-driver-volume">
         <bounds x="20" y="20" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-1-view" source="id-smv-do-1" target="id-smv-do-2" archimateRelationship="id-rel-mot-1"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-smv-do-1" target="id-smv-do-2" archimateRelationship="id-rel-mot-1"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-2" archimateElement="id-mot-goal-imports">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-2" targetConnections="id-rel-mot-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-goal-imports">
         <bounds x="220" y="20" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-2-view" source="id-smv-do-2" target="id-smv-do-5" archimateRelationship="id-rel-mot-2"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-3-view" source="id-smv-do-2" target="id-smv-do-4" archimateRelationship="id-rel-mot-3"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-3" archimateElement="id-mot-req-availability">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-3" targetConnections="id-rel-mot-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-availability">
         <bounds x="420" y="20" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-4" archimateElement="id-mot-req-scalability">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-4" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-scalability">
         <bounds x="420" y="100" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-5" archimateElement="id-mot-req-performance">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-5" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-performance">
         <bounds x="420" y="180" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-6" archimateElement="id-cap-manage-pricing-strategy">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-6" targetConnections="id-rel-mot-7-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#f5deaa" archimateElement="id-cap-manage-pricing-strategy">
         <bounds x="620" y="100" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-6-view" source="id-smv-do-6" target="id-smv-do-14" archimateRelationship="id-rel-mot-6"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-6-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-smv-do-6" target="id-smv-do-14" archimateRelationship="id-rel-mot-6"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-7" archimateElement="id-res-agentic-engineering">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-7" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#f5deaa" archimateElement="id-res-agentic-engineering">
         <bounds x="620" y="20" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-7-view" source="id-smv-do-7" target="id-smv-do-6" archimateRelationship="id-rel-mot-7"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-7-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-smv-do-7" target="id-smv-do-6" archimateRelationship="id-rel-mot-7"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-8" archimateElement="id-mot-princ-cloud">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-8" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-princ-cloud">
         <bounds x="20" y="100" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-4-view" source="id-smv-do-8" target="id-smv-do-3" archimateRelationship="id-rel-mot-4"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-4-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-smv-do-8" target="id-smv-do-3" archimateRelationship="id-rel-mot-4"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-9" archimateElement="id-strat-proc-import-flow">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-9" targetConnections="id-rel-mot-5-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#f5deaa" archimateElement="id-strat-proc-import-flow">
         <bounds x="20" y="260" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-10" archimateElement="id-mot-con-ext-tool">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-10" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-con-ext-tool">
         <bounds x="20" y="180" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-5-view" source="id-smv-do-10" target="id-smv-do-9" archimateRelationship="id-rel-mot-5"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-mot-5-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-smv-do-10" target="id-smv-do-9" archimateRelationship="id-rel-mot-5"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-11" archimateElement="id-mot-req-security">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-11" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-security">
         <bounds x="420" y="260" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-12" archimateElement="id-mot-req-reliability">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-12" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-reliability">
         <bounds x="420" y="340" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-13" archimateElement="id-mot-req-audit">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-13" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-audit">
         <bounds x="420" y="420" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-smv-do-14" archimateElement="id-strat-proc-weekly-update">
+      <child xsi:type="archimate:DiagramObject" id="id-smv-do-14" targetConnections="id-rel-mot-6-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#f5deaa" archimateElement="id-strat-proc-weekly-update">
         <bounds x="620" y="180" width="160" height="55"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Observability View" id="id-view-observability">
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-1" archimateElement="id-app-comp-service" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-1" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-service">
         <bounds x="40" y="100" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-12-view" source="id-obsv-do-1" target="id-obsv-do-2" archimateRelationship="id-rel-12"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-obs-1-view" source="id-obsv-do-1" target="id-obsv-do-5" archimateRelationship="id-rel-obs-1"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-12-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-obsv-do-1" target="id-obsv-do-2" archimateRelationship="id-rel-12"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-obs-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-obsv-do-1" target="id-obsv-do-5" archimateRelationship="id-rel-obs-1"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-2" archimateElement="id-app-comp-prometheus" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-2" targetConnections="id-rel-12-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-prometheus">
         <bounds x="240" y="100" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-13-view" source="id-obsv-do-2" target="id-obsv-do-3" archimateRelationship="id-rel-13"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-13-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-obsv-do-2" target="id-obsv-do-3" archimateRelationship="id-rel-13"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-3" archimateElement="id-app-comp-grafana" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-3" targetConnections="id-rel-13-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-grafana">
         <bounds x="440" y="100" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-4" archimateElement="id-app-comp-loki" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-4" targetConnections="id-rel-obs-2-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-loki">
         <bounds x="240" y="200" width="160" height="55"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-5" archimateElement="id-app-comp-otel" type="1">
+      <child xsi:type="archimate:DiagramObject" id="id-obsv-do-5" targetConnections="id-rel-obs-1-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-otel">
         <bounds x="40" y="200" width="160" height="55"/>
-        <sourceConnection xsi:type="archimate:Connection" id="id-rel-obs-2-view" source="id-obsv-do-5" target="id-obsv-do-4" archimateRelationship="id-rel-obs-2"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-rel-obs-2-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-obsv-do-5" target="id-obsv-do-4" archimateRelationship="id-rel-obs-2"/>
       </child>
     </element>
   </folder>
