@@ -27,40 +27,11 @@ Models the cloud-native infrastructure setup in Kubernetes.
 ### 5. Security View
 Highlights the authentication and authorization mechanisms.
 
-```mermaid
-graph TD
-    User[Pricing Manager] -- Login --> ManagerApp[Price Manager App]
-    ManagerApp -- OIDC Auth --> Keycloak[Keycloak]
-    Keycloak -- JWT Token --> ManagerApp
-    ManagerApp -- API Call + JWT --> AdminAPI[Admin REST API]
-    AdminAPI -- Validate Token --> Keycloak
-    AdminAPI --> Backend[Price Provider Service]
-```
-
-### 6. Strategy & Motivation View
+### 6. Strategy & Motivation View (idea)
 Traces the business drivers through goals and requirements to strategic capabilities.
 
-```mermaid
-graph TD
-    Volume[Large Volume of Price Updates] -- Association --> Goal[Optimized Import Performance]
-    Goal -- Realization --> Perf[Performance < 100ms]
-    Goal -- Realization --> Scale[Scalability 5000 req/sec]
-    Cloud[Cloud-Native Principle] -- Influence --> Avail[Availability 99.9%]
-    Tool[Customer Managed Vendor Tool] -- Association --> Flow[Price Import Flow]
-    Cap[Manage Pricing Strategy] -- Realization --> Weekly[Weekly Price Update]
-    Res[Agentic Engineering] -- Association --> Cap
-```
-
-### 7. Observability View
+### 7. Observability View (idea)
 Shows the monitoring and logging infrastructure.
-
-```mermaid
-graph LR
-    Service[Price Provider Service] -- Association --> Prometheus[Prometheus]
-    Prometheus -- Association --> Grafana[Grafana]
-    Service -- Association --> OTEL[OpenTelemetry]
-    OTEL -- Association --> Loki[Loki]
-```
 
 ### 8. Data Model View
 Details the core entities and their relationships within the Price Provider service.
