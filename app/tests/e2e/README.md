@@ -17,15 +17,9 @@ sudo npx playwright install --with-deps
 
 ### Preparation
 
-Before running the tests, ensure both the backend and frontend are running.
+Before running the tests, ensure both the frontend is running.
 
-1. **Start the Backend Service** (in `dev` profile for in-memory DB and sample data):
-   ```bash
-   cd service
-   ./gradlew bootRun --args='--spring.profiles.active=dev'
-   ```
-
-2. **Start the Angular Frontend**:
+**Start the Angular Frontend**:
    ```bash
    cd app
    npm start
