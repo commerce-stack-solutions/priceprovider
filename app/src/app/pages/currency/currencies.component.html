@@ -26,14 +26,14 @@
     <thead>
       <tr>
         <th style="width: 50px;">
-          <input type="checkbox" class="form-check-input" 
-                 [checked]="selectedCurrencies().size === currencies().length && currencies().length > 0"
-                 (change)="toggleAllSelection($event.target.checked)">
+          <input type="checkbox" class="form-check-input"
+            [checked]="selectedCurrencies().size === currencies().length && currencies().length > 0"
+            (change)="toggleAllSelection($event.target.checked)">
         </th>
         <th class="sortable">
           <span (click)="sortByField('currencyKey')">{{ 'common.fields.currencyKey' | transloco }}{{ getSortIndicator('currencyKey') }}</span>
           @if (getFilterConfig('currencyKey'); as config) {
-            <app-column-filter 
+            <app-column-filter
               [config]="config"
               [activeFilter]="getActiveFilter('currencyKey')"
               (filterApplied)="onFilterApplied($event)"
@@ -44,7 +44,7 @@
         <th class="sortable">
           <span (click)="sortByField('symbol')">{{ 'common.fields.symbol' | transloco }}{{ getSortIndicator('symbol') }}</span>
           @if (getFilterConfig('symbol'); as config) {
-            <app-column-filter 
+            <app-column-filter
               [config]="config"
               [activeFilter]="getActiveFilter('symbol')"
               (filterApplied)="onFilterApplied($event)"
@@ -57,21 +57,23 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let currency of currencies()">
-        <td>
-          <input type="checkbox" class="form-check-input" 
-                 [checked]="selectedCurrencies().has(currency.currencyKey)"
-                 (change)="toggleSelection(currency.currencyKey)">
-        </td>
-        <td><a [routerLink]="['/' + lang(), 'currencies', currency.currencyKey]" class="ref-badge">{{ currency.currencyKey }}</a></td>
-        <td>{{ currency.symbol }}</td>
-        <td>{{ getLocalizedName(currency) }}</td>
-        <td>
-          <a [routerLink]="['/' + lang(), 'currencies', currency.currencyKey, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Currency')">
-            <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
-          </a>
-        </td>
-      </tr>
+      @for (currency of currencies(); track currency) {
+        <tr>
+          <td>
+            <input type="checkbox" class="form-check-input"
+              [checked]="selectedCurrencies().has(currency.currencyKey)"
+              (change)="toggleSelection(currency.currencyKey)">
+          </td>
+          <td><a [routerLink]="['/' + lang(), 'currencies', currency.currencyKey]" class="ref-badge">{{ currency.currencyKey }}</a></td>
+          <td>{{ currency.symbol }}</td>
+          <td>{{ getLocalizedName(currency) }}</td>
+          <td>
+            <a [routerLink]="['/' + lang(), 'currencies', currency.currencyKey, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Currency')">
+              <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+            </a>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 
@@ -80,9 +82,11 @@
       <li class="page-item" [class.disabled]="page() === 0">
         <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
       </li>
-      <li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
-        <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
-      </li>
+      @for (p of getPageNumbers(); track p) {
+        <li class="page-item" [class.active]="p === page()">
+          <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+        </li>
+      }
       <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
         <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
       </li>

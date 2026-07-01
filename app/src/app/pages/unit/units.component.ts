@@ -1,6 +1,6 @@
 
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { UnitsService } from '../../service/unit/units.service';
 import { Unit, UnitList } from '../../model/unit/unit.model';
@@ -17,10 +17,10 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './units.component.html',
   styleUrls: ['./units.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, PlainNumberPipe, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, PlainNumberPipe, ColumnFilterComponent]
 })
 export class UnitsComponent {
-  private unitsService = new UnitsService();
+  private unitsService = inject(UnitsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   sessionService = inject(SessionService);

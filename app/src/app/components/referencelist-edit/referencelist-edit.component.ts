@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, effect, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoService, TranslocoModule} from '@jsverse/transloco';
@@ -22,7 +22,7 @@ export type ReferenceDataSource = (searchTerm: string, page: number) => Observab
   templateUrl: './referencelist-edit.component.html',
   styleUrls: ['./referencelist-edit.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,TranslocoModule],
+  imports: [FormsModule, ReactiveFormsModule, TranslocoModule],
   host: {
     '(document:keydown)': 'onDocumentKeydown($event)',
     '(document:click)': 'onDocumentClick($event)'

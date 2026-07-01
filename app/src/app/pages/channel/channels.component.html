@@ -25,8 +25,8 @@
       <tr>
         <th style="width: 50px;">
           <input type="checkbox" class="form-check-input"
-                 [checked]="selectedChannels().size === channels().length && channels().length > 0"
-                 (change)="toggleAllSelection($any($event.target).checked)">
+            [checked]="selectedChannels().size === channels().length && channels().length > 0"
+            (change)="toggleAllSelection($any($event.target).checked)">
         </th>
         <th class="sortable">
           <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
@@ -50,29 +50,31 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let channel of channels()">
-        <td>
-          <input type="checkbox" class="form-check-input"
-                 [checked]="selectedChannels().has(channel.id)"
-                 (change)="toggleSelection(channel.id)">
-        </td>
-        <td><a [routerLink]="['/' + lang(), 'channels', channel.id]" class="ref-badge">{{ channel.id }}</a></td>
-        <td>
-          @for (ref of (channel.allowedCountryRefs || []); track ref) {
-            <span class="badge bg-secondary me-1">{{ ref }}</span>
-          }
-        </td>
-        <td>
-          @if (channel.priceRepresentationMode) {
-            <span class="badge bg-primary">{{ channel.priceRepresentationMode }}</span>
-          }
-        </td>
-        <td>
-          <a [routerLink]="['/' + lang(), 'channels', channel.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Channel')">
-            <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
-          </a>
-        </td>
-      </tr>
+      @for (channel of channels(); track channel) {
+        <tr>
+          <td>
+            <input type="checkbox" class="form-check-input"
+              [checked]="selectedChannels().has(channel.id)"
+              (change)="toggleSelection(channel.id)">
+          </td>
+          <td><a [routerLink]="['/' + lang(), 'channels', channel.id]" class="ref-badge">{{ channel.id }}</a></td>
+          <td>
+            @for (ref of (channel.allowedCountryRefs || []); track ref) {
+              <span class="badge bg-secondary me-1">{{ ref }}</span>
+            }
+          </td>
+          <td>
+            @if (channel.priceRepresentationMode) {
+              <span class="badge bg-primary">{{ channel.priceRepresentationMode }}</span>
+            }
+          </td>
+          <td>
+            <a [routerLink]="['/' + lang(), 'channels', channel.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Channel')">
+              <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+            </a>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
   <nav aria-label="Page navigation">
@@ -80,9 +82,11 @@
       <li class="page-item" [class.disabled]="page() === 0">
         <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
       </li>
-      <li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
-        <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
-      </li>
+      @for (p of getPageNumbers(); track p) {
+        <li class="page-item" [class.active]="p === page()">
+          <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+        </li>
+      }
       <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
         <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
       </li>

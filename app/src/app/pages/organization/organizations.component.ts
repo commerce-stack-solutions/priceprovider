@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { OrganizationsService } from '../../service/organization/organizations.service';
 import { Organization, OrganizationList } from '../../model/organization/organization.model';
@@ -14,7 +14,7 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './organizations.component.html',
   styleUrls: ['./organizations.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class OrganizationsComponent {
   private organizationsService = inject(OrganizationsService);

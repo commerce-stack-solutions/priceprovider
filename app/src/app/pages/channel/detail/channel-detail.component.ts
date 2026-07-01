@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { ChannelsService } from '../../../service/channel/channels.service';
 import { Channel } from '../../../model/channel/channel.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../../service/permission.service';
   templateUrl: './channel-detail.component.html',
   styleUrls: ['./channel-detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, InfoSectionComponent, TranslocoModule],
+  imports: [RouterModule, InfoSectionComponent, TranslocoModule],
   host: { '(document:keydown.e)': 'handleEditKeyPress($event)' }
 })
 export class ChannelDetailComponent {

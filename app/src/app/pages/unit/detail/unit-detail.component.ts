@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UnitsService } from '../../../service/unit/units.service';
 import { Unit } from '../../../model/unit/unit.model';
@@ -17,7 +17,7 @@ import { PermissionService } from '../../../service/permission.service';
   templateUrl: './unit-detail.component.html',
   styleUrls: ['./unit-detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, LocalizedStringfieldViewComponent, InfoSectionComponent, TranslocoModule, PlainNumberPipe],
+  imports: [RouterModule, LocalizedStringfieldViewComponent, InfoSectionComponent, TranslocoModule, PlainNumberPipe],
   host: {
     '(document:keydown.e)': 'handleEditKeyPress($event)'
   }

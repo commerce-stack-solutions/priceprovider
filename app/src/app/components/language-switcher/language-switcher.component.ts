@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslocoService, TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-language-switcher',
   templateUrl: './language-switcher.component.html',
   styleUrls: ['./language-switcher.component.scss'],
-  imports: [CommonModule, TranslocoModule]
+  imports: [TranslocoModule]
 })
 export class LanguageSwitcherComponent {
   private translocoService = inject(TranslocoService);

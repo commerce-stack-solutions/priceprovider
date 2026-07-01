@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, Input, Output, EventEmitter, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { GroupsService } from '../../../service/group/groups.service';
@@ -22,7 +22,7 @@ import { IsMandatoryPipe } from '../../../pipes/is-mandatory.pipe';
   templateUrl: './group-form.component.html',
   styleUrls: ['./group-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReferenceListEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, ReferenceListEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }
