@@ -43,3 +43,4 @@ __screenshots__/
 Thumbs.db
 test-results/
 playwright-report/
+/.env.test
