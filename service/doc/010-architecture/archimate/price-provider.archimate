@@ -80,10 +80,10 @@
   </folder>
   <folder name="Relations" id="id-0087eb8192c14a8eb91ca1cf7534269d" type="relations">
     <element xsi:type="archimate:AccessRelationship" id="id-rel-3" source="id-app-comp-ext-pricing-tool" target="id-bus-data-pricerow" accessType="1"/>
-    <element xsi:type="archimate:ServingRelationship" name="provides identity infromation" id="id-rel-4" source="id-app-comp-keycloak" target="id-app-comp-service"/>
+    <element xsi:type="archimate:ServingRelationship" name="validate token / provide claims" id="id-rel-4" source="id-app-comp-keycloak" target="id-app-comp-service"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-5" source="id-app-comp-keycloak" target="id-app-comp-manager"/>
     <element xsi:type="archimate:ServingRelationship" name="price information management" id="id-rel-6" source="id-bus-service-admin-api" target="id-app-comp-manager"/>
-    <element xsi:type="archimate:AssociationRelationship" id="id-rel-7" source="id-app-comp-manager" target="id-app-comp-keycloak"/>
+    <element xsi:type="archimate:AssociationRelationship" name="Redirect / OIDC Auth Login Flow" id="id-rel-7" source="id-app-comp-manager" target="id-app-comp-keycloak"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-8" source="id-tech-node-k8s" target="id-tech-pod-api"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-9" source="id-tech-node-k8s" target="id-tech-pod-webapp"/>
     <element xsi:type="archimate:ServingRelationship" id="id-rel-10" source="id-tech-node-lb" target="id-tech-sw-ingress"/>
@@ -158,8 +158,9 @@
     <element xsi:type="archimate:ServingRelationship" id="id-ce3d10ceec204a2b9d08727256ebb55d" source="id-cap-manage-pricing-strategy" target="id-adef973ef8f64cb58885003e346a7980"/>
     <element xsi:type="archimate:RealizationRelationship" id="id-bc1a4d67e2b842e3940859d7e2553bad" source="id-cap-manage-pricing-strategy" target="id-strat-proc-import-flow"/>
     <element xsi:type="archimate:InfluenceRelationship" id="id-942ab213d6d9449eaa22b2eeac5232a9" source="id-mot-princ-cloud" target="id-mot-req-scalability"/>
-    <element xsi:type="archimate:AssociationRelationship" name="uses" id="id-e2c50704069f4817b23892c452155f6f" source="id-mot-act-price-mgr" target="id-app-comp-manager"/>
+    <element xsi:type="archimate:AssociationRelationship" name="Login" id="id-e2c50704069f4817b23892c452155f6f" source="id-mot-act-price-mgr" target="id-app-comp-manager"/>
     <element xsi:type="archimate:AccessRelationship" id="id-eca9bc6236044306a6c605aa6defe6a2" source="id-app-iface-admin" target="id-bus-data-pricerow"/>
+    <element xsi:type="archimate:FlowRelationship" name="API Call / JWT" id="id-355ed78d3b0c4bd0886f9ec13519a1ff" source="id-app-comp-manager" target="id-app-comp-service"/>
   </folder>
   <folder name="Views" id="id-4d9b6b8674d341129214d9153dc3e99a" type="diagrams">
     <element xsi:type="archimate:ArchimateDiagramModel" name="Business Process View" id="id-view-business-process">
@@ -381,23 +382,24 @@
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Security View" id="id-view-security">
       <child xsi:type="archimate:DiagramObject" id="id-secv-do-1" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ffffb5" archimateElement="id-mot-act-price-mgr">
-        <bounds x="108" y="24" width="140" height="55"/>
+        <bounds x="20" y="12" width="140" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-c2f1fe39520642b5a21357b0dd843ca8" source="id-secv-do-1" target="id-secv-do-2" archimateRelationship="id-e2c50704069f4817b23892c452155f6f"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-secv-do-2" targetConnections="id-c2f1fe39520642b5a21357b0dd843ca8" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-manager">
         <bounds x="20" y="120" width="140" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-7-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-secv-do-2" target="id-secv-do-3" archimateRelationship="id-rel-7"/>
+        <sourceConnection xsi:type="archimate:Connection" id="id-e50e7bffa5a2437a89313cf2b6540f0f" source="id-secv-do-2" target="id-secv-do-5" archimateRelationship="id-355ed78d3b0c4bd0886f9ec13519a1ff"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-secv-do-3" targetConnections="id-rel-7-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-keycloak">
-        <bounds x="216" y="120" width="140" height="55"/>
+        <bounds x="348" y="120" width="140" height="55"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-rel-4-sec-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#000000" source="id-secv-do-3" target="id-secv-do-5" archimateRelationship="id-rel-4"/>
         <sourceConnection xsi:type="archimate:Connection" id="id-f53e1fdb6ae347c0b03ded9e34a0e5eb" source="id-secv-do-3" target="id-secv-do-6" archimateRelationship="id-bc645c616e3740e5a848ffa064710606"/>
       </child>
-      <child xsi:type="archimate:DiagramObject" id="id-secv-do-5" targetConnections="id-rel-4-sec-view" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-service">
-        <bounds x="216" y="274" width="140" height="55"/>
+      <child xsi:type="archimate:DiagramObject" id="id-secv-do-5" targetConnections="id-rel-4-sec-view id-e50e7bffa5a2437a89313cf2b6540f0f" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#b5ffff" archimateElement="id-app-comp-service">
+        <bounds x="348" y="274" width="140" height="55"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-secv-do-6" targetConnections="id-f53e1fdb6ae347c0b03ded9e34a0e5eb" font="1|Sans|9.0|0|GTK|1|" fontColor="#000000" lineColor="#5c5c5c" fillColor="#ccccff" archimateElement="id-mot-req-security">
-        <bounds x="20" y="220" width="140" height="55"/>
+        <bounds x="348" y="12" width="140" height="55"/>
       </child>
     </element>
     <element xsi:type="archimate:ArchimateDiagramModel" name="Data Model View" id="id-view-data-model">
