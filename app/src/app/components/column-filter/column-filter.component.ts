@@ -8,6 +8,7 @@ import { FilterDefinition, ColumnFilterConfig, getAllowedOperators, FilterOperat
   selector: 'app-column-filter',
   templateUrl: './column-filter.component.html',
   styleUrls: ['./column-filter.component.scss'],
+  standalone: true,
   imports: [FormsModule, TranslocoModule]
 })
 export class ColumnFilterComponent {

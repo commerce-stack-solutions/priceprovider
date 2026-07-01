@@ -11,7 +11,7 @@ The Price Manager application needs to support multiple languages (19 languages 
 - Support for 19 languages: de, en, es, fr, pt, nl, da, sv, no, fi, zh, ja, sl, cs, pl, hr, et, lv, lt
 - Feature-scoped translation files to keep the codebase organized
 - Ability to avoid duplication with shared translation keys
-- Compatible with Angular 20+ and zoneless change detection
+- Compatible with Angular 22+ and zoneless change detection
 - Compatible with standalone components architecture
 - TypeScript type safety for translation keys
 - Small bundle size and good performance
@@ -19,7 +19,7 @@ The Price Manager application needs to support multiple languages (19 languages 
 ## Decision Drivers
 - **Developer Experience**: Easy to integrate, maintain, and use
 - **Performance**: Minimal runtime overhead and efficient bundle size
-- **Compatibility**: Works with Angular 20+, standalone components, and zoneless change detection
+- **Compatibility**: Works with Angular 22+, standalone components, and zoneless change detection
 - **Community Support**: Active maintenance and good documentation
 - **Features**: Runtime language switching, lazy loading, type safety
 
@@ -28,7 +28,7 @@ The Price Manager application needs to support multiple languages (19 languages 
 ### 1. @jsverse/transloco (formerly @ngneat/transloco)
 **Pros:**
 - Built specifically for Angular with modern architecture in mind
-- Excellent support for standalone components and Angular 20+
+- Excellent support for standalone components and Angular 22+
 - Runtime language switching out of the box (single build)
 - Lazy loading of translation files by feature/scope
 - TypeScript support with type-safe translation keys
@@ -99,7 +99,7 @@ The Price Manager application needs to support multiple languages (19 languages 
 We will use **@jsverse/transloco** for the following reasons:
 
 1. **Runtime Language Switching**: Meets our core requirement for single build with runtime language switching
-2. **Modern Angular Compatibility**: Excellent support for Angular 20+, standalone components, and zoneless change detection
+2. **Modern Angular Compatibility**: Excellent support for Angular 22+, standalone components, and zoneless change detection
 3. **Performance**: Small bundle size and efficient runtime performance
 4. **Developer Experience**: 
    - Clean, declarative API with pipes and structural directives
