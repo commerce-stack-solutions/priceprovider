@@ -22,7 +22,7 @@ Before running the tests, ensure both the frontend is running.
 **Start the Angular Frontend**:
    ```bash
    cd app
-   npm start
+   ng serve
    ```
 
 ### Running Tests
