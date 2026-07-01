@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { CountriesService } from '../../service/country/countries.service';
 import { Country } from '../../model/country/country.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './countries.component.html',
   styleUrls: ['./countries.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class CountriesComponent {
   private countriesService = inject(CountriesService);

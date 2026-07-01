@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -32,7 +32,7 @@ const OPTIONS_PAGESIZE = 30;
   templateUrl: './pricerow-form.component.html',
   styleUrls: ['./pricerow-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, ReferenceEditComponent, ReferenceListEditComponent, EnumSelectorComponent, TranslocoModule, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, ReferenceEditComponent, ReferenceListEditComponent, EnumSelectorComponent, TranslocoModule, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }

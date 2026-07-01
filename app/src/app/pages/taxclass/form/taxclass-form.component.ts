@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TaxClassesService } from '../../../service/taxclass/taxclasses.service';
@@ -22,7 +22,7 @@ import { IsMandatoryPipe } from '../../../pipes/is-mandatory.pipe';
   templateUrl: './taxclass-form.component.html',
   styleUrls: ['./taxclass-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, TranslocoModule, ReferenceEditComponent, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, TranslocoModule, ReferenceEditComponent, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }

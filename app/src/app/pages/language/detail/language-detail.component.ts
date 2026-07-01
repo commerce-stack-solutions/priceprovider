@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { LanguagesService } from '../../../service/language/languages.service';
 import { Language } from '../../../model/language/language.model';
@@ -16,7 +16,7 @@ import { PermissionService } from '../../../service/permission.service';
   templateUrl: './language-detail.component.html',
   styleUrls: ['./language-detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, InfoSectionComponent, TranslocoModule, LocalizedStringfieldViewComponent],
+  imports: [RouterModule, InfoSectionComponent, TranslocoModule, LocalizedStringfieldViewComponent],
   host: {
     '(document:keydown.e)': 'handleEditKeyPress($event)'
   }

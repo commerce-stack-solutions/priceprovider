@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, computed, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router , RouterModule} from '@angular/router';
 import { CurrenciesService } from '../../../service/currency/currencies.service';
@@ -18,7 +18,7 @@ import { IsMandatoryPipe } from '../../../pipes/is-mandatory.pipe';
   templateUrl: './currency-form.component.html',
   styleUrls: ['./currency-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LocalizedStringfieldEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, LocalizedStringfieldEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }

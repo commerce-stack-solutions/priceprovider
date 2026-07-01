@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { TaxClassesService } from '../../../service/taxclass/taxclasses.service';
 import { TaxClass } from '../../../model/taxclass/taxclass.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../../service/permission.service';
   templateUrl: './taxclass-detail.component.html',
   styleUrls: ['./taxclass-detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, InfoSectionComponent, TranslocoModule],
+  imports: [RouterModule, InfoSectionComponent, TranslocoModule],
   host: {
     '(document:keydown.e)': 'handleEditKeyPress($event)'
   }

@@ -1,5 +1,5 @@
 import { Component, input, output, signal, computed, effect, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { FilterDefinition, ColumnFilterConfig, getAllowedOperators, FilterOperator } from '../../model/column-filter.model';
@@ -8,7 +8,8 @@ import { FilterDefinition, ColumnFilterConfig, getAllowedOperators, FilterOperat
   selector: 'app-column-filter',
   templateUrl: './column-filter.component.html',
   styleUrls: ['./column-filter.component.scss'],
-  imports: [CommonModule, FormsModule, TranslocoModule]
+  standalone: true,
+  imports: [FormsModule, TranslocoModule]
 })
 export class ColumnFilterComponent {
   // Inputs

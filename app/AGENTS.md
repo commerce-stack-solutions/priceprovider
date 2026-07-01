@@ -18,9 +18,9 @@ For detailed development guides, component documentation, and implementation exa
 
 ## Technology Stack
 
-- Angular CLI: 20.3.5
-- Node.js: 22.20.0
-- TypeScript
+- Angular CLI: 22.0.5
+- Node.js: 22.22.3+
+- TypeScript: 6.0.3
 - RxJS
 - Standalone Components + Signals API
 - Bootstrap (incl. Bootstrap Icons)

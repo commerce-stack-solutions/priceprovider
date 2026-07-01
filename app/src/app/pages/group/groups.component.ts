@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { GroupsService } from '../../service/group/groups.service';
 import { Group } from '../../model/group/group.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class GroupsComponent {
   private groupsService = inject(GroupsService);

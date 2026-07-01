@@ -1,6 +1,6 @@
 
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { CurrenciesService } from '../../service/currency/currencies.service';
 import { Currency } from '../../model/currency/currency.model';
@@ -18,7 +18,7 @@ import { Message } from '../../model/message.model';
   templateUrl: './currencies.component.html',
   styleUrls: ['./currencies.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class CurrenciesComponent {
   private currenciesService = inject(CurrenciesService);
