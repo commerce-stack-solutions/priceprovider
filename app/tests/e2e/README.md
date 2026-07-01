@@ -17,7 +17,7 @@ sudo npx playwright install --with-deps
 
 ### Preparation
 
-Before running the tests, ensure both the frontend is running.
+Before running the tests, ensure both the frontend is running. (Backend and Keycloak are not required - requests are mocked via fixture. )
 
 **Start the Angular Frontend**:
    ```bash
