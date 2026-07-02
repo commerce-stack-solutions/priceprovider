@@ -43,6 +43,7 @@ public class TestSecurityConfig {
     @Order(1)
     public SecurityFilterChain testSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+            .securityMatcher("/**")
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
             .addFilterBefore(testAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

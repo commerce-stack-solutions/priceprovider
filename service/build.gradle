@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '3.2.2'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.4.2'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'java'
 }
 
@@ -17,9 +17,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    implementation 'com.h2database:h2:2.2.224'
-    implementation 'org.postgresql:postgresql:42.7.2'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation 'com.h2database:h2:2.3.232'
+    implementation 'org.postgresql:postgresql:42.7.5'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
     implementation 'com.flipkart.zjsonpatch:zjsonpatch:0.4.16'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -27,8 +27,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 test {
