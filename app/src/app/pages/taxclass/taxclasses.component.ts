@@ -1,6 +1,6 @@
 
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { TaxClassesService } from '../../service/taxclass/taxclasses.service';
 import { TaxClass } from '../../model/taxclass/taxclass.model';
@@ -16,7 +16,7 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './taxclasses.component.html',
   styleUrls: ['./taxclasses.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class TaxClassesComponent {
   private taxClassesService = inject(TaxClassesService);

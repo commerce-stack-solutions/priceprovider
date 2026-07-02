@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, ChangeDetectorRef, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -24,7 +24,7 @@ const OPTIONS_PAGESIZE = 30;
   templateUrl: './channel-form.component.html',
   styleUrls: ['./channel-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, ReferenceListEditComponent, EnumSelectorComponent, TranslocoModule, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, ReferenceListEditComponent, EnumSelectorComponent, TranslocoModule, IsMandatoryPipe],
   host: { '(document:keydown.s)': 'handleSaveKeyPress($event)' }
 })
 export class ChannelFormComponent implements OnInit {

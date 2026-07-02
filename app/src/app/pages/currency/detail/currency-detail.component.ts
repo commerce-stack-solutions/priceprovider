@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CurrenciesService } from '../../../service/currency/currencies.service';
 import { Currency } from '../../../model/currency/currency.model';
@@ -16,7 +16,7 @@ import { PermissionService } from '../../../service/permission.service';
   templateUrl: './currency-detail.component.html',
   styleUrls: ['./currency-detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, LocalizedStringfieldViewComponent, InfoSectionComponent, TranslocoModule],
+  imports: [RouterModule, LocalizedStringfieldViewComponent, InfoSectionComponent, TranslocoModule],
   host: {
     '(document:keydown.e)': 'handleEditKeyPress($event)'
   }

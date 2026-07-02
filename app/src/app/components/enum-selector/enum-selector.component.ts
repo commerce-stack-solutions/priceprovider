@@ -1,5 +1,5 @@
 import { Component, Input, signal, OnInit, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface EnumOption {
@@ -12,7 +12,7 @@ export interface EnumOption {
   templateUrl: './enum-selector.component.html',
   styleUrls: ['./enum-selector.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: EnumSelectorComponent,

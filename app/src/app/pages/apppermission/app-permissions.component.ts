@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { AppPermissionsService } from '../../service/approle/app-permission.service';
 import { AppPermission } from '../../model/approle/app-permission.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './app-permissions.component.html',
   styleUrls: ['./app-permissions.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class AppPermissionsComponent {
   private appPermissionsService = inject(AppPermissionsService);

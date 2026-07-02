@@ -1,5 +1,5 @@
 import { Component, Input, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { SessionService } from '../../service/session.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { SessionService } from '../../service/session.service';
   templateUrl: './localized-stringfield-view.component.html',
   styleUrls: ['./localized-stringfield-view.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [UpperCasePipe]
 })
 export class LocalizedStringfieldViewComponent {
   @Input() values?: { [key: string]: string };

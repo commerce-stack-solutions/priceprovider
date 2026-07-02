@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { GroupsService } from '../../../service/group/groups.service';
 import { Group } from '../../../model/group/group.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../../service/permission.service';
   templateUrl: './group-detail.component.html',
   styleUrls: ['./group-detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, InfoSectionComponent, TranslocoModule],
+  imports: [RouterModule, InfoSectionComponent, TranslocoModule],
   host: {
     '(document:keydown.e)': 'handleEditKeyPress($event)'
   }

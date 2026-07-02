@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, OnInit, Output, computed, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ interface JsonPatchOperation {
   templateUrl: './app-permission-form.component.html',
   styleUrls: ['./app-permission-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslocoModule, IsMandatoryPipe],
+  imports: [ReactiveFormsModule, RouterModule, TranslocoModule, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }

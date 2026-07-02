@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, signal, inject, computed, OnInit, OnChanges, SimpleChanges, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SessionService } from '../../service/session.service';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -9,7 +9,7 @@ import { TranslocoModule } from '@jsverse/transloco';
   templateUrl: './localized-stringfield-edit.component.html',
   styleUrls: ['./localized-stringfield-edit.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslocoModule]
+  imports: [UpperCasePipe, ReactiveFormsModule, TranslocoModule]
 })
 export class LocalizedStringfieldEditComponent implements OnInit, OnChanges {
   @Input() form!: FormGroup;

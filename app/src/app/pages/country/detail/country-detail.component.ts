@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { KeyValuePipe } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { CountriesService } from '../../../service/country/countries.service';
 import { Country } from '../../../model/country/country.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../../service/permission.service';
   templateUrl: './country-detail.component.html',
   styleUrls: ['./country-detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, InfoSectionComponent, TranslocoModule],
+  imports: [KeyValuePipe, RouterModule, InfoSectionComponent, TranslocoModule],
   host: { '(document:keydown.e)': 'handleEditKeyPress($event)' }
 })
 export class CountryDetailComponent {

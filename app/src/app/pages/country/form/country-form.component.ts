@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, computed, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CountriesService } from '../../../service/country/countries.service';
@@ -22,7 +22,7 @@ import { map } from 'rxjs/operators';
   templateUrl: './country-form.component.html',
   styleUrls: ['./country-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LocalizedStringfieldEditComponent, ReferenceListEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, LocalizedStringfieldEditComponent, ReferenceListEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
   host: { '(document:keydown.s)': 'handleSaveKeyPress($event)' }
 })
 export class CountryFormComponent implements OnInit {

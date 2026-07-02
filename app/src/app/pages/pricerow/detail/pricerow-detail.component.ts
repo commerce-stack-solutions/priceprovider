@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PricerowsService } from '../../../service/pricerow/pricerows.service';
 import { PriceRow } from '../../../model/pricerow/price-row.model';
@@ -14,13 +14,14 @@ import { PermissionService } from '../../../service/permission.service';
   selector: 'app-pricerow-detail',
   templateUrl: './pricerow-detail.component.html',
   styleUrls: ['./pricerow-detail.component.scss'],
-  imports: [CommonModule, RouterModule, InfoSectionComponent, TranslocoModule],
+  standalone: true,
+  imports: [RouterModule, InfoSectionComponent, TranslocoModule],
   host: {
     '(document:keydown.e)': 'handleEditKeyPress($event)'
   }
 })
 export class PricerowDetailComponent implements OnInit {
-  private pricerowsService = new PricerowsService();
+  private pricerowsService = inject(PricerowsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   sessionService = inject(SessionService);
