@@ -102,21 +102,53 @@ public class AppRoleServiceImpl implements AppRoleService {
     /**
      * Resolves permission references by name or ID to ensure they are managed entities.
      * This prevents detached entity issues when saving roles.
+     *
+     * <p>When this method is called inside a long-running transaction (e.g. from
+     * {@code loadDataAsync}), the {@code roleEntity} may already be a managed JPA
+     * entity.  Setting transient {@code AppPermissionEntity} stubs on it and then
+     * executing a JPQL query would trigger Hibernate's auto-flush, which in turn
+     * throws a {@code TransientObjectException} because the stubs have no
+     * database identity yet.</p>
+     *
+     * <p>The fix: collect the names/IDs from the stub objects first, then
+     * <em>clear</em> the permission set on the entity before running any query.
+     * With an empty (but valid) collection the auto-flush succeeds, and we
+     * repopulate the collection with the fully-managed entities afterwards.</p>
      */
     private void resolvePermissionRefs(AppRoleEntity roleEntity) {
-        if (roleEntity.getPermissionRefs() != null && !roleEntity.getPermissionRefs().isEmpty()) {
-            Set<AppPermissionEntity> managedPermissions = new HashSet<>();
-            for (AppPermissionEntity permRef : roleEntity.getPermissionRefs()) {
-                if (permRef.getName() != null) {
-                    appPermissionEntityRepository.findByName(permRef.getName())
-                        .ifPresent(managedPermissions::add);
-                } else if (permRef.getId() != null) {
-                    appPermissionEntityRepository.findById(permRef.getId())
-                        .ifPresent(managedPermissions::add);
-                }
-            }
-            roleEntity.setPermissionRefs(managedPermissions);
+        if (roleEntity.getPermissionRefs() == null || roleEntity.getPermissionRefs().isEmpty()) {
+            return;
         }
+
+        // 1. Capture names / IDs from possibly-transient stub objects.
+        List<String> names = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        for (AppPermissionEntity permRef : roleEntity.getPermissionRefs()) {
+            if (permRef.getName() != null) {
+                names.add(permRef.getName());
+            } else if (permRef.getId() != null) {
+                ids.add(permRef.getId());
+            }
+        }
+
+        // 2. Remove the transient stubs from the entity BEFORE any query is
+        //    executed.  This prevents Hibernate auto-flush from encountering
+        //    unsaved transient instances when the entity is already managed.
+        roleEntity.setPermissionRefs(new HashSet<>());
+
+        // 3. Look up the real, managed entities and collect them.
+        Set<AppPermissionEntity> managedPermissions = new HashSet<>();
+        for (String name : names) {
+            appPermissionEntityRepository.findByName(name)
+                .ifPresent(managedPermissions::add);
+        }
+        for (Long id : ids) {
+            appPermissionEntityRepository.findById(id)
+                .ifPresent(managedPermissions::add);
+        }
+
+        // 4. Re-assign only managed entities to the role.
+        roleEntity.setPermissionRefs(managedPermissions);
     }
 
     @Override
