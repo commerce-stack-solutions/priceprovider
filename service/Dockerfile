@@ -1,6 +1,6 @@
 # Stage 1: Build stage
 # Use a JDK image to build the application
-FROM eclipse-temurin:21-jdk-noble AS builder
+FROM eclipse-temurin:25-jdk-noble AS builder
 
 # Set the working directory in the container
 WORKDIR /workspace/app
@@ -24,7 +24,7 @@ RUN ./gradlew bootJar --no-daemon
 
 # Stage 2: Runtime stage
 # Use a JRE image for a smaller final image size
-FROM eclipse-temurin:21-jre-noble
+FROM eclipse-temurin:25-jre-noble
 
 # Set the working directory for the application
 WORKDIR /app
