@@ -5,99 +5,254 @@ The goal of this refactoring is to enable partners to extend the core product (S
 
 The concept revolves around a **Metadata-Driven Architecture** where:
 1. **Entities** are defined via a descriptive format and generated at build time.
-2. **Service Logic** is extensible through an Interceptor/Hook system.
-3. **UI** is dynamically rendered based on expanded metadata from the backend.
+2. **Business Logic** is extensible through an Interceptor/Hook system.
+3. **API Layers** (Facade/Controller) are generic and dynamic.
+4. **UI** is dynamically rendered based on expanded metadata from the backend.
 
 ---
 
 ## 2. Service Layer Refactoring
 
 ### 2.1 Entity Definition Format (EDF) & Code Generation
-Instead of hardcoding JPA entities in Java, entities will be described in a **JSON or XML Entity Definition Format (EDF)**.
+Instead of hardcoding JPA entities in Java, entities are described in a **JSON Entity Definition Format (EDF)**.
 
-**Approach:**
-- **Core Product** provides base EDF files (e.g., `PriceRow.edf.json`).
-- **Partners** provide extension EDF files (e.g., `PriceRow.ext.json`) containing additional fields.
-- **Build Process:** A custom Gradle plugin merges these files (fail-fast on field name conflicts) and uses a **Freemarker** template to generate the final `PriceRowEntity.java` class.
+**Key EDF Features:**
+- **Import Management**: Explicit declaration of required imports.
+- **Class-Level Annotations**: Annotations like `@Entity`, `@Table`, or `@JsonIgnoreProperties`.
+- **Annotation-Based Relations**: Standard JPA annotations (e.g., `@ManyToOne`, `@ManyToMany`) on fields.
+- **Method Management**: Lifecycle hooks (`@PrePersist`) and logic methods defined in the EDF.
 
-**Example `PriceRow.ext.json`:**
+**Build Process:**
+A custom Gradle task `mergeAndGenerate` will merge core and partner EDF files and use **Apache Freemarker** to generate the final Java source code.
+
+### 2.2 Full Reference: PriceRowEntity EDF
+The following is the complete EDF for the existing `PriceRowEntity`, demonstrating that the notation supports all current features including imports, class-level annotations, complex relations, and lifecycle methods.
+
 ```json
 {
-  "entity": "PriceRow",
+  "entity": "PriceRowEntity",
+  "package": "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity",
+  "imports": [
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId",
+    "io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.converter.PriceTypeConverter",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceTypeDefinition",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity",
+    "jakarta.persistence.*",
+    "org.springframework.format.annotation.DateTimeFormat",
+    "java.math.BigDecimal",
+    "java.time.OffsetDateTime",
+    "java.util.HashSet",
+    "java.util.Set",
+    "java.util.stream.Collectors"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": ["AuditableEntity"],
   "fields": [
     {
-      "name": "barcode",
+      "name": "id",
       "type": "String",
-      "annotations": ["@Column(length = 50)", "@MandatoryField"],
-      "ui": {
-        "label": "fields.barcode",
-        "type": "text",
-        "sortOrder": 105
-      }
-    }
-  ]
-}
-```
-
-### 2.2 Service Layer Hooks (Interceptor System)
-To extend business logic without touching core services, we introduce a **Service Interceptor Pattern** leveraging Spring AOP or simple Bean collection.
-
-**Mechanism:**
-Every core service (implementing `EntityService<T>`) will execute a chain of interceptors during the `save` and `delete` cycles.
-
-```java
-public interface EntityServiceInterceptor<T> {
-    default void beforeSave(T entity, T existingEntity) { }
-    default void afterSave(T entity) { }
-    default void beforeDelete(String id) { }
-}
-```
-
-**Refactored `performGenericSave`:**
-```java
-public default <ID> T performGenericSave(T entity) {
-    T existing = fetchAndDetachExistingEntity(...);
-
-    // Partner Hook 1: Before Save
-    interceptors.forEach(i -> i.beforeSave(entity, existing));
-
-    validateEntity(entity);
-    updateAuditTimestamps(entity);
-
-    T saved = getRepository().save(entity);
-
-    // Partner Hook 2: After Save
-    interceptors.forEach(i -> i.afterSave(saved));
-
-    return saved;
-}
-```
-
-### 2.3 Expanded `$meta` API
-The current `$meta` API only provides basic structural info. It will be expanded to include UI-centric metadata, allowing the frontend to render forms automatically.
-
-**Expanded `MetaInfo` Object:**
-```json
-{
-  "identityFields": ["id"],
-  "fields": [
-    {
-      "name": "priceValue",
-      "type": "number",
-      "mandatory": true,
-      "labelKey": "common.fields.priceValue",
-      "uiType": "currency",
-      "sortOrder": 10
+      "annotations": ["@Id", "@GeneratedId", "@Column(length = 100)"]
     },
     {
-      "name": "barcode",
-      "type": "string",
-      "mandatory": true,
-      "labelKey": "fields.barcode",
-      "uiType": "text",
-      "sortOrder": 105
+      "name": "pricedResourceId",
+      "type": "String",
+      "annotations": ["@MandatoryField"],
+      "ui": { "type": "text", "order": 1 }
+    },
+    {
+      "name": "priceValue",
+      "type": "BigDecimal",
+      "annotations": ["@Column(precision = 19, scale = 2)", "@MandatoryField"],
+      "ui": { "type": "currency", "order": 2 }
+    },
+    {
+      "name": "minQuantity",
+      "type": "BigDecimal",
+      "annotations": ["@Column(precision = 19, scale = 2)", "@MandatoryField"],
+      "ui": { "type": "number", "order": 3 }
+    },
+    {
+      "name": "unitRef",
+      "type": "UnitEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"unit_symbol\")",
+        "@MandatoryField"
+      ],
+      "ui": { "type": "reference", "dataSource": "units", "order": 4 }
+    },
+    {
+      "name": "currencyRef",
+      "type": "CurrencyEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"currency_key\")",
+        "@MandatoryField"
+      ],
+      "ui": { "type": "reference", "dataSource": "currencies", "order": 5 }
+    },
+    {
+      "name": "taxClassRef",
+      "type": "TaxClassEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"tax_class_id\", nullable = true)",
+        "@MandatoryField"
+      ],
+      "ui": { "type": "reference", "dataSource": "taxclasses", "order": 6 }
+    },
+    {
+      "name": "priceType",
+      "type": "PriceType",
+      "annotations": [
+        "@Convert(converter = PriceTypeConverter.class)",
+        "@MetaDynamicEnum(beanType = PriceTypeDefinition.class)"
+      ],
+      "ui": { "type": "enum", "order": 7 }
+    },
+    {
+      "name": "validFrom",
+      "type": "OffsetDateTime",
+      "annotations": ["@DateTimeFormat(pattern = \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\")"],
+      "ui": { "type": "datetime", "order": 8 }
+    },
+    {
+      "name": "validTo",
+      "type": "OffsetDateTime",
+      "ui": { "type": "datetime", "order": 9 }
+    },
+    {
+      "name": "groupRefs",
+      "type": "Set<GroupEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany(fetch = FetchType.LAZY)",
+        "@JoinTable(name = \"price_row_groups\", joinColumns = @JoinColumn(name = \"price_row_id\"), inverseJoinColumns = @JoinColumn(name = \"group_id\"))"
+      ],
+      "ui": { "type": "referencelist", "dataSource": "groups", "order": 10 }
+    },
+    {
+      "name": "channelRefs",
+      "type": "Set<ChannelEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany(fetch = FetchType.LAZY)",
+        "@JoinTable(name = \"price_row_channels\", joinColumns = @JoinColumn(name = \"price_row_id\"), inverseJoinColumns = @JoinColumn(name = \"channel_id\"))"
+      ],
+      "ui": { "type": "referencelist", "dataSource": "channels", "order": 11 }
+    },
+    {
+      "name": "taxIncluded",
+      "type": "boolean",
+      "ui": { "type": "boolean", "order": 12 }
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "methods": [
+    {
+      "name": "prePersist",
+      "annotations": ["@PrePersist"],
+      "visibility": "protected",
+      "body": "if (this.id == null) { this.id = IdGeneratorProvider.generate(PriceRowEntity.class); }"
+    },
+    {
+        "name": "toString",
+        "annotations": ["@Override"],
+        "visibility": "public",
+        "returnType": "String",
+        "body": "return \"PriceRowEntity{id=\" + id + \", value=\" + priceValue + \"}\";"
     }
   ]
+}
+```
+
+### 2.3 Service Layer Interceptors (Spring AOP)
+Partners can implement `EntityServiceInterceptor<T>` and register them as Spring Beans.
+
+**Interceptor Interface:**
+```java
+public interface EntityServiceInterceptor<T> {
+    boolean supports(Class<?> entityClass);
+    default void beforeSave(T entity, T existingEntity) { }
+    default void afterSave(T entity) { }
+}
+```
+
+**Spring AOP Aspect Implementation:**
+```java
+@Aspect
+@Component
+public class ServiceInterceptorAspect {
+    @Autowired
+    private List<EntityServiceInterceptor<Object>> interceptors;
+
+    @Around("execution(* io.commercestacksolutions.commons.service.entity.EntityService+.save(..))")
+    public Object aroundSave(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object entity = joinPoint.getArgs()[0];
+        EntityService<Object> service = (EntityService<Object>) joinPoint.getTarget();
+
+        Object existing = service.fetchAndDetachExistingEntity(
+            service.extractEntityId(entity), service.getRepository(), service.getEntityManager()
+        );
+
+        // Execute 'before' hooks
+        interceptors.stream()
+            .filter(i -> i.supports(entity.getClass()))
+            .forEach(i -> i.beforeSave(entity, existing));
+
+        Object result = joinPoint.proceed();
+
+        // Execute 'after' hooks
+        interceptors.stream()
+            .filter(i -> i.supports(entity.getClass()))
+            .forEach(i -> i.afterSave(result));
+
+        return result;
+    }
+}
+```
+
+### 2.4 Facade & Controller Layer Refactoring
+To avoid creating new controllers for every extended entity, we move to a **Generic Controller Pattern**.
+
+**Generic Controller:**
+```java
+@RestController
+@RequestMapping("/admin/api/{entityType}")
+public class GenericAdminController {
+    @Autowired
+    private ServiceRegistry serviceRegistry;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable String entityType, @PathVariable String id) {
+        EntityService<?> service = serviceRegistry.get(entityType);
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
+    public ResponseEntity<?> patch(@PathVariable String entityType, @PathVariable String id, @RequestBody JsonPatch patch) {
+        // Generic patching logic using Service + Mapper
+    }
 }
 ```
 
@@ -105,144 +260,61 @@ The current `$meta` API only provides basic structural info. It will be expanded
 
 ## 3. App Layer Refactoring
 
-### 3.1 Backend-Driven Navigation & Tiles
-The "Startpage Tiles" and "Main Menu" will no longer be hardcoded in Angular. Instead, a new endpoint `/api/ui/config` will provide the layout.
+### 3.1 Dynamic UI Navigation
+The "Startpage Tiles" and "Main Menu" are delivered via `/api/ui/config`.
 
-**Response Example:**
+**Response JSON Schema:**
 ```json
 {
-  "menu": [
-    { "label": "Prices", "route": "/pricerows", "icon": "bi-tags", "order": 10 },
-    { "label": "Loyalty Points", "route": "/loyalty", "icon": "bi-star", "order": 100 }
-  ],
-  "tiles": [
-    { "title": "Manage Prices", "route": "/pricerows", "color": "blue" }
-  ]
-}
-```
-
-### 3.2 Dynamic Form Component
-The core of the UI extensibility is the `DynamicFormComponent`. Instead of static templates (like `pricerow-form.component.html`), this component iterates over the fields provided by the `$meta` API.
-
-**Sketch of `DynamicFormComponent`:**
-```typescript
-@Component({
-  selector: 'app-dynamic-form',
-  template: `
-    <form [formGroup]="form">
-      <div *ngFor="let field of meta().fields" class="row mb-3">
-        <label class="col-sm-3 col-form-label">{{ field.labelKey | transloco }}</label>
-        <div class="col-sm-9">
-          <!-- Render different inputs based on field.uiType -->
-          <input *ngIf="field.uiType === 'text'" [formControlName]="field.name" class="form-control">
-          <app-enum-selector *ngIf="field.uiType === 'enum'" ...></app-enum-selector>
-          <app-reference-edit *ngIf="field.uiType === 'reference'" ...></app-reference-edit>
-        </div>
-      </div>
-    </form>
-  `
-})
-export class DynamicFormComponent {
-  // Logic to build FormGroup dynamically from MetaInfo
-}
-```
-
----
-
-## 4. Implementation Details & Examples
-
-### 4.1 Entity Descriptor Notation (EDN)
-The project will use a standardized JSON notation for defining and extending entities.
-
-**`PriceRow.edf.json` (Core):**
-```json
-{
-  "entity": "PriceRowEntity",
-  "tableName": "price_rows",
-  "fields": [
-    {
-      "name": "priceValue",
-      "type": "BigDecimal",
-      "annotations": ["@Column(precision = 19, scale = 2)", "@MandatoryField"],
-      "ui": { "type": "currency", "order": 10 }
-    },
-    {
-      "name": "currencyRef",
-      "type": "CurrencyEntity",
-      "relation": "ManyToOne",
-      "ui": { "type": "reference", "dataSource": "currencies", "order": 20 }
-    }
-  ]
-}
-```
-
-### 4.2 Gradle Generation Task
-A custom Gradle task `generateEntities` will be responsible for the transformation.
-
-```groovy
-task generateEntities {
-    doLast {
-        def coreFiles = fileTree('src/main/resources/edf/core').include('*.json')
-        def extFiles = fileTree('src/main/resources/edf/ext').include('*.json')
-
-        coreFiles.each { coreFile ->
-            def entityName = coreFile.name.replace('.edf.json', '')
-            def extFile = extFiles.find { it.name == "${entityName}.ext.json" }
-
-            def mergedModel = modelMerger.merge(coreFile, extFile)
-            templateEngine.render('Entity.java.ftl', mergedModel, "src/generated/java/.../${entityName}Entity.java")
-        }
-    }
-}
-```
-
-### 4.3 Service Interceptor Sample
-Implementation of a partner-specific business rule.
-
-```java
-@Component
-public class LoyaltyPointInterceptor implements EntityServiceInterceptor<PriceRowEntity> {
-
-    @Override
-    public void beforeSave(PriceRowEntity entity, PriceRowEntity existing) {
-        // Example: If price > 100, automatically set a custom 'loyaltyBonus' field
-        if (entity.getPriceValue().compareTo(new BigDecimal("100")) > 0) {
-            entity.setAdditionalAttribute("loyaltyBonus", "HIGH_VALUE");
-        }
-    }
-}
-```
-
-### 4.4 Angular Dynamic Form Sketch
-The `DynamicFormComponent` uses a `FieldRegistry` to map `uiType` from the backend to specific Angular components.
-
-```typescript
-// dynamic-form.component.ts
-export class DynamicFormComponent implements OnInit {
-  @Input() meta!: MetaInfo;
-  formGroup: FormGroup = new FormGroup({});
-
-  ngOnInit() {
-    this.meta.fields.sort((a, b) => a.order - b.order).forEach(field => {
-      this.formGroup.addControl(field.name, new FormControl(
-        '', field.mandatory ? Validators.required : null
-      ));
-    });
+  "navigation": {
+    "menu": [
+      { "id": "prices", "label": "nav.prices", "route": "/pricerows", "icon": "bi-tags", "order": 10 },
+      { "id": "loyalty", "label": "nav.loyalty", "route": "/loyalty", "icon": "bi-star", "order": 100 }
+    ],
+    "tiles": [
+      { "id": "price-mgmt", "title": "tiles.prices", "desc": "tiles.prices.desc", "route": "/pricerows", "color": "blue" }
+    ]
   }
 }
 ```
 
-## 5. Developer Experience (DX)
+### 3.2 Angular Dynamic Form & Field Registry
+The `DynamicFormComponent` uses a registry to render fields based on metadata.
 
-### 5.1 Combined Build Process
-The project structure will support a "Combined Build" where the partner project includes the product core as a library.
+**Field Registry Concept:**
+```typescript
+const FIELD_COMPONENTS = {
+  'text': TextFieldComponent,
+  'currency': CurrencyFieldComponent,
+  'reference': ReferenceEditComponent,
+  'enum': EnumSelectorComponent
+};
+```
 
-1. **`product-core.jar`**: Contains logic, services, and base EDF files.
-2. **`partner-extension.jar`**: Contains partner EDF files and Interceptor implementations.
-3. **`final-application.jar`**: The result of the merge & generation process.
+**Dynamic Form Template (Simplified):**
+```html
+<form [formGroup]="form">
+  <ng-container *ngFor="let field of meta().fields">
+    <div class="field-wrapper">
+      <label>{{ field.labelKey | transloco }}</label>
+      <!-- Dynamic Component Injection -->
+      <ng-container *ngComponentOutlet="getComponent(field.uiType);
+                         inputs: { control: form.get(field.name), config: field }">
+      </ng-container>
+    </div>
+  </ng-container>
+</form>
+```
 
-### 4.2 Partner Workflow
-1. **Define Extension:** Add new fields in a `*.ext.json` file.
-2. **Implement Logic:** Create a class implementing `EntityServiceInterceptor`.
-3. **Run Build:** The Gradle task generates/updates entities and compiles everything into a single Spring Boot executable.
-4. **Automated UI:** The Angular app detects the new fields via the `$meta` API and renders them automatically in the corresponding forms and tiles.
+---
+
+## 4. Developer Experience (DX) & Workflow
+
+1. **Core Distribution**: Distributed as a JAR including base EDF files in `META-INF/edf/`.
+2. **Partner Project**:
+   - Adds `extension.edf.json` in `src/main/resources/edf/`.
+   - Implements `EntityServiceInterceptor`.
+   - The Gradle task `mergeAndGenerate` runs automatically before `compileJava`.
+3. **Runtime**:
+   - The expanded `$meta` API reports new fields.
+   - The Angular App adapts its layout and forms instantly.
