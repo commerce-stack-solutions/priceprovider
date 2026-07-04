@@ -1,6 +1,5 @@
 package io.commercestacksolutions.priceproviderservice.web.controller.adminapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.commercestacksolutions.commons.exception.NotFoundException;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
 import io.commercestacksolutions.commons.web.rest.ErrorResponse;
@@ -46,9 +45,6 @@ public class ValidationIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockitoBean
     private PriceRowFacade priceRowFacade;
