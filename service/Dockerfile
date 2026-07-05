@@ -26,6 +26,9 @@ RUN ./gradlew bootJar --no-daemon
 # Use a JRE image for a smaller final image size
 FROM eclipse-temurin:25-jre-noble
 
+# Install curl for the Docker health check
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory for the application
 WORKDIR /app
 
