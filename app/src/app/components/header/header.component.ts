@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../service/session.service';
 import { AuthService } from '../../service/auth.service';
@@ -10,7 +10,7 @@ import { TranslocoModule } from '@jsverse/transloco';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [FormsModule, TranslocoModule],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

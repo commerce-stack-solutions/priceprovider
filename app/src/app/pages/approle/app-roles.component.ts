@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { AppRolesService } from '../../service/approle/app-role.service';
 import { AppRole } from '../../model/approle/app-role.model';
@@ -15,7 +15,7 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './app-roles.component.html',
   styleUrls: ['./app-roles.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class AppRolesComponent {
   private appRolesService = inject(AppRolesService);

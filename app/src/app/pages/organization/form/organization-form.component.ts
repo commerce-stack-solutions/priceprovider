@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, Input, Output, EventEmitter, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OrganizationsService } from '../../../service/organization/organizations.service';
@@ -24,7 +24,7 @@ import { IsMandatoryPipe } from '../../../pipes/is-mandatory.pipe';
   templateUrl: './organization-form.component.html',
   styleUrls: ['./organization-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, EnumSelectorComponent, ReferenceListEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, EnumSelectorComponent, ReferenceListEditComponent, RouterModule, TranslocoModule, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }

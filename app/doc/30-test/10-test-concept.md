@@ -97,8 +97,8 @@ NODE_ENV=test
 ### 6.1 Testing Tools
 | Tool | Purpose | Version |
 |------|---------|---------|
-| Playwright | E2E Testing | ^1.40.0 |
-| Jasmine | Unit Testing | ^5.0.0 |
+| Playwright | E2E Testing | ^1.61.0 |
+| Jasmine | Unit Testing | ^6.3.0 |
 | Karma | Test Runner | ^6.4.0 |
 
 ### 6.2 CI/CD Tools

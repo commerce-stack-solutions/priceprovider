@@ -4,19 +4,19 @@
     <div>
       @if (selectedRoles().size > 0) {
         <button class="btn btn-danger me-2"
-                (click)="deleteSelected()"
-                [disabled]="!canDelete()"
-                [attr.aria-disabled]="!canDelete()"
-                [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          (click)="deleteSelected()"
+          [disabled]="!canDelete()"
+          [attr.aria-disabled]="!canDelete()"
+          [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
           <i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedRoles().size }})
         </button>
       }
       @if (permissionService.isLoggedIn()) {
         <a class="btn btn-primary"
-           [routerLink]="canWrite() ? ['/' + lang(), 'app-roles', 'add'] : null"
-           [class.disabled]="!canWrite()"
-           [attr.aria-disabled]="!canWrite()"
-           [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+          [routerLink]="canWrite() ? ['/' + lang(), 'app-roles', 'add'] : null"
+          [class.disabled]="!canWrite()"
+          [attr.aria-disabled]="!canWrite()"
+          [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
           <i class="bi bi-plus-circle"></i> {{ 'pages.appRoles.addAppRole' | transloco }}
         </a>
       }
@@ -35,8 +35,8 @@
       <tr>
         <th style="width: 50px;">
           <input type="checkbox" class="form-check-input"
-                 [checked]="selectedRoles().size === roles().length && roles().length > 0"
-                 (change)="toggleAllSelection($event.target.checked)">
+            [checked]="selectedRoles().size === roles().length && roles().length > 0"
+            (change)="toggleAllSelection($event.target.checked)">
         </th>
         <th class="sortable">
           <span (click)="sortByField('name')">{{ 'common.fields.name' | transloco }}{{ getSortIndicator('name') }}</span>
@@ -64,24 +64,26 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let role of roles()">
-        <td>
-          <input type="checkbox" class="form-check-input"
-                 [checked]="selectedRoles().has(role.id)"
-                 (change)="toggleSelection(role.id)">
-        </td>
-        <td><a [routerLink]="['/' + lang(), 'app-roles', role.id]" class="ref-badge">{{ role.name }}</a></td>
-        <td>{{ role.description }}</td>
-        <td>
-          <a [routerLink]="canWrite() ? ['/' + lang(), 'app-roles', role.id, 'edit'] : null"
-             class="btn btn-sm btn-outline-primary me-1"
-             [class.disabled]="!canWrite()"
-             [attr.aria-disabled]="!canWrite()"
-             [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
-            <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
-          </a>
-        </td>
-      </tr>
+      @for (role of roles(); track role) {
+        <tr>
+          <td>
+            <input type="checkbox" class="form-check-input"
+              [checked]="selectedRoles().has(role.id)"
+              (change)="toggleSelection(role.id)">
+          </td>
+          <td><a [routerLink]="['/' + lang(), 'app-roles', role.id]" class="ref-badge">{{ role.name }}</a></td>
+          <td>{{ role.description }}</td>
+          <td>
+            <a [routerLink]="canWrite() ? ['/' + lang(), 'app-roles', role.id, 'edit'] : null"
+              class="btn btn-sm btn-outline-primary me-1"
+              [class.disabled]="!canWrite()"
+              [attr.aria-disabled]="!canWrite()"
+              [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+              <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+            </a>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 
@@ -90,9 +92,11 @@
       <li class="page-item" [class.disabled]="page() === 0">
         <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
       </li>
-      <li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
-        <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
-      </li>
+      @for (p of getPageNumbers(); track p) {
+        <li class="page-item" [class.active]="p === page()">
+          <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+        </li>
+      }
       <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
         <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
       </li>

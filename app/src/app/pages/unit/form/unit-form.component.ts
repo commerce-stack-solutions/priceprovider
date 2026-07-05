@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectorRef, Component, computed, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ const OPTIONS_PAGESIZE = 30;
   templateUrl: './unit-form.component.html',
   styleUrls: ['./unit-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LocalizedStringfieldEditComponent, RouterModule, ReferenceEditComponent, TranslocoModule, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, LocalizedStringfieldEditComponent, RouterModule, ReferenceEditComponent, TranslocoModule, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }

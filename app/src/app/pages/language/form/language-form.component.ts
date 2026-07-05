@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { LanguagesService } from '../../../service/language/languages.service';
@@ -18,7 +18,7 @@ import { IsMandatoryPipe } from '../../../pipes/is-mandatory.pipe';
   templateUrl: './language-form.component.html',
   styleUrls: ['./language-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, TranslocoModule, LocalizedStringfieldEditComponent, IsMandatoryPipe],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, TranslocoModule, LocalizedStringfieldEditComponent, IsMandatoryPipe],
   host: {
     '(document:keydown.s)': 'handleSaveKeyPress($event)'
   }

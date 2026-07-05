@@ -26,14 +26,14 @@
     <thead>
       <tr>
         <th style="width: 50px;">
-          <input type="checkbox" class="form-check-input" 
-                 [checked]="selectedGroups().size === groups().length && groups().length > 0"
-                 (change)="toggleAllSelection($event.target.checked)">
+          <input type="checkbox" class="form-check-input"
+            [checked]="selectedGroups().size === groups().length && groups().length > 0"
+            (change)="toggleAllSelection($event.target.checked)">
         </th>
         <th class="sortable">
           <span (click)="sortByField('path')">{{ 'common.fields.path' | transloco }}{{ getSortIndicator('path') }}</span>
           @if (getFilterConfig('path'); as config) {
-            <app-column-filter 
+            <app-column-filter
               [config]="config"
               [activeFilter]="getActiveFilter('path')"
               (filterApplied)="onFilterApplied($event)"
@@ -44,7 +44,7 @@
         <th class="sortable">
           <span (click)="sortByField('name')">{{ 'common.fields.name' | transloco }}{{ getSortIndicator('name') }}</span>
           @if (getFilterConfig('name'); as config) {
-            <app-column-filter 
+            <app-column-filter
               [config]="config"
               [activeFilter]="getActiveFilter('name')"
               (filterApplied)="onFilterApplied($event)"
@@ -56,20 +56,22 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let group of groups()">
-        <td>
-          <input type="checkbox" class="form-check-input" 
-                 [checked]="group.id !== undefined && selectedGroups().has(group.id)"
-                 (change)="group.id && toggleSelection(group.id)">
-        </td>
-        <td><a [routerLink]="['/' + lang(), 'groups', group.id]" class="ref-badge">{{ group.path }}</a></td>
-        <td>{{ group.name }}</td>
-        <td>
-          <a [routerLink]="['/' + lang(), 'groups', group.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Group')">
-            <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
-          </a>
-        </td>
-      </tr>
+      @for (group of groups(); track group) {
+        <tr>
+          <td>
+            <input type="checkbox" class="form-check-input"
+              [checked]="group.id !== undefined && selectedGroups().has(group.id)"
+              (change)="group.id && toggleSelection(group.id)">
+          </td>
+          <td><a [routerLink]="['/' + lang(), 'groups', group.id]" class="ref-badge">{{ group.path }}</a></td>
+          <td>{{ group.name }}</td>
+          <td>
+            <a [routerLink]="['/' + lang(), 'groups', group.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('Group')">
+              <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+            </a>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 
@@ -78,9 +80,11 @@
       <li class="page-item" [class.disabled]="page() === 0">
         <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
       </li>
-      <li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
-        <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
-      </li>
+      @for (p of getPageNumbers(); track p) {
+        <li class="page-item" [class.active]="p === page()">
+          <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+        </li>
+      }
       <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
         <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
       </li>

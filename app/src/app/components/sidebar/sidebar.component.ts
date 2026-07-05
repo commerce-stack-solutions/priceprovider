@@ -8,6 +8,7 @@ import { PermissionService } from '../../service/permission.service';
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
+  standalone: true,
   imports: [RouterLink, RouterLinkActive, TranslocoModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

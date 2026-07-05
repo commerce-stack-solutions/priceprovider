@@ -25,14 +25,14 @@
     <thead>
       <tr>
         <th style="width: 50px;">
-          <input type="checkbox" class="form-check-input" 
-                 [checked]="selectedTaxClasses().size === taxClasses().length && taxClasses().length > 0"
-                 (change)="toggleAllSelection($event.target.checked)">
+          <input type="checkbox" class="form-check-input"
+            [checked]="selectedTaxClasses().size === taxClasses().length && taxClasses().length > 0"
+            (change)="toggleAllSelection($event.target.checked)">
         </th>
         <th class="sortable">
           <span (click)="sortByField('taxClassId')">{{ 'common.fields.taxKey' | transloco }}{{ getSortIndicator('taxClassId') }}</span>
           @if (getFilterConfig('taxClassId'); as config) {
-            <app-column-filter 
+            <app-column-filter
               [config]="config"
               [activeFilter]="getActiveFilter('taxClassId')"
               (filterApplied)="onFilterApplied($event)"
@@ -43,7 +43,7 @@
         <th class="sortable">
           <span (click)="sortByField('taxRate')">{{ 'common.fields.taxRate' | transloco }}{{ getSortIndicator('taxRate') }}</span>
           @if (getFilterConfig('taxRate'); as config) {
-            <app-column-filter 
+            <app-column-filter
               [config]="config"
               [activeFilter]="getActiveFilter('taxRate')"
               (filterApplied)="onFilterApplied($event)"
@@ -55,20 +55,22 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let taxClass of taxClasses()">
-        <td>
-          <input type="checkbox" class="form-check-input" 
-                 [checked]="selectedTaxClasses().has(taxClass.taxClassId)"
-                 (change)="toggleSelection(taxClass.taxClassId)">
-        </td>
-        <td><a [routerLink]="['/' + lang(), 'taxclasses', taxClass.taxClassId]" class="ref-badge">{{ taxClass.taxClassId }}</a></td>
-        <td>{{ taxClass.taxRate }}%</td>
-        <td>
-          <a [routerLink]="['/' + lang(), 'taxclasses', taxClass.taxClassId, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('TaxClass')">
-            <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
-          </a>
-        </td>
-      </tr>
+      @for (taxClass of taxClasses(); track taxClass) {
+        <tr>
+          <td>
+            <input type="checkbox" class="form-check-input"
+              [checked]="selectedTaxClasses().has(taxClass.taxClassId)"
+              (change)="toggleSelection(taxClass.taxClassId)">
+          </td>
+          <td><a [routerLink]="['/' + lang(), 'taxclasses', taxClass.taxClassId]" class="ref-badge">{{ taxClass.taxClassId }}</a></td>
+          <td>{{ taxClass.taxRate }}%</td>
+          <td>
+            <a [routerLink]="['/' + lang(), 'taxclasses', taxClass.taxClassId, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!permissionService.hasWritePermission('TaxClass')">
+              <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+            </a>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 
@@ -77,9 +79,11 @@
       <li class="page-item" [class.disabled]="page() === 0">
         <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
       </li>
-      <li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
-        <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
-      </li>
+      @for (p of getPageNumbers(); track p) {
+        <li class="page-item" [class.active]="p === page()">
+          <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+        </li>
+      }
       <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
         <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
       </li>

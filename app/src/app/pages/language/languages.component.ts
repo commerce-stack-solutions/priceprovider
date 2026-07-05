@@ -1,5 +1,5 @@
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { LanguagesService } from '../../service/language/languages.service';
@@ -14,7 +14,7 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './languages.component.html',
   styleUrls: ['./languages.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class LanguagesComponent {
   private languagesService = inject(LanguagesService);

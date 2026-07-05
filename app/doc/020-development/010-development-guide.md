@@ -18,7 +18,7 @@ This guide provides detailed implementation patterns, best practices, and exampl
 
 ### Standalone Components
 
-All components use the standalone API (default in Angular 20+):
+All components use the standalone API (default in Angular 22+):
 
 ```typescript
 import { Component } from '@angular/core';
@@ -28,8 +28,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-my-component',
   templateUrl: './my-component.component.html',
   styleUrls: ['./my-component.component.scss'],
-  // NOTE: Do NOT set standalone: true - it's the default
-  imports: [CommonModule, /* other imports */],
+  standalone: true, // explicit standalone: true is preferred
+  imports: [/* components/pipes/directives imports */],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyComponent {
@@ -164,8 +164,9 @@ import { ProductService } from './services/product.service';
 export class ProductListComponent {
   products = signal<Product[]>([]);
   loading = signal(false);
+  private productService = inject(ProductService);
   
-  constructor(private productService: ProductService) {
+  constructor() {
     this.loadProducts();
   }
   
@@ -203,8 +204,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 export class ProductFormComponent {
   form: FormGroup;
   fieldErrors = signal<Map<string, string[]>>(new Map());
+  private fb = inject(FormBuilder);
   
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.form = this.fb.group({
       name: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
@@ -507,7 +509,7 @@ import { GroupType } from '../../../model/group/group.model';
 @Component({
   selector: 'app-group-form',
   templateUrl: './group-form.component.html',
-  standalone: true,
+  standalone: true, // explicit standalone: true is preferred
   // 2. You MUST provide IsMandatoryPipe here to make it available to the template!
   imports: [/* other imports... */, IsMandatoryPipe]
 })
@@ -797,7 +799,7 @@ this.route.queryParamMap.subscribe(params => {
 ## Best Practices Summary
 
 ### Component Development
-- Use standalone components (default in Angular 20+)
+- Use standalone components (default in Angular 22+)
 - Use `input()` and `output()` functions instead of decorators
 - Use `ChangeDetectionStrategy.OnPush` for performance
 - Use `inject()` instead of constructor injection

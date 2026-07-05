@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TranslocoModule } from '@jsverse/transloco';
 import { SessionService } from '../../service/session.service';
@@ -11,7 +11,7 @@ import { ServiceInitializationService, DataFilesPreview } from '../../service/se
   templateUrl: './service-initialization.component.html',
   styleUrls: ['./service-initialization.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslocoModule],
+  imports: [FormsModule, TranslocoModule],
   providers: [ServiceInitializationService]
 })
 export class ServiceInitializationComponent {

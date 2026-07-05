@@ -1,6 +1,6 @@
 
 import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { PricerowsService } from '../../service/pricerow/pricerows.service';
 import { PriceRow, PriceRowList } from '../../model/pricerow/price-row.model';
@@ -16,10 +16,10 @@ import { PermissionService } from '../../service/permission.service';
   templateUrl: './pricerows.component.html',
   styleUrls: ['./pricerows.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslocoModule, ColumnFilterComponent]
+  imports: [RouterModule, TranslocoModule, ColumnFilterComponent]
 })
 export class PriceRowsComponent {
-  private pricerowsService = new PricerowsService();
+  private pricerowsService = inject(PricerowsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   sessionService = inject(SessionService);

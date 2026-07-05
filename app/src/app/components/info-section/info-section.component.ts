@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { SessionService } from '../../service/session.service';
 import { inject } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -20,7 +20,7 @@ export interface InfoField {
   selector: 'app-info-section',
   templateUrl: './info-section.component.html',
   styleUrls: ['./info-section.component.scss'],
-  imports: [CommonModule, TranslocoModule],
+  imports: [TranslocoModule],
   standalone: true
 })
 export class InfoSectionComponent {

@@ -1,19 +1,19 @@
 <div class="container mt-4">
-<div class="d-flex justify-content-between align-items-center mb-3">
-<h1>{{ 'pages.pricerows.title' | transloco }}</h1>
-<div>
-@if (selectedPriceRows().size > 0) {
-<button class="btn btn-danger me-2" (click)="deleteSelected()" [disabled]="!canDeleteSelected()">
-<i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedPriceRows().size }})
-</button>
-}
-@if (permissionService.isLoggedIn()) {
-  <a class="btn btn-primary" [routerLink]="['/' + lang(), 'pricerows', 'add']" [class.disabled]="!permissionService.hasWritePermission('PriceRow')">
-    <i class="bi bi-plus-circle"></i> {{ 'pages.pricerows.addPriceRow' | transloco }}
-  </a>
-}
-</div>
-</div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>{{ 'pages.pricerows.title' | transloco }}</h1>
+    <div>
+      @if (selectedPriceRows().size > 0) {
+        <button class="btn btn-danger me-2" (click)="deleteSelected()" [disabled]="!canDeleteSelected()">
+          <i class="bi bi-trash"></i> {{ 'common.actions.deleteSelected' | transloco }} ({{ selectedPriceRows().size }})
+        </button>
+      }
+      @if (permissionService.isLoggedIn()) {
+        <a class="btn btn-primary" [routerLink]="['/' + lang(), 'pricerows', 'add']" [class.disabled]="!permissionService.hasWritePermission('PriceRow')">
+          <i class="bi bi-plus-circle"></i> {{ 'pages.pricerows.addPriceRow' | transloco }}
+        </a>
+      }
+    </div>
+  </div>
   @if (deleteError()) {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <i class="bi bi-exclamation-triangle"></i> {{ deleteError() }}
@@ -21,231 +21,235 @@
     </div>
   }
 
-<table class="table table-hover">
-<thead>
-<tr>
-<th style="width: 50px;">
-<input type="checkbox" class="form-check-input"
-   [checked]="selectedPriceRows().size === priceRows().length && priceRows().length > 0"
-   (change)="toggleAllSelection($event.target.checked)">
-</th>
-<th class="sortable">
-  <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
-  @if (getFilterConfig('id'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('id')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th>
-  {{ 'common.fields.channelRefs' | transloco }}
-  @if (getFilterConfig('channelRefs'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('channelRefs')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('pricedResourceId')">{{ 'common.fields.pricedResourceId' | transloco }}{{ getSortIndicator('pricedResourceId') }}</span>
-  @if (getFilterConfig('pricedResourceId'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('pricedResourceId')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('priceValue')">{{ 'common.fields.priceValue' | transloco }}{{ getSortIndicator('priceValue') }}</span>
-  @if (getFilterConfig('priceValue'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('priceValue')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('minQuantity')">{{ 'common.fields.minQuantity' | transloco }}{{ getSortIndicator('minQuantity') }}</span>
-  @if (getFilterConfig('minQuantity'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('minQuantity')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('unitRef.symbol')">{{ 'common.fields.unit' | transloco }}{{ getSortIndicator('unitRef.symbol') }}</span>
-  @if (getFilterConfig('unitRef'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('unitRef')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('currencyRef')">{{ 'common.fields.currency' | transloco }}{{ getSortIndicator('currencyRef') }}</span>
-  @if (getFilterConfig('currencyRef'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('currencyRef')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('taxClassRef')">{{ 'common.fields.taxClass' | transloco }}{{ getSortIndicator('taxClassRef') }}</span>
-  @if (getFilterConfig('taxClassRef'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('taxClassRef')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('taxIncluded')">{{ 'common.fields.taxIncluded' | transloco }}{{ getSortIndicator('taxIncluded') }}</span>
-  @if (getFilterConfig('taxIncluded'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('taxIncluded')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('validFrom')">{{ 'common.fields.validFrom' | transloco }}{{ getSortIndicator('validFrom') }}</span>
-  @if (getFilterConfig('validFrom'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('validFrom')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th class="sortable">
-  <span (click)="sortByField('validTo')">{{ 'common.fields.validTo' | transloco }}{{ getSortIndicator('validTo') }}</span>
-  @if (getFilterConfig('validTo'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('validTo')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th>
-  {{ 'common.fields.groupRefs' | transloco }}
-  @if (getFilterConfig('groupRefs'); as config) {
-    <app-column-filter 
-      [config]="config"
-      [activeFilter]="getActiveFilter('groupRefs')"
-      (filterApplied)="onFilterApplied($event)"
-      (filterRemoved)="onFilterRemoved($event)">
-    </app-column-filter>
-  }
-</th>
-<th>{{ 'common.fields.actions' | transloco }}</th>
-</tr>
-</thead>
-<tbody>
-<tr *ngFor="let row of priceRows()">
-<td>
-<input type="checkbox" class="form-check-input"
-   [checked]="selectedPriceRows().has(row.id)"
-   (change)="toggleSelection(row.id)">
-</td>
-<td>
-<span class="d-inline-flex align-items-center gap-1">
-  <a [routerLink]="['/' + lang(), 'pricerows', row.id]" class="ref-badge" [title]="row.id">{{ shortId(row.id) }}</a>
-  <button type="button" class="btn btn-link btn-sm p-0 text-muted" [title]="'common.actions.copyId' | transloco" (click)="copyIdToClipboard(row.id, $event)">
-    <i [class]="copiedId() === row.id ? 'bi bi-check text-success' : 'bi bi-clipboard'"></i>
-  </button>
-</span>
-</td>
-<td>
-@if (row.channelRefs && row.channelRefs.length > 0) {
-  @for (channelRef of row.channelRefs; track channelRef) {
-    <a [routerLink]="['/' + lang(), 'channels', channelRef]" class="ref-badge me-1">{{ channelRef }}</a>
-  }
-} @else {
-  -
-}
-</td>
-<td>
-<span>{{ row.pricedResourceId }}</span>
-</td>
-<td>{{ row.priceValue }}</td>
-<td>{{ row.minQuantity }}</td>
-<td>
-@if (row.unitRef) {
-<a [routerLink]="['/' + lang(), 'units', row.unitRef]" class="ref-badge">{{ row.unitRef }}</a>
-} @else {
--
-}
-</td>
-<td>
-@if (row.currencyRef) {
-<a [routerLink]="['/' + lang(), 'currencies', row.currencyRef]" class="ref-badge">{{ row.currencyRef }}</a>
-} @else {
--
-}
-</td>
-<td>
-@if (row.taxClassRef) {
-<a [routerLink]="['/' + lang(), 'taxclasses', row.taxClassRef]" class="ref-badge">{{ row.taxClassRef }}</a>
-} @else {
--
-}
-</td>
-<td>{{ row.taxIncluded ? ('common.actions.yes' | transloco) : ('common.actions.no' | transloco) }}</td>
-<td>{{ formatDate(row.validFrom) }}</td>
-<td>{{ formatDate(row.validTo) }}</td>
-<td>
-@if (row.groupRefs && row.groupRefs.length > 0) {
-  @for (groupRef of row.groupRefs; track groupRef) {
-    <a [routerLink]="['/' + lang(), 'groups', row.$info?.groupRefIds?.[groupRef] ?? groupRef]" class="ref-badge me-1">{{ groupRef }}</a>
-  }
-} @else {
-  -
-}
-</td>
-<td>
-<a [routerLink]="['/' + lang(), 'pricerows', row.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!canEditRow(row)">
-<i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
-</a>
-</td>
-</tr>
-</tbody>
-</table>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th style="width: 50px;">
+          <input type="checkbox" class="form-check-input"
+            [checked]="selectedPriceRows().size === priceRows().length && priceRows().length > 0"
+            (change)="toggleAllSelection($event.target.checked)">
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('id')">{{ 'common.fields.id' | transloco }}{{ getSortIndicator('id') }}</span>
+          @if (getFilterConfig('id'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('id')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th>
+          {{ 'common.fields.channelRefs' | transloco }}
+          @if (getFilterConfig('channelRefs'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('channelRefs')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('pricedResourceId')">{{ 'common.fields.pricedResourceId' | transloco }}{{ getSortIndicator('pricedResourceId') }}</span>
+          @if (getFilterConfig('pricedResourceId'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('pricedResourceId')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('priceValue')">{{ 'common.fields.priceValue' | transloco }}{{ getSortIndicator('priceValue') }}</span>
+          @if (getFilterConfig('priceValue'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('priceValue')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('minQuantity')">{{ 'common.fields.minQuantity' | transloco }}{{ getSortIndicator('minQuantity') }}</span>
+          @if (getFilterConfig('minQuantity'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('minQuantity')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('unitRef.symbol')">{{ 'common.fields.unit' | transloco }}{{ getSortIndicator('unitRef.symbol') }}</span>
+          @if (getFilterConfig('unitRef'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('unitRef')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('currencyRef')">{{ 'common.fields.currency' | transloco }}{{ getSortIndicator('currencyRef') }}</span>
+          @if (getFilterConfig('currencyRef'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('currencyRef')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('taxClassRef')">{{ 'common.fields.taxClass' | transloco }}{{ getSortIndicator('taxClassRef') }}</span>
+          @if (getFilterConfig('taxClassRef'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('taxClassRef')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('taxIncluded')">{{ 'common.fields.taxIncluded' | transloco }}{{ getSortIndicator('taxIncluded') }}</span>
+          @if (getFilterConfig('taxIncluded'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('taxIncluded')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('validFrom')">{{ 'common.fields.validFrom' | transloco }}{{ getSortIndicator('validFrom') }}</span>
+          @if (getFilterConfig('validFrom'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('validFrom')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th class="sortable">
+          <span (click)="sortByField('validTo')">{{ 'common.fields.validTo' | transloco }}{{ getSortIndicator('validTo') }}</span>
+          @if (getFilterConfig('validTo'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('validTo')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th>
+          {{ 'common.fields.groupRefs' | transloco }}
+          @if (getFilterConfig('groupRefs'); as config) {
+            <app-column-filter
+              [config]="config"
+              [activeFilter]="getActiveFilter('groupRefs')"
+              (filterApplied)="onFilterApplied($event)"
+              (filterRemoved)="onFilterRemoved($event)">
+            </app-column-filter>
+          }
+        </th>
+        <th>{{ 'common.fields.actions' | transloco }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of priceRows(); track row) {
+        <tr>
+          <td>
+            <input type="checkbox" class="form-check-input"
+              [checked]="selectedPriceRows().has(row.id)"
+              (change)="toggleSelection(row.id)">
+          </td>
+          <td>
+            <span class="d-inline-flex align-items-center gap-1">
+              <a [routerLink]="['/' + lang(), 'pricerows', row.id]" class="ref-badge" [title]="row.id">{{ shortId(row.id) }}</a>
+              <button type="button" class="btn btn-link btn-sm p-0 text-muted" [title]="'common.actions.copyId' | transloco" (click)="copyIdToClipboard(row.id, $event)">
+                <i [class]="copiedId() === row.id ? 'bi bi-check text-success' : 'bi bi-clipboard'"></i>
+              </button>
+            </span>
+          </td>
+          <td>
+            @if (row.channelRefs && row.channelRefs.length > 0) {
+              @for (channelRef of row.channelRefs; track channelRef) {
+                <a [routerLink]="['/' + lang(), 'channels', channelRef]" class="ref-badge me-1">{{ channelRef }}</a>
+              }
+            } @else {
+              -
+            }
+          </td>
+          <td>
+            <span>{{ row.pricedResourceId }}</span>
+          </td>
+          <td>{{ row.priceValue }}</td>
+          <td>{{ row.minQuantity }}</td>
+          <td>
+            @if (row.unitRef) {
+              <a [routerLink]="['/' + lang(), 'units', row.unitRef]" class="ref-badge">{{ row.unitRef }}</a>
+            } @else {
+              -
+            }
+          </td>
+          <td>
+            @if (row.currencyRef) {
+              <a [routerLink]="['/' + lang(), 'currencies', row.currencyRef]" class="ref-badge">{{ row.currencyRef }}</a>
+            } @else {
+              -
+            }
+          </td>
+          <td>
+            @if (row.taxClassRef) {
+              <a [routerLink]="['/' + lang(), 'taxclasses', row.taxClassRef]" class="ref-badge">{{ row.taxClassRef }}</a>
+            } @else {
+              -
+            }
+          </td>
+          <td>{{ row.taxIncluded ? ('common.actions.yes' | transloco) : ('common.actions.no' | transloco) }}</td>
+          <td>{{ formatDate(row.validFrom) }}</td>
+          <td>{{ formatDate(row.validTo) }}</td>
+          <td>
+            @if (row.groupRefs && row.groupRefs.length > 0) {
+              @for (groupRef of row.groupRefs; track groupRef) {
+                <a [routerLink]="['/' + lang(), 'groups', row.$info?.groupRefIds?.[groupRef] ?? groupRef]" class="ref-badge me-1">{{ groupRef }}</a>
+              }
+            } @else {
+              -
+            }
+          </td>
+          <td>
+            <a [routerLink]="['/' + lang(), 'pricerows', row.id, 'edit']" class="btn btn-sm btn-outline-primary me-1" [class.disabled]="!canEditRow(row)">
+              <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+            </a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 
-<nav aria-label="Page navigation">
-<ul class="pagination">
-<li class="page-item" [class.disabled]="page() === 0">
-<button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
-</li>
-<li class="page-item" *ngFor="let p of getPageNumbers()" [class.active]="p === page()">
-<button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
-</li>
-<li class="page-item" [class.disabled]="page() >= totalPages() - 1">
-<button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
-</li>
-</ul>
-</nav>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="page() === 0">
+        <button class="page-link" type="button" (click)="previousPage()">{{ 'common.pagination.previous' | transloco }}</button>
+      </li>
+      @for (p of getPageNumbers(); track p) {
+        <li class="page-item" [class.active]="p === page()">
+          <button class="page-link" type="button" (click)="setPage(p)">{{ p + 1 }}</button>
+        </li>
+      }
+      <li class="page-item" [class.disabled]="page() >= totalPages() - 1">
+        <button class="page-link" type="button" (click)="nextPage()">{{ 'common.pagination.next' | transloco }}</button>
+      </li>
+    </ul>
+  </nav>
 </div>

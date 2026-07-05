@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, signal, effect, ChangeDetectionStrategy, ElementRef, inject, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, ReactiveFormsModule, FormControl, AbstractControl } from '@angular/forms';
 import { Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export type ReferenceDataSource = (searchTerm: string, page: number) => Observab
   templateUrl: './reference-edit.component.html',
   styleUrls: ['./reference-edit.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,TranslocoModule],
+  imports: [FormsModule, ReactiveFormsModule, TranslocoModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:keydown)': 'onDocumentKeydown($event)',
