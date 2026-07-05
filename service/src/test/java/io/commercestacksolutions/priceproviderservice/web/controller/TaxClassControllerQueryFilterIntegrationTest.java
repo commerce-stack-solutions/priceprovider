@@ -8,8 +8,8 @@ import io.commercestacksolutions.priceproviderservice.web.controller.ExceptionHa
 import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.TaxClassController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,7 +32,7 @@ public class TaxClassControllerQueryFilterIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private TaxClassFacade taxClassFacade;
 
     @Test

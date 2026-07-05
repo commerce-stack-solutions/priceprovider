@@ -15,7 +15,7 @@ public class ExceptionHandlerAdviceTest {
     @Test
     public void testHandleNoResourceFoundExceptionReturns404() throws Exception {
         NoResourceFoundException ex = new NoResourceFoundException(
-                HttpMethod.GET, "public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates");
+                HttpMethod.GET, "public/api/dach-sales-channel/DE/pricerows/SALES_PRICE/of/DEMO-PRODUCT-001/candidates", null);
 
         ResponseEntity<Void> response = advice.handleNoResourceFoundException(ex);
 

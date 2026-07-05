@@ -103,17 +103,10 @@ public class AppRoleServiceImpl implements AppRoleService {
      * Resolves permission references by name or ID to ensure they are managed entities.
      * This prevents detached entity issues when saving roles.
      *
-     * <p>When this method is called inside a long-running transaction (e.g. from
-     * {@code loadDataAsync}), the {@code roleEntity} may already be a managed JPA
-     * entity.  Setting transient {@code AppPermissionEntity} stubs on it and then
-     * executing a JPQL query would trigger Hibernate's auto-flush, which in turn
-     * throws a {@code TransientObjectException} because the stubs have no
-     * database identity yet.</p>
-     *
-     * <p>The fix: collect the names/IDs from the stub objects first, then
-     * <em>clear</em> the permission set on the entity before running any query.
-     * With an empty (but valid) collection the auto-flush succeeds, and we
-     * repopulate the collection with the fully-managed entities afterwards.</p>
+     * <p>Transient stub objects are removed from the collection <em>before</em> any
+     * repository query is issued so that Hibernate's auto-flush (triggered by JPQL
+     * queries inside a long-running transaction) does not encounter unsaved transient
+     * instances and throw a {@code TransientPropertyValueException}.</p>
      */
     private void resolvePermissionRefs(AppRoleEntity roleEntity) {
         if (roleEntity.getPermissionRefs() == null || roleEntity.getPermissionRefs().isEmpty()) {

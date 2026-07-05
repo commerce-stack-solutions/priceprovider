@@ -10,7 +10,7 @@ For detailed information on the project's architecture, development guidelines, 
 
 ### Prerequisites
 
-*   **Open JDK 21**
+*   **Open JDK 25**
 *   **IntelliJ IDEA** (or another IDE with Gradle support)
 
 ### Building and Running (local developer)

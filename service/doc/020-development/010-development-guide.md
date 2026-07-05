@@ -4,14 +4,14 @@ This guide provides an overview of the development patterns, conventions, and to
 
 ## Technology Stack
 
-- Java 17
-- Spring Boot 3.x
-- Gradle 8.8
+- Java 25
+- Spring Boot 4.x
+- Gradle 9.x
 - MapStruct for DTO mapping
 - Spring Web, Spring Data JPA
 - H2 (development/test), PostgreSQL (production)
 - RESTful API design
-- SpringDoc OpenAPI 3.0 (Swagger UI available at `/swagger-ui.html`)
+- SpringDoc OpenAPI 2.8.x (OpenAPI 3.0 spec, Swagger UI available at `/swagger-ui.html`)
 
 ## Project Structure
 

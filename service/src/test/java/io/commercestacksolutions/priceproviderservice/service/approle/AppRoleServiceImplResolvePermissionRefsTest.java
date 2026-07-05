@@ -1,6 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.service.approle;
 
 import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
+import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppPermissionEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppRoleEntityRepository;
@@ -32,7 +33,7 @@ import static org.mockito.Mockito.*;
  * are removed from the role's {@code permissionRefs} collection <em>before</em> any
  * JPQL query is issued.  This prevents Hibernate's auto-flush from throwing a
  * {@code TransientObjectException} when the method is called inside a long-running
- * transaction (e.g. from {@code SetupDataImportManager#loadDataAsync}).</p>
+ * transaction (e.g. during an update or patch of an already-managed AppRoleEntity).</p>
  */
 @ExtendWith(MockitoExtension.class)
 public class AppRoleServiceImplResolvePermissionRefsTest {
@@ -58,6 +59,10 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
     @Mock
     private EntityManager tempEntityManager;
 
+    @SuppressWarnings("unchecked")
+    @Mock
+    private ValidationRule<AppRoleEntity> validationRule;
+
     private AppRoleServiceImpl appRoleService;
 
     @BeforeEach
@@ -65,11 +70,10 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
         appRoleService = new AppRoleServiceImpl(
                 appRoleEntityRepository,
                 appPermissionEntityRepository,
-                List.of(),
+                List.of(validationRule),
                 authorizationContext,
                 entityAuthorizationService,
-                entityManager
-        );
+                entityManager);
 
         doNothing().when(entityAuthorizationService).checkAccessBeforeAndAfter(any(), any(), any(), any(), any());
 
@@ -78,6 +82,7 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
         lenient().when(tempEntityManager.find(eq(AppRoleEntity.class), any())).thenReturn(null);
         lenient().when(tempEntityManager.isOpen()).thenReturn(true);
         lenient().doNothing().when(tempEntityManager).close();
+        lenient().when(validationRule.validate(any())).thenReturn(List.of());
     }
 
     // ---------- helpers ----------
@@ -117,16 +122,14 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
         AppPermissionEntity managed = managedPermission(10L, "priceprovider.admin:AppRole:read");
         AppRoleEntity role = roleWithPermissions(Set.of(transientStubByName("priceprovider.admin:AppRole:read")));
 
-        when(appPermissionEntityRepository.findByName("priceprovider.admin:AppRole:read"))
-                .thenReturn(Optional.of(managed));
+        when(appPermissionEntityRepository.findByName("priceprovider.admin:AppRole:read")).thenReturn(Optional.of(managed));
         when(appRoleEntityRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         appRoleService.save(role);
 
         verify(appPermissionEntityRepository).findByName("priceprovider.admin:AppRole:read");
         assertEquals(1, role.getPermissionRefs().size());
-        assertTrue(role.getPermissionRefs().contains(managed),
-                "permissionRefs must contain the managed entity after resolution");
+        assertTrue(role.getPermissionRefs().contains(managed));
     }
 
     @Test
@@ -146,16 +149,15 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
 
     @Test
     void save_permissionRefUnresolvable_isDroppedSilently() throws Exception {
-        AppRoleEntity role = roleWithPermissions(Set.of(transientStubByName("priceprovider.admin:Missing:read")));
+        AppRoleEntity role = roleWithPermissions(new HashSet<>(Set.of(transientStubByName("priceprovider.admin:NonExistent:read"))));
 
-        when(appPermissionEntityRepository.findByName("priceprovider.admin:Missing:read"))
-                .thenReturn(Optional.empty());
+        when(appPermissionEntityRepository.findByName("priceprovider.admin:NonExistent:read")).thenReturn(Optional.empty());
         when(appRoleEntityRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         appRoleService.save(role);
 
         assertTrue(role.getPermissionRefs().isEmpty(),
-                "Unresolvable stub must be silently dropped");
+                "Unresolvable permission ref stub must be dropped silently");
     }
 
     @Test
@@ -166,8 +168,7 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
 
         appRoleService.save(role);
 
-        verify(appPermissionEntityRepository, never()).findByName(any());
-        verify(appPermissionEntityRepository, never()).findById(any());
+        verifyNoInteractions(appPermissionEntityRepository);
     }
 
     @Test
@@ -176,23 +177,23 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
 
         when(appRoleEntityRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        assertDoesNotThrow(() -> appRoleService.save(role));
-        verify(appPermissionEntityRepository, never()).findByName(any());
-        verify(appPermissionEntityRepository, never()).findById(any());
+        appRoleService.save(role);
+
+        verifyNoInteractions(appPermissionEntityRepository);
     }
 
     /**
-     * Regression test for the bug reported in issue #76.
+     * Regression test for the bug reported in issue #81.
      *
      * <p>When {@code resolvePermissionRefs} is called inside a long-running transaction
      * the role entity may already be <em>managed</em> by the JPA persistence context.
-     * Setting transient permission stubs on it and then executing a JPQL query triggers
-     * Hibernate's auto-flush.  If the stubs are still attached to the entity during the
-     * flush, Hibernate throws {@code TransientObjectException}.</p>
+     * Any JPQL query (e.g. {@code findByName}) will trigger Hibernate's auto-flush
+     * which will detect the transient stubs still in the collection and throw
+     * {@code TransientPropertyValueException}.</p>
      *
-     * <p>This test verifies that the permissionRefs collection is cleared on the entity
-     * <em>before</em> the first {@code findByName} call, so that any auto-flush sees a
-     * clean (empty) collection.</p>
+     * <p>The fix clears the {@code permissionRefs} collection on the entity
+     * <strong>before</strong> issuing any query so that Hibernate auto-flush cannot
+     * encounter the transient stubs.</p>
      */
     @Test
     void resolvePermissionRefs_clearsTransientRefsBeforeQuery() throws Exception {
