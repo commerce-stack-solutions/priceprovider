@@ -70,7 +70,7 @@ class AuthServiceImpl implements AuthService {
         _clientId,
         _redirectUri,
         discoveryUrl: _discoveryUrl,
-        scopes: ['openid', 'profile', 'email'],
+        scopes: ['profile', 'email'],
       ),
     );
 
@@ -85,7 +85,7 @@ class AuthServiceImpl implements AuthService {
 
     final authenticator = openid.Authenticator(
       client,
-      scopes: ['openid', 'profile', 'email'],
+      scopes: ['profile', 'email'],
       port: 4000,
       urlLancher: (url) async {
         final uri = Uri.parse(url);
@@ -150,7 +150,7 @@ class AuthServiceImpl implements AuthService {
           isDesktop ? _desktopRedirectUri : _redirectUri,
           discoveryUrl: _discoveryUrl,
           refreshToken: _refreshToken,
-          scopes: ['openid', 'profile', 'email'],
+          scopes: ['profile', 'email'],
         ),
       );
 
