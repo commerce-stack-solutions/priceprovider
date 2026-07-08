@@ -1,0 +1,216 @@
+package io.commercestacksolutions.commons.permissionselector;
+
+import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
+
+@ExtendWith(MockitoExtension.class)
+class PermissionFilterBuilderTest {
+
+    @Mock
+    private ApiContextResolver apiContextResolver;
+
+    private PermissionFilterBuilder filterBuilder;
+
+    @BeforeEach
+    void setUp() {
+        // Mock API context to return admin prefix by default for tests
+        lenient().when(apiContextResolver.getCurrentPermissionPrefix()).thenReturn("priceprovider.admin");
+        filterBuilder = new PermissionFilterBuilder(apiContextResolver);
+    }
+
+    // Test entity class
+    @SuppressWarnings("unused")
+    static class TestPriceRow {
+        private final String currencyRef;
+        private final String priceType;
+
+        public TestPriceRow(String currencyRef, String priceType) {
+            this.currencyRef = currencyRef;
+            this.priceType = priceType;
+        }
+
+        public String getCurrencyRef() {
+            return currencyRef;
+        }
+    }
+
+    @Test
+    void testBuildFilterWithNoPermissions() throws InvalidParameterException {
+        assertEquals("SALES_PRICE", new TestPriceRow("EUR", "SALES_PRICE").priceType);
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.emptySet(), "PriceRow", "read");
+
+        assertNotNull(spec, "Should return a deny-all specification");
+        // The specification should be a disjunction (always false)
+    }
+
+    @Test
+    void testBuildFilterWithGlobalPermission() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNull(spec, "Global permission should return null (no filtering needed)");
+    }
+
+    @Test
+    void testBuildFilterWithSelectorPermission() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "Selector permission should return a filtering specification");
+    }
+
+    @Test
+    void testBuildFilterWithMultipleSelectorPermissions() throws InvalidParameterException {
+        AppPermissionEntity perm1 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        AppPermissionEntity perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='USD']:read");
+
+        Set<AppPermissionEntity> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(permissions, "PriceRow", "read");
+
+        assertNotNull(spec, "Multiple selector permissions should return a filtering specification");
+        // The specification should be an OR of the two conditions
+    }
+
+    @Test
+    void testBuildFilterWithComplexSelector() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[currencyRef=='EUR' AND priceType=='SALES_PRICE']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "Complex selector permission should return a filtering specification");
+    }
+
+    @Test
+    void testBuildFilterWithWrongDataType() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission("priceprovider.admin:Channel:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "Wrong data type should return deny-all specification");
+        // The specification should be a disjunction (always false)
+    }
+
+    @Test
+    void testBuildFilterWithWrongAction() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "write");
+
+        assertNotNull(spec, "Wrong action should return deny-all specification");
+        // The specification should be a disjunction (always false)
+    }
+
+    @Test
+    void testBuildFilterWithMixedPermissions() throws InvalidParameterException {
+        // Mix of global and selector permissions - global wins
+        AppPermissionEntity perm1 = createPermission("priceprovider.admin:PriceRow:read"); // Global
+        AppPermissionEntity perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read"); // Selector
+
+        Set<AppPermissionEntity> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(permissions, "PriceRow", "read");
+
+        assertNull(spec, "Global permission should take precedence, returning null");
+    }
+
+    @Test
+    void testBuildFilterWithNotOperator() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[NOT priceType=='PURCHASE_PRICE']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "NOT operator should be supported in selector");
+    }
+
+    @Test
+    void testBuildFilterWithOrOperator() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "OR operator should be supported in selector");
+    }
+
+    @Test
+    void testBuildFilterWithIsEmptyOperator() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[groupRefs isEmpty]:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "isEmpty operator should be supported in selector");
+    }
+
+    @Test
+    void testBuildFilterWithHasAnyOperator() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[groupRefs hasAny ('GROUP1', 'GROUP2')]:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "hasAny operator should be supported in selector");
+    }
+
+    @Test
+    void testBuildFilterWithInvalidPermissionName() throws InvalidParameterException {
+        AppPermissionEntity perm = createPermission("invalid-permission-name");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "Invalid permission should be ignored and return deny-all specification");
+    }
+
+    @Test
+    void testBuildFilterWithNotEqualsOperator() throws InvalidParameterException {
+        // Test that NOT_EQUALS is correctly handled via negation
+        // Permission: can read all price rows EXCEPT purchase prices
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[priceType!='PURCHASE_PRICE']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "NOT_EQUALS operator should be supported in selector");
+
+        // The implementation converts NOT_EQUALS to EQUALS with negation applied to the expression
+        // This test verifies the filter is created without errors
+        // The actual negation semantics are tested in SelectorEvaluatorTest
+    }
+
+    @Test
+    void testBuildFilterWithComplexNotEquals() throws InvalidParameterException {
+        // Test NOT_EQUALS combined with AND operator
+        AppPermissionEntity perm = createPermission(
+                "priceprovider.admin:PriceRow[currencyRef=='EUR' AND priceType!='PURCHASE_PRICE']:read");
+
+        Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
+
+        assertNotNull(spec, "Complex selector with NOT_EQUALS should return a filtering specification");
+    }
+
+    // Helper method to create a permission entity
+    private AppPermissionEntity createPermission(String name) {
+        AppPermissionEntity entity = new AppPermissionEntity();
+        entity.setName(name);
+        return entity;
+    }
+}

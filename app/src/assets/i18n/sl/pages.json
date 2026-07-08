@@ -1,0 +1,117 @@
+{
+  "home": {
+    "title": "Dobrodošli v price|manager",
+    "description": "To je začetna stran. Tukaj je nekaj bližnjic do strani s seznami:",
+    "shortcuts": "Bližnjice"
+  },
+  "languages": {
+    "title": "Jeziki",
+    "addLanguage": "Dodaj jezik",
+    "editLanguage": "Uredi jezik",
+    "languageDetails": "Podrobnosti jezika",
+    "deleteConfirm": "Izbriši {{count}} izbranih jezikov?",
+    "fields": {
+      "isoKey": "ISO ključ",
+      "active": "Aktiven",
+      "mandatory": "Obvezno"
+    }
+  },
+  "currencies": {
+    "title": "Valute",
+    "addCurrency": "Dodaj valuto",
+    "editCurrency": "Uredi valuto",
+    "currencyDetails": "Podrobnosti valute",
+    "createCurrency": "Ustvari valuto"
+  },
+  "units": {
+    "title": "Enote",
+    "addUnit": "Dodaj enoto",
+    "editUnit": "Uredi enoto",
+    "unitDetails": "Podrobnosti enote",
+    "createUnit": "Ustvari enoto"
+  },
+  "taxclasses": {
+    "title": "Davčni razredi",
+    "addTaxClass": "Dodaj davčni razred",
+    "editTaxClass": "Uredi davčni razred",
+    "taxClassDetails": "Podrobnosti davčnega razreda",
+    "createTaxClass": "Ustvari davčni razred"
+  },
+  "groups": {
+    "title": "Skupine",
+    "addGroup": "Dodaj skupino",
+    "editGroup": "Uredi skupino",
+    "groupDetails": "Podrobnosti skupine",
+    "createGroup": "Ustvari skupino",
+    "deleteConfirm": "Ali ste prepričani, da želite izbrisati {{count}} izbranih skupin?"
+  },
+  "organizations": {
+    "title": "Organizacije",
+    "addOrganization": "Dodaj organizacijo",
+    "editOrganization": "Uredi organizacijo",
+    "organizationDetails": "Podrobnosti organizacije",
+    "createOrganization": "Ustvari organizacijo"
+  },
+  "pricerows": {
+    "title": "Cenovne vrstice",
+    "addPriceRow": "Dodaj cenovno vrstico",
+    "editPriceRow": "Uredi cenovno vrstico",
+    "priceRowDetails": "Podrobnosti cenovne vrstice",
+    "createPriceRow": "Ustvari cenovno vrstico"
+  },
+  "countries": {
+    "title": "Države",
+    "addCountry": "Dodaj državo",
+    "editCountry": "Uredi državo",
+    "countryDetails": "Podrobnosti države",
+    "createCountry": "Ustvari državo",
+    "deleteConfirm": "Izbrisati {{count}} izbranih držav?"
+  },
+  "channels": {
+    "title": "Kanali",
+    "addChannel": "Dodaj kanal",
+    "editChannel": "Uredi kanal",
+    "channelDetails": "Podrobnosti kanala",
+    "createChannel": "Ustvari kanal",
+    "deleteConfirm": "Izbrisati {{count}} izbranih kanalov?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details",
+    "createAppPermission": "Create App Permission",
+    "editAppPermission": "Edit App Permission",
+    "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
+    "deleteWarning": "Deleting this permission can break application access. Continue?",
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Dodaj dovoljenje aplikacije"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Inicializacija storitve",
+    "description": "Ročno inicializirajte podatke storitve. Izberite podatke, ki jih želite naložiti, in kliknite gumb Naloži podatke.",
+    "selectDataTitle": "Izberite podatke za nalaganje",
+    "essentialData": "Bistveni podatki",
+    "essentialDataDescription": "Ključni podatki, potrebni za delovanje storitve (jeziki, valute, države, enote, davčni razredi, dovoljenja, vloge)",
+    "sampleData": "Vzorčni podatki",
+    "sampleDataDescription": "Vzorčni podatki za testiranje in predstavitev (organizacije, skupine, kanali, vrstice cen)",
+    "loadButton": "Naloži podatke",
+    "loading": "Nalaganje...",
+    "previewTitle": "Predogled podatkovnih datotek",
+    "essentialFiles": "Bistvene podatkovne datoteke",
+    "sampleFiles": "Vzorčne podatkovne datoteke",
+    "directory": "Imenik",
+    "noFiles": "Ni najdenih datotek",
+    "loadingPreview": "Nalaganje predogleda...",
+    "refreshPermissions": "Osveži dovoljenja",
+    "refreshPermissionsHint": "Po nalaganju novih podatkov ponovno naložite svoja dovoljenja"
+  }
+}

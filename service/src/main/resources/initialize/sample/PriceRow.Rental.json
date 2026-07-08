@@ -1,0 +1,1442 @@
+[
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 10.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 9.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 9.0,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 8.1,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 8.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 7.2,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 5.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 4.5,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 4.5,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 4.05,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 4.0,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 3.6,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 12.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 10.8,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 11.0,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 9.9,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 10.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 9.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 6.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 5.4,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 5.5,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 4.95,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 5.0,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 4.5,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-GREEN-LAND"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 20.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 18.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 18.0,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 16.2,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 16.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 14.4,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 10.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 9.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 9.0,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 8.1,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 8.0,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 7.2,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 30.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 27.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 27.0,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 24.3,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 24.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 21.6,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 15.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 13.5,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 13.5,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 12.15,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 12.0,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 10.8,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "ORG-RENTAL-BUILDER-PRO"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 50.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 45.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 25.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 22.5,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 100.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 90.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 40.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 36.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 150.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 135.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 60.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 54.0,
+    "minQuantity": 1,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 45.0,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 40.5,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 40.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 36.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 20.0,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 18.0,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 15.0,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-DRILL",
+    "priceValue": 13.5,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 45.0,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 40.5,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 40.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 36.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 20.0,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 18.0,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 15.0,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-SAW",
+    "priceValue": 13.5,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 45.0,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 40.5,
+    "minQuantity": 3,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 40.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 36.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_BASE_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 20.0,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 18.0,
+    "minQuantity": 7,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 15.0,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "RENT-MOWER",
+    "priceValue": 13.5,
+    "minQuantity": 14,
+    "unitRef": "d",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "RENTAL_DAILY_RATE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel",
+      "rental-channel"
+    ]
+  }
+]

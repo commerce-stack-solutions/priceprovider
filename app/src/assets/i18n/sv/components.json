@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Prisrader",
+    "currencies": "Valutor",
+    "taxClasses": "Skatteklasser",
+    "units": "Enheter",
+    "languages": "Språk",
+    "groups": "Grupper",
+    "organizations": "Organisationer",
+    "countries": "Länder",
+    "channels": "Kanaler",
+    "appPermissions": "Appbehörigheter",
+    "appRoles": "Approller",
+    "serviceInitialization": "Tjänsteinitiering",
+    "categories": {
+      "commerceManagement": "Handelshantering",
+      "organizationsGroups": "Organisationer och grupper",
+      "masterData": "Masterdata",
+      "systemAccessManagement": "System- och åtkomsthantering"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Välj språk",
+    "currentLanguage": "Nuvarande språk"
+  }
+}

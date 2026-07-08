@@ -1,0 +1,20 @@
+@if (hasContent()) {
+  <div class="card info-section">
+    <div class="card-header">
+      <h5 class="mb-0"><i class="bi bi-info-circle"></i> {{ 'common.labels.additionalInformation' | transloco }}</h5>
+    </div>
+    <div class="card-body">
+      @for (section of sections(); track section.title) {
+        <div class="info-block">
+          <h6 class="info-title">{{ section.title }}</h6>
+          <dl class="row mb-0">
+            @for (field of section.fields; track field.label) {
+              <dt class="col-sm-6">{{ field.label }}</dt>
+              <dd class="col-sm-6">{{ formatValue(field) }}</dd>
+            }
+          </dl>
+        </div>
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Cjenovni redovi",
+    "currencies": "Valute",
+    "taxClasses": "Porezne klase",
+    "units": "Jedinice",
+    "languages": "Jezici",
+    "groups": "Grupe",
+    "organizations": "Organizacije",
+    "countries": "Države",
+    "channels": "Kanali",
+    "appPermissions": "Dopuštenja aplikacije",
+    "appRoles": "Uloge aplikacije",
+    "serviceInitialization": "Inicijalizacija usluge",
+    "categories": {
+      "commerceManagement": "Upravljanje trgovinom",
+      "organizationsGroups": "Organizacije i grupe",
+      "masterData": "Matični podaci",
+      "systemAccessManagement": "Sustav i upravljanje pristupom"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Odaberi jezik",
+    "currentLanguage": "Trenutni jezik"
+  }
+}

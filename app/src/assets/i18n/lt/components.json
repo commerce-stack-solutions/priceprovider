@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Kainų eilutės",
+    "currencies": "Valiutos",
+    "taxClasses": "Mokesčių klasės",
+    "units": "Vienetai",
+    "languages": "Kalbos",
+    "groups": "Grupės",
+    "organizations": "Organizacijos",
+    "countries": "Šalys",
+    "channels": "Kanalai",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles",
+    "serviceInitialization": "Paslaugos inicijavimas",
+    "categories": {
+      "commerceManagement": "Prekybos valdymas",
+      "organizationsGroups": "Organizacijos ir grupės",
+      "masterData": "Pagrindiniai duomenys",
+      "systemAccessManagement": "Sistema ir prieigos valdymas"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Pasirinkti kalbą",
+    "currentLanguage": "Dabartinė kalba"
+  }
+}

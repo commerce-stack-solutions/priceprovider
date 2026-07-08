@@ -1,0 +1,138 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ isEditMode() ? ('pages.channels.editChannel' | transloco) : ('pages.channels.addChannel' | transloco) }}</h1>
+    <div>
+      <a [routerLink]="['/' + lang(), 'channels']" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert alert-success" role="alert">
+      <i class="bi bi-check-circle"></i> {{ successMessage() }}
+    </div>
+  }
+
+  @if (!loading()) {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+            <label for="id" class="col-sm-3 col-form-label">{{ 'common.fields.id' | transloco }} @if ('id' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <div class="col-sm-9">
+              <input
+                type="text"
+                class="form-control"
+                id="id"
+                formControlName="id"
+                [class.is-invalid]="(form.get('id')?.invalid && form.get('id')?.touched) || hasFieldError('id')"
+                placeholder="e.g., dach-sales-channel"
+                [readonly]="isEditMode()">
+              @if (form.get('id')?.invalid && form.get('id')?.touched) {
+                <div class="invalid-feedback">
+                  @if (form.get('id')?.errors?.['required']) {
+                    {{ 'common.messages.idRequired' | transloco }}
+                  }
+                  @if (form.get('id')?.errors?.['pattern']) {
+                    {{ 'common.messages.idInvalidPattern' | transloco }}
+                  }
+                </div>
+              }
+              @if (hasFieldError('id')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('id'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              @if (isEditMode()) {
+                <small class="form-text text-muted">{{ 'common.messages.idCannotBeChanged' | transloco }}</small>
+              }
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="priceRepresentationMode" class="col-sm-3 col-form-label">
+              {{ 'common.fields.priceRepresentationMode' | transloco }} @if ('priceRepresentationMode' | isMandatory: meta()) { <span class="text-danger">*</span> }
+            </label>
+            <div class="col-sm-9">
+              <div class="d-flex align-items-start gap-2">
+                <app-enum-selector
+                  [values]="priceRepresentationModeValues"
+                  formControlName="priceRepresentationMode"
+                  [required]="isMandatory('priceRepresentationMode')"
+                  [isInvalid]="(form.get('priceRepresentationMode')?.invalid && form.get('priceRepresentationMode')?.touched) || hasFieldError('priceRepresentationMode')"
+                  placeholder="{{ 'common.fields.priceRepresentationModePlaceholder' | transloco }}">
+                </app-enum-selector>
+                @if (form.get('priceRepresentationMode')?.value) {
+                  <span class="text-muted" style="cursor: help;" [title]="getPriceRepresentationModeDescription(form.get('priceRepresentationMode')?.value)">
+                    <i class="bi bi-info-circle"></i>
+                  </span>
+                }
+              </div>
+              @if (form.get('priceRepresentationMode')?.invalid && form.get('priceRepresentationMode')?.touched) {
+                <div class="invalid-feedback d-block">
+                  {{ 'common.messages.requiredField' | transloco }}
+                </div>
+              }
+              @if (hasFieldError('priceRepresentationMode')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('priceRepresentationMode'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+              @if (form.get('priceRepresentationMode')?.value) {
+                <small class="form-text text-muted">{{ getPriceRepresentationModeDescription(form.get('priceRepresentationMode')?.value) }}</small>
+              }
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="allowedCountryRefs" class="col-sm-3 col-form-label">{{ 'common.fields.allowedCountryRefs' | transloco }}</label>
+            <div class="col-sm-9">
+              <app-referencelist-edit
+                formControlName="allowedCountryRefs"
+                [dataSource]="countriesDataSource"
+                placeholder="{{ 'common.fields.allowedCountryRefsPlaceholder' | transloco }}"
+                [allowCreate]="false">
+              </app-referencelist-edit>
+              @if (hasFieldError('allowedCountryRefs')) {
+                <div class="invalid-feedback d-block">
+                  @for (error of getFieldErrors('allowedCountryRefs'); track error) {
+                    <div>{{ error }}</div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) { <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

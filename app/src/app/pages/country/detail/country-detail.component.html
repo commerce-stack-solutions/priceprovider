@@ -1,0 +1,81 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ 'pages.countries.countryDetails' | transloco }}</h1>
+    <div>
+      <a [routerLink]="['/' + lang(), 'countries']" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </a>
+      @if (country()) {
+        <a [routerLink]="canWrite() ? ['/' + lang(), 'countries', country()?.isoKey, 'edit'] : null" class="btn btn-primary me-2" [class.text-decoration-underline]="showEditKeyHint()"
+           [class.disabled]="!canWrite()"
+           [attr.aria-disabled]="!canWrite()"
+           [attr.title]="!canWrite() ? ( 'common.messages.noWritePermission' | transloco ) : null">
+          <i class="bi bi-pencil"></i> {{ 'common.actions.edit' | transloco }}
+        </a>
+        <button class="btn btn-danger" (click)="deleteCountry()"
+                [disabled]="!canDelete()"
+                [attr.aria-disabled]="!canDelete()"
+                [attr.title]="!canDelete() ? ( 'common.messages.noDeletePermission' | transloco ) : null">
+          <i class="bi bi-trash"></i> {{ 'common.actions.delete' | transloco }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  }
+
+  @if (!error() && !country()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (country() && !error()) {
+    <div class="row">
+      <div [class]="infoSections().length > 0 ? 'col-md-8' : 'col-md-12'">
+        <div class="card">
+          <div class="card-body">
+            <dl class="row">
+              <dt class="col-sm-3">{{ 'common.fields.isoKey' | transloco }}</dt>
+              <dd class="col-sm-9">{{ country()!.isoKey }}</dd>
+            </dl>
+            @if (country()!.name && (country()!.name | keyvalue)!.length > 0) {
+              <hr>
+              <h6>{{ 'common.fields.name' | transloco }}</h6>
+              <dl class="row">
+                @for (entry of (country()!.name | keyvalue); track entry.key) {
+                  <dt class="col-sm-3">{{ entry.key }}</dt>
+                  <dd class="col-sm-9">{{ entry.value }}</dd>
+                }
+              </dl>
+            }
+            @if (country()!.allowedCurrencyRefs && country()!.allowedCurrencyRefs!.length > 0) {
+              <hr>
+              <dl class="row">
+                <dt class="col-sm-3">{{ 'common.fields.allowedCurrencyRefs' | transloco }}</dt>
+                <dd class="col-sm-9">{{ country()!.allowedCurrencyRefs!.join(', ') }}</dd>
+              </dl>
+            }
+            @if (country()!.primaryCurrencyRef) {
+              <dl class="row">
+                <dt class="col-sm-3">{{ 'common.fields.primaryCurrencyRef' | transloco }}</dt>
+                <dd class="col-sm-9">{{ country()!.primaryCurrencyRef }}</dd>
+              </dl>
+            }
+          </div>
+        </div>
+      </div>
+      @if (infoSections().length > 0) {
+        <div class="col-md-4">
+          <app-info-section [sections]="infoSections()"></app-info-section>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,39 @@
+.app-container {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 56px); /* Full height minus header */
+  margin-top: 56px;
+}
+
+.main-content {
+  flex-grow: 1; /* Allows the main content to take up all available space */
+  overflow-y: auto; /* Add scroll for the main content area if it overflows */
+  padding: 1.5rem;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 56px; /* Match the margin-top of app-container */
+    right: 0;
+    bottom: 0;
+    left: 0px;
+    z-index: -1;
+    transition: background 0.3s ease-in-out;
+    
+    /* Theme-based radial gradient using CSS variables */
+    background: radial-gradient(
+      circle at bottom right,
+      var(--gradient-color-3) 0%,
+      var(--gradient-color-2) 45%,
+      var(--gradient-color-1) 100%
+    );
+  }
+
+  /* When sidebar is collapsed */
+  .sidebar-hidden + & {
+    &::before {
+      left: 0;
+    }
+  }
+}

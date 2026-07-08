@@ -1,0 +1,25 @@
+package io.commercestacksolutions.priceproviderservice.facade.language.mapper;
+
+import io.commercestacksolutions.commons.mapper.AbstractMapper;
+import io.commercestacksolutions.commons.mapper.RestRequestMappingContext;
+import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
+import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
+import io.commercestacksolutions.priceproviderservice.facade.language.restentity.LanguageRestEntity;
+import org.springframework.stereotype.Component;
+
+@Component
+public class LanguageEntityMapper extends AbstractMapper<LanguageRestEntity, LanguageEntity, RestRequestMappingContext<String>> {
+
+    @Override
+    public LanguageEntity createTarget() {
+        return new LanguageEntity();
+    }
+
+    @Override
+    public void convert(LanguageRestEntity source, LanguageEntity target, RestRequestMappingContext<String> context) throws DataMappingException {
+        target.setIsoKey(context.getId());
+        target.setActive(source.getActive());
+        target.setMandatory(source.getMandatory());
+        target.setName(source.getName());
+    }
+}

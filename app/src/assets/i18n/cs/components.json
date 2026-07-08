@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Řádky cen",
+    "currencies": "Měny",
+    "taxClasses": "Daňové třídy",
+    "units": "Jednotky",
+    "languages": "Jazyky",
+    "groups": "Skupiny",
+    "organizations": "Organizace",
+    "countries": "Země",
+    "channels": "Kanály",
+    "appPermissions": "App Permissions",
+    "appRoles": "App Roles",
+    "serviceInitialization": "Inicializace služby",
+    "categories": {
+      "commerceManagement": "Správa obchodu",
+      "organizationsGroups": "Organizace & Skupiny",
+      "masterData": "Kmenová data",
+      "systemAccessManagement": "Systém & Správa přístupu"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Vybrat jazyk",
+    "currentLanguage": "Aktuální jazyk"
+  }
+}

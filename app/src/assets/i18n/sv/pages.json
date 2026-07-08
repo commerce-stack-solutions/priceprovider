@@ -1,0 +1,117 @@
+{
+  "home": {
+    "title": "Välkommen till price|manager",
+    "description": "Detta är startsidan. Här är några genvägar till listsidorna:",
+    "shortcuts": "Genvägar"
+  },
+  "languages": {
+    "title": "Språk",
+    "addLanguage": "Lägg till språk",
+    "editLanguage": "Redigera språk",
+    "languageDetails": "Språkdetaljer",
+    "deleteConfirm": "Radera {{count}} valda språk?",
+    "fields": {
+      "isoKey": "ISO-nyckel",
+      "active": "Aktiv",
+      "mandatory": "Obligatorisk"
+    }
+  },
+  "currencies": {
+    "title": "Valutor",
+    "addCurrency": "Lägg till valuta",
+    "editCurrency": "Redigera valuta",
+    "currencyDetails": "Valutadetaljer",
+    "createCurrency": "Skapa valuta"
+  },
+  "units": {
+    "title": "Enheter",
+    "addUnit": "Lägg till enhet",
+    "editUnit": "Redigera enhet",
+    "unitDetails": "Enhetsdetaljer",
+    "createUnit": "Skapa enhet"
+  },
+  "taxclasses": {
+    "title": "Skatteklasser",
+    "addTaxClass": "Lägg till skatteklass",
+    "editTaxClass": "Redigera skatteklass",
+    "taxClassDetails": "Skatteklassdetaljer",
+    "createTaxClass": "Skapa skatteklass"
+  },
+  "groups": {
+    "title": "Grupper",
+    "addGroup": "Lägg till grupp",
+    "editGroup": "Redigera grupp",
+    "groupDetails": "Gruppdetaljer",
+    "createGroup": "Skapa grupp",
+    "deleteConfirm": "Är du säker på att du vill radera {{count}} valda grupper?"
+  },
+  "organizations": {
+    "title": "Organisationer",
+    "addOrganization": "Lägg till organisation",
+    "editOrganization": "Redigera organisation",
+    "organizationDetails": "Organisationsdetaljer",
+    "createOrganization": "Skapa organisation"
+  },
+  "pricerows": {
+    "title": "Prisrader",
+    "addPriceRow": "Lägg till prisrad",
+    "editPriceRow": "Redigera prisrad",
+    "priceRowDetails": "Prisraddetaljer",
+    "createPriceRow": "Skapa prisrad"
+  },
+  "countries": {
+    "title": "Länder",
+    "addCountry": "Lägg till land",
+    "editCountry": "Redigera land",
+    "countryDetails": "Landinformation",
+    "createCountry": "Skapa land",
+    "deleteConfirm": "Ta bort {{count}} valda länder?"
+  },
+  "channels": {
+    "title": "Kanaler",
+    "addChannel": "Lägg till kanal",
+    "editChannel": "Redigera kanal",
+    "channelDetails": "Kanalinformation",
+    "createChannel": "Skapa kanal",
+    "deleteConfirm": "Ta bort {{count}} valda kanaler?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details",
+    "createAppPermission": "Create App Permission",
+    "editAppPermission": "Edit App Permission",
+    "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
+    "deleteWarning": "Deleting this permission can break application access. Continue?",
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Lägg till appbehörighet"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Tjänsteinitialisering",
+    "description": "Initialisera tjänstedata manuellt. Välj de data du vill läsa in och klicka på knappen Läs in data.",
+    "selectDataTitle": "Välj data att läsa in",
+    "essentialData": "Viktiga data",
+    "essentialDataDescription": "Kärndata som krävs för att tjänsten ska fungera (språk, valutor, länder, enheter, skatteklasser, behörigheter, roller)",
+    "sampleData": "Exempeldata",
+    "sampleDataDescription": "Exempeldata för testning och demonstration (organisationer, grupper, kanaler, prisrader)",
+    "loadButton": "Läs in data",
+    "loading": "Läser in...",
+    "previewTitle": "Förhandsgranskning av datafiler",
+    "essentialFiles": "Viktiga datafiler",
+    "sampleFiles": "Exempeldatafiler",
+    "directory": "Katalog",
+    "noFiles": "Inga filer hittades",
+    "loadingPreview": "Läser in förhandsgranskning...",
+    "refreshPermissions": "Uppdatera behörigheter",
+    "refreshPermissionsHint": "Läs in dina behörigheter igen efter att ha läst in nya data"
+  }
+}

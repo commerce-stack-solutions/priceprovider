@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Wiersze cen",
+    "currencies": "Waluty",
+    "taxClasses": "Klasy podatkowe",
+    "units": "Jednostki",
+    "languages": "Języki",
+    "groups": "Grupy",
+    "organizations": "Organizacje",
+    "countries": "Kraje",
+    "channels": "Kanały",
+    "appPermissions": "Uprawnienia aplikacji",
+    "appRoles": "Role aplikacji",
+    "serviceInitialization": "Inicjalizacja usługi",
+    "categories": {
+      "commerceManagement": "Zarządzanie handlem",
+      "organizationsGroups": "Organizacje i grupy",
+      "masterData": "Dane podstawowe",
+      "systemAccessManagement": "System i zarządzanie dostępem"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Wybierz język",
+    "currentLanguage": "Obecny język"
+  }
+}

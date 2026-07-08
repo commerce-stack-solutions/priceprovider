@@ -1,0 +1,80 @@
+<div class="referencelist-container">
+  <div class="reference-list mb-2">
+    @for (item of selectedReferencesList(); track item) {
+      <span class="ref-badge ref-badge-removable me-1 mb-1">
+        {{ item }}
+        <button type="button" class="ref-badge-clear" (click)="removeItem(item, $event)" title="Remove">
+          <i class="bi bi-trash"></i>
+        </button>
+      </span>
+    }
+  </div>
+  
+  <div class="reference-input-wrapper position-relative">
+    <input 
+      type="text"
+      class="form-control"
+      [formControl]="inputFormControl"
+      [placeholder]="placeholder || ('common.actions.addReference' | transloco)"
+      (focus)="onInputFocus()"
+      (blur)="onInputBlur()"
+      (click)="onInputClick()"
+      (keydown)="onKeydown($event)"
+    />
+    
+    @if (showDropdown()) {
+      <div class="dropdown-menu show" style="width: 100%;">
+        @if (isLoading()) {
+          <div class="dropdown-item disabled">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Loading...
+          </div>
+        }
+        
+        @if (!isLoading()) {
+          @for (option of availableReferenceOptions(); track option.value; let idx = $index) {
+            <button 
+              type="button"
+              class="dropdown-item"
+              [class.highlighted]="selectedIndex() === idx"
+              (mousedown)="selectOption(option)"
+              (mouseenter)="selectedIndex.set(idx)"
+            >
+              <strong>{{ option.value }}</strong>
+              @if (option.label !== option.value) {
+                <span class="text-muted ms-2">{{ option.label }}</span>
+              }
+            </button>
+          }
+          
+          @if (hasMoreItems()) {
+            <button 
+              type="button"
+              class="dropdown-item dropdown-item-load-more"
+              [class.highlighted]="selectedIndex() === availableReferenceOptions().length"
+              (mousedown)="loadMore()"
+              (mouseenter)="selectedIndex.set(availableReferenceOptions().length)"
+            >
+              <i class="bi bi-arrow-down-circle me-2"></i>
+              <strong>{{ 'common.actions.loadMore' | transloco }}</strong>
+            </button>
+          }
+          
+          @if (shouldShowCreateOption()) {
+            <button 
+              type="button"
+              class="dropdown-item dropdown-item-create"
+              [class.highlighted]="selectedIndex() === (availableReferenceOptions().length + (hasMoreItems() ? 1 : 0))"
+              (mousedown)="onCreateNew($event)"
+              (mouseenter)="selectedIndex.set(availableReferenceOptions().length + (hasMoreItems() ? 1 : 0))"
+            >
+              <i class="bi bi-plus-circle me-2"></i>
+              <strong>{{ createLabel || ('common.actions.createNew' | transloco)}}</strong>
+            </button>
+          }
+          
+        }
+      </div>
+    }
+  </div>
+</div>

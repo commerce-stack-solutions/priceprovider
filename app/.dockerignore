@@ -1,0 +1,28 @@
+# Node modules (will be installed during build)
+node_modules
+
+# Build output (will be generated during build)
+dist
+.angular
+
+# IDE and editor files
+.vscode
+.idea
+*.iml
+
+# Git files
+.git
+.gitignore
+
+# Testing output
+coverage
+
+# Documentation
+README.md
+AGENTS.md
+
+# Docker files (not needed in the image)
+Dockerfile
+.dockerignore
+dockerimage-*.sh
+dockerimage-*.bat

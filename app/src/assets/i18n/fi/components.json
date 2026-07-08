@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Hintarivit",
+    "currencies": "Valuutat",
+    "taxClasses": "Veroluokat",
+    "units": "Yksiköt",
+    "languages": "Kielet",
+    "groups": "Ryhmät",
+    "organizations": "Organisaatiot",
+    "countries": "Maat",
+    "channels": "Kanavat",
+    "appPermissions": "Sovelluksen käyttöoikeudet",
+    "appRoles": "Sovelluksen roolit",
+    "serviceInitialization": "Palvelun alustus",
+    "categories": {
+      "commerceManagement": "Kaupanhallinta",
+      "organizationsGroups": "Organisaatiot ja ryhmät",
+      "masterData": "Päätiedot",
+      "systemAccessManagement": "Järjestelmä ja käyttöoikeuksien hallinta"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Valitse kieli",
+    "currentLanguage": "Nykyinen kieli"
+  }
+}

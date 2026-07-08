@@ -1,0 +1,150 @@
+[
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 299.98,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 279.98,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 259.98,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 270.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-CITY-COUNCIL"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 250.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-CITY-COUNCIL"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 240.0,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-CITY-COUNCIL"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 240.0,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-CITY-COUNCIL/ORG-CITY-HEALTH"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 220.0,
+    "minQuantity": 5,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-CITY-COUNCIL/ORG-CITY-HEALTH"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "TOOL-TORQUE-50NM",
+    "priceValue": 200.0,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": false,
+    "groupRefs": [
+      "ORG-CITY-COUNCIL/ORG-CITY-HEALTH"
+    ],
+    "channelRefs": [
+      "global-b2b-sales-channel"
+    ]
+  }
+]
+

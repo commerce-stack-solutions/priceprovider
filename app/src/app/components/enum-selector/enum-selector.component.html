@@ -1,0 +1,29 @@
+<div class="mb-3">
+  @if (label) {
+    <label class="form-label">
+      {{ label }}
+      @if (required) {
+        <span class="text-danger">*</span>
+      }
+    </label>
+  }
+  <select
+    class="form-select"
+    [class.is-invalid]="isInvalid"
+    [ngModel]="selectedValue()"
+    (ngModelChange)="onValueChange($event)"
+    [disabled]="disabled"
+    >
+    <option [value]="null">{{ placeholder }}</option>
+    @for (option of options; track option) {
+      <option [value]="option.value">
+        {{ option.label }}
+      </option>
+    }
+  </select>
+  @if (isInvalid) {
+    <div class="invalid-feedback">
+      This field is required
+    </div>
+  }
+</div>

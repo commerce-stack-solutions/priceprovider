@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Hinnaread",
+    "currencies": "Valuutad",
+    "taxClasses": "Maksuklassid",
+    "units": "Ühikud",
+    "languages": "Keeled",
+    "groups": "Rühmad",
+    "organizations": "Organisatsioonid",
+    "countries": "Riigid",
+    "channels": "Kanalid",
+    "appPermissions": "Rakenduse load",
+    "appRoles": "Rakenduse rollid",
+    "serviceInitialization": "Teenuse lähtestamine",
+    "categories": {
+      "commerceManagement": "Kaubandushaldus",
+      "organizationsGroups": "Organisatsioonid ja rühmad",
+      "masterData": "Põhiandmed",
+      "systemAccessManagement": "Süsteem ja juurdepääsuhaldus"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Vali keel",
+    "currentLanguage": "Praegune keel"
+  }
+}

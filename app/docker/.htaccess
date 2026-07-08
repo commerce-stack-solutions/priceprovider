@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# If an existing asset or directory is requested, serve it directly
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+RewriteRule ^ - [L]
+
+# Otherwise redirect all requests to index.html for Angular routing
+RewriteRule ^ /index.html

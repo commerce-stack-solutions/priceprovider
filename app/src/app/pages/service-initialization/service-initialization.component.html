@@ -1,0 +1,118 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1>{{ 'pages.serviceInitialization.title' | transloco }}</h1>
+      <p class="text-muted">{{ 'pages.serviceInitialization.description' | transloco }}</p>
+    </div>
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="refreshPermissions()"
+      title="{{ 'pages.serviceInitialization.refreshPermissionsHint' | transloco }}"
+    >
+      <i class="bi bi-arrow-clockwise me-2"></i>{{ 'pages.serviceInitialization.refreshPermissions' | transloco }}
+    </button>
+  </div>
+
+  @if (message()) {
+    <div class="alert" [class.alert-success]="messageType() === 'success'" [class.alert-danger]="messageType() === 'error'" role="alert">
+      {{ message() }}
+    </div>
+  }
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">{{ 'pages.serviceInitialization.selectDataTitle' | transloco }}</h5>
+    </div>
+    <div class="card-body">
+      <div class="form-check mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="loadEssential"
+          [checked]="loadEssential()"
+          (change)="loadEssential.set(!loadEssential())"
+          [disabled]="loading()"
+        >
+        <label class="form-check-label" for="loadEssential">
+          <strong>{{ 'pages.serviceInitialization.essentialData' | transloco }}</strong>
+          <br>
+          <small class="text-muted">{{ 'pages.serviceInitialization.essentialDataDescription' | transloco }}</small>
+        </label>
+      </div>
+
+      <div class="form-check mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="loadSample"
+          [checked]="loadSample()"
+          (change)="loadSample.set(!loadSample())"
+          [disabled]="loading()"
+        >
+        <label class="form-check-label" for="loadSample">
+          <strong>{{ 'pages.serviceInitialization.sampleData' | transloco }}</strong>
+          <br>
+          <small class="text-muted">{{ 'pages.serviceInitialization.sampleDataDescription' | transloco }}</small>
+        </label>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="loadData()"
+        [disabled]="loading() || (!loadEssential() && !loadSample())"
+      >
+        @if (loading()) {
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ 'pages.serviceInitialization.loading' | transloco }}
+        } @else {
+          {{ 'pages.serviceInitialization.loadButton' | transloco }}
+        }
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">{{ 'pages.serviceInitialization.previewTitle' | transloco }}</h5>
+    </div>
+    <div class="card-body">
+      @if (preview()) {
+        <h6 class="mb-3">{{ 'pages.serviceInitialization.essentialFiles' | transloco }}</h6>
+        <p class="text-muted small mb-2">
+          <i class="bi bi-folder me-2"></i>{{ 'pages.serviceInitialization.directory' | transloco }}: {{ preview()!.essentialDataDirectory }}
+        </p>
+        @if (preview()!.essentialFiles.length > 0) {
+          <ul class="list-group mb-4">
+            @for (file of preview()!.essentialFiles; track file) {
+              <li class="list-group-item">
+                <i class="bi bi-file-earmark-text me-2"></i>{{ file }}
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="text-muted">{{ 'pages.serviceInitialization.noFiles' | transloco }}</p>
+        }
+
+        <h6 class="mb-3">{{ 'pages.serviceInitialization.sampleFiles' | transloco }}</h6>
+        <p class="text-muted small mb-2">
+          <i class="bi bi-folder me-2"></i>{{ 'pages.serviceInitialization.directory' | transloco }}: {{ preview()!.sampleDataDirectory }}
+        </p>
+        @if (preview()!.sampleFiles.length > 0) {
+          <ul class="list-group">
+            @for (file of preview()!.sampleFiles; track file) {
+              <li class="list-group-item">
+                <i class="bi bi-file-earmark-text me-2"></i>{{ file }}
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="text-muted">{{ 'pages.serviceInitialization.noFiles' | transloco }}</p>
+        }
+      } @else {
+        <p class="text-muted">{{ 'pages.serviceInitialization.loadingPreview' | transloco }}</p>
+      }
+    </div>
+  </div>
+</div>

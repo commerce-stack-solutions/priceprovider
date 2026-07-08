@@ -1,0 +1,138 @@
+[
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 29.99,
+    "minQuantity": 1,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 27.99,
+    "minQuantity": 5,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 25.99,
+    "minQuantity": 10,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 23.99,
+    "minQuantity": 20,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 26.99,
+    "minQuantity": 1,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
+    ],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 24.99,
+    "minQuantity": 5,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
+    ],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 22.99,
+    "minQuantity": 10,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
+    ],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  },
+  {
+    "pricedResourceId": "DEMO-PRODUCT-002",
+    "priceValue": 20.99,
+    "minQuantity": 20,
+    "unitRef": "kg",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "taxIncluded": true,
+    "groupRefs": [
+      "DEMO-GROUP-STANDARD/DEMO-GROUP-PREMIUM"
+    ],
+    "channelRefs": [
+      "dach-sales-channel",
+      "euro-sales-channel"
+    ]
+  }
+]

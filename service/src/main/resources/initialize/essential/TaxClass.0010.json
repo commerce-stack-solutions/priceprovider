@@ -1,0 +1,92 @@
+[
+  {
+    "taxClassId": "de-vat-full",
+    "taxRate": 19.00,
+    "countryRef": "DE"
+  },
+  {
+    "taxClassId": "de-vat-reduced",
+    "taxRate": 7.00,
+    "countryRef": "DE"
+  },
+  {
+    "taxClassId": "at-vat-full",
+    "taxRate": 20.00,
+    "countryRef": "AT"
+  },
+  {
+    "taxClassId": "at-vat-reduced",
+    "taxRate": 10.00,
+    "countryRef": "AT"
+  },
+  {
+    "taxClassId": "ch-vat-full",
+    "taxRate": 8.10,
+    "countryRef": "CH"
+  },
+  {
+    "taxClassId": "ch-vat-reduced",
+    "taxRate": 2.60,
+    "countryRef": "CH"
+  },
+  {
+    "taxClassId": "se-vat-full",
+    "taxRate": 25.00,
+    "countryRef": "SE"
+  },
+  {
+    "taxClassId": "se-vat-reduced",
+    "taxRate": 12.00,
+    "countryRef": "SE"
+  },
+  {
+    "taxClassId": "no-vat-full",
+    "taxRate": 25.00,
+    "countryRef": "NO"
+  },
+  {
+    "taxClassId": "no-vat-reduced",
+    "taxRate": 15.00,
+    "countryRef": "NO"
+  },
+  {
+    "taxClassId": "dk-vat-full",
+    "taxRate": 25.00,
+    "countryRef": "DK"
+  },
+  {
+    "taxClassId": "fi-vat-full",
+    "taxRate": 24.00,
+    "countryRef": "FI"
+  },
+  {
+    "taxClassId": "fi-vat-reduced",
+    "taxRate": 14.00,
+    "countryRef": "FI"
+  },
+  {
+    "taxClassId": "pl-vat-full",
+    "taxRate": 23.00,
+    "countryRef": "PL"
+  },
+  {
+    "taxClassId": "pl-vat-reduced",
+    "taxRate": 8.00,
+    "countryRef": "PL"
+  },
+  {
+    "taxClassId": "cz-vat-full",
+    "taxRate": 21.00,
+    "countryRef": "CZ"
+  },
+  {
+    "taxClassId": "cz-vat-reduced",
+    "taxRate": 12.00,
+    "countryRef": "CZ"
+  },
+  {
+    "taxClassId": "us-sales-tax",
+    "taxRate": 7.00,
+    "countryRef": "US"
+  }
+]

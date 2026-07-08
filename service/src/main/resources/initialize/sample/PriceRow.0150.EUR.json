@@ -1,0 +1,96 @@
+[
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 19.99,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true,
+    "channelRefs": ["dach-sales-channel", "euro-sales-channel"]
+  },
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 18.99,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true,
+    "channelRefs": ["dach-sales-channel", "euro-sales-channel"]
+  },
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 17.99,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "validTo": "2024-12-31T23:59:59.000Z",
+    "taxIncluded": true,
+    "channelRefs": ["dach-sales-channel"]
+  },
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 16.99,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-full",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "validTo": "2024-12-31T23:59:59.000Z",
+    "taxIncluded": true,
+    "channelRefs": ["dach-sales-channel"]
+  },
+  {
+    "pricedResourceId": "products/002",
+    "priceValue": 0.99,
+    "minQuantity": 100,
+    "unitRef": "g",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true,
+    "channelRefs": ["euro-sales-channel"]
+  },
+  {
+    "pricedResourceId": "products/002",
+    "priceValue": 0.89,
+    "minQuantity": 100,
+    "unitRef": "g",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-02-01T00:00:00.000Z",
+    "validTo": "2024-12-31T23:59:59.000Z",
+    "taxIncluded": true,
+    "channelRefs": ["euro-sales-channel"]
+  },
+  {
+    "pricedResourceId": "products/003",
+    "priceValue": 1.99,
+    "minQuantity": 0.1,
+    "unitRef": "l",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true,
+    "channelRefs": ["dach-sales-channel"]
+  },
+  {
+    "pricedResourceId": "products/003",
+    "priceValue": 1.49,
+    "minQuantity": 1,
+    "unitRef": "l",
+    "currencyRef": "EUR",
+    "taxClassRef": "de-vat-reduced",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true,
+    "channelRefs": ["dach-sales-channel"]
+  }
+]

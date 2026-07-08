@@ -1,0 +1,144 @@
+<!-- Page Mode - Header and messages -->
+@if (!isModalMode()) {
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>{{ isEditMode() ? ('pages.currencies.editCurrency' | transloco) : ('pages.currencies.addCurrency' | transloco) }}</h1>
+      <div>
+        <a [routerLink]="['/' + lang(), 'currencies']" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+        </a>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+        </div>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert alert-success" role="alert">
+        <i class="bi bi-check-circle"></i> {{ successMessage() }}
+      </div>
+    }
+  </div>
+}
+
+<!-- Modal Mode - Error messages -->
+@if (isModalMode() && error()) {
+  <div class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+  </div>
+}
+
+<!-- Single Form - used by both page and modal modes with non-modal field structure -->
+@if (!loading()) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" [class.container]="!isModalMode()" [class.mt-4]="!isModalMode()">
+    <div [class.card]="!isModalMode()">
+      <div [class.card-body]="!isModalMode()">
+        <!-- Form Fields (using non-modal version with row layout) -->
+        <div class="row mb-3">
+          <label for="currencyKey" class="col-sm-3 col-form-label">{{ 'common.fields.currencyKey' | transloco }} @if ('currencyKey' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="currencyKey" 
+              formControlName="currencyKey"
+              [class.is-invalid]="(form.get('currencyKey')?.invalid && form.get('currencyKey')?.touched) || hasFieldError('currencyKey')"
+              placeholder="e.g., USD, EUR"
+              [readonly]="isEditMode()">
+            @if (form.get('currencyKey')?.invalid && form.get('currencyKey')?.touched) {
+              <div class="invalid-feedback">
+                @if (form.get('currencyKey')?.errors?.['required']) {
+                  Currency key is required.
+                }
+                @if (form.get('currencyKey')?.errors?.['pattern']) {
+                  Must be 3 uppercase letters (e.g., USD, EUR).
+                }
+              </div>
+            }
+            @if (hasFieldError('currencyKey')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('currencyKey'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+            @if (isEditMode() && !isModalMode()) {
+              <small class="form-text text-muted">Currency key cannot be changed in edit mode.</small>
+            }
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-3 col-form-label">{{ 'common.fields.symbol' | transloco }} @if ('symbol' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="symbol" 
+              formControlName="symbol"
+              [class.is-invalid]="(form.get('symbol')?.invalid && form.get('symbol')?.touched) || hasFieldError('symbol')"
+              placeholder="e.g., $, €">
+            @if (form.get('symbol')?.invalid && form.get('symbol')?.touched) {
+              <div class="invalid-feedback">Symbol is required.</div>
+            }
+            @if (hasFieldError('symbol')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('symbol'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <app-localized-stringfield-edit
+          [form]="form"
+          [fieldPrefix]="'name_'"
+          [fieldLabel]="'Name'"
+          [configuredLanguages]="languages"
+          [fieldErrors]="fieldErrors"
+          [isEditMode]="isEditMode()"
+          [isModalMode]="isModalMode()"
+          (removeLanguageEvent)="removeLanguage($event)"
+          (addLanguageEvent)="addLanguage($event)">
+        </app-localized-stringfield-edit>
+      </div>
+    </div>
+
+    <!-- Form Buttons -->
+    <div [class]="isModalMode() ? 'd-flex justify-content-end gap-2' : 'container mt-4 d-flex gap-2'">
+      @if (isModalMode()) {
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          {{ 'common.actions.create' | transloco }}
+        </button>
+      } @else {
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      }
+    </div>
+  </form>
+}

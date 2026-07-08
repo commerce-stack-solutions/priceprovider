@@ -1,0 +1,158 @@
+<!-- Page Mode - Header and messages -->
+@if (!isModalMode()) {
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>{{ isEditMode() ? ('pages.taxclasses.editTaxClass' | transloco) : ('pages.taxclasses.addTaxClass' | transloco) }}</h1>
+      <div>
+        <a [routerLink]="['/' + lang(), 'taxclasses']" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+        </a>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+        </div>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert alert-success" role="alert">
+        <i class="bi bi-check-circle"></i> {{ successMessage() }}
+      </div>
+    }
+  </div>
+}
+
+<!-- Modal Mode - Error messages -->
+@if (isModalMode() && error()) {
+  <div class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+  </div>
+}
+
+<!-- Single Form - used by both page and modal modes with non-modal field structure -->
+@if (!loading()) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" [class.container]="!isModalMode()" [class.mt-4]="!isModalMode()">
+    <div [class.card]="!isModalMode()">
+      <div [class.card-body]="!isModalMode()">
+        <!-- Form Fields (using non-modal version with row layout) -->
+        <div class="row mb-3">
+          <label for="taxClassId" class="col-sm-3 col-form-label">{{ 'common.fields.id' | transloco }} @if ('taxClassId' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="taxClassId" 
+              formControlName="taxClassId"
+              [class.is-invalid]="(form.get('taxClassId')?.invalid && form.get('taxClassId')?.touched) || hasFieldError('taxClassId')"
+              placeholder="{{ 'common.fields.taxClassPlaceholder' | transloco }}"
+              [readonly]="isEditMode()">
+            @if (form.get('taxClassId')?.invalid && form.get('taxClassId')?.touched) {
+              <div class="invalid-feedback">
+                @if (form.get('taxClassId')?.errors?.['required']) {
+                  {{ 'common.messages.idRequired' | transloco }}
+                }
+                @if (form.get('taxClassId')?.errors?.['pattern']) {
+                  {{ 'common.messages.idInvalidPattern' | transloco }}
+                }
+              </div>
+            }
+            @if (hasFieldError('taxClassId')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('taxClassId'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+            @if (isEditMode() && !isModalMode()) {
+              <small class="form-text text-muted">{{ 'common.messages.idCannotBeChanged' | transloco }}</small>
+            }
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-3 col-form-label">{{ 'common.fields.country' | transloco }} @if ('countryRef' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <app-reference-edit
+              [inputFormControl]="form.get('countryRef')"
+              [dataSource]="countriesDataSource"
+              placeholder="{{ 'common.fields.isoKeyPlaceholder' | transloco }}">
+            </app-reference-edit>
+            <small class="form-text text-muted">{{ 'common.messages.countryReference' | transloco }}</small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="taxRate" class="col-sm-3 col-form-label">{{ 'common.fields.taxRate' | transloco }} (%) @if ('taxRate' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+          <div class="col-sm-9">
+            <input 
+              type="number" 
+              step="0.01"
+              class="form-control" 
+              id="taxRate" 
+              formControlName="taxRate"
+              [class.is-invalid]="(form.get('taxRate')?.invalid && form.get('taxRate')?.touched) || hasFieldError('taxRate')"
+              placeholder="{{ 'common.fields.taxRatePlaceholder' | transloco }}">
+            @if (form.get('taxRate')?.invalid && form.get('taxRate')?.touched) {
+              <div class="invalid-feedback">
+                @if (form.get('taxRate')?.errors?.['required']) {
+                  {{ 'common.messages.requiredField' | transloco }}
+                }
+                @if (form.get('taxRate')?.errors?.['min']) {
+                  {{ 'common.messages.taxRateMinValue' | transloco }}
+                }
+                @if (form.get('taxRate')?.errors?.['max']) {
+                  {{ 'common.messages.taxRateMaxValue' | transloco }}
+                }
+              </div>
+            }
+            @if (hasFieldError('taxRate')) {
+              <div class="invalid-feedback d-block">
+                @for (error of getFieldErrors('taxRate'); track error) {
+                  <div>{{ error }}</div>
+                }
+              </div>
+            }
+            @if (isModalMode()) {
+              <small class="form-text text-muted">{{ 'common.messages.taxRateOptional' | transloco }}</small>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Buttons -->
+    <div [class]="isModalMode() ? 'd-flex justify-content-end gap-2' : 'container mt-4 d-flex gap-2'">
+      @if (isModalMode()) {
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          Create
+        </button>
+      } @else {
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          Cancel
+        </button>
+      }
+    </div>
+  </form>
+}

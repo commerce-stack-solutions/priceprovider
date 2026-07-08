@@ -1,0 +1,88 @@
+[
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 21.99,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true
+  },
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 20.99,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true
+  },
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 19.99,
+    "minQuantity": 1,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "validTo": "2024-12-31T23:59:59Z",
+    "taxIncluded": true
+  },
+  {
+    "pricedResourceId": "products/001",
+    "priceValue": 18.99,
+    "minQuantity": 10,
+    "unitRef": "piece",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-01-01T00:00:00.000Z",
+    "validTo": "2024-12-31T23:59:59.000Z",
+    "taxIncluded": true
+  },
+  {
+    "pricedResourceId": "products/002",
+    "priceValue": 1.09,
+    "minQuantity": 100,
+    "unitRef": "g",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true
+  },
+  {
+    "pricedResourceId": "products/002",
+    "priceValue": 0.99,
+    "minQuantity": 100,
+    "unitRef": "g",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "validFrom": "2024-02-01T00:00:00.000Z",
+    "validTo": "2024-12-31T23:59:59.000Z",
+    "taxIncluded": true
+  },
+  {
+    "pricedResourceId": "products/003",
+    "priceValue": 2.19,
+    "minQuantity": 0.1,
+    "unitRef": "l",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true
+  },
+  {
+    "pricedResourceId": "products/003",
+    "priceValue": 1.69,
+    "minQuantity": 1,
+    "unitRef": "l",
+    "currencyRef": "USD",
+    "taxClassRef": "us-sales-tax",
+    "priceType": "SALES_PRICE",
+    "taxIncluded": true
+  }
+]

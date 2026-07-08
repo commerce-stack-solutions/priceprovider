@@ -1,0 +1,117 @@
+{
+  "home": {
+    "title": "Tere tulemast price|manager",
+    "description": "See on avaleht. Siin on mõned otseteed loendilehtedele:",
+    "shortcuts": "Otseteed"
+  },
+  "languages": {
+    "title": "Keeled",
+    "addLanguage": "Lisa keel",
+    "editLanguage": "Muuda keelt",
+    "languageDetails": "Keele üksikasjad",
+    "deleteConfirm": "Kustuta {{count}} valitud keelt?",
+    "fields": {
+      "isoKey": "ISO võti",
+      "active": "Aktiivne",
+      "mandatory": "Kohustuslik"
+    }
+  },
+  "currencies": {
+    "title": "Valuutad",
+    "addCurrency": "Lisa valuuta",
+    "editCurrency": "Muuda valuutat",
+    "currencyDetails": "Valuuta üksikasjad",
+    "createCurrency": "Loo valuuta"
+  },
+  "units": {
+    "title": "Ühikud",
+    "addUnit": "Lisa ühik",
+    "editUnit": "Muuda ühikut",
+    "unitDetails": "Ühiku üksikasjad",
+    "createUnit": "Loo ühik"
+  },
+  "taxclasses": {
+    "title": "Maksuklassid",
+    "addTaxClass": "Lisa maksuklass",
+    "editTaxClass": "Muuda maksuklassi",
+    "taxClassDetails": "Maksuklassi üksikasjad",
+    "createTaxClass": "Loo maksuklass"
+  },
+  "groups": {
+    "title": "Rühmad",
+    "addGroup": "Lisa rühm",
+    "editGroup": "Muuda rühma",
+    "groupDetails": "Rühma üksikasjad",
+    "createGroup": "Loo rühm",
+    "deleteConfirm": "Kas olete kindel, et soovite kustutada {{count}} valitud rühma?"
+  },
+  "organizations": {
+    "title": "Organisatsioonid",
+    "addOrganization": "Lisa organisatsioon",
+    "editOrganization": "Muuda organisatsiooni",
+    "organizationDetails": "Organisatsiooni üksikasjad",
+    "createOrganization": "Loo organisatsioon"
+  },
+  "pricerows": {
+    "title": "Hinnaread",
+    "addPriceRow": "Lisa hinnarida",
+    "editPriceRow": "Muuda hinnarida",
+    "priceRowDetails": "Hinnarea üksikasjad",
+    "createPriceRow": "Loo hinnarida"
+  },
+  "countries": {
+    "title": "Riigid",
+    "addCountry": "Lisa riik",
+    "editCountry": "Muuda riiki",
+    "countryDetails": "Riigi andmed",
+    "createCountry": "Loo riik",
+    "deleteConfirm": "Kustutada {{count}} valitud riiki?"
+  },
+  "channels": {
+    "title": "Kanalid",
+    "addChannel": "Lisa kanal",
+    "editChannel": "Muuda kanalit",
+    "channelDetails": "Kanali andmed",
+    "createChannel": "Loo kanal",
+    "deleteConfirm": "Kustutada {{count}} valitud kanalit?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details",
+    "createAppPermission": "Create App Permission",
+    "editAppPermission": "Edit App Permission",
+    "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
+    "deleteWarning": "Deleting this permission can break application access. Continue?",
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Lisa rakenduse õigus"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Teenuse initsialiseerimine",
+    "description": "Teenuse andmete käsitsi initsialiseerimine. Valige andmed, mida soovite laadida, ja klõpsake nuppu Laadi andmed.",
+    "selectDataTitle": "Vali laaditavad andmed",
+    "essentialData": "Olulised andmed",
+    "essentialDataDescription": "Teenuse toimimiseks vajalikud põhiandmed (keeled, valuutad, riigid, ühikud, maksuklassid, õigused, rollid)",
+    "sampleData": "Näidisandmed",
+    "sampleDataDescription": "Näidisandmed testimiseks ja demonstreerimiseks (organisatsioonid, grupid, kanalid, hinnaread)",
+    "loadButton": "Laadi andmed",
+    "loading": "Laadimine...",
+    "previewTitle": "Andmefailide eelvaade",
+    "essentialFiles": "Olulised andmefailid",
+    "sampleFiles": "Näidisandmefailid",
+    "directory": "Kataloog",
+    "noFiles": "Faile ei leitud",
+    "loadingPreview": "Eelvaate laadimine...",
+    "refreshPermissions": "Värskenda õigusi",
+    "refreshPermissionsHint": "Laadi oma õigused pärast uute andmete laadimist uuesti"
+  }
+}

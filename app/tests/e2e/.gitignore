@@ -1,0 +1,25 @@
+# Playwright test artifacts
+playwright-report/
+test-results/
+
+# Screenshots and videos
+screenshots/
+videos/
+
+# Trace files
+traces/
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+npm-debug.log*
+
+# Cache
+.cache/

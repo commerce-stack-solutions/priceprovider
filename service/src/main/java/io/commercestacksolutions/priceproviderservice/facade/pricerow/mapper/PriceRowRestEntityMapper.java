@@ -1,0 +1,170 @@
+package io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper;
+
+import io.commercestacksolutions.commons.mapper.AbstractMapper;
+import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
+import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
+import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
+import io.commercestacksolutions.priceproviderservice.facade.currency.mapper.CurrencyRestEntityMapper;
+import io.commercestacksolutions.priceproviderservice.facade.pricerow.info.InfoPriceRow;
+import io.commercestacksolutions.priceproviderservice.facade.pricerow.info.TaxationInfo;
+import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.IncludesPriceRow;
+import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
+import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassRestEntityMapper;
+import io.commercestacksolutions.priceproviderservice.facade.unit.mapper.UnitRestEntityMapper;
+import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxCalculationStrategy;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
+@Component
+public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, PriceRowRestEntity, RestResponseMappingContext> {
+
+    private final UnitRestEntityMapper unitRestEntityMapper;
+    private final CurrencyRestEntityMapper currencyRestEntityMapper;
+    private final TaxClassRestEntityMapper taxClassRestEntityMapper;
+    private final TaxCalculationStrategy taxCalculationStrategy;
+
+    public PriceRowRestEntityMapper(UnitRestEntityMapper unitRestEntityMapper,
+                                    CurrencyRestEntityMapper currencyRestEntityMapper,
+                                    TaxClassRestEntityMapper taxClassRestEntityMapper,
+                                    TaxCalculationStrategy taxCalculationStrategy) {
+        this.unitRestEntityMapper = unitRestEntityMapper;
+        this.currencyRestEntityMapper = currencyRestEntityMapper;
+        this.taxClassRestEntityMapper = taxClassRestEntityMapper;
+        this.taxCalculationStrategy = taxCalculationStrategy;
+    }
+
+    @Override
+    public PriceRowRestEntity createTarget() {
+        return new PriceRowRestEntity();
+    }
+
+    @Override
+    public void convert(PriceRowEntity source, PriceRowRestEntity target, RestResponseMappingContext context) throws DataMappingException {
+        target.setId(source.getId());
+        target.setPricedResourceId(source.getPricedResourceId());
+        target.setPriceValue(source.getPriceValue());
+        target.setMinQuantity(source.getMinQuantity());
+        
+        // Map entity references to string references
+        target.setUnitRef(source.getUnit() != null ? source.getUnit().getSymbol() : null);
+        target.setCurrencyRef(source.getCurrency() != null ? source.getCurrency().getCurrencyKey() : null);
+        target.setTaxClassRef(source.getTaxClass() != null ? source.getTaxClass().getTaxClassId() : null);
+
+        target.setPriceType(source.getPriceType() != null ? source.getPriceType().code() : null);
+        target.setValidFrom(source.getValidFrom());
+        target.setValidTo(source.getValidTo());
+        
+        // Map group references to path strings (@ReferenceKey)
+        if (source.getGroups() != null) {
+            Set<String> groupRefPaths = new HashSet<>();
+            for (GroupEntity group : source.getGroups()) {
+                if (group != null && group.getPath() != null) {
+                    groupRefPaths.add(group.getPath());
+                }
+            }
+            target.setGroupRefs(groupRefPaths);
+        }
+
+        // Map channel references to string IDs
+        if (source.getChannels() != null) {
+            Set<String> channelRefIds = new HashSet<>();
+            for (io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity channel : source.getChannels()) {
+                if (channel != null && channel.getId() != null) {
+                    channelRefIds.add(channel.getId());
+                }
+            }
+            target.setChannelRefs(channelRefIds);
+        }
+        
+        target.setTaxIncluded(source.isTaxIncluded());
+
+        // Always populate $info with groupRefIds for navigation links
+        // (taxation and timestamps are added only when $info is explicitly requested)
+        addInfo(source, target, context);
+
+        // Add includes only if requested via $expand
+        if (context.shouldExpand("$includes")) {
+            addIncludes(source, target, context);
+        }
+    }
+
+    private void addInfo(PriceRowEntity source, PriceRowRestEntity target, RestResponseMappingContext context) {
+        InfoPriceRow info = new InfoPriceRow();
+        if (source.getTaxClass() != null && source.getPriceValue() != null &&
+                context.expandWithAnyOf(new String[]{"$info", "$info.taxation"})) {
+            addTaxation(source, info, taxCalculationStrategy);
+        }
+        // Always populate groupRefIds in $info for UI navigation links (path → id map)
+        if (source.getGroups() != null && !source.getGroups().isEmpty()) {
+            java.util.Map<String, String> groupRefIds = new java.util.HashMap<>();
+            for (GroupEntity group : source.getGroups()) {
+                if (group != null && group.getPath() != null && group.getId() != null) {
+                    groupRefIds.put(group.getPath(), group.getId());
+                }
+            }
+            if (!groupRefIds.isEmpty()) {
+                info.setGroupRefIds(groupRefIds);
+            }
+        }
+        target.setInfo(info);
+    }
+
+    private static void addTaxation(PriceRowEntity source, InfoPriceRow info, TaxCalculationStrategy taxCalculationStrategy) {
+        BigDecimal taxRate = source.getTaxClass().getTaxRate();
+        BigDecimal priceValue = source.getPriceValue();
+        BigDecimal taxValue;
+
+        if (source.isTaxIncluded()) {
+            // Price includes tax - calculate tax portion
+            taxValue = taxCalculationStrategy.calculateTaxFromGross(priceValue, taxRate);
+        } else {
+            // Tax to be added - calculate tax to add
+            taxValue = taxCalculationStrategy.calculateTaxFromNet(priceValue, taxRate);
+        }
+
+        String taxIncludedInfo = source.isTaxIncluded() ? "included (gross)" : "to be added (net)";
+
+        TaxationInfo taxation = new TaxationInfo(taxValue, taxRate, taxIncludedInfo);
+        info.setTaxation(taxation);
+
+        // Add audit timestamps
+        info.setCreatedAt(source.getCreatedAt());
+        info.setLastModifiedAt(source.getLastModifiedAt());
+    }
+
+    private void addIncludes(PriceRowEntity source, PriceRowRestEntity target, RestResponseMappingContext context) throws DataMappingException {
+        boolean hasAnyIncludes = false;
+        IncludesPriceRow includesObject = new IncludesPriceRow();
+
+        // Check if unit should be included
+
+        if (context.expandWithAnyOf(new String[]{"$includes", "$includes.unit"})
+                && source.getUnit() != null) {
+            includesObject.setUnit(unitRestEntityMapper.convert(source.getUnit(), context));
+            hasAnyIncludes = true;
+        }
+
+        // Check if currency should be included
+        if (context.expandWithAnyOf(new String[]{"$includes", "$includes.currency"})
+                && source.getCurrency() != null) {
+            includesObject.setCurrency(currencyRestEntityMapper.convert(source.getCurrency(), context));
+            hasAnyIncludes = true;
+        }
+
+        // Check if taxClass should be included
+        if (context.expandWithAnyOf(new String[]{"$includes", "$includes.taxClass"})
+                && source.getTaxClass() != null) {
+            includesObject.setTaxClass(taxClassRestEntityMapper.convert(source.getTaxClass(), context));
+            hasAnyIncludes = true;
+        }
+
+        // Only set includes if at least one field was added
+        if (hasAnyIncludes) {
+            target.setIncludes(includesObject);
+        }
+    }
+}

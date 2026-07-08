@@ -1,0 +1,117 @@
+{
+  "home": {
+    "title": "Dobrodošli u price|manager",
+    "description": "Ovo je početna stranica. Ovdje su neki prečaci do stranica s popisima:",
+    "shortcuts": "Prečaci"
+  },
+  "languages": {
+    "title": "Jezici",
+    "addLanguage": "Dodaj jezik",
+    "editLanguage": "Uredi jezik",
+    "languageDetails": "Detalji jezika",
+    "deleteConfirm": "Izbriši {{count}} odabranih jezika?",
+    "fields": {
+      "isoKey": "ISO ključ",
+      "active": "Aktivan",
+      "mandatory": "Obavezno"
+    }
+  },
+  "currencies": {
+    "title": "Valute",
+    "addCurrency": "Dodaj valutu",
+    "editCurrency": "Uredi valutu",
+    "currencyDetails": "Detalji valute",
+    "createCurrency": "Kreiraj valutu"
+  },
+  "units": {
+    "title": "Jedinice",
+    "addUnit": "Dodaj jedinicu",
+    "editUnit": "Uredi jedinicu",
+    "unitDetails": "Detalji jedinice",
+    "createUnit": "Kreiraj jedinicu"
+  },
+  "taxclasses": {
+    "title": "Porezne klase",
+    "addTaxClass": "Dodaj poreznu klasu",
+    "editTaxClass": "Uredi poreznu klasu",
+    "taxClassDetails": "Detalji porezne klase",
+    "createTaxClass": "Kreiraj poreznu klasu"
+  },
+  "groups": {
+    "title": "Grupe",
+    "addGroup": "Dodaj grupu",
+    "editGroup": "Uredi grupu",
+    "groupDetails": "Detalji grupe",
+    "createGroup": "Kreiraj grupu",
+    "deleteConfirm": "Jeste li sigurni da želite izbrisati {{count}} odabranih grupa?"
+  },
+  "organizations": {
+    "title": "Organizacije",
+    "addOrganization": "Dodaj organizaciju",
+    "editOrganization": "Uredi organizaciju",
+    "organizationDetails": "Detalji organizacije",
+    "createOrganization": "Kreiraj organizaciju"
+  },
+  "pricerows": {
+    "title": "Cjenovni redovi",
+    "addPriceRow": "Dodaj cjenovni red",
+    "editPriceRow": "Uredi cjenovni red",
+    "priceRowDetails": "Detalji cjenovnog reda",
+    "createPriceRow": "Kreiraj cjenovni red"
+  },
+  "countries": {
+    "title": "Države",
+    "addCountry": "Dodaj državu",
+    "editCountry": "Uredi državu",
+    "countryDetails": "Detalji države",
+    "createCountry": "Stvori državu",
+    "deleteConfirm": "Izbrisati {{count}} odabranih država?"
+  },
+  "channels": {
+    "title": "Kanali",
+    "addChannel": "Dodaj kanal",
+    "editChannel": "Uredi kanal",
+    "channelDetails": "Detalji kanala",
+    "createChannel": "Stvori kanal",
+    "deleteConfirm": "Izbrisati {{count}} odabranih kanala?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details",
+    "createAppPermission": "Create App Permission",
+    "editAppPermission": "Edit App Permission",
+    "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
+    "deleteWarning": "Deleting this permission can break application access. Continue?",
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Dodaj dopuštenje aplikacije"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Inicijalizacija usluge",
+    "description": "Ručno inicijalizirajte podatke usluge. Odaberite podatke koje želite učitati i kliknite gumb Učitaj podatke.",
+    "selectDataTitle": "Odaberite podatke za učitavanje",
+    "essentialData": "Bitni podaci",
+    "essentialDataDescription": "Osnovni podaci potrebni za rad usluge (jezici, valute, zemlje, jedinice, porezni razredi, dopuštenja, uloge)",
+    "sampleData": "Ogledni podaci",
+    "sampleDataDescription": "Ogledni podaci za testiranje i demonstraciju (organizacije, grupe, kanali, reci cijena)",
+    "loadButton": "Učitaj podatke",
+    "loading": "Učitavanje...",
+    "previewTitle": "Pregled podatkovnih datoteka",
+    "essentialFiles": "Bitne podatkovne datoteke",
+    "sampleFiles": "Ogledne podatkovne datoteke",
+    "directory": "Direktorij",
+    "noFiles": "Nisu pronađene datoteke",
+    "loadingPreview": "Učitavanje pregleda...",
+    "refreshPermissions": "Osvježi dopuštenja",
+    "refreshPermissionsHint": "Ponovno učitajte svoja dopuštenja nakon učitavanja novih podataka"
+  }
+}

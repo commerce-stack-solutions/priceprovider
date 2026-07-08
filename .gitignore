@@ -1,0 +1,25 @@
+.idea/
+app/pricemanager-app/package-lock.json
+service/logs/
+**/node_modules/
+**/dist/
+**/build/
+**/.gradle/
+**/out/
+*.log
+*.class
+/.instructions.md
+*.bak
+*.bak2
+*.bak*
+
+# Flutter related
+.metadata
+.packages
+.pub/
+.dart_tool/
+**/android/
+**/ios/
+**/linux/
+**/windows/
+**/*.iml

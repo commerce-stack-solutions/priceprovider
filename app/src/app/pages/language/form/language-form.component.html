@@ -1,0 +1,126 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>{{ isEditMode() ? ('pages.languages.editLanguage' | transloco) : ('pages.languages.addLanguage' | transloco) }}</h1>
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      {{ error() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert alert-success" role="alert">
+      <i class="bi bi-check-circle"></i> {{ successMessage() }}
+    </div>
+  }
+
+  @if (!loading()) {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">{{ 'common.fields.isoKey' | transloco }} @if ('isoKey' | isMandatory: meta()) { <span class="text-danger">*</span> }</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="isoKey" 
+              formControlName="isoKey"
+              [class.is-invalid]="form.get('isoKey')?.invalid && form.get('isoKey')?.touched"
+              required
+              maxlength="10"
+              pattern="[a-z]{2,10}">
+            @if (form.get('isoKey')?.invalid && form.get('isoKey')?.touched) {
+              <div class="invalid-feedback">
+                @if (form.get('isoKey')?.errors?.['required']) {
+                  <div>ISO key is required.</div>
+                }
+                @if (form.get('isoKey')?.errors?.['pattern']) {
+                  <div>Must be 2-10 lowercase letters (e.g., en, de, fr).</div>
+                }
+              </div>
+            }
+            <div class="form-text">
+              {{ 'common.messages.isoKey' | transloco}} 
+            </div>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input 
+              type="checkbox" 
+              class="form-check-input" 
+              id="active" 
+              formControlName="active"
+              [class.is-invalid]="hasFieldError('active')">
+            <label class="form-check-label" for="active">
+              {{ 'common.fields.active' | transloco }}
+            </label>
+            @if (hasFieldError('active')) {
+              <div class="invalid-feedback d-block">
+                @for (errorMsg of getFieldErrors('active'); track errorMsg) {
+                  <div>{{ errorMsg }}</div>
+                }
+              </div>
+            }
+            <div class="form-text">
+              {{ 'common.messages.activeLanguages' | transloco }}
+            </div>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input 
+              type="checkbox" 
+              class="form-check-input" 
+              id="mandatory" 
+              formControlName="mandatory"
+              [class.is-invalid]="hasFieldError('mandatory')">
+            <label class="form-check-label" for="mandatory">
+              {{ 'common.fields.mandatory' | transloco }} *
+            </label>
+            @if (hasFieldError('mandatory')) {
+              <div class="invalid-feedback d-block">
+                @for (errorMsg of getFieldErrors('mandatory'); track errorMsg) {
+                  <div>{{ errorMsg }}</div>
+                }
+              </div>
+            }
+            <div class="form-text">
+              {{ 'common.messages.mandatoryLanguages' | transloco }}
+            </div>
+          </div>
+
+          <app-localized-stringfield-edit
+            [form]="form"
+            [fieldPrefix]="'name_'"
+            [fieldLabel]="'Name'"
+            [configuredLanguages]="languages"
+            [fieldErrors]="fieldErrors"
+            [isEditMode]="isEditMode()"
+            [isModalMode]="false"
+            (removeLanguageEvent)="removeLanguage($event)"
+            (addLanguageEvent)="addLanguage($event)">
+          </app-localized-stringfield-edit>
+        </div>
+
+        <div class="card-footer">
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="loading() || form.invalid"
+            [class.text-decoration-underline]="showSaveKeyHint()">
+            @if (loading()) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            }
+            {{ 'common.actions.save' | transloco }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary ms-2" (click)="cancel()">
+             {{ 'common.actions.cancel' | transloco }}
+          </button>
+        </div>
+      </div>
+    </form>
+  }
+</div>

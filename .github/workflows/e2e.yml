@@ -1,0 +1,63 @@
+name: Playwright E2E Tests
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BASE_URL: http://localhost:4200
+  NODE_ENV: test
+
+jobs:
+  test:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install app dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: app
+        run: npx playwright install --with-deps
+
+      - name: Build application
+        working-directory: app
+        run: npm run build -- --configuration production
+        env:
+          NODE_ENV: test
+
+      - name: Start application server
+        working-directory: app
+        run: |
+          nohup npm run start -- --port 4200 > /tmp/app.log 2>&1 &
+          sleep 15
+          npx wait-on http://localhost:4200
+        env:
+          NODE_ENV: test
+          PORT: 4200
+
+      - name: Run Playwright tests
+        working-directory: app
+        run: npm run test:e2e
+        env:
+          CI: true
+          BASE_URL: http://localhost:4200

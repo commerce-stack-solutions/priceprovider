@@ -1,0 +1,26 @@
+{
+  "sidebar": {
+    "priceRows": "Prisrader",
+    "currencies": "Valutaer",
+    "taxClasses": "Skatteklasser",
+    "units": "Enheter",
+    "languages": "Språk",
+    "groups": "Grupper",
+    "organizations": "Organisasjoner",
+    "countries": "Land",
+    "channels": "Kanaler",
+    "appPermissions": "Apptillatelser",
+    "appRoles": "Approller",
+    "serviceInitialization": "Tjenesteinitialisering",
+    "categories": {
+      "commerceManagement": "Handelsadministrasjon",
+      "organizationsGroups": "Organisasjoner og grupper",
+      "masterData": "Stamdata",
+      "systemAccessManagement": "System og tilgangsstyring"
+    }
+  },
+  "languageSwitcher": {
+    "selectLanguage": "Velg språk",
+    "currentLanguage": "Nåværende språk"
+  }
+}

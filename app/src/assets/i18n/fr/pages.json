@@ -1,0 +1,117 @@
+{
+  "home": {
+    "title": "Bienvenue dans price|manager",
+    "description": "Ceci est la page d'accueil. Voici quelques raccourcis vers les pages de liste :",
+    "shortcuts": "Raccourcis"
+  },
+  "languages": {
+    "title": "Langues",
+    "addLanguage": "Ajouter une langue",
+    "editLanguage": "Modifier la langue",
+    "languageDetails": "Détails de la langue",
+    "deleteConfirm": "Supprimer {{count}} langue(s) sélectionnée(s) ?",
+    "fields": {
+      "isoKey": "Clé ISO",
+      "active": "Actif",
+      "mandatory": "Obligatoire"
+    }
+  },
+  "currencies": {
+    "title": "Devises",
+    "addCurrency": "Ajouter une devise",
+    "editCurrency": "Modifier la devise",
+    "currencyDetails": "Détails de la devise",
+    "createCurrency": "Créer une devise"
+  },
+  "units": {
+    "title": "Unités",
+    "addUnit": "Ajouter une unité",
+    "editUnit": "Modifier l'unité",
+    "unitDetails": "Détails de l'unité",
+    "createUnit": "Créer une unité"
+  },
+  "taxclasses": {
+    "title": "Classes fiscales",
+    "addTaxClass": "Ajouter une classe fiscale",
+    "editTaxClass": "Modifier la classe fiscale",
+    "taxClassDetails": "Détails de la classe fiscale",
+    "createTaxClass": "Créer une classe d'impôt"
+  },
+  "groups": {
+    "title": "Groupes",
+    "addGroup": "Ajouter un groupe",
+    "editGroup": "Modifier le groupe",
+    "groupDetails": "Détails du groupe",
+    "createGroup": "Créer un groupe",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {{count}} groupes sélectionnés?"
+  },
+  "organizations": {
+    "title": "Organisations",
+    "addOrganization": "Ajouter une organisation",
+    "editOrganization": "Modifier l'organisation",
+    "organizationDetails": "Détails de l'organisation",
+    "createOrganization": "Créer une organisation"
+  },
+  "pricerows": {
+    "title": "Lignes de prix",
+    "addPriceRow": "Ajouter une ligne de prix",
+    "editPriceRow": "Modifier la ligne de prix",
+    "priceRowDetails": "Détails de la ligne de prix",
+    "createPriceRow": "Créer une ligne de prix"
+  },
+  "countries": {
+    "title": "Pays",
+    "addCountry": "Ajouter un pays",
+    "editCountry": "Modifier le pays",
+    "countryDetails": "Détails du pays",
+    "createCountry": "Créer un pays",
+    "deleteConfirm": "Voulez-vous supprimer {{count}} pays ?"
+  },
+  "channels": {
+    "title": "Canaux",
+    "addChannel": "Ajouter un canal",
+    "editChannel": "Modifier le canal",
+    "channelDetails": "Détails du canal",
+    "createChannel": "Créer un canal",
+    "deleteConfirm": "Voulez-vous supprimer {{count}} canaux ?"
+  },
+  "appPermissions": {
+    "title": "App Permissions",
+    "details": "App Permission Details",
+    "createAppPermission": "Create App Permission",
+    "editAppPermission": "Edit App Permission",
+    "dangerWarning": "Editing or deleting permissions can lock users out of the application. Proceed only if you have a superuser available and understand the impact.",
+    "deleteWarning": "Deleting this permission can break application access. Continue?",
+    "deleteSelectedWarning": "Deleting {{count}} permission(s) can break application access. Continue?",
+    "addAppPermission": "Ajouter une autorisation d'application"
+  },
+  "appRoles": {
+    "title": "App Roles",
+    "addAppRole": "Add App Role",
+    "editAppRole": "Edit App Role",
+    "details": "App Role Details",
+    "createAppRole": "Create App Role",
+    "permissions": "Permissions",
+    "permissionId": "Permission ID",
+    "deleteConfirm": "Are you sure you want to delete {{count}} selected app roles?"
+  },
+  "serviceInitialization": {
+    "title": "Initialisation du service",
+    "description": "Initialisez manuellement les données du service. Sélectionnez les données que vous souhaitez charger et cliquez sur le bouton Charger les données.",
+    "selectDataTitle": "Sélectionner les données à charger",
+    "essentialData": "Données essentielles",
+    "essentialDataDescription": "Données de base nécessaires au fonctionnement du service (langues, devises, pays, unités, classes d'imposition, autorisations, rôles)",
+    "sampleData": "Données d'exemple",
+    "sampleDataDescription": "Données d'exemple pour les tests et la démonstration (organisations, groupes, canaux, lignes de prix)",
+    "loadButton": "Charger les données",
+    "loading": "Chargement...",
+    "previewTitle": "Aperçu des fichiers de données",
+    "essentialFiles": "Fichiers de données essentiels",
+    "sampleFiles": "Fichiers de données d'exemple",
+    "directory": "Répertoire",
+    "noFiles": "Aucun fichier trouvé",
+    "loadingPreview": "Chargement de l'aperçu...",
+    "refreshPermissions": "Actualiser les autorisations",
+    "refreshPermissionsHint": "Rechargez vos autorisations après avoir chargé de nouvelles données"
+  }
+}
