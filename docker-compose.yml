@@ -36,6 +36,9 @@ services:
 
   # Backend Service
   service:
+    build:
+      context: ./services
+      dockerfile: Dockerfile
     image: price-provider-service:${VERSION:-0.0.0-SNAPSHOT}
     container_name: price-provider-service
     depends_on:

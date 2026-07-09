@@ -6,4 +6,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'service'
+rootProject.name = 'priceprovider'
+
+includeBuild '../../platform/commons'
