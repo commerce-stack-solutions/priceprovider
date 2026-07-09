@@ -1,4 +1,4 @@
-package io.commercestacksolutions;
+package io.commercestacksolutions.priceproviderservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

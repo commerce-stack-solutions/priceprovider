@@ -1,0 +1,4 @@
+rootProject.name = 'priceprovider'
+
+include 'commons'
+project(':commons').projectDir = file('../../platform/commons')
