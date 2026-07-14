@@ -1,8 +1,8 @@
 package io.commercestacksolutions.commons.service.entity.authorization;
 
 import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
+import io.commercestacksolutions.commons.config.security.AuthorizationContext;
 import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
-import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -39,7 +39,7 @@ public class EntityAuthorizationService {
      */
     public <T> void checkAccess(T entity, String entityType, String action, Object entityId) {
         // Skip authorization checks during bootstrap/data import
-        if (AuthorizationContext.isBootstrapMode()) {
+        if (authorizationContext.isBootstrapModeEnabled()) {
             logger.debug("Bootstrap mode active - skipping authorization check for {} on {} with id '{}'",
                 action, entityType, entityId);
             return;
@@ -75,7 +75,7 @@ public class EntityAuthorizationService {
      */
     public <T> void checkAccessBeforeAndAfter(T entityBefore, T entityAfter, String entityType, String action, Object entityId) {
         // Skip authorization checks during bootstrap/data import
-        if (AuthorizationContext.isBootstrapMode()) {
+        if (authorizationContext.isBootstrapModeEnabled()) {
             logger.debug("Bootstrap mode active - skipping before/after authorization check for {} on {} with id '{}'",
                 action, entityType, entityId);
             return;

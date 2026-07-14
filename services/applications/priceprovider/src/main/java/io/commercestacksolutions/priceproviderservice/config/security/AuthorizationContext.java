@@ -27,7 +27,7 @@ import java.util.Set;
  * </ul>
  */
 @Component
-public class AuthorizationContext {
+public class AuthorizationContext implements io.commercestacksolutions.commons.config.security.AuthorizationContext {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationContext.class);
     private static final String ANONYMOUS_USER_ROLE_NAME = "priceprovider.public:AnonymousUser";
@@ -137,6 +137,11 @@ public class AuthorizationContext {
     public boolean isAuthenticated() {
         Authentication auth = getAuthentication();
         return auth != null && auth.isAuthenticated();
+    }
+
+    @Override
+    public boolean isBootstrapModeEnabled() {
+        return isBootstrapMode();
     }
 
     /**
