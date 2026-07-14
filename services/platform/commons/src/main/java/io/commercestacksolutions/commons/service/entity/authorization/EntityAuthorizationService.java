@@ -1,8 +1,8 @@
 package io.commercestacksolutions.commons.service.entity.authorization;
 
 import io.commercestacksolutions.commons.permissionselector.PermissionMatcher;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,7 +45,7 @@ public class EntityAuthorizationService {
             return;
         }
 
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        Set<? extends AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
         boolean hasAccess = permissionMatcher.hasAccess(permissions, entityType, action, entity);
 
         if (!hasAccess) {
@@ -81,7 +81,7 @@ public class EntityAuthorizationService {
             return;
         }
 
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        Set<? extends AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
 
         // Check permission on the "before" state (existing object in database)
         if (entityBefore != null) {

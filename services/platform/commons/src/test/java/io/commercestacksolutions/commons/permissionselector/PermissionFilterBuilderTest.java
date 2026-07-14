@@ -1,8 +1,8 @@
 package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.config.security.ApiContextResolver;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +46,19 @@ class PermissionFilterBuilderTest {
 
         public String getCurrencyRef() {
             return currencyRef;
+        }
+    }
+
+    static class TestAppPermissionEntity implements AppPermissionEntity {
+        private String name;
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        void setName(String name) {
+            this.name = name;
         }
     }
 
@@ -209,7 +222,7 @@ class PermissionFilterBuilderTest {
 
     // Helper method to create a permission entity
     private AppPermissionEntity createPermission(String name) {
-        AppPermissionEntity entity = new AppPermissionEntity();
+        TestAppPermissionEntity entity = new TestAppPermissionEntity();
         entity.setName(name);
         return entity;
     }

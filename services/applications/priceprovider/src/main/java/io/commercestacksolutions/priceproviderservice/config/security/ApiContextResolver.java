@@ -25,7 +25,7 @@ import java.util.Collection;
  * </ul>
  */
 @Component
-public class ApiContextResolver {
+public class ApiContextResolver implements io.commercestacksolutions.commons.config.security.ApiContextResolver {
 
     private static final String ADMIN_PREFIX = "priceprovider.admin";
     private static final String PUBLIC_PREFIX = "priceprovider.public";
@@ -38,6 +38,7 @@ public class ApiContextResolver {
      * @return "priceprovider.admin" for admin API requests, "priceprovider.public" for public API requests
      * @throws IllegalStateException if the API context cannot be determined from the request
      */
+    @Override
     public String getCurrentPermissionPrefix() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 

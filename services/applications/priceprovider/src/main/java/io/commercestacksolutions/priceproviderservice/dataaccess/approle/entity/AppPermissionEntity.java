@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = AppPermissionEntity.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class AppPermissionEntity implements AuditableEntity {
+public class AppPermissionEntity implements AuditableEntity, io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

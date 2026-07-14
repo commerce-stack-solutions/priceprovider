@@ -1,12 +1,12 @@
 package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.config.security.ApiContextResolver;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.commons.permissionselector.PermissionNameParser.ParsedPermission;
 import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryFilter;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
-import io.commercestacksolutions.priceproviderservice.config.security.ApiContextResolver;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -62,7 +62,7 @@ public class PermissionFilterBuilder {
      * @return a Specification that filters entities according to the permissions, or null if no filtering needed
      * @throws InvalidParameterException if the selector expression cannot be converted to a valid query
      */
-    public <T> Specification<T> buildFilter(Collection<AppPermissionEntity> permissions, String dataType, String action) throws InvalidParameterException {
+    public <T> Specification<T> buildFilter(Collection<? extends AppPermissionEntity> permissions, String dataType, String action) throws InvalidParameterException {
         if (permissions == null || permissions.isEmpty()) {
             // No permissions = deny all
             logger.debug("No permissions for {}:{}, denying all access", dataType, action);
