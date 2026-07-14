@@ -5,29 +5,28 @@ FROM eclipse-temurin:25-jdk-noble AS builder
 # Set the working directory in the container
 WORKDIR /workspace/app
 
-# Copy the Gradle wrapper and build files for both modules
-# First, copy the platform/commons files
-COPY platform/commons/gradlew platform/commons/
-COPY platform/commons/gradle platform/commons/gradle
-COPY platform/commons/build.gradle platform/commons/
-COPY platform/commons/settings.gradle platform/commons/
-COPY platform/commons/src platform/commons/src
+# Copy the cdf-plugin (build logic plugin)
+COPY platform/cdf-plugin platform/cdf-plugin
 
-# Next, copy the applications/priceprovider files
-COPY applications/priceprovider/gradlew applications/priceprovider/
-COPY applications/priceprovider/gradle applications/priceprovider/gradle
-COPY applications/priceprovider/build.gradle applications/priceprovider/
-COPY applications/priceprovider/settings.gradle applications/priceprovider/
-COPY applications/priceprovider/src applications/priceprovider/src
+# Copy the platform/commons library
+COPY platform/commons platform/commons
 
-# Grant execution rights and ensure LF line endings
-RUN sed -i 's/\r$//' ./platform/commons/gradlew && chmod +x ./platform/commons/gradlew
-RUN sed -i 's/\r$//' ./applications/priceprovider/gradlew && chmod +x ./applications/priceprovider/gradlew
+# Copy the applications multi-project files (wrapper, settings, builds, and subprojects)
+COPY applications/gradlew applications/
+COPY applications/gradle applications/gradle
+COPY applications/build.gradle applications/
+COPY applications/settings.gradle applications/
 
-# Build the application
-# We build the priceprovider app, which will automatically build commons via includeBuild
-WORKDIR /workspace/app/applications/priceprovider
-RUN ./gradlew bootJar --no-daemon
+# Copy subprojects under applications
+COPY applications/generated applications/generated
+COPY applications/priceprovider applications/priceprovider
+
+# Grant execution rights and ensure LF line endings for gradlew
+RUN sed -i 's/\r$//' ./applications/gradlew && chmod +x ./applications/gradlew
+
+# Build the application from the applications root directory
+WORKDIR /workspace/app/applications
+RUN ./gradlew :priceprovider:bootJar --no-daemon
 
 # Stage 2: Runtime stage
 # Use a JRE image for a smaller final image size
@@ -40,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf 
 WORKDIR /app
 
 # The application requires the 'initialize' data directory to be present.
-# It is now located in the priceprovider application module.
+# It is located in the priceprovider application module.
 COPY applications/priceprovider/src/main/resources/initialize /app/initialize/
 
 # Set the environment variable to inform the application where to find the data files.

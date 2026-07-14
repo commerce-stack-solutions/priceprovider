@@ -4,12 +4,17 @@ pluginManagement {
         maven { url 'https://repo.spring.io/snapshot' }
         maven { url 'https://repo.spring.io/milestone' }
     }
+    includeBuild '../platform/cdf-plugin'
 }
 
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
-rootProject.name = 'priceprovider'
+rootProject.name = 'priceproviderservice'
 
-includeBuild '../../platform/commons'
+include 'commons'
+project(':commons').projectDir = file('../platform/commons')
+
+include 'generated'
+include 'priceprovider'
