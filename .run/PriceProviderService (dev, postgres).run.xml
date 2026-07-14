@@ -1,9 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PriceProviderService (dev, postgres)" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="io.commercestacksolutions.PriceProviderServiceApp" />
-    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=dev" />
-    <module name="service.main" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/service" />
     <envs>
       <env name="PPS_DB_JDBCURL" value="jdbc:postgresql://localhost:5432/priceProviderService" />
       <env name="PPS_DB_USERNAME" value="postgres" />
@@ -11,6 +7,10 @@
       <env name="PPS_DB_DRIVER" value="org.postgresql.Driver" />
       <env name="PPS_JPA_DB_PLATFORM" value="org.hibernate.dialect.PostgreSQLDialect" />
     </envs>
+    <option name="MAIN_CLASS_NAME" value="io.commercestacksolutions.PriceProviderServiceApp" />
+    <module name="io.commercestacksolutions.priceproviderservice.priceprovider.main" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=dev" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/services/applications/priceprovider" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="io.commercestacksolutions.*" />
