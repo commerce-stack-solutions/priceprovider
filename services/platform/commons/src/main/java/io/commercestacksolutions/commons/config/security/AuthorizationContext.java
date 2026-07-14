@@ -9,4 +9,8 @@ public interface AuthorizationContext {
     Set<? extends AppPermissionEntity> getCurrentPermissions();
 
     boolean isBootstrapModeEnabled();
+
+    void activateBootstrapMode();
+
+    void deactivateBootstrapMode();
 }

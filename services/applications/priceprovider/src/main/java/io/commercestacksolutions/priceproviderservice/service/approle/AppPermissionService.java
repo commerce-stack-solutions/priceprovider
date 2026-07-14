@@ -10,7 +10,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.Optional;
 
-public interface AppPermissionService extends EntityService<AppPermissionEntity> {
+public interface AppPermissionService extends EntityService<AppPermissionEntity>,
+    io.commercestacksolutions.commons.service.approle.AppPermissionService {
     List<AppPermissionEntity> getAllAppPermissions();
     Page<AppPermissionEntity> getAppPermissions(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
     Optional<AppPermissionEntity> getAppPermissionById(Long id);

@@ -3,10 +3,10 @@ package io.commercestacksolutions.priceproviderservice.service.approle;
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
+import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.service.entity.authorization.EntityAuthorizationService;
 import io.commercestacksolutions.commons.service.entity.validation.EntityValidator;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
-import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppPermissionEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppRoleEntityRepository;
@@ -92,6 +92,28 @@ public class AppRoleServiceImpl implements AppRoleService {
     @Override
     public AppRoleEntity save(AppRoleEntity roleEntity) throws EntityValidationException {
         return performGenericSave(roleEntity);
+    }
+
+    @Override
+    public AppRoleEntity createRole(String name, String description, Set<? extends io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity> permissions) {
+        AppRoleEntity role = new AppRoleEntity();
+        role.setName(name);
+        role.setDescription(description);
+        Set<AppPermissionEntity> permissionEntities = new HashSet<>();
+        if (permissions != null) {
+            for (io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity permission : permissions) {
+                if (!(permission instanceof AppPermissionEntity)) {
+                    throw new IllegalArgumentException("Unsupported AppPermissionEntity implementation: " + permission.getClass().getName());
+                }
+                permissionEntities.add((AppPermissionEntity) permission);
+            }
+        }
+        role.setPermissionRefs(permissionEntities);
+        try {
+            return save(role);
+        } catch (EntityValidationException e) {
+            throw new IllegalStateException("Failed to create app role: " + name, e);
+        }
     }
 
     @Override
@@ -224,5 +246,3 @@ public class AppRoleServiceImpl implements AppRoleService {
         });
     }
 }
-
-

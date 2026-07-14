@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flipkart.zjsonpatch.JsonPatch;
 import com.flipkart.zjsonpatch.JsonPatchApplicationException;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
+import io.commercestacksolutions.commons.query.messagekeys.MessageKeys;
 
 import java.util.HashMap;
 import java.util.Map;

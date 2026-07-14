@@ -144,6 +144,16 @@ public class AuthorizationContext implements io.commercestacksolutions.commons.c
         return isBootstrapMode();
     }
 
+    @Override
+    public void activateBootstrapMode() {
+        AuthorizationContext.enableBootstrapMode();
+    }
+
+    @Override
+    public void deactivateBootstrapMode() {
+        AuthorizationContext.disableBootstrapMode();
+    }
+
     /**
      * Returns the current JWT token, or null if not authenticated or not a JWT-based authentication.
      *

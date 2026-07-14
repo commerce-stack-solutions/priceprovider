@@ -12,6 +12,10 @@ public final class MessageKeys {
     public static final String ERROR_QUERY_INVALID_OPERATOR = "common.errors.query.invalidOperator";
     public static final String ERROR_QUERY_INVALID_COLLECTION_OPERATOR = "common.errors.query.invalidCollectionOperator";
     public static final String ERROR_QUERY_INVALID_VALUE_TYPE = "common.errors.query.invalidValueType";
+    public static final String ERROR_MAPPING_INSTANTIATION = "common.errors.mapping.instantiation";
+    public static final String ERROR_MAPPING_PATCH_OPERATION = "common.errors.mapping.patchOperation";
+    public static final String ERROR_MAPPING_NO_TARGET_CLASS = "common.errors.mapping.noTargetClass";
+    public static final String ERROR_APPLYING_PATCH = "common.errors.applyingPatch";
 
     private MessageKeys() {
         // utility

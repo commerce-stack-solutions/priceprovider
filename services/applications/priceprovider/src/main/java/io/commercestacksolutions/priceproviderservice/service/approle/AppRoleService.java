@@ -10,7 +10,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.Optional;
 
-public interface AppRoleService extends EntityService<AppRoleEntity> {
+public interface AppRoleService extends EntityService<AppRoleEntity>,
+    io.commercestacksolutions.commons.service.approle.AppRoleService {
     List<AppRoleEntity> getAllAppRoles();
     Page<AppRoleEntity> getAppRoles(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException;
     Optional<AppRoleEntity> getAppRoleById(Long id);

@@ -91,6 +91,18 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
+    public AppPermissionEntity createPermission(String name, String description) {
+        AppPermissionEntity permission = new AppPermissionEntity();
+        permission.setName(name);
+        permission.setDescription(description);
+        try {
+            return save(permission);
+        } catch (EntityValidationException e) {
+            throw new IllegalStateException("Failed to create app permission: " + name, e);
+        }
+    }
+
+    @Override
     public List<AppPermissionEntity> getAllAppPermissions() {
         return appPermissionEntityRepository.findAll();
     }

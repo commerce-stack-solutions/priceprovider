@@ -1,10 +1,10 @@
 package io.commercestacksolutions.commons.service.setup;
 
-import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
-import io.commercestacksolutions.priceproviderservice.service.approle.AppPermissionService;
-import io.commercestacksolutions.priceproviderservice.service.approle.AppRoleService;
+import io.commercestacksolutions.commons.config.security.AuthorizationContext;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.AppRoleEntity;
+import io.commercestacksolutions.commons.service.approle.AppPermissionService;
+import io.commercestacksolutions.commons.service.approle.AppRoleService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +35,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
     private static final Logger logger = LoggerFactory.getLogger(SetupDataImportManager.class);
 
     private final List<SetupDataImporter> dataImporters;
+    private final AuthorizationContext authorizationContext;
     private final AppPermissionService appPermissionService;
     private final AppRoleService appRoleService;
 
@@ -49,9 +50,11 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
 
     @Autowired
     public SetupDataImportManager(List<SetupDataImporter> dataImporters,
+                                  AuthorizationContext authorizationContext,
                                   AppPermissionService appPermissionService,
                                   AppRoleService appRoleService) {
         this.dataImporters = dataImporters;
+        this.authorizationContext = authorizationContext;
         this.appPermissionService = appPermissionService;
         this.appRoleService = appRoleService;
     }
@@ -60,7 +63,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
     @Override
     public void loadData() {
         // Enable bootstrap mode to bypass authorization during initial data setup
-        AuthorizationContext.enableBootstrapMode();
+        authorizationContext.activateBootstrapMode();
         try {
             // Bootstrap: Create minimal permission and role if database is empty
             bootstrapMinimalAccess();
@@ -75,7 +78,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
             }
         } finally {
             // Always disable bootstrap mode after data loading
-            AuthorizationContext.disableBootstrapMode();
+            authorizationContext.deactivateBootstrapMode();
         }
     }
 
@@ -93,28 +96,20 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
                 logger.info("Database is empty. Creating bootstrap permission and role for service initialization.");
 
                 // Create the ServiceInitialization permission
-                AppPermissionEntity initPermission = new AppPermissionEntity();
-                initPermission.setName("priceprovider.admin:ServiceInitialization:write");
-                initPermission.setDescription("Initialize service data");
-                appPermissionService.save(initPermission);
+                AppPermissionEntity initPermission = appPermissionService
+                    .createPermission("priceprovider.admin:ServiceInitialization:write", "Initialize service data");
                 logger.info("Created permission: {}", initPermission.getName());
 
                 // Create the AppRole:read permission (needed to load roles)
-                AppPermissionEntity roleReadPermission = new AppPermissionEntity();
-                roleReadPermission.setName("priceprovider.admin:AppRole:read");
-                roleReadPermission.setDescription("Read app roles");
-                appPermissionService.save(roleReadPermission);
+                AppPermissionEntity roleReadPermission = appPermissionService
+                    .createPermission("priceprovider.admin:AppRole:read", "Read app roles");
                 logger.info("Created permission: {}", roleReadPermission.getName());
 
                 // Create the Admin role with both permissions
-                AppRoleEntity adminRole = new AppRoleEntity();
-                adminRole.setName("priceprovider.admin:Admin");
-                adminRole.setDescription("Full admin access");
                 Set<AppPermissionEntity> permissions = new HashSet<>();
                 permissions.add(initPermission);
                 permissions.add(roleReadPermission);
-                adminRole.setPermissionRefs(permissions);
-                appRoleService.save(adminRole);
+                AppRoleEntity adminRole = appRoleService.createRole("priceprovider.admin:Admin", "Full admin access", permissions);
                 logger.info("Created role: {} with bootstrap permissions", adminRole.getName());
 
                 logger.info("Bootstrap complete. Admin users can now access the service initialization page.");
@@ -142,7 +137,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
             logger.info("Starting asynchronous data loading: essential={}, sample={}", loadEssential, loadSample);
 
             // Enable bootstrap mode and set force load flag to override configuration
-            AuthorizationContext.enableBootstrapMode();
+            authorizationContext.activateBootstrapMode();
             AbstractSetupDataImporter.setForceLoad(true);
 
             try {
@@ -158,7 +153,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
             } finally {
                 // Always clear the force load flag and disable bootstrap mode
                 AbstractSetupDataImporter.clearForceLoad();
-                AuthorizationContext.disableBootstrapMode();
+                authorizationContext.deactivateBootstrapMode();
             }
         } catch (Exception e) {
             logger.error("Error during asynchronous data loading", e);
