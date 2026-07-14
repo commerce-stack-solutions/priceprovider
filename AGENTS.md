@@ -1,7 +1,7 @@
 # AGENTS.md
 This repository contains two sub-projects:
 
-- subfolder `service/` – the priceprovider service is a Java / Spring Boot backend using Gradle, see [AGENTS.md](service/AGENTS.md) for project specific architecture, conventions, and development guidelines
+- subfolder `services/applications/priceprovider/` – the priceprovider service is a Java / Spring Boot backend using Gradle, see [AGENTS.md](services/applications/priceprovider/AGENTS.md) for project specific architecture, conventions, and development guidelines
 - subfolder `app/` – the pricemanager app is an Angular frontend using Node.js and Bootstrap, see [AGENTS.md](app/AGENTS.md) for project specific architecture, conventions, and development guidelines
 
 Each project follows modern best practices and is structured for scalability, maintainability, and developer productivity.

@@ -23,10 +23,10 @@ set "VERSION=%~1"
 REM ============================================================
 REM  Resolve the service source directory
 REM  This script lives in deployment/azure-container-apps/
-REM  The service Dockerfile is in service/ (two levels up)
+REM  The service Dockerfile is in services/ (two levels up)
 REM ============================================================
 set "SCRIPT_DIR=%~dp0"
-set "SERVICE_DIR=%SCRIPT_DIR%..\..\service"
+set "SERVICE_DIR=%SCRIPT_DIR%..\..\services"
 
 REM ============================================================
 REM  Log in to ACR

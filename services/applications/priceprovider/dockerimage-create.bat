@@ -1,4 +1,7 @@
 @echo off
+REM Always run from this script directory so relative paths are stable
+cd /d "%~dp0"
+
 REM Use provided version or default to 0.0.0-SNAPSHOT
 if [%1]==[] (
     set VERSION=0.0.0-SNAPSHOT
@@ -11,6 +14,6 @@ set IMAGE_NAME="price-provider-service"
 echo Building Docker image %IMAGE_NAME%:%VERSION%...
 
 REM Build the Docker image
-docker build -t %IMAGE_NAME%:%VERSION% .
+docker build -t %IMAGE_NAME%:%VERSION% -f ..\..\Dockerfile ..\..
 
 echo Docker image %IMAGE_NAME%:%VERSION% built successfully.

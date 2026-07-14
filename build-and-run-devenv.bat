@@ -78,7 +78,7 @@ echo   [1/2] Building Docker image for Price Provider Service...
 echo         Image: price-provider-service:%VERSION%
 echo.
 
-pushd "%SCRIPT_DIR%\service"
+pushd "%SCRIPT_DIR%\services\applications\priceprovider"
 call dockerimage-create.bat %VERSION%
 if %errorlevel% neq 0 (
     echo ERROR: Failed to build Price Provider Service image.
@@ -188,7 +188,7 @@ echo       rental-green-land  / rental123 (Org: Green Land^)
 echo.
 echo   Documentation:
 echo   Project README         -^>  %SCRIPT_DIR%\README.md
-echo   Service README         -^>  %SCRIPT_DIR%\service\README.md
+echo   Service README         -^>  %SCRIPT_DIR%\services\applications\priceprovider\README.md
 echo   App README             -^>  %SCRIPT_DIR%\app\README.md
 echo   Shop Frontend README   -^>  %SCRIPT_DIR%\examples\shopfrontend\README.md
 echo   Rental Frontend README -^>  %SCRIPT_DIR%\examples\rentalfrontend\README.md
