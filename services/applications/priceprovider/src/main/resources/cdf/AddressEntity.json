@@ -1,0 +1,82 @@
+{
+  "entity": "AddressEntity",
+  "package": "io.commercestacksolutions.priceproviderservice.dataaccess.address.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity",
+    "jakarta.persistence.*",
+    "java.util.HashSet",
+    "java.util.Set"
+  ],
+  "classAnnotations": [
+    "@Entity"
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "type": "String",
+      "annotations": [
+        "@Id",
+        "@Column(length = 100)"
+      ]
+    },
+    {
+      "name": "street",
+      "type": "String"
+    },
+    {
+      "name": "city",
+      "type": "String"
+    },
+    {
+      "name": "postalCode",
+      "type": "String"
+    },
+    {
+      "name": "country",
+      "type": "String"
+    },
+    {
+      "name": "organizations",
+      "type": "Set<OrganizationEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany",
+        "@JoinTable(name = \"address_organization\", joinColumns = @JoinColumn(name = \"address_id\"), inverseJoinColumns = @JoinColumn(name = \"organization_id\"))"
+      ]
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "street",     "type": "String" },
+        { "name": "city",       "type": "String" },
+        { "name": "postalCode", "type": "String" },
+        { "name": "country",    "type": "String" }
+      ],
+      "body": "this.street = street; this.city = city; this.postalCode = postalCode; this.country = country;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "prePersist",
+      "annotations": ["@PrePersist"],
+      "visibility": "protected",
+      "returnType": "void",
+      "body": "if (this.id == null) { this.id = IdGeneratorProvider.generate(AddressEntity.class); }"
+    },
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"AddressEntity{\" + \"id='\" + id + '\\'' + \", street='\" + street + '\\'' + \", city='\" + city + '\\'' + \", postalCode='\" + postalCode + '\\'' + \", country='\" + country + '\\'' + '}';"
+    }
+  ]
+}
