@@ -2,7 +2,7 @@ package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.config.security.ApiContextResolver;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +49,7 @@ class PermissionFilterBuilderTest {
         }
     }
 
-    static class TestAppPermissionEntity implements AppPermissionEntity {
+    static class TestCommonAppPermission implements CommonAppPermission {
         private String name;
 
         @Override
@@ -74,7 +74,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithGlobalPermission() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
 
@@ -83,7 +83,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithSelectorPermission() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
 
@@ -92,10 +92,10 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithMultipleSelectorPermissions() throws InvalidParameterException {
-        AppPermissionEntity perm1 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
-        AppPermissionEntity perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='USD']:read");
+        CommonAppPermission perm1 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        CommonAppPermission perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='USD']:read");
 
-        Set<AppPermissionEntity> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
+        Set<CommonAppPermission> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(permissions, "PriceRow", "read");
 
         assertNotNull(spec, "Multiple selector permissions should return a filtering specification");
@@ -104,7 +104,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithComplexSelector() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[currencyRef=='EUR' AND priceType=='SALES_PRICE']:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
@@ -114,7 +114,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithWrongDataType() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:Channel:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:Channel:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
 
@@ -124,7 +124,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithWrongAction() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "write");
 
@@ -135,10 +135,10 @@ class PermissionFilterBuilderTest {
     @Test
     void testBuildFilterWithMixedPermissions() throws InvalidParameterException {
         // Mix of global and selector permissions - global wins
-        AppPermissionEntity perm1 = createPermission("priceprovider.admin:PriceRow:read"); // Global
-        AppPermissionEntity perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read"); // Selector
+        CommonAppPermission perm1 = createPermission("priceprovider.admin:PriceRow:read"); // Global
+        CommonAppPermission perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read"); // Selector
 
-        Set<AppPermissionEntity> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
+        Set<CommonAppPermission> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(permissions, "PriceRow", "read");
 
         assertNull(spec, "Global permission should take precedence, returning null");
@@ -146,7 +146,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithNotOperator() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[NOT priceType=='PURCHASE_PRICE']:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
@@ -156,7 +156,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithOrOperator() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[priceType=='SALES_PRICE' OR priceType=='RENTAL_BASE_PRICE']:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
@@ -166,7 +166,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithIsEmptyOperator() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[groupRefs isEmpty]:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
@@ -176,7 +176,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithHasAnyOperator() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[groupRefs hasAny ('GROUP1', 'GROUP2')]:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
@@ -186,7 +186,7 @@ class PermissionFilterBuilderTest {
 
     @Test
     void testBuildFilterWithInvalidPermissionName() throws InvalidParameterException {
-        AppPermissionEntity perm = createPermission("invalid-permission-name");
+        CommonAppPermission perm = createPermission("invalid-permission-name");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
 
@@ -197,7 +197,7 @@ class PermissionFilterBuilderTest {
     void testBuildFilterWithNotEqualsOperator() throws InvalidParameterException {
         // Test that NOT_EQUALS is correctly handled via negation
         // Permission: can read all price rows EXCEPT purchase prices
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[priceType!='PURCHASE_PRICE']:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
@@ -212,7 +212,7 @@ class PermissionFilterBuilderTest {
     @Test
     void testBuildFilterWithComplexNotEquals() throws InvalidParameterException {
         // Test NOT_EQUALS combined with AND operator
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[currencyRef=='EUR' AND priceType!='PURCHASE_PRICE']:read");
 
         Specification<TestPriceRow> spec = filterBuilder.buildFilter(Collections.singleton(perm), "PriceRow", "read");
@@ -221,8 +221,8 @@ class PermissionFilterBuilderTest {
     }
 
     // Helper method to create a permission entity
-    private AppPermissionEntity createPermission(String name) {
-        TestAppPermissionEntity entity = new TestAppPermissionEntity();
+    private CommonAppPermission createPermission(String name) {
+        TestCommonAppPermission entity = new TestCommonAppPermission();
         entity.setName(name);
         return entity;
     }

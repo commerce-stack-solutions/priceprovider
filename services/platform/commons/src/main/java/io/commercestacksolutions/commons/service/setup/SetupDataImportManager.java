@@ -1,7 +1,7 @@
 package io.commercestacksolutions.commons.service.setup;
 
 import io.commercestacksolutions.commons.config.security.AuthorizationContext;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppRole;
 import io.commercestacksolutions.commons.service.approle.CommonAppPermissionService;
 import io.commercestacksolutions.commons.service.approle.AppRoleService;
@@ -96,17 +96,17 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
                 logger.info("Database is empty. Creating bootstrap permission and role for service initialization.");
 
                 // Create the ServiceInitialization permission
-                AppPermissionEntity initPermission = appPermissionService
+                CommonAppPermission initPermission = appPermissionService
                     .createPermission("priceprovider.admin:ServiceInitialization:write", "Initialize service data");
                 logger.info("Created permission: {}", initPermission.getName());
 
                 // Create the AppRole:read permission (needed to load roles)
-                AppPermissionEntity roleReadPermission = appPermissionService
+                CommonAppPermission roleReadPermission = appPermissionService
                     .createPermission("priceprovider.admin:AppRole:read", "Read app roles");
                 logger.info("Created permission: {}", roleReadPermission.getName());
 
                 // Create the Admin role with both permissions
-                Set<AppPermissionEntity> permissions = new HashSet<>();
+                Set<CommonAppPermission> permissions = new HashSet<>();
                 permissions.add(initPermission);
                 permissions.add(roleReadPermission);
                 CommonAppRole adminRole = appRoleService.createRole("priceprovider.admin:Admin", "Full admin access", permissions);

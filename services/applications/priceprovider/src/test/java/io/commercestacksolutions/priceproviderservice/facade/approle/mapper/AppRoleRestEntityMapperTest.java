@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.facade.approle.mapper;
 
 import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.facade.approle.restentity.AppRoleRestEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,8 +32,8 @@ class AppRoleRestEntityMapperTest {
 
     // ---------- helpers ----------
 
-    private static AppPermissionEntity permission(Long id, String name) {
-        AppPermissionEntity p = new AppPermissionEntity();
+    private static CommonAppPermission permission(Long id, String name) {
+        CommonAppPermission p = new CommonAppPermission();
         p.setId(id);
         p.setName(name);
         return p;

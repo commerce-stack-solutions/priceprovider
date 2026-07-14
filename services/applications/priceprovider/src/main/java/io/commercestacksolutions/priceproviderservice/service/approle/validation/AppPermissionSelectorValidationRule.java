@@ -3,7 +3,7 @@ package io.commercestacksolutions.priceproviderservice.service.approle.validatio
 import io.commercestacksolutions.commons.permissionselector.PermissionNameParser;
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.web.rest.Message;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,12 +21,12 @@ import java.util.List;
  * </ul>
  */
 @Component
-public class AppPermissionSelectorValidationRule implements ValidationRule<AppPermissionEntity> {
+public class AppPermissionSelectorValidationRule implements ValidationRule<CommonAppPermission> {
 
     private final PermissionNameParser permissionNameParser = new PermissionNameParser();
 
     @Override
-    public List<Message> validate(AppPermissionEntity entity) {
+    public List<Message> validate(CommonAppPermission entity) {
         List<Message> errors = new ArrayList<>();
 
         if (entity == null) {

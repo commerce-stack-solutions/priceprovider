@@ -9,7 +9,7 @@ import io.commercestacksolutions.commons.service.entity.validation.ValidationRul
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppPermissionEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     private static final Logger logger = LoggerFactory.getLogger(AppPermissionServiceImpl.class);
 
     private final AppPermissionEntityRepository appPermissionEntityRepository;
-    private final EntityValidator<AppPermissionEntity> entityValidator;
+    private final EntityValidator<CommonAppPermission> entityValidator;
     private final QueryParser queryParser;
     private final AuthorizationContext authorizationContext;
     private final EntityAuthorizationService entityAuthorizationService;
@@ -39,32 +39,32 @@ public class AppPermissionServiceImpl implements AppPermissionService {
 
     @Autowired
     public AppPermissionServiceImpl(AppPermissionEntityRepository appPermissionEntityRepository,
-                                    List<ValidationRule<AppPermissionEntity>> validationRules,
+                                    List<ValidationRule<CommonAppPermission>> validationRules,
                                     AuthorizationContext authorizationContext,
                                     EntityAuthorizationService entityAuthorizationService,
                                     EntityManager entityManager) {
         this.appPermissionEntityRepository = appPermissionEntityRepository;
         this.entityValidator = new EntityValidator<>(validationRules);
-        this.queryParser = new QueryParser(AppPermissionEntity.class);
+        this.queryParser = new QueryParser(CommonAppPermission.class);
         this.authorizationContext = authorizationContext;
         this.entityAuthorizationService = entityAuthorizationService;
         this.entityManager = entityManager;
     }
 
     @Override
-    public Class<AppPermissionEntity> getTargetClass() {
-        return AppPermissionEntity.class;
+    public Class<CommonAppPermission> getTargetClass() {
+        return CommonAppPermission.class;
     }
 
     @Override
-    public EntityValidator<AppPermissionEntity> getEntityValidator() {
+    public EntityValidator<CommonAppPermission> getEntityValidator() {
         return entityValidator;
     }
 
     @Override
-    public <ID> JpaRepository<AppPermissionEntity, ID> getRepository() {
+    public <ID> JpaRepository<CommonAppPermission, ID> getRepository() {
         @SuppressWarnings("unchecked")
-        JpaRepository<AppPermissionEntity, ID> repo = (JpaRepository<AppPermissionEntity, ID>) appPermissionEntityRepository;
+        JpaRepository<CommonAppPermission, ID> repo = (JpaRepository<CommonAppPermission, ID>) appPermissionEntityRepository;
         return repo;
     }
 
@@ -79,20 +79,20 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
-    public <ID> ID extractEntityId(AppPermissionEntity entity) {
+    public <ID> ID extractEntityId(CommonAppPermission entity) {
         @SuppressWarnings("unchecked")
         ID id = (ID) entity.getId();
         return id;
     }
 
     @Override
-    public AppPermissionEntity save(AppPermissionEntity permissionEntity) throws EntityValidationException {
+    public CommonAppPermission save(CommonAppPermission permissionEntity) throws EntityValidationException {
         return performGenericSave(permissionEntity);
     }
 
     @Override
-    public AppPermissionEntity createPermission(String name, String description) {
-        AppPermissionEntity permission = new AppPermissionEntity();
+    public CommonAppPermission createPermission(String name, String description) {
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName(name);
         permission.setDescription(description);
         try {
@@ -103,12 +103,12 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
-    public List<AppPermissionEntity> getAllAppPermissions() {
+    public List<CommonAppPermission> getAllAppPermissions() {
         return appPermissionEntityRepository.findAll();
     }
 
     @Override
-    public Page<AppPermissionEntity> getAppPermissions(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException {
+    public Page<CommonAppPermission> getAppPermissions(int page, int pageSize, List<String> sortBy, String sortDirection, String query) throws QueryParseException, InvalidParameterException {
         PageRequest pageRequest;
         if (sortBy != null && !sortBy.isEmpty()) {
             Sort.Direction direction = "desc".equalsIgnoreCase(sortDirection) ? Sort.Direction.DESC : Sort.Direction.ASC;
@@ -123,7 +123,7 @@ public class AppPermissionServiceImpl implements AppPermissionService {
 
         if (query != null && !query.trim().isEmpty()) {
             QueryExpression expression = queryParser.parse(query);
-            Specification<AppPermissionEntity> spec = SpecificationBuilder.build(expression);
+            Specification<CommonAppPermission> spec = SpecificationBuilder.build(expression);
             return appPermissionEntityRepository.findAll(spec, pageRequest);
         }
 
@@ -131,22 +131,22 @@ public class AppPermissionServiceImpl implements AppPermissionService {
     }
 
     @Override
-    public Optional<AppPermissionEntity> getAppPermissionById(Long id) {
+    public Optional<CommonAppPermission> getAppPermissionById(Long id) {
         return appPermissionEntityRepository.findById(id);
     }
 
     @Override
-    public AppPermissionEntity getAppPermission(Long id) {
+    public CommonAppPermission getAppPermission(Long id) {
         return appPermissionEntityRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Optional<AppPermissionEntity> getAppPermissionByName(String name) {
+    public Optional<CommonAppPermission> getAppPermissionByName(String name) {
         return appPermissionEntityRepository.findByName(name);
     }
 
     @Override
-    public AppPermissionEntity updateAppPermission(AppPermissionEntity entity) throws EntityValidationException {
+    public CommonAppPermission updateAppPermission(CommonAppPermission entity) throws EntityValidationException {
         return save(entity);
     }
 

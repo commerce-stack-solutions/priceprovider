@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.service.approle.AppRoleService;
 import org.slf4j.Logger;
@@ -87,7 +87,7 @@ public class AuthorizationContext implements io.commercestacksolutions.commons.c
      *
      * @return set of permissions
      */
-    public Set<AppPermissionEntity> getCurrentPermissions() {
+    public Set<CommonAppPermission> getCurrentPermissions() {
         // First try JWT-based permissions (production)
         Jwt jwt = getCurrentJwt();
         if (jwt != null) {
@@ -103,7 +103,7 @@ public class AuthorizationContext implements io.commercestacksolutions.commons.c
      *
      * @return set of permissions from the AnonymousUser role
      */
-    private Set<AppPermissionEntity> getAnonymousUserPermissions() {
+    private Set<CommonAppPermission> getAnonymousUserPermissions() {
         try {
             AppRoleEntity anonymousRole = appRoleService.getAppRoleWithPermissionsByName(ANONYMOUS_USER_ROLE_NAME);
             if (anonymousRole != null && anonymousRole.getPermissionRefs() != null) {

@@ -1,7 +1,7 @@
 package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.SpecificationBuilder;
@@ -69,7 +69,7 @@ public class SpecificationCombiner {
      * @throws InvalidParameterException if permission selector expressions are invalid
      */
     public <T> Specification<T> combine(
-            Set<? extends AppPermissionEntity> permissions,
+            Set<? extends CommonAppPermission> permissions,
             String entityType,
             String action,
             String userQuery,
@@ -114,7 +114,7 @@ public class SpecificationCombiner {
      * @throws InvalidParameterException if permission selector expressions are invalid
      */
     public <T> Specification<T> fromPermissions(
-            Set<? extends AppPermissionEntity> permissions,
+            Set<? extends CommonAppPermission> permissions,
             String entityType,
             String action) throws InvalidParameterException {
         return permissionFilterBuilder.buildFilter(permissions, entityType, action);

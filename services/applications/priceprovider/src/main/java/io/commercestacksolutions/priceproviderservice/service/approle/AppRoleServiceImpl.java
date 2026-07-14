@@ -1,5 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.approle;
 
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.commons.query.*;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
@@ -10,7 +11,6 @@ import io.commercestacksolutions.commons.service.entity.validation.ValidationRul
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppPermissionEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppRoleEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,17 +95,17 @@ public class AppRoleServiceImpl implements AppRoleService {
     }
 
     @Override
-    public AppRoleEntity createRole(String name, String description, Set<? extends io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity> permissions) {
+    public AppRoleEntity createRole(String name, String description, Set<? extends CommonAppPermission> permissions) {
         AppRoleEntity role = new AppRoleEntity();
         role.setName(name);
         role.setDescription(description);
-        Set<AppPermissionEntity> permissionEntities = new HashSet<>();
+        Set<io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission> permissionEntities = new HashSet<>();
         if (permissions != null) {
-            for (io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity permission : permissions) {
-                if (!(permission instanceof AppPermissionEntity)) {
+            for (CommonAppPermission permission : permissions) {
+                if (!(permission instanceof io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission)) {
                     throw new IllegalArgumentException("Unsupported AppPermissionEntity implementation: " + permission.getClass().getName());
                 }
-                permissionEntities.add((AppPermissionEntity) permission);
+                permissionEntities.add((io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission) permission);
             }
         }
         role.setPermissionRefs(permissionEntities);
@@ -138,7 +138,7 @@ public class AppRoleServiceImpl implements AppRoleService {
         // 1. Capture names / IDs from possibly-transient stub objects.
         List<String> names = new ArrayList<>();
         List<Long> ids = new ArrayList<>();
-        for (AppPermissionEntity permRef : roleEntity.getPermissionRefs()) {
+        for (io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission permRef : roleEntity.getPermissionRefs()) {
             if (permRef.getName() != null) {
                 names.add(permRef.getName());
             } else if (permRef.getId() != null) {
@@ -152,7 +152,7 @@ public class AppRoleServiceImpl implements AppRoleService {
         roleEntity.setPermissionRefs(new HashSet<>());
 
         // 3. Look up the real, managed entities and collect them.
-        Set<AppPermissionEntity> managedPermissions = new HashSet<>();
+        Set<io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission> managedPermissions = new HashSet<>();
         for (String name : names) {
             appPermissionEntityRepository.findByName(name)
                 .ifPresent(managedPermissions::add);

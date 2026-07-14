@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,14 +51,14 @@ public class PermissionSecurityService {
      * @return true if the user has ANY permission for this entity type and action in the current API context
      */
     public boolean hasPermissionForAction(String entityType, String action) {
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        Set<CommonAppPermission> permissions = authorizationContext.getCurrentPermissions();
 
         // Determine the correct permission prefix based on API context
         String permissionPrefix = apiContextResolver.getCurrentPermissionPrefix();
         String prefix = permissionPrefix + ":" + entityType;
         String suffix = ":" + action;
 
-        for (AppPermissionEntity permission : permissions) {
+        for (CommonAppPermission permission : permissions) {
             String permissionName = permission.getName();
             if (permissionName != null && permissionName.startsWith(prefix) && permissionName.endsWith(suffix)) {
                 // Check if it's either a direct match or has a selector in between
@@ -84,8 +84,8 @@ public class PermissionSecurityService {
      * @return true if the user has this exact permission
      */
     public boolean hasExactPermission(String permission) {
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
-        for (AppPermissionEntity perm : permissions) {
+        Set<CommonAppPermission> permissions = authorizationContext.getCurrentPermissions();
+        for (CommonAppPermission perm : permissions) {
             if (permission.equals(perm.getName())) {
                 return true;
             }

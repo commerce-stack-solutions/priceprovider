@@ -3,7 +3,7 @@ package io.commercestacksolutions.priceproviderservice.facade.approle.mapper;
 import io.commercestacksolutions.commons.mapper.AbstractMapper;
 import io.commercestacksolutions.commons.mapper.RestRequestMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.facade.approle.restentity.AppRoleRestEntity;
 import org.springframework.stereotype.Component;
@@ -29,9 +29,9 @@ public class AppRoleEntityMapper extends AbstractMapper<AppRoleRestEntity, AppRo
         // Convert permission name strings to stub AppPermissionEntity objects
         // The actual managed entities will be resolved in AppRoleServiceImpl.save()
         if (source.getPermissionRefs() != null) {
-            Set<AppPermissionEntity> permissionRefs = new HashSet<>();
+            Set<CommonAppPermission> permissionRefs = new HashSet<>();
             for (String permissionName : source.getPermissionRefs()) {
-                AppPermissionEntity permission = new AppPermissionEntity();
+                CommonAppPermission permission = new CommonAppPermission();
                 permission.setName(permissionName);
                 permissionRefs.add(permission);
             }

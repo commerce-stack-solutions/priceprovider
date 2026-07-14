@@ -1,6 +1,6 @@
 package io.commercestacksolutions.commons.dataaccess.approle.entity;
 
-public interface AppPermissionEntity {
+public interface CommonAppPermission {
 
     String getName();
 }

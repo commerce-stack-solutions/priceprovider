@@ -16,7 +16,7 @@ import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import io.commercestacksolutions.commons.web.rest.*;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.facade.approle.mapper.AppPermissionEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.approle.mapper.AppPermissionRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.approle.restentity.AppPermissionListRestEntity;
@@ -67,7 +67,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
     @Transactional(readOnly = true)
     @Override
     public AppPermissionListRestEntity getAppPermissions(int page, int pageSize, List<String> sortBy, String sortDirection, Set<String> expand, String query) throws DataMappingException, InvalidParameterException, QueryParseException {
-        Page<AppPermissionEntity> permissionsPage = appPermissionService.getAppPermissions(page, pageSize, sortBy, sortDirection, query);
+        Page<CommonAppPermission> permissionsPage = appPermissionService.getAppPermissions(page, pageSize, sortBy, sortDirection, query);
         RestResponseMappingContext context = new RestResponseMappingContext();
         context.addExpandPaths(expand);
         PagingInfo pagingInfo = new PagingInfo(permissionsPage.getNumber(), permissionsPage.getSize(), permissionsPage.getTotalElements(), permissionsPage.getTotalPages());
@@ -76,7 +76,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         AppPermissionListRestEntity result = new AppPermissionListRestEntity(pagingInfo, sortingInfo, restEntities);
 
         if (expand != null && expand.contains("$meta")) {
-            result.setMeta(entityMetaInfoRegistry.getMetaInfo(AppPermissionEntity.class));
+            result.setMeta(entityMetaInfoRegistry.getMetaInfo(CommonAppPermission.class));
         }
 
         return result;
@@ -84,13 +84,13 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
 
     @Override
     public MetaInfo getMeta() {
-        return entityMetaInfoRegistry.getMetaInfo(AppPermissionEntity.class);
+        return entityMetaInfoRegistry.getMetaInfo(CommonAppPermission.class);
     }
 
     @Transactional
     @Override
     public AppPermissionRestEntity getAppPermission(Long id, Set<String> expand) throws NotFoundException, DataMappingException {
-        AppPermissionEntity entity = appPermissionService.getAppPermission(id);
+        CommonAppPermission entity = appPermissionService.getAppPermission(id);
         if (entity == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "AppPermission");
@@ -103,7 +103,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         AppPermissionRestEntity result = appPermissionRestEntityMapper.convert(entity, context);
 
         if (expand != null && expand.contains("$meta")) {
-            result.setMeta(entityMetaInfoRegistry.getMetaInfo(AppPermissionEntity.class));
+            result.setMeta(entityMetaInfoRegistry.getMetaInfo(CommonAppPermission.class));
         }
 
         return result;
@@ -121,7 +121,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         AppPermissionRestEntity restEntity = getAppPermission(id, Collections.emptySet());
         restEntity = appPermissionRestEntityPatchMapper.applyPatch(patch, restEntity);
 
-        AppPermissionEntity existingEntity = appPermissionService.getAppPermission(id);
+        CommonAppPermission existingEntity = appPermissionService.getAppPermission(id);
         if (existingEntity == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "AppPermission");
@@ -129,17 +129,17 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
             throw new NotFoundException(MessageKeys.ERROR_APPPERMISSION_NOT_FOUND, params);
         }
         appPermissionEntityMapper.convert(restEntity, existingEntity, new RestRequestMappingContext<>(id));
-        AppPermissionEntity saved = appPermissionService.save(existingEntity);
+        CommonAppPermission saved = appPermissionService.save(existingEntity);
         return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
 
     @Transactional(rollbackFor = {EntityValidationException.class, DataMappingException.class, NotFoundException.class})
     @Override
     public AppPermissionRestEntity createOrRecreate(Long id, AppPermissionRestEntity restEntity) throws DataMappingException, EntityValidationException, NotFoundException {
-        AppPermissionEntity entity = appPermissionService.getAppPermission(id);
+        CommonAppPermission entity = appPermissionService.getAppPermission(id);
         if (entity != null) {
             appPermissionEntityMapper.convert(restEntity, entity, new RestRequestMappingContext<>(id));
-            AppPermissionEntity saved = appPermissionService.save(entity);
+            CommonAppPermission saved = appPermissionService.save(entity);
             return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
         } else {
             Map<String, String> params = new HashMap<>();
@@ -157,20 +157,20 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
             throw new EntityValidationException(MessageKeys.ERROR_VALIDATION_ID_REQUIRED, message);
         }
 
-        Optional<AppPermissionEntity> existingPermission = appPermissionService.getAppPermissionByName(restEntity.getName());
+        Optional<CommonAppPermission> existingPermission = appPermissionService.getAppPermissionByName(restEntity.getName());
         if (existingPermission.isPresent()) {
             throw new EntityAlreadyExistsException(MessageKeys.ERROR_APPPERMISSION_ALREADY_EXISTS, Map.of("name", restEntity.getName()), List.of("name"));
         }
 
-        AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
-        AppPermissionEntity saved = appPermissionService.save(newEntity);
+        CommonAppPermission newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
+        CommonAppPermission saved = appPermissionService.save(newEntity);
         return appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext());
     }
 
     @Transactional
     @Override
     public void delete(Long id) throws NotFoundException {
-        AppPermissionEntity entity = appPermissionService.getAppPermission(id);
+        CommonAppPermission entity = appPermissionService.getAppPermission(id);
         if (entity == null) {
             Map<String, String> params = new HashMap<>();
             params.put("entityType", "AppPermission");
@@ -185,7 +185,7 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
         List<String> failedDeletes = new ArrayList<>();
 
         for (Long id : ids) {
-            AppPermissionEntity entity = appPermissionService.getAppPermission(id);
+            CommonAppPermission entity = appPermissionService.getAppPermission(id);
             if (entity != null) {
                 try {
                     appPermissionService.deleteAppPermission(id);
@@ -244,15 +244,15 @@ public class AppPermissionFacadeImpl implements AppPermissionFacade {
                     continue;
                 }
 
-                Optional<AppPermissionEntity> existingOpt = appPermissionService.getAppPermissionByName(restEntity.getName());
+                Optional<CommonAppPermission> existingOpt = appPermissionService.getAppPermissionByName(restEntity.getName());
                 if (existingOpt.isPresent()) {
-                    AppPermissionEntity existing = existingOpt.get();
+                    CommonAppPermission existing = existingOpt.get();
                     appPermissionEntityMapper.convert(restEntity, existing, new RestRequestMappingContext<>(existing.getId()));
-                    AppPermissionEntity saved = appPermissionService.save(existing);
+                    CommonAppPermission saved = appPermissionService.save(existing);
                     results.add(appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 } else {
-                    AppPermissionEntity newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
-                    AppPermissionEntity saved = appPermissionService.save(newEntity);
+                    CommonAppPermission newEntity = appPermissionEntityMapper.convert(restEntity, new RestRequestMappingContext<>(null));
+                    CommonAppPermission saved = appPermissionService.save(newEntity);
                     results.add(appPermissionRestEntityMapper.convert(saved, new RestResponseMappingContext()));
                 }
             } catch (EntityValidationException e) {

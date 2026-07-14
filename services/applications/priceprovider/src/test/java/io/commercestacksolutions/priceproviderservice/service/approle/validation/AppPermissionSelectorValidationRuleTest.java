@@ -1,7 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.service.approle.validation;
 
 import io.commercestacksolutions.commons.web.rest.Message;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,7 +17,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testValidPermissionWithoutSelector() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -27,7 +27,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testValidPermissionWithSelector() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -37,7 +37,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testValidPermissionWithComplexSelector() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[currencyRef=='EUR' AND priceType=='SALES_PRICE']:write");
 
         List<Message> errors = validationRule.validate(permission);
@@ -47,7 +47,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testValidPermissionWithNotEqualsOperator() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[priceType!='PURCHASE_PRICE']:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -57,7 +57,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testValidPermissionWithHasAny() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[channelRefs hasAny('global-b2b-sales-channel')]:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -67,7 +67,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testInvalidPermissionFormat() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("invalid-permission-name");
 
         List<Message> errors = validationRule.validate(permission);
@@ -81,7 +81,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testInvalidSelectorSyntax() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[currencyRef=='EUR' AND]:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -95,7 +95,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testMalformedSelector() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[currencyRef=]:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -107,7 +107,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testUnmatchedParentheses() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[(currencyRef=='EUR']:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -128,7 +128,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testEmptyPermissionName() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("");
 
         List<Message> errors = validationRule.validate(permission);
@@ -139,7 +139,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testNullPermissionName() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName(null);
 
         List<Message> errors = validationRule.validate(permission);
@@ -150,7 +150,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testValidPermissionWithFlexiblePrefix() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.public:PriceRow[groupRefs isEmpty]:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -160,7 +160,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testValidPermissionWithCustomPrefix() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("custom.app:Resource:read");
 
         List<Message> errors = validationRule.validate(permission);
@@ -170,7 +170,7 @@ class AppPermissionSelectorValidationRuleTest {
 
     @Test
     void testInvalidSelectorWithWrongOperator() {
-        AppPermissionEntity permission = new AppPermissionEntity();
+        CommonAppPermission permission = new CommonAppPermission();
         permission.setName("priceprovider.admin:PriceRow[currencyRef==='EUR']:read");
 
         List<Message> errors = validationRule.validate(permission);

@@ -35,7 +35,7 @@ public class AppRoleEntity implements AuditableEntity, io.commercestacksolutions
         inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     @JsonIdentityReference(alwaysAsId = true)
-    private Set<AppPermissionEntity> permissionRefs = new HashSet<>();
+    private Set<CommonAppPermission> permissionRefs = new HashSet<>();
 
     private OffsetDateTime createdAt;
 
@@ -68,11 +68,11 @@ public class AppRoleEntity implements AuditableEntity, io.commercestacksolutions
         this.description = description;
     }
 
-    public Set<AppPermissionEntity> getPermissionRefs() {
+    public Set<CommonAppPermission> getPermissionRefs() {
         return permissionRefs;
     }
 
-    public void setPermissionRefs(Set<AppPermissionEntity> permissionRefs) {
+    public void setPermissionRefs(Set<CommonAppPermission> permissionRefs) {
         this.permissionRefs = permissionRefs;
     }
 

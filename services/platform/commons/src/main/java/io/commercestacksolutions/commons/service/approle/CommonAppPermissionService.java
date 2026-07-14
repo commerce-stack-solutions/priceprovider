@@ -1,12 +1,12 @@
 package io.commercestacksolutions.commons.service.approle;
 
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 
 import java.util.List;
 
 public interface CommonAppPermissionService {
 
-    List<? extends AppPermissionEntity> getAllAppPermissions();
+    List<? extends CommonAppPermission> getAllAppPermissions();
 
-    AppPermissionEntity createPermission(String name, String description);
+    CommonAppPermission createPermission(String name, String description);
 }

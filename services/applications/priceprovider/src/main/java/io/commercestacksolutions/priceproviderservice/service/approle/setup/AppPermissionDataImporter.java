@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.commercestacksolutions.commons.service.setup.AbstractSetupDataImporter;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.service.approle.AppPermissionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
-public class AppPermissionDataImporter extends AbstractSetupDataImporter<AppPermissionEntity> {
+public class AppPermissionDataImporter extends AbstractSetupDataImporter<CommonAppPermission> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppPermissionDataImporter.class);
 
@@ -69,8 +69,8 @@ public class AppPermissionDataImporter extends AbstractSetupDataImporter<AppPerm
                     continue;
                 }
 
-                AppPermissionEntity entity = appPermissionService.getAppPermissionByName(name)
-                        .orElseGet(AppPermissionEntity::new);
+                CommonAppPermission entity = appPermissionService.getAppPermissionByName(name)
+                        .orElseGet(CommonAppPermission::new);
 
                 entity.setName(name);
                 if (node.hasNonNull("description")) {

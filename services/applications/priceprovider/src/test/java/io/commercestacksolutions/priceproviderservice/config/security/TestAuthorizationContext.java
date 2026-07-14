@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,23 +37,23 @@ public class TestAuthorizationContext extends AuthorizationContext {
      *
      * <p>This method extracts permission strings from the authorities set up by
      * {@link io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig}
-     * and converts them to {@link AppPermissionEntity} objects.
+     * and converts them to {@link CommonAppPermission} objects.
      *
      * @return set of permissions from Spring Security authorities
      */
     @Override
-    public Set<AppPermissionEntity> getCurrentPermissions() {
+    public Set<CommonAppPermission> getCurrentPermissions() {
         Authentication auth = getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
             return Set.of();
         }
 
-        Set<AppPermissionEntity> permissions = new HashSet<>();
+        Set<CommonAppPermission> permissions = new HashSet<>();
         for (org.springframework.security.core.GrantedAuthority authority : auth.getAuthorities()) {
             String authorityString = authority.getAuthority();
             // Filter out ROLE_ authorities, only keep permission strings
             if (!authorityString.startsWith("ROLE_")) {
-                AppPermissionEntity permission = new AppPermissionEntity();
+                CommonAppPermission permission = new CommonAppPermission();
                 permission.setName(authorityString);
                 permissions.add(permission);
             }

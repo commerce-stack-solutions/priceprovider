@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.service.publicprice.strat
 
 import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
@@ -174,7 +174,7 @@ public abstract class AbstractPermissionAwarePriceCandidatesQueryStrategy {
             return;
         }
 
-        Set<AppPermissionEntity> permissions = authorizationContext.getCurrentPermissions();
+        Set<CommonAppPermission> permissions = authorizationContext.getCurrentPermissions();
 
         try {
             Specification<PriceRowEntity> permissionSpec =

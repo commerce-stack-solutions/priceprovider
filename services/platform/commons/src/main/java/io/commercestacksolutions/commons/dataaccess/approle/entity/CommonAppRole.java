@@ -6,5 +6,5 @@ public interface CommonAppRole {
 
     String getName();
 
-    Set<? extends AppPermissionEntity> getPermissionRefs();
+    Set<? extends CommonAppPermission> getPermissionRefs();
 }

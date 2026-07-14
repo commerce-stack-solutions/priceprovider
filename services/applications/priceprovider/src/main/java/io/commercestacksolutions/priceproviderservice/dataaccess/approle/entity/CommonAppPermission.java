@@ -11,9 +11,9 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = AppPermissionEntity.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = CommonAppPermission.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class AppPermissionEntity implements AuditableEntity, io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity {
+public class CommonAppPermission implements AuditableEntity, io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class AppPermissionEntity implements AuditableEntity, io.commercestacksol
 
     private OffsetDateTime lastModifiedAt;
 
-    public AppPermissionEntity() {
+    public CommonAppPermission() {
     }
 
     public Long getId() {

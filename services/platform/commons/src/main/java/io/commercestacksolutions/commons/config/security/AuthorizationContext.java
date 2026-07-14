@@ -1,12 +1,12 @@
 package io.commercestacksolutions.commons.config.security;
 
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 
 import java.util.Set;
 
 public interface AuthorizationContext {
 
-    Set<? extends AppPermissionEntity> getCurrentPermissions();
+    Set<? extends CommonAppPermission> getCurrentPermissions();
 
     boolean isBootstrapModeEnabled();
 

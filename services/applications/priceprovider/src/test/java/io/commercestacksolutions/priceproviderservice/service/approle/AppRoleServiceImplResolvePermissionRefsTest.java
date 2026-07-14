@@ -5,7 +5,7 @@ import io.commercestacksolutions.commons.service.entity.validation.ValidationRul
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppPermissionEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.AppRoleEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 /**
  * Unit tests for {@link AppRoleServiceImpl#resolvePermissionRefs(AppRoleEntity)}.
  *
- * <p>The key behaviour under test is that transient {@link AppPermissionEntity} stubs
+ * <p>The key behaviour under test is that transient {@link CommonAppPermission} stubs
  * are removed from the role's {@code permissionRefs} collection <em>before</em> any
  * JPQL query is issued.  This prevents Hibernate's auto-flush from throwing a
  * {@code TransientObjectException} when the method is called inside a long-running
@@ -87,27 +87,27 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
 
     // ---------- helpers ----------
 
-    private static AppPermissionEntity managedPermission(Long id, String name) {
-        AppPermissionEntity p = new AppPermissionEntity();
+    private static CommonAppPermission managedPermission(Long id, String name) {
+        CommonAppPermission p = new CommonAppPermission();
         p.setId(id);
         p.setName(name);
         return p;
     }
 
-    private static AppPermissionEntity transientStubByName(String name) {
-        AppPermissionEntity stub = new AppPermissionEntity();
+    private static CommonAppPermission transientStubByName(String name) {
+        CommonAppPermission stub = new CommonAppPermission();
         stub.setName(name);
         // no id — transient
         return stub;
     }
 
-    private static AppPermissionEntity transientStubById(Long id) {
-        AppPermissionEntity stub = new AppPermissionEntity();
+    private static CommonAppPermission transientStubById(Long id) {
+        CommonAppPermission stub = new CommonAppPermission();
         stub.setId(id);
         return stub;
     }
 
-    private static AppRoleEntity roleWithPermissions(Set<AppPermissionEntity> perms) {
+    private static AppRoleEntity roleWithPermissions(Set<CommonAppPermission> perms) {
         AppRoleEntity role = new AppRoleEntity();
         role.setId(1L);
         role.setName("priceprovider.admin:Superuser");
@@ -119,7 +119,7 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
 
     @Test
     void save_permissionRefByName_isResolvedToManagedEntity() throws Exception {
-        AppPermissionEntity managed = managedPermission(10L, "priceprovider.admin:AppRole:read");
+        CommonAppPermission managed = managedPermission(10L, "priceprovider.admin:AppRole:read");
         AppRoleEntity role = roleWithPermissions(Set.of(transientStubByName("priceprovider.admin:AppRole:read")));
 
         when(appPermissionEntityRepository.findByName("priceprovider.admin:AppRole:read")).thenReturn(Optional.of(managed));
@@ -134,7 +134,7 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
 
     @Test
     void save_permissionRefById_isResolvedToManagedEntity() throws Exception {
-        AppPermissionEntity managed = managedPermission(20L, "priceprovider.admin:AppRole:write");
+        CommonAppPermission managed = managedPermission(20L, "priceprovider.admin:AppRole:write");
         AppRoleEntity role = roleWithPermissions(Set.of(transientStubById(20L)));
 
         when(appPermissionEntityRepository.findById(20L)).thenReturn(Optional.of(managed));
@@ -197,8 +197,8 @@ public class AppRoleServiceImplResolvePermissionRefsTest {
      */
     @Test
     void resolvePermissionRefs_clearsTransientRefsBeforeQuery() throws Exception {
-        AppPermissionEntity managed = managedPermission(30L, "priceprovider.admin:Superuser:write");
-        AppPermissionEntity transientStub = transientStubByName("priceprovider.admin:Superuser:write");
+        CommonAppPermission managed = managedPermission(30L, "priceprovider.admin:Superuser:write");
+        CommonAppPermission transientStub = transientStubByName("priceprovider.admin:Superuser:write");
 
         AppRoleEntity role = roleWithPermissions(new HashSet<>(Set.of(transientStub)));
 

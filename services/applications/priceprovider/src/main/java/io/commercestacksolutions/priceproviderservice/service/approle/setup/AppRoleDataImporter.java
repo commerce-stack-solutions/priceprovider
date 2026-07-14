@@ -1,7 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.service.approle.setup;
 
 import io.commercestacksolutions.commons.service.setup.AbstractSetupDataImporter;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.service.approle.AppRoleService;
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
@@ -82,10 +82,10 @@ public class AppRoleDataImporter extends AbstractSetupDataImporter<AppRoleEntity
                 }
 
                 if (node.has("permissionRefs") && node.get("permissionRefs").isArray()) {
-                    Set<AppPermissionEntity> perms = new HashSet<>();
+                    Set<CommonAppPermission> perms = new HashSet<>();
                     for (JsonNode pref : node.get("permissionRefs")) {
                         if (pref.isTextual()) {
-                            AppPermissionEntity perm = new AppPermissionEntity();
+                            CommonAppPermission perm = new CommonAppPermission();
                             perm.setName(pref.asText());
                             perms.add(perm);
                         }

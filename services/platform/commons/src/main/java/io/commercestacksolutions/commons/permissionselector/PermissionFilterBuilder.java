@@ -2,7 +2,7 @@ package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.config.security.ApiContextResolver;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.commons.permissionselector.PermissionNameParser.ParsedPermission;
 import io.commercestacksolutions.commons.query.QueryExpression;
 import io.commercestacksolutions.commons.query.QueryFilter;
@@ -62,7 +62,7 @@ public class PermissionFilterBuilder {
      * @return a Specification that filters entities according to the permissions, or null if no filtering needed
      * @throws InvalidParameterException if the selector expression cannot be converted to a valid query
      */
-    public <T> Specification<T> buildFilter(Collection<? extends AppPermissionEntity> permissions, String dataType, String action) throws InvalidParameterException {
+    public <T> Specification<T> buildFilter(Collection<? extends CommonAppPermission> permissions, String dataType, String action) throws InvalidParameterException {
         if (permissions == null || permissions.isEmpty()) {
             // No permissions = deny all
             logger.debug("No permissions for {}:{}, denying all access", dataType, action);
@@ -74,7 +74,7 @@ public class PermissionFilterBuilder {
 
         // Find all permissions matching dataType:action AND the current API context
         List<ParsedPermission> matchingPermissions = new ArrayList<>();
-        for (AppPermissionEntity perm : permissions) {
+        for (CommonAppPermission perm : permissions) {
             try {
                 logger.debug("Parsing permission: {}", perm.getName());
                 ParsedPermission parsed = permissionNameParser.parse(perm.getName());

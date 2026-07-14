@@ -3,12 +3,12 @@ package io.commercestacksolutions.priceproviderservice.facade.approle.mapper;
 import io.commercestacksolutions.commons.mapper.AbstractMapper;
 import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.facade.approle.restentity.AppPermissionRestEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AppPermissionRestEntityMapper extends AbstractMapper<AppPermissionEntity, AppPermissionRestEntity, RestResponseMappingContext> {
+public class AppPermissionRestEntityMapper extends AbstractMapper<CommonAppPermission, AppPermissionRestEntity, RestResponseMappingContext> {
 
     @Override
     public AppPermissionRestEntity createTarget() {
@@ -16,7 +16,7 @@ public class AppPermissionRestEntityMapper extends AbstractMapper<AppPermissionE
     }
 
     @Override
-    public void convert(AppPermissionEntity source, AppPermissionRestEntity target, RestResponseMappingContext context) {
+    public void convert(CommonAppPermission source, AppPermissionRestEntity target, RestResponseMappingContext context) {
         target.setId(source.getId());
         target.setName(source.getName());
         target.setDescription(source.getDescription());
@@ -26,7 +26,7 @@ public class AppPermissionRestEntityMapper extends AbstractMapper<AppPermissionE
         }
     }
 
-    private void addInfoSection(AppPermissionEntity source, AppPermissionRestEntity target, RestResponseMappingContext context) {
+    private void addInfoSection(CommonAppPermission source, AppPermissionRestEntity target, RestResponseMappingContext context) {
         InfoAuditableRestEntity info = new InfoAuditableRestEntity();
         if (context.expandWithAnyOf(new String[]{"$info", "$info.createdAt"})) {
             info.setCreatedAt(source.getCreatedAt());

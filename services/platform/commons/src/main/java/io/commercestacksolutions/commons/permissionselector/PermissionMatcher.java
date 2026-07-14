@@ -2,7 +2,7 @@ package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.permissionselector.PermissionNameParser.ParsedPermission;
 import io.commercestacksolutions.commons.config.security.ApiContextResolver;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +50,7 @@ public class PermissionMatcher {
      * @param target       the object to check access for
      * @return true if access is granted, false otherwise
      */
-    public boolean hasAccess(Collection<? extends AppPermissionEntity> permissions, String dataType, String action, Object target) {
+    public boolean hasAccess(Collection<? extends CommonAppPermission> permissions, String dataType, String action, Object target) {
         if (permissions == null || permissions.isEmpty()) {
             logAccessDecision(dataType, action, target, false, "No permissions");
             return false;
@@ -120,7 +119,7 @@ public class PermissionMatcher {
      * @param action      the action to check
      * @return true if user has at least one permission (global or selector-based) for this dataType:action in the current context
      */
-    public boolean hasAnyPermission(Collection<? extends AppPermissionEntity> permissions, String dataType, String action) {
+    public boolean hasAnyPermission(Collection<? extends CommonAppPermission> permissions, String dataType, String action) {
         if (permissions == null || permissions.isEmpty()) {
             return false;
         }
@@ -150,7 +149,7 @@ public class PermissionMatcher {
      * @param action      the action to check
      * @return true if user has a global permission (without selector) in the current context
      */
-    public boolean hasGlobalPermission(Collection<? extends AppPermissionEntity> permissions, String dataType, String action) {
+    public boolean hasGlobalPermission(Collection<? extends CommonAppPermission> permissions, String dataType, String action) {
         if (permissions == null || permissions.isEmpty()) {
             return false;
         }
@@ -181,7 +180,7 @@ public class PermissionMatcher {
      * @param action      the action
      * @return list of parsed permissions matching the criteria in the current context
      */
-    public List<ParsedPermission> getPermissionsFor(Collection<? extends AppPermissionEntity> permissions, String dataType, String action) {
+    public List<ParsedPermission> getPermissionsFor(Collection<? extends CommonAppPermission> permissions, String dataType, String action) {
         if (permissions == null || permissions.isEmpty()) {
             return Collections.emptyList();
         }

@@ -1,7 +1,7 @@
 package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.config.security.ApiContextResolver;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.commons.permissionselector.PermissionNameParser.ParsedPermission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class PermissionMatcherTest {
         }
     }
 
-    static class TestAppPermissionEntity implements AppPermissionEntity {
+    static class TestCommonAppPermission implements CommonAppPermission {
         private String name;
 
         @Override
@@ -63,7 +63,7 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAccessWithGlobalPermission() {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow:read");
         TestPriceRow priceRow = new TestPriceRow("EUR", "SALES_PRICE");
 
         assertEquals("SALES_PRICE", priceRow.priceType);
@@ -75,7 +75,7 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAccessWithMatchingSelector() {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
         TestPriceRow priceRow = new TestPriceRow("EUR", "SALES_PRICE");
 
         boolean hasAccess = permissionMatcher.hasAccess(Collections.singleton(perm), "PriceRow", "read", priceRow);
@@ -85,7 +85,7 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAccessWithNonMatchingSelector() {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='USD']:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='USD']:read");
         TestPriceRow priceRow = new TestPriceRow("EUR", "SALES_PRICE");
 
         boolean hasAccess = permissionMatcher.hasAccess(Collections.singleton(perm), "PriceRow", "read", priceRow);
@@ -95,14 +95,14 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAccessWithMultiplePermissionsUnion() {
-        AppPermissionEntity perm1 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
-        AppPermissionEntity perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='USD']:read");
+        CommonAppPermission perm1 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        CommonAppPermission perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='USD']:read");
 
         TestPriceRow priceRowEUR = new TestPriceRow("EUR", "SALES_PRICE");
         TestPriceRow priceRowUSD = new TestPriceRow("USD", "SALES_PRICE");
         TestPriceRow priceRowGBP = new TestPriceRow("GBP", "SALES_PRICE");
 
-        Set<AppPermissionEntity> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
+        Set<CommonAppPermission> permissions = new HashSet<>(Arrays.asList(perm1, perm2));
 
         assertTrue(permissionMatcher.hasAccess(permissions, "PriceRow", "read", priceRowEUR),
                 "EUR price row should be accessible (matches first permission)");
@@ -114,7 +114,7 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAccessWithComplexSelector() {
-        AppPermissionEntity perm = createPermission(
+        CommonAppPermission perm = createPermission(
                 "priceprovider.admin:PriceRow[currencyRef=='EUR' AND priceType=='SALES_PRICE']:read");
 
         TestPriceRow matchingRow = new TestPriceRow("EUR", "SALES_PRICE");
@@ -131,7 +131,7 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAccessWithWrongAction() {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow:read");
         TestPriceRow priceRow = new TestPriceRow("EUR", "SALES_PRICE");
 
         boolean hasAccess = permissionMatcher.hasAccess(Collections.singleton(perm), "PriceRow", "write", priceRow);
@@ -141,7 +141,7 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAccessWithWrongDataType() {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:Channel:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:Channel:read");
         TestPriceRow priceRow = new TestPriceRow("EUR", "SALES_PRICE");
 
         boolean hasAccess = permissionMatcher.hasAccess(Collections.singleton(perm), "PriceRow", "read", priceRow);
@@ -160,7 +160,7 @@ class PermissionMatcherTest {
 
     @Test
     void testHasAnyPermission() {
-        AppPermissionEntity perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        CommonAppPermission perm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
 
         assertTrue(permissionMatcher.hasAnyPermission(Collections.singleton(perm), "PriceRow", "read"));
         assertFalse(permissionMatcher.hasAnyPermission(Collections.singleton(perm), "PriceRow", "write"));
@@ -169,8 +169,8 @@ class PermissionMatcherTest {
 
     @Test
     void testHasGlobalPermission() {
-        AppPermissionEntity globalPerm = createPermission("priceprovider.admin:PriceRow:read");
-        AppPermissionEntity selectorPerm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        CommonAppPermission globalPerm = createPermission("priceprovider.admin:PriceRow:read");
+        CommonAppPermission selectorPerm = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
 
         assertTrue(permissionMatcher.hasGlobalPermission(Collections.singleton(globalPerm), "PriceRow", "read"),
                 "Should detect global permission");
@@ -180,12 +180,12 @@ class PermissionMatcherTest {
 
     @Test
     void testGetPermissionsFor() {
-        AppPermissionEntity perm1 = createPermission("priceprovider.admin:PriceRow:read");
-        AppPermissionEntity perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
-        AppPermissionEntity perm3 = createPermission("priceprovider.admin:PriceRow:write");
-        AppPermissionEntity perm4 = createPermission("priceprovider.admin:Channel:read");
+        CommonAppPermission perm1 = createPermission("priceprovider.admin:PriceRow:read");
+        CommonAppPermission perm2 = createPermission("priceprovider.admin:PriceRow[currencyRef=='EUR']:read");
+        CommonAppPermission perm3 = createPermission("priceprovider.admin:PriceRow:write");
+        CommonAppPermission perm4 = createPermission("priceprovider.admin:Channel:read");
 
-        Set<AppPermissionEntity> permissions = new HashSet<>(Arrays.asList(perm1, perm2, perm3, perm4));
+        Set<CommonAppPermission> permissions = new HashSet<>(Arrays.asList(perm1, perm2, perm3, perm4));
 
         var readPermissions = permissionMatcher.getPermissionsFor(permissions, "PriceRow", "read");
 
@@ -195,8 +195,8 @@ class PermissionMatcherTest {
     }
 
     // Helper method to create a permission entity
-    private AppPermissionEntity createPermission(String name) {
-        TestAppPermissionEntity entity = new TestAppPermissionEntity();
+    private CommonAppPermission createPermission(String name) {
+        TestCommonAppPermission entity = new TestCommonAppPermission();
         entity.setName(name);
         return entity;
     }

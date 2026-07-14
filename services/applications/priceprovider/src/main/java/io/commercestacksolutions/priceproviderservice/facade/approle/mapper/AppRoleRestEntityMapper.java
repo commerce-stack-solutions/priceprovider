@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.facade.approle.mapper;
 
 import io.commercestacksolutions.commons.mapper.AbstractMapper;
 import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.facade.approle.info.InfoAppRole;
 import io.commercestacksolutions.priceproviderservice.facade.approle.restentity.AppRoleRestEntity;
@@ -30,7 +30,7 @@ public class AppRoleRestEntityMapper extends AbstractMapper<AppRoleEntity, AppRo
         if (source.getPermissionRefs() != null) {
             Set<String> permissionRefs = source.getPermissionRefs().stream()
                     .filter(p -> p != null && p.getName() != null)
-                    .map(AppPermissionEntity::getName)
+                    .map(CommonAppPermission::getName)
                     .collect(Collectors.toSet());
             target.setPermissionRefs(permissionRefs);
         }
@@ -46,7 +46,7 @@ public class AppRoleRestEntityMapper extends AbstractMapper<AppRoleEntity, AppRo
         if (source.getPermissionRefs() != null) {
             Map<String, Long> permissionRefIds = source.getPermissionRefs().stream()
                     .filter(p -> p != null && p.getName() != null && p.getId() != null)
-                    .collect(Collectors.toMap(AppPermissionEntity::getName, AppPermissionEntity::getId));
+                    .collect(Collectors.toMap(CommonAppPermission::getName, CommonAppPermission::getId));
             if (!permissionRefIds.isEmpty()) {
                 info.setPermissionRefIds(permissionRefIds);
             }

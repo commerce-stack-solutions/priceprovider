@@ -2,7 +2,7 @@ package io.commercestacksolutions.commons.permissionselector;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.config.security.ApiContextResolver;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.commons.query.QueryParser;
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ class SpecificationCombinerTest {
         }
     }
 
-    static class TestAppPermissionEntity implements AppPermissionEntity {
+    static class TestCommonAppPermission implements CommonAppPermission {
         private String name;
 
         @Override
@@ -80,7 +80,7 @@ class SpecificationCombinerTest {
 
     @Test
     void testCombine_GlobalPermissionNoQuery_ReturnsNull() throws QueryParseException, InvalidParameterException {
-        AppPermissionEntity globalPerm = createPermission("priceprovider.admin:TestEntity:read");
+        CommonAppPermission globalPerm = createPermission("priceprovider.admin:TestEntity:read");
 
         Specification<TestEntity> spec = specificationCombiner.combine(
                 Collections.singleton(globalPerm), "TestEntity", "read", null, queryParser);
@@ -97,7 +97,7 @@ class SpecificationCombinerTest {
 
     @Test
     void testCombine_SelectorPermissionNoQuery_ReturnsPermissionSpec() throws QueryParseException, InvalidParameterException {
-        AppPermissionEntity selectorPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
+        CommonAppPermission selectorPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
 
         Specification<TestEntity> spec = specificationCombiner.combine(
                 Collections.singleton(selectorPerm), "TestEntity", "read", null, queryParser);
@@ -114,7 +114,7 @@ class SpecificationCombinerTest {
 
     @Test
     void testCombine_EmptyQuery_TreatedAsNull() throws QueryParseException, InvalidParameterException {
-        AppPermissionEntity globalPerm = createPermission("priceprovider.admin:TestEntity:read");
+        CommonAppPermission globalPerm = createPermission("priceprovider.admin:TestEntity:read");
 
         Specification<TestEntity> spec1 = specificationCombiner.combine(
                 Collections.singleton(globalPerm), "TestEntity", "read", "", queryParser);
@@ -141,9 +141,9 @@ class SpecificationCombinerTest {
 
     @Test
     void testCombine_MultiplePermissions_ReturnsUnionSpec() throws QueryParseException, InvalidParameterException {
-        AppPermissionEntity perm1 = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
-        AppPermissionEntity perm2 = createPermission("priceprovider.admin:TestEntity[field1=='USD']:read");
-        Set<AppPermissionEntity> permissions = new HashSet<>();
+        CommonAppPermission perm1 = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
+        CommonAppPermission perm2 = createPermission("priceprovider.admin:TestEntity[field1=='USD']:read");
+        Set<CommonAppPermission> permissions = new HashSet<>();
         permissions.add(perm1);
         permissions.add(perm2);
 
@@ -163,7 +163,7 @@ class SpecificationCombinerTest {
 
     @Test
     void testFromPermissions_GlobalPermission_ReturnsNull() throws InvalidParameterException {
-        AppPermissionEntity globalPerm = createPermission("priceprovider.admin:TestEntity:read");
+        CommonAppPermission globalPerm = createPermission("priceprovider.admin:TestEntity:read");
 
         Specification<TestEntity> spec = specificationCombiner.fromPermissions(
                 Collections.singleton(globalPerm), "TestEntity", "read");
@@ -173,7 +173,7 @@ class SpecificationCombinerTest {
 
     @Test
     void testFromPermissions_SelectorPermission_ReturnsSpec() throws InvalidParameterException {
-        AppPermissionEntity selectorPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
+        CommonAppPermission selectorPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
 
         Specification<TestEntity> spec = specificationCombiner.fromPermissions(
                 Collections.singleton(selectorPerm), "TestEntity", "read");
@@ -191,8 +191,8 @@ class SpecificationCombinerTest {
 
     @Test
     void testCombine_DifferentActions_FilteredCorrectly() throws QueryParseException, InvalidParameterException {
-        AppPermissionEntity readPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
-        AppPermissionEntity writePerm = createPermission("priceprovider.admin:TestEntity[field1=='USD']:write");
+        CommonAppPermission readPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
+        CommonAppPermission writePerm = createPermission("priceprovider.admin:TestEntity[field1=='USD']:write");
 
         // When requesting read permissions, only readPerm should be used
         Specification<TestEntity> spec = specificationCombiner.combine(
@@ -204,8 +204,8 @@ class SpecificationCombinerTest {
 
     @Test
     void testCombine_MixedGlobalAndSelectorPermissions_GlobalTakesPrecedence() throws QueryParseException, InvalidParameterException {
-        AppPermissionEntity globalPerm = createPermission("priceprovider.admin:TestEntity:read");
-        AppPermissionEntity selectorPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
+        CommonAppPermission globalPerm = createPermission("priceprovider.admin:TestEntity:read");
+        CommonAppPermission selectorPerm = createPermission("priceprovider.admin:TestEntity[field1=='EUR']:read");
 
         Specification<TestEntity> spec = specificationCombiner.combine(
                 Set.of(globalPerm, selectorPerm), "TestEntity", "read", null, queryParser);
@@ -214,8 +214,8 @@ class SpecificationCombinerTest {
     }
 
     // Helper method to create AppPermissionEntity
-    private AppPermissionEntity createPermission(String name) {
-        TestAppPermissionEntity entity = new TestAppPermissionEntity();
+    private CommonAppPermission createPermission(String name) {
+        TestCommonAppPermission entity = new TestCommonAppPermission();
         entity.setName(name);
         return entity;
     }

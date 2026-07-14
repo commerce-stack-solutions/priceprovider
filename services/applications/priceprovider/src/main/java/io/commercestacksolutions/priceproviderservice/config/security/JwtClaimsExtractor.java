@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppPermissionEntity;
+import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
 import io.commercestacksolutions.priceproviderservice.service.approle.AppRoleService;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -75,9 +74,9 @@ public class JwtClaimsExtractor {
     }
 
     /**
-     * Extracts all {@link AppPermissionEntity}s granted to the user by their roles.
+     * Extracts all {@link CommonAppPermission}s granted to the user by their roles.
      */
-    public Set<AppPermissionEntity> extractPermissions(Jwt jwt) {
+    public Set<CommonAppPermission> extractPermissions(Jwt jwt) {
         return extractRoles(jwt).stream()
                 .flatMap(role -> role.getPermissionRefs().stream())
                 .collect(Collectors.toSet());
