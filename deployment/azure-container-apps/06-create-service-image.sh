@@ -24,9 +24,9 @@ VERSION="$1"
 # ============================================================
 #  Resolve the service source directory
 #  This script lives in deployment/azure-container-apps/
-#  The service Dockerfile is in service/ (two levels up)
+#  The service Dockerfile is in services/ (two levels up)
 # ============================================================
-SERVICE_DIR="${SCRIPT_DIR}/../../service"
+SERVICE_DIR="${SCRIPT_DIR}/../../services"
 
 # ============================================================
 #  Log in to ACR

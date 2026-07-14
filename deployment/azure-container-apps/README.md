@@ -104,7 +104,7 @@ Scripts 06 and 07 build a Docker image locally (requires Docker Desktop) and pus
 
 ### Option A – Build locally then push (scripts 06/07)
 
-Both image scripts resolve the source directories automatically (`../../service/` and `../../app/` relative to this folder), so they can be run from any working directory.
+Both image scripts resolve the source directories automatically (`../../services/` and `../../app/` relative to this folder), so they can be run from any working directory.
 
 #### Build and push the backend image
 

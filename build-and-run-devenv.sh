@@ -72,7 +72,7 @@ echo ""
 echo "  [1/2] Building Docker image for Price Provider Service..."
 echo "        Image: price-provider-service:${VERSION}"
 echo ""
-(cd "${SCRIPT_DIR}/service" && bash dockerimage-create.sh "${VERSION}")
+(cd "${SCRIPT_DIR}/services/applications/priceprovider" && bash dockerimage-create.sh "${VERSION}")
 echo ""
 
 # ---------------------------------------------------------------------------
@@ -157,11 +157,11 @@ echo "      rental-green-land  / rental123 (Org: Green Land)"
 echo ""
 echo "  Documentation:"
 echo "  Project README         ->  $(link "file://${SCRIPT_DIR}/README.md")"
-echo "  Service README         ->  $(link "file://${SCRIPT_DIR}/service/README.md")"
+echo "  Service README         ->  $(link "file://${SCRIPT_DIR}/services/applications/priceprovider/README.md")"
 echo "  App README             ->  $(link "file://${SCRIPT_DIR}/app/README.md")"
 echo "  Shop Frontend README   ->  $(link "file://${SCRIPT_DIR}/examples/shopfrontend/README.md")"
 echo "  Rental Frontend README ->  $(link "file://${SCRIPT_DIR}/examples/rentalfrontend/README.md")"
-  In-Store Kiosk README  ->  $(link "file://${SCRIPT_DIR}/examples/instorekiosk/README.md")"
+echo "  In-Store Kiosk README  ->  $(link "file://${SCRIPT_DIR}/examples/instorekiosk/README.md")"
 echo ""
 echo "  To stream logs:  docker compose logs -f"
 echo "  To stop:         docker compose down"
