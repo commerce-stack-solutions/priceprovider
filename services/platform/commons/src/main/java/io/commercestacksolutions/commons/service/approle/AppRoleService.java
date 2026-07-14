@@ -1,16 +1,16 @@
 package io.commercestacksolutions.commons.service.approle;
 
 import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppRoleEntity;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppRole;
 
 import java.util.List;
 import java.util.Set;
 
 public interface AppRoleService {
 
-    List<? extends AppRoleEntity> getAllAppRoles();
+    List<? extends CommonAppRole> getAllAppRoles();
 
-    AppRoleEntity getAppRoleWithPermissionsByName(String name);
+    CommonAppRole getAppRoleWithPermissionsByName(String name);
 
-    AppRoleEntity createRole(String name, String description, Set<? extends AppPermissionEntity> permissions);
+    CommonAppRole createRole(String name, String description, Set<? extends AppPermissionEntity> permissions);
 }

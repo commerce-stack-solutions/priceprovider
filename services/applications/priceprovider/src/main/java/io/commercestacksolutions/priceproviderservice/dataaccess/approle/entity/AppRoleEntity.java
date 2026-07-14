@@ -16,7 +16,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = AppRoleEntity.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class AppRoleEntity implements AuditableEntity, io.commercestacksolutions.commons.dataaccess.approle.entity.AppRoleEntity {
+public class AppRoleEntity implements AuditableEntity, io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,8 +2,8 @@ package io.commercestacksolutions.commons.service.setup;
 
 import io.commercestacksolutions.commons.config.security.AuthorizationContext;
 import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermissionEntity;
-import io.commercestacksolutions.commons.dataaccess.approle.entity.AppRoleEntity;
-import io.commercestacksolutions.commons.service.approle.AppPermissionService;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppRole;
+import io.commercestacksolutions.commons.service.approle.CommonAppPermissionService;
 import io.commercestacksolutions.commons.service.approle.AppRoleService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
 
     private final List<SetupDataImporter> dataImporters;
     private final AuthorizationContext authorizationContext;
-    private final AppPermissionService appPermissionService;
+    private final CommonAppPermissionService appPermissionService;
     private final AppRoleService appRoleService;
 
     @Value("${service-config.initialize.data-folder}")
@@ -51,7 +51,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
     @Autowired
     public SetupDataImportManager(List<SetupDataImporter> dataImporters,
                                   AuthorizationContext authorizationContext,
-                                  AppPermissionService appPermissionService,
+                                  CommonAppPermissionService appPermissionService,
                                   AppRoleService appRoleService) {
         this.dataImporters = dataImporters;
         this.authorizationContext = authorizationContext;
@@ -109,7 +109,7 @@ public class SetupDataImportManager implements SelectiveDataImportManager {
                 Set<AppPermissionEntity> permissions = new HashSet<>();
                 permissions.add(initPermission);
                 permissions.add(roleReadPermission);
-                AppRoleEntity adminRole = appRoleService.createRole("priceprovider.admin:Admin", "Full admin access", permissions);
+                CommonAppRole adminRole = appRoleService.createRole("priceprovider.admin:Admin", "Full admin access", permissions);
                 logger.info("Created role: {} with bootstrap permissions", adminRole.getName());
 
                 logger.info("Bootstrap complete. Admin users can now access the service initialization page.");

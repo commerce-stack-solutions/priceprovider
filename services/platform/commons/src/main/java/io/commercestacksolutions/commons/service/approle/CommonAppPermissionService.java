@@ -4,7 +4,7 @@ import io.commercestacksolutions.commons.dataaccess.approle.entity.AppPermission
 
 import java.util.List;
 
-public interface AppPermissionService {
+public interface CommonAppPermissionService {
 
     List<? extends AppPermissionEntity> getAllAppPermissions();
 
