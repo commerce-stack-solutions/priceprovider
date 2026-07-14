@@ -4,5 +4,5 @@ This directory contains shared IntelliJ IDEA run configurations for the Price Pr
 They are picked up automatically when the project is opened in IntelliJ IDEA.
 
 For documentation on the available configurations and how to use them, see the
-[Getting Started with Development (IntelliJ)](../service/README.md#getting-started-with-development-intellij)
-section in `service/README.md`.
+[Getting Started with Development (IntelliJ)](../services/applications/priceprovider/README.md#getting-started-with-development-intellij)
+section in `services/applications/priceprovider/README.md`.

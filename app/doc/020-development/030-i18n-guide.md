@@ -6,7 +6,7 @@ The Price Manager application supports multiple languages using [Transloco](http
 
 ## Supported Languages
 
-The application supports 19 languages as defined in `service/src/main/resources/initialize/essential/languages.json`:
+The application supports 19 languages as defined in `services/applications/priceprovider/src/main/resources/initialize/essential/languages.json`:
 
 - **de** - German (Deutsch)
 - **en** - English (default)

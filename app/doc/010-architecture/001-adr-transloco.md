@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-The Price Manager application needs to support multiple languages (19 languages as defined in `service/src/main/resources/initialize/essential/languages.json`). Users must be able to switch languages at runtime without requiring a page reload or separate builds per language.
+The Price Manager application needs to support multiple languages (19 languages as defined in `services/applications/priceprovider/src/main/resources/initialize/essential/languages.json`). Users must be able to switch languages at runtime without requiring a page reload or separate builds per language.
 
 ### Requirements
 - Runtime language switching (single build for all languages)

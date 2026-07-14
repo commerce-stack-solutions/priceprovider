@@ -3,9 +3,9 @@
 This repository contains the backend service and frontend application for the Price Provider project.
 
 ## Price Provider Service
-location: `service/**`
+location: `services/platform/commons/**` and `services/applications/priceprovider/**`
 
-A Java/Spring Boot backend that provides a RESTful API for managing and retrieving price information. For more details, see the [service README](service/README.md).
+A Java/Spring Boot backend that provides a RESTful API for managing and retrieving price information. The backend is split into a shared commons module and the priceprovider application module. For more details, see the [priceprovider README](services/applications/priceprovider/README.md).
 
 ## Price Manager App
 location: `app/**`

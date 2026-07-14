@@ -14,7 +14,7 @@ description: 'Skill for creating or updating a domain entity in the backend serv
 - if you introduce or extend entities with enum also introduce a (NEW ENTITY)TypeEnumConstraint based on io.commercestacksolutions.commons.dataaccess.dbupdate.AbstractEnumConstraintUpdater
 
 ## Relevant Resources during this phase
-- see [011-development-guide-data-access-layer.md](../../../service/doc/020-development/011-development-guide-data-access-layer.md)
+- see [011-development-guide-data-access-layer.md](../../../services/applications/priceprovider/doc/020-development/011-development-guide-data-access-layer.md)
 
 # Phase 2 - Update Service Layer
 - introduce or extend an Entity Service that makes use of an interface
@@ -27,7 +27,7 @@ description: 'Skill for creating or updating a domain entity in the backend serv
 - create or update unit tests and integration tests
 
 ## Relevant Resources during this phase
-- see [012-development-guide-service-layer.md](../../../service/doc/020-development/012-development-guide-service-layer.md)
+- see [012-development-guide-service-layer.md](../../../services/applications/priceprovider/doc/020-development/012-development-guide-service-layer.md)
 
 # Phase 3 - Facade Layer, Controller Layer (REST API)
 In the next step you plan implement changes to the REST API by using facade layer, RestEntity and Mappers to convert similar to the existing entities
@@ -51,7 +51,7 @@ expected API calls for an entity :
 - update the postmancollection accordingly (Happy Path and Angry Path Requests with validations)
 
 ## Relevant Resources during this phase
-- see [013-development-guide-facade-layer.md](../../../service/doc/020-development/013-development-guide-facade-layer.md), [014-development-guide-controller-layer.md](../../../service/doc/020-development/014-development-guide-controller-layer.md)
+- see [013-development-guide-facade-layer.md](../../../services/applications/priceprovider/doc/020-development/013-development-guide-facade-layer.md), [014-development-guide-controller-layer.md](../../../services/applications/priceprovider/doc/020-development/014-development-guide-controller-layer.md)
 
 # Phase 4 - Extend REST API with Query Capabilities
 make sure the query capabilities work for a new entity too 
@@ -61,7 +61,7 @@ make sure the query capabilities work for a new entity too
 - update the postmancollection accordingly (Happy Path and Angry Path Requests) - and please note if you test them run the spring application with the dev profile (this ensures the sample and test data is loaded accordingly)
 
 ## Relevant Resources during this phase
-- see [020-query-filtering-implementation.md](../../../service/doc/030-features/020-query-filtering-implementation.md)
+- see [020-query-filtering-implementation.md](../../../services/applications/priceprovider/doc/030-features/020-query-filtering-implementation.md)
 
 # Phase 5 - Frontend / App for new Types Group and Organization
 introduce updates of the frontend app to support new Types or new field
@@ -90,4 +90,3 @@ Texts in templates (labels, form field names, button labels, Action names, Statu
 Make use of the [SKILL.md](../translation/SKILL.md)
 ### Relevant Resources during this phase
 - see [i18n-guide.md](../../../app/docs/i18n-guide.md)
-
