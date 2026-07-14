@@ -420,7 +420,7 @@ export class ProductListComponent {
 
 The `$meta` expand returns structural metadata about an entity from the REST API. Form components consume it to drive mandatory-field markers and enum selector options without any hardcoding.
 
-For backend implementation details (annotations, registry, service-layer validation) see [service/doc/030-features/060-meta-annotation-concept.md](../../../service/doc/030-features/060-meta-annotation-concept.md).
+For backend implementation details (annotations, registry, service-layer validation) see [060-meta-annotation-concept.md](../../../services/applications/priceprovider/doc/030-features/060-meta-annotation-concept.md).
 
 ### API Response Structure
 
@@ -833,4 +833,3 @@ this.route.queryParamMap.subscribe(params => {
 - Avoid complex logic in templates
 - Use `track` in `@for` loops for performance
 - Use `async` pipe for observables when appropriate
-

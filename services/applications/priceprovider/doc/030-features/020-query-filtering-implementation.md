@@ -296,7 +296,7 @@ Run only parser unit tests locally (fast):
 
 ```bash
 # from repo root on Windows (cmd.exe)
-cd service
+cd services\applications\priceprovider
 gradlew.bat test --tests io.commercestacksolutions.commons.query.QueryParserTest
 ```
 
@@ -336,7 +336,7 @@ The specification builder handles various field types automatically:
 
 ## Additional Resources
 
-- Usage Guide: `service/doc/030-features/010-query-filtering-usage.md`
-- Query Parser Tests: `service/src/test/java/de/ebusyness/commons/query/QueryParserTest.java`
-- Specification Builder Tests: `service/src/test/java/de/ebusyness/commons/query/SpecificationBuilderTest.java`
-- Postman Collection: `service/postman/pps-postmancollection.json`
+- Usage Guide: `doc/030-features/010-query-filtering-usage.md`
+- Query Parser Tests: `src/test/java/io/commercestacksolutions/commons/query/QueryParserTest.java`
+- Specification Builder Tests: `src/test/java/io/commercestacksolutions/commons/query/SpecificationBuilderTest.java`
+- Postman Collection: `postman/pps-postmancollection.json`

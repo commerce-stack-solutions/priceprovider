@@ -104,14 +104,14 @@ The repository includes a comprehensive Postman collection for testing all API e
 
 The Postman collection is located at:
 ```
-service/postman/pps-postmancollection.json
+postman/pps-postmancollection.json
 ```
 
 ### Importing the Collection
 
 1. **Open Postman** (download from [postman.com](https://www.postman.com/) if needed)
 2. Click **Import** in the top left
-3. Select **File** and choose `service/postman/pps-postmancollection.json`
+3. Select **File** and choose `postman/pps-postmancollection.json`
 4. The collection will be imported with all endpoints pre-configured
 
 ### Available Endpoints in Collection
@@ -162,13 +162,13 @@ To build the backend service and frontend application Docker images separately:
 
    **Linux/macOS:**
    ```bash
-   cd service
+   cd services/applications/priceprovider
    ./dockerimage-create.sh [version]
    ```
 
    **Windows:**
    ```bat
-   cd service
+   cd services/applications/priceprovider
    dockerimage-create.bat [version]
    ```
 
@@ -274,7 +274,7 @@ service-config:
 
 ## Documentation
 
-For comprehensive documentation on architecture, development guidelines, features, and API reference, see the [service/doc/](doc/) directory.
+For comprehensive documentation on architecture, development guidelines, features, and API reference, see the [doc/](doc/) directory.
 
 ### Key Features
 

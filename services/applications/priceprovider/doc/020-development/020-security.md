@@ -47,7 +47,7 @@ The RBAC system maps IDP roles to application-specific permissions.
 - **AppPermission**: Represents a specific action on a data type (e.g., `priceprovider.admin:Channel:read`).
 - **AppRole**: A collection of permissions (e.g., `priceprovider.admin:Admin`).
 
-These are initialized from JSON files in `service/src/main/resources/initialize/essential/`.
+These are initialized from JSON files in `src/main/resources/initialize/essential/`.
 
 ### Claim Mapping
 

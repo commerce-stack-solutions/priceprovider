@@ -334,6 +334,6 @@ The query filtering implementation differentiates between single-valued referenc
 
 ## Additional Resources
 
-- Postman Collection: `service/postman/pps-postmancollection.json`
-- Implementation Guide: `service/doc/030-features/020-query-filtering-implementation.md`
-- API Documentation: `service/doc/README.md`
+- Postman Collection: `postman/pps-postmancollection.json`
+- Implementation Guide: `doc/030-features/020-query-filtering-implementation.md`
+- API Documentation: `doc/README.md`

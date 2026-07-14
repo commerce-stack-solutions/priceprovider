@@ -71,6 +71,15 @@ Dividing data access, services (domain and business logic), DTO conversion, and 
 | Facade      | `io.commercestacksolutions.priceproviderservice.facade`           | RestEntity mapping, service delegation, response shaping. Typical classes: `(Entity)Facade`, `(Entity)Mapper`, `(Entity)RestEntity`                                     |
 | Web         | `io.commercestacksolutions.priceproviderservice.web.controller`   | REST controllers, input validation, API contracts. Typical classes: `(Entity)Controller`, `(Type)Validator`                                                             |
 
+## Module Architecture (Multi-Module Setup)
+
+The backend is organized as two Gradle modules:
+
+- `services/platform/commons` – reusable platform/common contracts and shared logic (`io.commercestacksolutions.commons.*`)
+- `services/applications/priceprovider` – the concrete priceprovider application (`io.commercestacksolutions.priceproviderservice.*`)
+
+The commons module must not depend on priceprovider implementation packages. Cross-module integration is done via commons interfaces/contracts implemented in the priceprovider module.
+
 ### Layer Diagram
 
 ```mermaid

@@ -10,8 +10,8 @@ The Postman collection serves two purposes:
 ## Collection Location
 
 ```
-service/postman/pps-postmancollection.json   ← collection with all requests and test scripts
-service/postman/pps-environment.json         ← environment file with all pre-configured variables
+postman/pps-postmancollection.json   ← collection with all requests and test scripts
+postman/pps-environment.json         ← environment file with all pre-configured variables
 ```
 
 ## Tools
@@ -28,16 +28,16 @@ The primary tool. Download from [postman.com](https://www.postman.com/).
 
 1. **Open Postman** (download from [postman.com](https://www.postman.com/) if needed)
 2. Click **Import** in the top left
-3. Select **File** and choose `service/postman/pps-postmancollection.json`
-4. Import the environment: **Import** → **File** → `service/postman/pps-environment.json`
+3. Select **File** and choose `postman/pps-postmancollection.json`
+4. Import the environment: **Import** → **File** → `postman/pps-environment.json`
 5. Select **Price Provider Service - Local** as the active environment
 6. The collection is imported with all endpoints pre-configured
 
 ## Importing the Collection into Hoppscotch
 
 1. Open [hoppscotch.io](https://hoppscotch.io/) in your browser
-2. Go to **Collections** → **Import** → choose `service/postman/pps-postmancollection.json`
-3. Go to **Environments** → **Import** → choose `service/postman/pps-environment.json`
+2. Go to **Collections** → **Import** → choose `postman/pps-postmancollection.json`
+3. Go to **Environments** → **Import** → choose `postman/pps-environment.json`
 4. Select **Price Provider Service - Local** as the active environment (top-right environment picker)
 5. All variables are pre-configured — run the `Authentication / Get Admin Access Token` request first to populate `{{accessToken}}`
 
@@ -91,7 +91,7 @@ Keycloak starts on port **8081** and auto-imports the `priceprovider` realm with
 **Newman**: Pass the `Authentication` folder first (it is the first folder in the collection, so a full run handles this automatically):
 
 ```bash
-cd service
+cd services/applications/priceprovider
 newman run postman/pps-postmancollection.json \
   --env-var "baseUrl=http://localhost:8080" \
   --reporters cli,html \
@@ -188,7 +188,7 @@ npm install -g newman newman-reporter-html
 Run the complete collection against a local backend (requires Keycloak running on port 8081):
 
 ```bash
-cd service
+cd services/applications/priceprovider
 newman run postman/pps-postmancollection.json \
   --env-var "baseUrl=http://localhost:8080" \
   --reporters cli,html \
@@ -228,7 +228,7 @@ newman run postman/pps-postmancollection.json \
 ### Windows (cmd.exe)
 
 ```cmd
-cd C:\Projects\priceproviderservice\service
+cd C:\Projects\priceprovider\services\applications\priceprovider
 newman run postman/pps-postmancollection.json --env-var "baseUrl=http://localhost:8080" --reporters cli,html --reporter-html-export reports/newman/collection-report.html
 ```
 

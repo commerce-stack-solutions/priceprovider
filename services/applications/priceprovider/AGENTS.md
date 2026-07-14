@@ -24,25 +24,23 @@ The following skills are particularly relevant when working on the backend:
 ## Project Structure
 
 ```
-service/            
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── de/
-│       │       └── ebusyness/
-│       │           ├── commons/
-│       │           └── priceprovider/
-│       │               ├── dataaccess/
-│       │               ├── facade/
-│       │               ├── service/
-│       │               └── web/
-│       │                   └── controller/
-│       └── resources/
-│           └── application.yml
-├── postman/pps-postmancollection.json
-├── build.gradle
-├── Dockerfile
-└── dockerimage-create.sh / dockerimage-create.bat
+services/
+├── platform/
+│   └── commons/
+│       ├── src/main/java/io/commercestacksolutions/commons/
+│       ├── build.gradle
+│       └── gradlew
+└── applications/
+    └── priceprovider/
+        ├── src/main/java/io/commercestacksolutions/priceproviderservice/
+        │   ├── dataaccess/
+        │   ├── facade/
+        │   ├── service/
+        │   └── web/controller/
+        ├── src/main/resources/application.yml
+        ├── postman/pps-postmancollection.json
+        ├── build.gradle
+        └── gradlew
 ```
 
 ## Documentation
@@ -56,10 +54,10 @@ For detailed architecture documentation, development guide, and implementation e
 | Layer            | Package                                     | Responsibility                                                                 |
 |------------------|---------------------------------------------|--------------------------------------------------------------------------------|
 | Commons          | `io.commercestacksolutions.commons`                      | Shared utilities, interfaces, exception handling                              |
-| Data Access      | `io.commercestacksolutions.priceprovider.dataaccess`     | Repositories, JPA entities, REST clients (external REST access), typical classes (Entity)Repository, Entity, (View)Projection                           |
-| Service          | `io.commercestacksolutions.priceprovider.service`        | Domain Services, Business Services, typical classes (Entity)Service, (Entity)ImportJob, (Businesslogic)Service                       |
-| Facade           | `io.commercestacksolutions.priceprovider.facade`         | RestEntity mapping, service delegation, response shaping, typical classes (Entity)Facade, (Entity)Mapper, (Entity)RestEntity                           |
-| Web              | `io.commercestacksolutions.priceprovider.web.controller` | REST controllers, input validation, API contracts , typical classes (Entity)Controller, (Type)Validator                            |
+| Data Access      | `io.commercestacksolutions.priceproviderservice.dataaccess`     | Repositories, JPA entities, REST clients (external REST access), typical classes (Entity)Repository, Entity, (View)Projection                           |
+| Service          | `io.commercestacksolutions.priceproviderservice.service`        | Domain Services, Business Services, typical classes (Entity)Service, (Entity)ImportJob, (Businesslogic)Service                       |
+| Facade           | `io.commercestacksolutions.priceproviderservice.facade`         | RestEntity mapping, service delegation, response shaping, typical classes (Entity)Facade, (Entity)Mapper, (Entity)RestEntity                           |
+| Web              | `io.commercestacksolutions.priceproviderservice.web.controller` | REST controllers, input validation, API contracts , typical classes (Entity)Controller, (Type)Validator                            |
 
 
 ### Diagram 
@@ -198,7 +196,7 @@ This project follows Interface Driven Design (IDD) principles to ensure maintain
 
 **Service Layer Structure:**
 ```
-service/
+src/main/java/io/commercestacksolutions/priceproviderservice/service/
 ├── unit/
 │   ├── UnitService.java              # Interface defining the contract
 │   ├── UnitServiceImpl.java          # Default implementation

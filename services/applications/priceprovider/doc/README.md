@@ -5,7 +5,7 @@ This directory contains the comprehensive documentation for the Price Provider S
 ## Structure
 
 ```
-service/doc/
+services/applications/priceprovider/doc/
 ├── README.md                          ← You are here
 │
 ├── 010-architecture/
@@ -91,7 +91,7 @@ service/doc/
 
 | Task | Document |
 |------|----------|
-| Developer setup (build, run) | [service/README.md](../README.md) |
+| Developer setup (build, run) | [README.md](../README.md) |
 | Understanding the architecture | [Architecture Overview](010-architecture/010-overview.md) |
 | Adding a new entity | [Development Guide](020-development/010-development-guide.md) |
 | Implementing a service | [Service Layer Guide](020-development/012-development-guide-service-layer.md) |

@@ -255,6 +255,6 @@ The query filtering infrastructure automatically handles various field types:
 
 # Relevant Resources
 
-- [Query Filtering Usage Guide](../../../service/doc/030-features/010-query-filtering-usage.md) - User guide with query syntax examples
-- [Query Filtering Implementation Guide](../../../service/doc/030-features/020-query-filtering-implementation.md) - Comprehensive technical implementation guide
-- Postman Collection: `service/postman/pps-postmancollection.json`
+- [Query Filtering Usage Guide](../../../services/applications/priceprovider/doc/030-features/010-query-filtering-usage.md) - User guide with query syntax examples
+- [Query Filtering Implementation Guide](../../../services/applications/priceprovider/doc/030-features/020-query-filtering-implementation.md) - Comprehensive technical implementation guide
+- Postman Collection: `services/applications/priceprovider/postman/pps-postmancollection.json`

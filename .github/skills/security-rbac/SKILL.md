@@ -42,7 +42,7 @@ Roles are collections of permissions defined in `AppRole.0010.json`:
 
 ## Step 1: Define Permissions and Roles
 
-**Location:** `service/src/main/resources/initialize/essential/`
+**Location:** `services/applications/priceprovider/src/main/resources/initialize/essential/`
 
 **AppPermission.0010.json:**
 ```json
@@ -410,9 +410,9 @@ For public APIs, use organization context:
 
 # Relevant Resources
 
-- [Security Implementation Guide (Service)](../../../service/doc/020-development/021-security-implementation-guide.md) - Backend security technical details
+- [Security Implementation Guide (Service)](../../../services/applications/priceprovider/doc/020-development/021-security-implementation-guide.md) - Backend security technical details
 - [Security Implementation Guide (App)](../../../app/doc/020-development/020-security-implementation-guide.md) - Frontend security patterns
-- [RBAC and User Guide](../../../service/doc/030-features/050-rbac-and-user-guide.md) - RBAC model overview and sample users
+- [RBAC and User Guide](../../../services/applications/priceprovider/doc/030-features/050-rbac-and-user-guide.md) - RBAC model overview and sample users
 - Sample Data:
-  - `service/src/main/resources/initialize/essential/AppPermission.0010.json`
-  - `service/src/main/resources/initialize/essential/AppRole.0010.json`
+  - `services/applications/priceprovider/src/main/resources/initialize/essential/AppPermission.0010.json`
+  - `services/applications/priceprovider/src/main/resources/initialize/essential/AppRole.0010.json`

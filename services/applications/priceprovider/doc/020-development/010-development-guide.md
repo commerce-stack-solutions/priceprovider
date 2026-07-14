@@ -1,6 +1,6 @@
 # Development Guide
 
-This guide provides an overview of the development patterns, conventions, and tooling for the Price Provider Service. For the full architectural layering concept, see [Architecture Overview](../010-architecture/010-overview.md). For developer setup (build, run, environment), see [service/README.md](../../README.md).
+This guide provides an overview of the development patterns, conventions, and tooling for the Price Provider Service. For the full architectural layering concept, see [Architecture Overview](../010-architecture/010-overview.md). For developer setup (build, run, environment), see [README.md](../../README.md).
 
 ## Technology Stack
 
@@ -16,25 +16,23 @@ This guide provides an overview of the development patterns, conventions, and to
 ## Project Structure
 
 ```
-service/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── de/
-│       │       └── ebusyness/
-│       │           ├── commons/
-│       │           └── priceproviderservice/
-│       │               ├── dataaccess/
-│       │               ├── facade/
-│       │               ├── service/
-│       │               └── web/
-│       │                   └── controller/
-│       └── resources/
-│           └── application.yaml
-├── postman/pps-postmancollection.json
-├── build.gradle
-├── Dockerfile
-└── dockerimage-create.sh / dockerimage-create.bat
+services/
+├── platform/
+│   └── commons/
+│       ├── src/main/java/io/commercestacksolutions/commons/
+│       ├── build.gradle
+│       └── gradlew
+└── applications/
+    └── priceprovider/
+        ├── src/main/java/io/commercestacksolutions/priceproviderservice/
+        │   ├── dataaccess/
+        │   ├── facade/
+        │   ├── service/
+        │   └── web/controller/
+        ├── src/main/resources/application.yaml
+        ├── postman/pps-postmancollection.json
+        ├── build.gradle
+        └── gradlew
 ```
 
 ## Layer-Specific Development Guides

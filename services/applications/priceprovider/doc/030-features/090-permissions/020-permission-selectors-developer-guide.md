@@ -482,7 +482,7 @@ public class CustomPriceCandidatesQueryStrategy
 
 ### Unit Tests
 
-Location: `service/src/test/java/io/commercestacksolutions/commons/permissionselector/`
+Location: `src/test/java/io/commercestacksolutions/commons/permissionselector/`
 
 - ✅ SelectorParserTest (28 tests)
 - ✅ SelectorEvaluatorTest (20 tests)
@@ -649,4 +649,3 @@ public class MyEntityController {
   - b3a9907 - Permission filtering integration
   - 272827d - Public API permission support
   - ab72c69 - Database-level filtering in query strategy
-

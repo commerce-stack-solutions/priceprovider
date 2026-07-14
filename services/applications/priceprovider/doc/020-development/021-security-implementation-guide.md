@@ -78,7 +78,7 @@ priceprovider:
 
 ## RBAC Initialization
 
-`AppRole` and `AppPermission` entities are initialized during application startup from the JSON files in `service/src/main/resources/initialize/essential/`.
+`AppRole` and `AppPermission` entities are initialized during application startup from the JSON files in `src/main/resources/initialize/essential/`.
 
 -   `AppPermission.0010.json`: Defines individual permissions for data types.
 -   `AppRole.0010.json`: Groups permissions into logical roles.
