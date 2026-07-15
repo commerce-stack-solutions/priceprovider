@@ -11,6 +11,6 @@ IMAGE_NAME="price-provider-service"
 echo "Building Docker image ${IMAGE_NAME}:${VERSION}..."
 
 # Build the Docker image
-docker build -t ${IMAGE_NAME}:${VERSION} -f ../../Dockerfile ../..
+docker build -t ${IMAGE_NAME}:${VERSION} -f Dockerfile ../../..
 
 echo "Docker image ${IMAGE_NAME}:${VERSION} built successfully."
