@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -313,7 +312,6 @@ public class PriceRowFacadeImpl implements PriceRowFacade {
         return new PriceRowListRestEntity(null, null, results);
     }
 
-    @NonNull
     private PriceRowMatchingContext buildPriceRowMatchingContext(PriceRowRestEntity restEntity) {
         PriceRowMatchingContext context = new PriceRowMatchingContext();
         context.setPricedResourceId(restEntity.getPricedResourceId());
