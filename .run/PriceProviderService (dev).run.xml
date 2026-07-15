@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PriceProviderService (dev)" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="io.commercestacksolutions.PriceProviderServiceApp" />
-    <module name="io.commercestacksolutions.priceproviderservice.priceprovider.main" />
+    <module name="priceprovider-root.service.main" />
     <option name="VM_PARAMETERS" value="-Dspring.profiles.active=dev" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/services/applications/priceprovider" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/services/applications/priceprovider/service" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="io.commercestacksolutions.*" />
