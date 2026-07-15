@@ -18,7 +18,6 @@ COPY applications/build.gradle applications/
 COPY applications/settings.gradle applications/
 
 # Copy subprojects under applications
-COPY applications/generated applications/generated
 COPY applications/priceprovider applications/priceprovider
 
 # Grant execution rights and ensure LF line endings for gradlew
