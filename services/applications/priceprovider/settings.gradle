@@ -4,6 +4,7 @@ pluginManagement {
         maven { url 'https://repo.spring.io/snapshot' }
         maven { url 'https://repo.spring.io/milestone' }
     }
+    includeBuild '../../platform/cdf-plugin'
 }
 
 plugins {
@@ -12,4 +13,5 @@ plugins {
 
 rootProject.name = 'priceprovider'
 
-includeBuild '../../platform/commons'
+include 'commons'
+project(':commons').projectDir = file('../../platform/commons')

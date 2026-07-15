@@ -16,5 +16,4 @@ rootProject.name = 'priceproviderservice'
 include 'commons'
 project(':commons').projectDir = file('../platform/commons')
 
-include 'generated'
 include 'priceprovider'
