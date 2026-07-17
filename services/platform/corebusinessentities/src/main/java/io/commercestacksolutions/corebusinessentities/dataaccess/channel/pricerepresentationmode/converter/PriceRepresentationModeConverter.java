@@ -1,4 +1,4 @@
-package io.commercestacksolutions.corebusinessentities.dataaccess.channel.converter;
+package io.commercestacksolutions.corebusinessentities.dataaccess.channel.pricerepresentationmode.converter;
 
 import io.commercestacksolutions.corebusinessentities.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeType;
 import jakarta.persistence.AttributeConverter;
