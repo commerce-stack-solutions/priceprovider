@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.service.publicprice.strat
 
 import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuilder;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
+import io.commercestacksolutions.coreserviceapp.dataaccess.approle.entity.CommonAppPermission;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;

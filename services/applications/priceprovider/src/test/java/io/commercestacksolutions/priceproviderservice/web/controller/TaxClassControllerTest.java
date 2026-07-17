@@ -2,8 +2,8 @@ package io.commercestacksolutions.priceproviderservice.web.controller.adminapi;
 
 import io.commercestacksolutions.commons.exception.DataIntegrityException;
 import io.commercestacksolutions.priceproviderservice.commons.messagekeys.MessageKeys;
-import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.TaxClassController;
-import io.commercestacksolutions.priceproviderservice.facade.taxclass.TaxClassFacade;
+import io.commercestacksolutions.corebusinessentities.web.controller.adminapi.TaxClassController;
+import io.commercestacksolutions.corebusinessentities.facade.taxclass.TaxClassFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;

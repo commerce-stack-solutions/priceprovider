@@ -7,6 +7,26 @@ description: 'Skill for creating or updating a domain entity in the backend serv
 - Create a fully working full-stack domain entity, from persistence to frontend visualization, or update an existing entity with a new field or relation.
 - To achieve this goal, several phases need to be completed to implement the changes.
 
+## Before You Start: Platform vs. Application Decision
+
+Before creating any entity, determine **where it belongs**:
+
+| Entity type | Module |
+|------------|--------|
+| Reusable core reference data (used by multiple services) | `services/platform/corebusinessentities` |
+| RABAC / security concept | `services/platform/coreserviceapp` or `services/platform/commons` |
+| Shared utility or base abstraction | `services/platform/commons` |
+| Price-specific or application-specific entity | `services/applications/priceprovider` |
+
+**Key rules:**
+- Platform modules must **not** import from `priceproviderservice.*`
+- Integration tests (`@SpringBootTest`, `@WebMvcTest`) must live in the service application, not in platform modules
+- Unit tests (no Spring context) may live in the platform module's test sources
+- `MessageKeys` classes in each module contain **only the keys used by that module** — add new keys only to the owning module's `MessageKeys`
+- After moving or adding a platform entity, the service application (`PriceProviderServiceApp`) must declare explicit `@EntityScan` covering all `dataaccess` packages from all platform modules
+
+See [Development Guide](../../../services/doc/020-development/010-development-guide.md) for the full module overview.
+
 # Phase 1 - Domain Entity Setup - Data Access Layer
 - start with the data model (entity) setup / data model changes in the backend service
   - make sure it implements AuditableEntity and fields: OffsetDateTime createdAt, OffsetDateTime lastModifiedAt exist
@@ -14,7 +34,7 @@ description: 'Skill for creating or updating a domain entity in the backend serv
 - if you introduce or extend entities with enum also introduce a (NEW ENTITY)TypeEnumConstraint based on io.commercestacksolutions.commons.dataaccess.dbupdate.AbstractEnumConstraintUpdater
 
 ## Relevant Resources during this phase
-- see [011-development-guide-data-access-layer.md](../../../services/applications/priceprovider/doc/020-development/011-development-guide-data-access-layer.md)
+- see [011-development-guide-data-access-layer.md](../../../services/doc/020-development/011-development-guide-data-access-layer.md)
 
 # Phase 2 - Update Service Layer
 - introduce or extend an Entity Service that makes use of an interface
@@ -27,7 +47,7 @@ description: 'Skill for creating or updating a domain entity in the backend serv
 - create or update unit tests and integration tests
 
 ## Relevant Resources during this phase
-- see [012-development-guide-service-layer.md](../../../services/applications/priceprovider/doc/020-development/012-development-guide-service-layer.md)
+- see [012-development-guide-service-layer.md](../../../services/doc/020-development/012-development-guide-service-layer.md)
 
 # Phase 3 - Facade Layer, Controller Layer (REST API)
 In the next step you plan implement changes to the REST API by using facade layer, RestEntity and Mappers to convert similar to the existing entities
@@ -51,7 +71,7 @@ expected API calls for an entity :
 - update the postmancollection accordingly (Happy Path and Angry Path Requests with validations)
 
 ## Relevant Resources during this phase
-- see [013-development-guide-facade-layer.md](../../../services/applications/priceprovider/doc/020-development/013-development-guide-facade-layer.md), [014-development-guide-controller-layer.md](../../../services/applications/priceprovider/doc/020-development/014-development-guide-controller-layer.md)
+- see [013-development-guide-facade-layer.md](../../../services/doc/020-development/013-development-guide-facade-layer.md), [014-development-guide-controller-layer.md](../../../services/doc/020-development/014-development-guide-controller-layer.md)
 
 # Phase 4 - Extend REST API with Query Capabilities
 make sure the query capabilities work for a new entity too 
@@ -61,7 +81,7 @@ make sure the query capabilities work for a new entity too
 - update the postmancollection accordingly (Happy Path and Angry Path Requests) - and please note if you test them run the spring application with the dev profile (this ensures the sample and test data is loaded accordingly)
 
 ## Relevant Resources during this phase
-- see [020-query-filtering-implementation.md](../../../services/applications/priceprovider/doc/030-features/020-query-filtering-implementation.md)
+- see [020-query-filtering-implementation.md](../../../services/doc/030-features/020-query-filtering-implementation.md)
 
 # Phase 5 - Frontend / App for new Types Group and Organization
 introduce updates of the frontend app to support new Types or new field
@@ -90,3 +110,4 @@ Texts in templates (labels, form field names, button labels, Action names, Statu
 Make use of the [SKILL.md](../translation/SKILL.md)
 ### Relevant Resources during this phase
 - see [i18n-guide.md](../../../app/docs/i18n-guide.md)
+

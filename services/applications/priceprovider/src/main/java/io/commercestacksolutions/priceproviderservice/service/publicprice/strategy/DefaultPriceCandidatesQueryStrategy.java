@@ -4,7 +4,7 @@ import io.commercestacksolutions.commons.permissionselector.PermissionFilterBuil
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
-import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
+import io.commercestacksolutions.corebusinessentities.service.group.model.GroupWithDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

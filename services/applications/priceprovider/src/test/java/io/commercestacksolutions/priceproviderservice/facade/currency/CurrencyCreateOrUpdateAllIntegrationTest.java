@@ -2,10 +2,11 @@ package io.commercestacksolutions.priceproviderservice.facade.currency;
 
 import io.commercestacksolutions.commons.web.rest.Message;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
-import io.commercestacksolutions.priceproviderservice.facade.currency.restentity.CurrencyListRestEntity;
-import io.commercestacksolutions.priceproviderservice.facade.currency.restentity.CurrencyRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.currency.CurrencyFacade;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.CurrencyEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.facade.currency.restentity.CurrencyListRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.currency.restentity.CurrencyRestEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

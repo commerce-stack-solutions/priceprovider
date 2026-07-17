@@ -1,9 +1,9 @@
 package io.commercestacksolutions.priceproviderservice.web.controller.adminapi;
 
 import io.commercestacksolutions.commons.exception.EntityAlreadyExistsException;
-import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.UnitController;
-import io.commercestacksolutions.priceproviderservice.facade.unit.UnitFacadeService;
-import io.commercestacksolutions.priceproviderservice.facade.unit.restentity.UnitRestEntity;
+import io.commercestacksolutions.corebusinessentities.web.controller.adminapi.UnitController;
+import io.commercestacksolutions.corebusinessentities.facade.unit.UnitFacadeService;
+import io.commercestacksolutions.corebusinessentities.facade.unit.restentity.UnitRestEntity;
 import io.commercestacksolutions.commons.web.rest.Message;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

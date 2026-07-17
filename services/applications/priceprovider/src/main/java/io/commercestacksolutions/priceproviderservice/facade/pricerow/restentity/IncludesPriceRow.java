@@ -1,9 +1,9 @@
 package io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.commercestacksolutions.priceproviderservice.facade.currency.restentity.CurrencyRestEntity;
-import io.commercestacksolutions.priceproviderservice.facade.taxclass.restentity.TaxClassRestEntity;
-import io.commercestacksolutions.priceproviderservice.facade.unit.restentity.UnitRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.currency.restentity.CurrencyRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.taxclass.restentity.TaxClassRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.unit.restentity.UnitRestEntity;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class IncludesPriceRow {

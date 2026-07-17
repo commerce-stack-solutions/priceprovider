@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.facade.pricerow.restentit
 
 import io.commercestacksolutions.commons.web.rest.RestEntity;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.info.InfoPriceRow;
-import io.commercestacksolutions.priceproviderservice.facade.unit.restentity.UnitRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.unit.restentity.UnitRestEntity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

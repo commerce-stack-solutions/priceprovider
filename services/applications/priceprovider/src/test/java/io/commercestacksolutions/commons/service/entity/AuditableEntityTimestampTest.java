@@ -1,14 +1,14 @@
 package io.commercestacksolutions.commons.service.entity;
 
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import io.commercestacksolutions.priceproviderservice.service.language.LanguageService;
-import io.commercestacksolutions.priceproviderservice.service.currency.CurrencyService;
-import io.commercestacksolutions.priceproviderservice.service.unit.UnitService;
-import io.commercestacksolutions.priceproviderservice.service.taxclass.TaxClassService;
+import io.commercestacksolutions.corebusinessentities.dataaccess.language.entity.LanguageEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.service.language.LanguageService;
+import io.commercestacksolutions.corebusinessentities.service.currency.CurrencyService;
+import io.commercestacksolutions.corebusinessentities.service.unit.UnitService;
+import io.commercestacksolutions.corebusinessentities.service.taxclass.TaxClassService;
 import io.commercestacksolutions.priceproviderservice.service.pricerow.PriceRowService;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.AfterEach;

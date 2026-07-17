@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.service.approle.AppRoleService;
+import io.commercestacksolutions.coreserviceapp.service.approle.AppRoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

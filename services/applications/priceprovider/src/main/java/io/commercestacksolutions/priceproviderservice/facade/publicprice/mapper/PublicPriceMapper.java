@@ -3,16 +3,16 @@ package io.commercestacksolutions.priceproviderservice.facade.publicprice.mapper
 import io.commercestacksolutions.commons.mapper.AbstractMapper;
 import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.facade.currency.mapper.CurrencyRestEntityMapper;
+import io.commercestacksolutions.corebusinessentities.facade.currency.mapper.CurrencyRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.info.InfoPublicPrice;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.info.OriginalPriceInfo;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.info.TaxationInfo;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.IncludesPublicPrice;
 import io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity.PublicPriceRestEntity;
-import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassRestEntityMapper;
-import io.commercestacksolutions.priceproviderservice.facade.unit.mapper.UnitRestEntityMapper;
+import io.commercestacksolutions.corebusinessentities.facade.taxclass.mapper.TaxClassRestEntityMapper;
+import io.commercestacksolutions.corebusinessentities.facade.unit.mapper.UnitRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxCalculationStrategy;
 import org.springframework.stereotype.Component;
@@ -98,7 +98,7 @@ public class PublicPriceMapper extends AbstractMapper<PriceRowEntity, PublicPric
         // Map channel references to string IDs
         if (source.getChannels() != null) {
             Set<String> channelRefIds = new HashSet<>();
-            for (io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity channel : source.getChannels()) {
+            for (io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity.ChannelEntity channel : source.getChannels()) {
                 if (channel != null && channel.getId() != null) {
                     channelRefIds.add(channel.getId());
                 }

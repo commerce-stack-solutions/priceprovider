@@ -1,7 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice.strategy;
 
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
+import io.commercestacksolutions.corebusinessentities.service.group.model.GroupWithDistance;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
 import org.springframework.stereotype.Component;
 

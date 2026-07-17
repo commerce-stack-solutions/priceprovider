@@ -3,7 +3,7 @@
   "package": "io.commercestacksolutions.priceproviderservice.dataaccess.address.entity",
   "imports": [
     "io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider",
-    "io.commercestacksolutions.priceproviderservice.dataaccess.organization.entity.OrganizationEntity",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.organization.entity.OrganizationEntity",
     "jakarta.persistence.*",
     "java.util.HashSet",
     "java.util.Set"

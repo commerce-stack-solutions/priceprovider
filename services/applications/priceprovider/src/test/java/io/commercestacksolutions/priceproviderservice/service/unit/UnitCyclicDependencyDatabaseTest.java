@@ -1,8 +1,9 @@
 package io.commercestacksolutions.priceproviderservice.service.unit;
 
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.UnitEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.corebusinessentities.service.unit.UnitService;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

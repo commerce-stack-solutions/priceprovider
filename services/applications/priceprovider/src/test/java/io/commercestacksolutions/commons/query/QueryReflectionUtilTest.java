@@ -1,6 +1,6 @@
 package io.commercestacksolutions.commons.query;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

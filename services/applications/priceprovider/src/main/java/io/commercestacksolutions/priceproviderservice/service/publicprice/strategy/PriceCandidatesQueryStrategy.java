@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.service.publicprice.strat
 
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
-import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
+import io.commercestacksolutions.corebusinessentities.service.group.model.GroupWithDistance;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

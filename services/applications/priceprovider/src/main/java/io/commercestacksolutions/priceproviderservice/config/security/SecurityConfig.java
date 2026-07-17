@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
+import io.commercestacksolutions.coreserviceapp.dataaccess.approle.entity.AppRoleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -2,13 +2,14 @@ package io.commercestacksolutions.priceproviderservice.facade.currency;
 
 import io.commercestacksolutions.commons.exception.DataIntegrityException;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.facade.currency.CurrencyFacade;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.CurrencyEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.TaxClassEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
