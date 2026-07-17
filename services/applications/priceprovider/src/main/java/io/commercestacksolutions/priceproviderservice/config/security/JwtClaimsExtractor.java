@@ -1,8 +1,8 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.AppRoleEntity;
-import io.commercestacksolutions.priceproviderservice.service.approle.AppRoleService;
+import io.commercestacksolutions.coreserviceapp.dataaccess.approle.entity.CommonAppPermission;
+import io.commercestacksolutions.coreserviceapp.dataaccess.approle.entity.AppRoleEntity;
+import io.commercestacksolutions.coreserviceapp.service.approle.AppRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;

@@ -2,9 +2,9 @@ package io.commercestacksolutions.commons.service.entity;
 
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import io.commercestacksolutions.priceproviderservice.config.security.AuthorizationContext;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
-import io.commercestacksolutions.priceproviderservice.service.currency.CurrencyService;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.CurrencyEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.service.currency.CurrencyService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -3,9 +3,9 @@ package io.commercestacksolutions.commons.service.entity.validation.rules;
 import io.commercestacksolutions.commons.dataaccess.meta.EntityMetaInfoRegistry;
 import io.commercestacksolutions.commons.dataaccess.meta.MetaInfoBuilder;
 import io.commercestacksolutions.commons.web.rest.Message;
-import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.country.entity.CountryEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

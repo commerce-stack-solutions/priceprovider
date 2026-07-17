@@ -167,7 +167,7 @@ public class MetaInfoBuilderTest {
     @Test
     void build_forGroupEntity_containsExpectedFields() {
         MetaInfo meta = MetaInfoBuilder.build(
-                io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity.class);
+                io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity.class);
 
         assertTrue(meta.getIdentityFields().contains("id"),    "GroupEntity: id must be identityField");
         assertFalse(meta.getMandatoryFields().contains("id"),  "GroupEntity: id must NOT be mandatory (auto-generated UUID)");

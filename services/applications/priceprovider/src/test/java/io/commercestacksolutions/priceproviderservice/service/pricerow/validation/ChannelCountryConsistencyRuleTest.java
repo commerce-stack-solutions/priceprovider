@@ -1,10 +1,10 @@
 package io.commercestacksolutions.priceproviderservice.service.pricerow.validation;
 
 import io.commercestacksolutions.commons.web.rest.Message;
-import io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.country.entity.CountryEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity.ChannelEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

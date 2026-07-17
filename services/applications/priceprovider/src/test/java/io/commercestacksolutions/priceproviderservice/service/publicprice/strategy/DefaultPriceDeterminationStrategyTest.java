@@ -1,11 +1,11 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice.strategy;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.corebusinessentities.service.group.model.GroupWithDistance;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

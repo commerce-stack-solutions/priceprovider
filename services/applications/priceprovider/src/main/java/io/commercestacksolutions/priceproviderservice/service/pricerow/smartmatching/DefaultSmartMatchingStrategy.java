@@ -1,11 +1,11 @@
 package io.commercestacksolutions.priceproviderservice.service.pricerow.smartmatching;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;

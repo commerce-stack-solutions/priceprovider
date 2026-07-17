@@ -1,6 +1,6 @@
 package io.commercestacksolutions.priceproviderservice.config.security;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.approle.entity.CommonAppPermission;
+import io.commercestacksolutions.coreserviceapp.dataaccess.approle.entity.CommonAppPermission;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

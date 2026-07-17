@@ -1,7 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.web.controller;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.UnitEntityRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;

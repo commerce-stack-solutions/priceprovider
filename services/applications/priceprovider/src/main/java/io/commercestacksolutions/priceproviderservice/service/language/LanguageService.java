@@ -16,7 +16,7 @@ import java.util.Optional;
  * This interface defines the contract for language management operations,
  * following Interface Driven Design (IDD) principles.
  */
-public interface LanguageService extends EntityService<LanguageEntity> {
+public interface LanguageService extends EntityService<LanguageEntity>, io.commercestacksolutions.corebusinessentities.service.language.LanguageService {
     
     /**
      * Retrieves all languages.

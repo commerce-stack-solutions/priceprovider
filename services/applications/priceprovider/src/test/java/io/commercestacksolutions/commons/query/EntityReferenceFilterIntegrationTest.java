@@ -1,14 +1,14 @@
 package io.commercestacksolutions.commons.query;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.CurrencyEntityRepository;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.PriceRowEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.TaxClassEntityRepository;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.entity.UnitEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.unit.UnitEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.TaxClassEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.unit.UnitEntityRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;

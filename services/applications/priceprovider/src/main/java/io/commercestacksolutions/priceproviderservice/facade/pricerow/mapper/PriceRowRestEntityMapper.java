@@ -3,15 +3,15 @@ package io.commercestacksolutions.priceproviderservice.facade.pricerow.mapper;
 import io.commercestacksolutions.commons.mapper.AbstractMapper;
 import io.commercestacksolutions.commons.mapper.RestResponseMappingContext;
 import io.commercestacksolutions.commons.mapper.exception.DataMappingException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.facade.currency.mapper.CurrencyRestEntityMapper;
+import io.commercestacksolutions.corebusinessentities.facade.currency.mapper.CurrencyRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.info.InfoPriceRow;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.info.TaxationInfo;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.IncludesPriceRow;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
-import io.commercestacksolutions.priceproviderservice.facade.taxclass.mapper.TaxClassRestEntityMapper;
-import io.commercestacksolutions.priceproviderservice.facade.unit.mapper.UnitRestEntityMapper;
+import io.commercestacksolutions.corebusinessentities.facade.taxclass.mapper.TaxClassRestEntityMapper;
+import io.commercestacksolutions.corebusinessentities.facade.unit.mapper.UnitRestEntityMapper;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.TaxCalculationStrategy;
 import org.springframework.stereotype.Component;
 
@@ -72,7 +72,7 @@ public class PriceRowRestEntityMapper extends AbstractMapper<PriceRowEntity, Pri
         // Map channel references to string IDs
         if (source.getChannels() != null) {
             Set<String> channelRefIds = new HashSet<>();
-            for (io.commercestacksolutions.priceproviderservice.dataaccess.channel.entity.ChannelEntity channel : source.getChannels()) {
+            for (io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity.ChannelEntity channel : source.getChannels()) {
                 if (channel != null && channel.getId() != null) {
                     channelRefIds.add(channel.getId());
                 }

@@ -2,7 +2,7 @@ package io.commercestacksolutions.priceproviderservice.web.controller;
 
 import io.commercestacksolutions.commons.exception.InvalidParameterException;
 import io.commercestacksolutions.commons.query.messagekeys.MessageKeys;
-import io.commercestacksolutions.priceproviderservice.facade.taxclass.TaxClassFacade;
+import io.commercestacksolutions.corebusinessentities.facade.taxclass.TaxClassFacade;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;

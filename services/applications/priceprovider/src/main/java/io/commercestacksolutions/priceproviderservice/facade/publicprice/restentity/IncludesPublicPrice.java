@@ -1,9 +1,9 @@
 package io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.commercestacksolutions.priceproviderservice.facade.currency.restentity.CurrencyRestEntity;
-import io.commercestacksolutions.priceproviderservice.facade.taxclass.restentity.TaxClassRestEntity;
-import io.commercestacksolutions.priceproviderservice.facade.unit.restentity.UnitRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.currency.restentity.CurrencyRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.taxclass.restentity.TaxClassRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.unit.restentity.UnitRestEntity;
 
 /**
  * Includes section for public price response containing expanded related entities.

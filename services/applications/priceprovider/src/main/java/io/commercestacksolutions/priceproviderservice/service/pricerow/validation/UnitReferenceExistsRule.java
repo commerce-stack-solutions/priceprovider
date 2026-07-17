@@ -3,7 +3,7 @@ package io.commercestacksolutions.priceproviderservice.service.pricerow.validati
 import io.commercestacksolutions.commons.service.entity.validation.ValidationRule;
 import io.commercestacksolutions.commons.web.rest.Message;
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.service.unit.UnitService;
+import io.commercestacksolutions.corebusinessentities.service.unit.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

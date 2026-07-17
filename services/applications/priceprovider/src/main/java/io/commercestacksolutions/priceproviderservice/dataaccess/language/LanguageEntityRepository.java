@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LanguageEntityRepository extends JpaRepository<LanguageEntity, String>, JpaSpecificationExecutor<LanguageEntity> {
+public interface LanguageEntityRepository extends
+        JpaRepository<LanguageEntity, String>,
+        JpaSpecificationExecutor<LanguageEntity>,
+        io.commercestacksolutions.corebusinessentities.dataaccess.language.LanguageEntityRepository {
     LanguageEntity findByIsoKey(String isoKey);
     List<LanguageEntity> findByActive(Boolean active);
     List<LanguageEntity> findByMandatory(Boolean mandatory);

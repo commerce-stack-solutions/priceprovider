@@ -1,7 +1,7 @@
 package io.commercestacksolutions.commons.query;
 
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.taxclass.entity.TaxClassEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

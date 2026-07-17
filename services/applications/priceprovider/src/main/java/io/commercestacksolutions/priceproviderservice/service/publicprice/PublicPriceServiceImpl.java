@@ -1,8 +1,8 @@
 package io.commercestacksolutions.priceproviderservice.service.publicprice;
 
 import io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity;
-import io.commercestacksolutions.priceproviderservice.service.group.GroupHierarchyService;
-import io.commercestacksolutions.priceproviderservice.service.group.model.GroupWithDistance;
+import io.commercestacksolutions.corebusinessentities.service.group.GroupHierarchyService;
+import io.commercestacksolutions.corebusinessentities.service.group.model.GroupWithDistance;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.model.PriceMatchingCriteria;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceDeterminationStrategy;
 import io.commercestacksolutions.priceproviderservice.service.publicprice.strategy.PriceCandidatesQueryStrategy;

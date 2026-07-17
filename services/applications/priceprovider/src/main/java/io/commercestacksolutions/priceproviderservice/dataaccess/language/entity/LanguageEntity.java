@@ -13,7 +13,7 @@ import java.util.Map;
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "isoKey")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class LanguageEntity implements AuditableEntity {
+public class LanguageEntity implements AuditableEntity, io.commercestacksolutions.corebusinessentities.dataaccess.language.entity.LanguageEntity {
     @Id
         private String isoKey;
     

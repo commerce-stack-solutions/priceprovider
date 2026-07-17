@@ -1,7 +1,7 @@
 package io.commercestacksolutions.priceproviderservice.web.controller;
 
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.entity.CurrencyEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.currency.CurrencyEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.currency.CurrencyEntityRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
