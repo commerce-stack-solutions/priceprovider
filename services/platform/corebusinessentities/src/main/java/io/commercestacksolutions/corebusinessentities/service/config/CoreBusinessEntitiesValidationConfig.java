@@ -7,6 +7,7 @@ import io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity.
 import io.commercestacksolutions.corebusinessentities.dataaccess.country.entity.CountryEntity;
 import io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity;
 import io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.language.entity.LanguageEntity;
 import io.commercestacksolutions.corebusinessentities.dataaccess.organization.entity.OrganizationEntity;
 import io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity;
 import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
@@ -49,5 +50,10 @@ public class CoreBusinessEntitiesValidationConfig {
     @Bean
     public ValidationRule<TaxClassEntity> taxClassRequireMandatoryFieldsRule(EntityMetaInfoRegistry registry) {
         return new RequireMandatoryFieldsRule<>(TaxClassEntity.class, registry);
+    }
+
+    @Bean
+    public ValidationRule<LanguageEntity> languageRequireMandatoryFieldsRule(EntityMetaInfoRegistry registry) {
+        return new RequireMandatoryFieldsRule<>(LanguageEntity.class, registry);
     }
 }

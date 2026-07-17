@@ -1,8 +1,9 @@
 package io.commercestacksolutions.priceproviderservice.service.language;
 
 import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
-import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.language.LanguageEntityRepository;
+import io.commercestacksolutions.corebusinessentities.dataaccess.language.entity.LanguageEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.language.LanguageEntityRepository;
+import io.commercestacksolutions.corebusinessentities.service.language.LanguageService;
 import io.commercestacksolutions.priceproviderservice.config.TestSecurityConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

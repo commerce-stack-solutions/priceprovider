@@ -7,6 +7,7 @@ import io.commercestacksolutions.corebusinessentities.facade.channel.restentity.
 import io.commercestacksolutions.corebusinessentities.facade.country.restentity.CountryRestEntity;
 import io.commercestacksolutions.corebusinessentities.facade.currency.restentity.CurrencyRestEntity;
 import io.commercestacksolutions.corebusinessentities.facade.group.restentity.GroupRestEntity;
+import io.commercestacksolutions.corebusinessentities.facade.language.restentity.LanguageRestEntity;
 import io.commercestacksolutions.corebusinessentities.facade.organization.restentity.OrganizationRestEntity;
 import io.commercestacksolutions.corebusinessentities.facade.taxclass.restentity.TaxClassRestEntity;
 import io.commercestacksolutions.corebusinessentities.facade.unit.restentity.UnitRestEntity;
@@ -49,5 +50,10 @@ public class CoreBusinessEntitiesMapperConfig {
     @Bean
     public PatchMapper<ChannelRestEntity> channelRestEntityPatchMapper(ObjectMapper objectMapper) {
         return new GenericPatchMapper<>(objectMapper, ChannelRestEntity.class);
+    }
+
+    @Bean
+    public PatchMapper<LanguageRestEntity> languageRestEntityPatchMapper(ObjectMapper objectMapper) {
+        return new GenericPatchMapper<>(objectMapper, LanguageRestEntity.class);
     }
 }

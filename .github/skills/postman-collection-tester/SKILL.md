@@ -132,8 +132,8 @@ When modifying or extending the collection:
 | Group       | `id`, `name`                        |
 
 # Relevant Resources
-- [Postman Collection Guide](../../../services/applications/priceprovider/doc/020-development/040-postman.md) – detailed documentation on collection structure, Newman usage, and configuration
-- [Public Price API Integration Guide](../../../services/applications/priceprovider/doc/030-features/040-public-price-api/010-integration-guide.md)
-- [Channels & Countries Business Guide](../../../services/applications/priceprovider/doc/030-features/050-channels-countries/010-business-guide.md)
+- [Postman Collection Guide](../../../services/doc/020-development/040-postman.md) – detailed documentation on collection structure, Newman usage, and configuration
+- [Public Price API Integration Guide](../../../services/doc/050-service-applications/010-priceprovider/010-public-price-api/010-integration-guide.md)
+- [Channels & Countries Business Guide](../../../services/doc/030-features/050-channels-countries/010-business-guide.md)
 - Newman documentation: <https://www.npmjs.com/package/newman>
 - Postman: <https://www.postman.com/>

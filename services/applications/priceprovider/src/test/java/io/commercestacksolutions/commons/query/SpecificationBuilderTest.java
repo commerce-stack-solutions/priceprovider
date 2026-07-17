@@ -2,7 +2,7 @@ package io.commercestacksolutions.commons.query;
 
 import io.commercestacksolutions.commons.query.exception.QueryParseException;
 import io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity;
-import io.commercestacksolutions.priceproviderservice.dataaccess.language.entity.LanguageEntity;
+import io.commercestacksolutions.corebusinessentities.dataaccess.language.entity.LanguageEntity;
 import io.commercestacksolutions.corebusinessentities.dataaccess.organization.entity.OrganizationEntity;
 import io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity;
 import jakarta.persistence.EntityManager;
