@@ -1,4 +1,4 @@
-# API Reference – General Concepts
+# Admin API Reference – General Concepts
 
 This document describes the general REST API concepts used throughout the Price Provider Service.
 
