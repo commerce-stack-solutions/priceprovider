@@ -1,4 +1,4 @@
-# API Reference – Error Codes
+# Admin API Reference – Error Codes
 
 This document describes the error response format, HTTP status codes, and common error messages returned by the Price Provider Service API.
 
