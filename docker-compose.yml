@@ -38,7 +38,7 @@ services:
   service:
     build:
       context: ./services
-      dockerfile: Dockerfile
+      dockerfile: applications/priceprovider/Dockerfile
     image: price-provider-service:${VERSION:-0.0.0-SNAPSHOT}
     container_name: price-provider-service
     depends_on:

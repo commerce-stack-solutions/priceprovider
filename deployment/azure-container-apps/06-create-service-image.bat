@@ -23,7 +23,7 @@ set "VERSION=%~1"
 REM ============================================================
 REM  Resolve the service source directory
 REM  This script lives in deployment/azure-container-apps/
-REM  The service Dockerfile is in services/ (two levels up)
+REM  The service Dockerfile is in services/applications/priceprovider/ (two levels up)
 REM ============================================================
 set "SCRIPT_DIR=%~dp0"
 set "SERVICE_DIR=%SCRIPT_DIR%..\..\services"
@@ -42,7 +42,7 @@ REM ============================================================
 REM  Build Docker image
 REM ============================================================
 echo Building Docker image %IMAGE_NAME%:%VERSION%...
-call docker build -t "%IMAGE_NAME%:%VERSION%" "%SERVICE_DIR%"
+call docker build -t "%IMAGE_NAME%:%VERSION%" -f "%SERVICE_DIR%\applications\priceprovider\Dockerfile" "%SERVICE_DIR%"
 if %errorlevel% neq 0 (
     echo ERROR: Docker build failed.
     exit /b 1

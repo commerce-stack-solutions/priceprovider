@@ -8,24 +8,20 @@ WORKDIR /workspace/app
 # Copy the cdf-plugin (build logic plugin)
 COPY platform/cdf-plugin platform/cdf-plugin
 
-# Copy the platform/commons library
+# Copy the platform platform libraries
 COPY platform/commons platform/commons
+COPY platform/corebusinessentities platform/corebusinessentities
+COPY platform/coreserviceapp platform/coreserviceapp
 
-# Copy the applications multi-project files (wrapper, settings, builds, and subprojects)
-COPY applications/gradlew applications/
-COPY applications/gradle applications/gradle
-COPY applications/build.gradle applications/
-COPY applications/settings.gradle applications/
-
-# Copy subprojects under applications
+# Copy the priceprovider application files
 COPY applications/priceprovider applications/priceprovider
 
-# Grant execution rights and ensure LF line endings for gradlew
-RUN sed -i 's/\r$//' ./applications/gradlew && chmod +x ./applications/gradlew
+# Grant execution rights and ensure LF line endings for the priceprovider gradlew
+RUN sed -i 's/\r$//' ./applications/priceprovider/gradlew && chmod +x ./applications/priceprovider/gradlew
 
-# Build the application from the applications root directory
-WORKDIR /workspace/app/applications
-RUN ./gradlew :priceprovider:bootJar --no-daemon
+# Build the application from the priceprovider root directory
+WORKDIR /workspace/app/applications/priceprovider
+RUN ./gradlew bootJar --no-daemon
 
 # Stage 2: Runtime stage
 # Use a JRE image for a smaller final image size

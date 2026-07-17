@@ -24,7 +24,7 @@ VERSION="$1"
 # ============================================================
 #  Resolve the service source directory
 #  This script lives in deployment/azure-container-apps/
-#  The service Dockerfile is in services/ (two levels up)
+#  The service Dockerfile is in services/applications/priceprovider/ (two levels up)
 # ============================================================
 SERVICE_DIR="${SCRIPT_DIR}/../../services"
 
@@ -38,7 +38,7 @@ az acr login --name "${ACR_NAME}"
 #  Build Docker image
 # ============================================================
 echo "Building Docker image ${IMAGE_NAME}:${VERSION}..."
-docker build -t "${IMAGE_NAME}:${VERSION}" "${SERVICE_DIR}"
+docker build -t "${IMAGE_NAME}:${VERSION}" -f "${SERVICE_DIR}/applications/priceprovider/Dockerfile" "${SERVICE_DIR}"
 
 # ============================================================
 #  Tag image for ACR
