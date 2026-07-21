@@ -22,8 +22,8 @@ style: |
   }
 ---
 
-# Extensible Microservice Platform
-### Build-Time Entity Extension via Class Definition Format (CDF)
+# Extensible Platform
+### Build-Time Entity Extension via CDF
 
 <center>
 
@@ -31,19 +31,16 @@ style: |
 
 </center>
 
+<!--
+Welcome everyone. Today we are presenting the new Extensible Microservice Platform concept, specifically detailing how we extend database entities and REST facade representations cleanly at build-time using Class Definition Format (CDF) descriptors.
+-->
+
 ---
 
-## 2. Traditional Extensions vs. CDF
+## 2. Decoupling the Schema
 
-How do we extend core platform classes at the application level?
-
-* **Traditional Approaches:**
-  * *Polymorphism / Class Inheritance*: Slow runtime reflection, complex Hibernate schemas, tight coupling.
-  * *Forking*: Destroys platform upgrade paths; high maintenance overhead.
-* **The CDF Build-Time Pattern:**
-  * Core entities and REST representation classes are declared as **JSON descriptors**.
-  * The custom `cdf-plugin` merges platform base files with application extensions.
-  * Generates normal compiled Java classes at compile-time with **zero runtime overhead**.
+* **Traditional:** Tight coupling, slow runtime reflection, and schema complexity.
+* **CDF Pattern:** Meta-driven, zero runtime overhead, and clean upgrade paths.
 
 <center>
 
@@ -51,15 +48,18 @@ How do we extend core platform classes at the application level?
 
 </center>
 
+<!--
+On this slide, we contrast traditional extension approaches with our build-time CDF pattern.
+Instead of using Hibernate polymorphic mappings or runtime reflection which cause significant performance penalties and leak domain concepts across modules, CDF uses a declarative JSON schema. This ensures clean JARs and zero reflection overhead at runtime, while keeping our upgrade paths fully intact.
+-->
+
 ---
 
-## 3. The CDF JSON Format & Schema
+## 3. Declarative JSON Schema
 
-Classes are declared in highly structured, easy-to-read JSON descriptors.
-
-- **Structural Metadata:** Define target entity name, package path, imports, class annotations, implemented interfaces, and superClass.
-- **Fields & Types:** Getters/setters auto-generated. Custom initializers & annotations allowed.
-- **Constructors & Methods:** Direct injection of visibilities, parameter types, and raw Java bodies.
+* Class package, target superClass, and imports.
+* Accessor fields with annotations.
+* Direct injection of custom Java methods & constructors.
 
 <center>
 
@@ -67,16 +67,17 @@ Classes are declared in highly structured, easy-to-read JSON descriptors.
 
 </center>
 
+<!--
+Here we look at the structure of a CDF file. It is a highly structured JSON file representing all package paths, target class details, annotations, fields, and custom behaviors. Out of these files, standard JPA entity classes and REST RestEntities are generated, fully automated by our build plugin.
+-->
+
 ---
 
-## 4. Build-Time Merging Architecture
+## 4. Merging Architecture (Approach B)
 
-We resolve platform-to-application dependency limits with **Approach B**:
-
-1. CDF definitions are located in their respective platform modules.
-2. The `cdf-codegen` plugin runs **only** in the application service (`priceprovider`).
-3. It scans all JSON definitions, merges extensions, and outputs them centrally.
-4. Platforms map package-filtered slices of the generated folder to their source sets.
+* Multi-project definitions merged centrally.
+* Package-filtered source directories for each subproject.
+* Zero compile-time circular dependency loops.
 
 <center>
 
@@ -84,24 +85,25 @@ We resolve platform-to-application dependency limits with **Approach B**:
 
 </center>
 
+<!--
+This is the core build-time flow. All CDF JSON files across different projects are scanned centrally during the build of our leaf application service (priceprovider).
+The plugin merges base schemas with service-specific extensions. It then outputs them back to the platform modules' source sets using precise, package-filtered directory mapping. This successfully keeps our dependencies strictly one-directional.
+-->
+
 ---
 
-## 5. Summary & Best Practices
+## 5. Developer Guide Summary
 
-An extremely powerful pattern for developer agility and modularity.
-
-* **Introduce New CDF:**
-  * Define `{Name}Entity.json` and `{Name}RestEntity.json` in target platform modules.
-  * Delete the original manual `.java` files from `src/main/java`.
-* **Add Contextual Extension:**
-  * Create `{Name}Entity.json` extension under `priceprovider` resources.
-  * List only the new fields, custom imports, and customized `toString()` overrides.
-* **Keep Build Clean:**
-  * Generated files reside cleanly inside the ignored `build/` workspace.
-  * Disabling JVM Class Data Sharing (`-Xshare:off`) silences warnings across tests.
+* **Add Entity:** Define JSON descriptor in platform module & delete manual Java.
+* **Add Extension:** List only new fields & imports in priceprovider.
+* **Prise Build:** Centralized and clean generated workspace under `build/`.
 
 <center>
 
 ![width:350px](assets/slide5.svg)
 
 </center>
+
+<!--
+To summarize, introducing or extending a class is incredibly simple. For a new entity, you just define the JSON descriptors in the platform, and the plugin takes care of the rest. For extensions, like priceRepresentationMode on ChannelEntity, you define a small extension JSON in the priceprovider service, listing only the fields you are adding. The code is generated seamlessly under the build directory.
+-->
