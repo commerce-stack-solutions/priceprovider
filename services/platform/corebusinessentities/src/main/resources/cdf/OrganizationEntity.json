@@ -1,0 +1,51 @@
+{
+  "entity": "OrganizationEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.organization.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.organization.organizationtype.converter.OrganizationTypeConverter",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.organization.organizationtype.OrganizationType",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.organization.organizationtype.OrganizationTypeDefinition",
+    "jakarta.persistence.*"
+  ],
+  "classAnnotations": [
+    "@Entity"
+  ],
+  "superClass": "GroupEntity",
+  "fields": [
+    {
+      "name": "organizationType",
+      "type": "OrganizationType",
+      "annotations": [
+        "@Convert(converter = OrganizationTypeConverter.class)",
+        "@MetaDynamicEnum(beanType = OrganizationTypeDefinition.class)",
+        "@MandatoryField"
+      ]
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": "super();"
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "id", "type": "String" }
+      ],
+      "body": "super(id);"
+    }
+  ],
+  "methods": [
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"OrganizationEntity{\" + \"id=\" + getId() + \", path='\" + getPath() + \"'\" + \", name='\" + getName() + \"'\" + \", organizationType=\" + organizationType + \", createdAt=\" + getCreatedAt() + \", lastModifiedAt=\" + getLastModifiedAt() + '}';"
+    }
+  ]
+}

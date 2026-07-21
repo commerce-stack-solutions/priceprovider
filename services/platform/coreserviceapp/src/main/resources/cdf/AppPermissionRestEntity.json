@@ -1,0 +1,23 @@
+{
+  "entity": "AppPermissionRestEntity",
+  "package": "io.commercestacksolutions.coreserviceapp.facade.approle.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity",
+    "io.commercestacksolutions.commons.web.rest.RestEntity"
+  ],
+  "superClass": "RestEntity<InfoAuditableRestEntity, IncludesAppPermission>",
+  "fields": [
+    {
+      "name": "id",
+      "type": "Long"
+    },
+    {
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "description",
+      "type": "String"
+    }
+  ]
+}

@@ -28,13 +28,15 @@ Before creating any entity, determine **where it belongs**:
 See [Development Guide](../../../services/doc/020-development/010-development-guide.md) for the full module overview.
 
 # Phase 1 - Domain Entity Setup - Data Access Layer
-- start with the data model (entity) setup / data model changes in the backend service
-  - make sure it implements AuditableEntity and fields: OffsetDateTime createdAt, OffsetDateTime lastModifiedAt exist
-- if required introduce repository / update repository methods / query 
-- if you introduce or extend entities with enum also introduce a (NEW ENTITY)TypeEnumConstraint based on io.commercestacksolutions.commons.dataaccess.dbupdate.AbstractEnumConstraintUpdater
+- All core entities and RestEntities are metadata-driven and generated from Class Definition Format (CDF) JSON files.
+- Start with the data model (entity) setup / data model changes by editing or creating a CDF JSON file in the appropriate module's `src/main/resources/cdf` directory.
+  - Make sure the CDF definition implements `AuditableEntity` and fields `OffsetDateTime createdAt`, `OffsetDateTime lastModifiedAt` exist.
+- If required introduce repository / update repository methods / query.
+- If you introduce or extend entities with enum also introduce a (NEW ENTITY)TypeEnumConstraint based on `io.commercestacksolutions.commons.dataaccess.dbupdate.AbstractEnumConstraintUpdater`.
 
 ## Relevant Resources during this phase
 - see [011-development-guide-data-access-layer.md](../../../services/doc/020-development/011-development-guide-data-access-layer.md)
+- see [016-cdf-code-generation-guide.md](../../../services/doc/020-development/016-cdf-code-generation-guide.md)
 
 # Phase 2 - Update Service Layer
 - introduce or extend an Entity Service that makes use of an interface

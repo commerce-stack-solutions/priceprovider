@@ -1,0 +1,113 @@
+{
+  "entity": "TaxClassEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.country.entity.CountryEntity",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.math.BigDecimal",
+    "java.time.OffsetDateTime"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"taxClassId\")",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "taxClassId",
+      "type": "String",
+      "annotations": [
+        "@Id"
+      ]
+    },
+    {
+      "name": "taxRate",
+      "type": "BigDecimal",
+      "annotations": [
+        "@Column(precision = 4, scale = 2)",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "countryRef",
+      "type": "CountryEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"country_iso_key\", nullable = true)",
+        "@JsonIgnoreProperties({\"taxClasses\", \"hibernateLazyInitializer\", \"handler\"})",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "taxClassId", "type": "String" }
+      ],
+      "body": "this.taxClassId = taxClassId;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "getCountry",
+      "visibility": "public",
+      "returnType": "CountryEntity",
+      "body": "return countryRef;"
+    },
+    {
+      "name": "setCountry",
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "country", "type": "CountryEntity" }
+      ],
+      "body": "this.countryRef = country;"
+    },
+    {
+      "name": "getCountryRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return countryRef != null ? countryRef.getIsoKey() : null;"
+    },
+    {
+      "name": "setCountryRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "countryRef", "type": "String" }
+      ],
+      "body": "if (countryRef != null) { CountryEntity country = new CountryEntity(); country.setIsoKey(countryRef); this.countryRef = country; } else { this.countryRef = null; }"
+    },
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"TaxClassEntity{\" + \"taxClassId='\" + taxClassId + '\\'' + \", taxRate=\" + taxRate + \", countryRef=\" + (countryRef != null ? countryRef.getIsoKey() : null) + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}
