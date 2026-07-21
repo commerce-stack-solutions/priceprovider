@@ -1,0 +1,24 @@
+<svg width="600" height="150" viewBox="0 0 600 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- JSON Box -->
+  <rect x="50" y="10" width="160" height="130" rx="8" fill="#2d3748" stroke="#cbd5e0" stroke-width="2"/>
+  <text x="130" y="35" fill="#cbd5e0" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle">JSON Schema</text>
+  <text x="130" y="65" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">- package, imports</text>
+  <text x="130" y="85" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">- fields, annotations</text>
+  <text x="130" y="105" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">- methods, ctors</text>
+
+  <!-- Arrow -->
+  <path d="M 230 75 L 350 75" stroke="#4fc3f7" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4fc3f7"/>
+    </marker>
+  </defs>
+  <text x="290" y="60" fill="#4fc3f7" font-family="Arial" font-size="11" font-weight="bold" text-anchor="middle">cdf-plugin</text>
+
+  <!-- Java Box -->
+  <rect x="380" y="10" width="170" height="130" rx="8" fill="#2d3748" stroke="#4fc3f7" stroke-width="2"/>
+  <text x="465" y="35" fill="#4fc3f7" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle">Java Source Class</text>
+  <text x="465" y="65" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">- standard JPA entity</text>
+  <text x="465" y="85" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">- fields & fields accessors</text>
+  <text x="465" y="105" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">- custom overridden methods</text>
+</svg>
