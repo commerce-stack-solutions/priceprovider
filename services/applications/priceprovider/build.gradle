@@ -47,6 +47,13 @@ test {
     useJUnitPlatform()
 }
 
+// Disable Class Data Sharing (CDS) to silence "Sharing is only supported..." JVM warnings in tests
+allprojects {
+    tasks.withType(Test).configureEach {
+        jvmArgs '-Xshare:off'
+    }
+}
+
 // Exclude platform packages from priceprovider compilation to avoid duplicates
 sourceSets {
     main {
