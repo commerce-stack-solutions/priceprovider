@@ -5,7 +5,7 @@
   <text x="140" y="85" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">and high maintenance overhead</text>
 
   <rect x="330" y="10" width="260" height="100" rx="8" fill="#1c4532" stroke="#9ae6b4" stroke-width="2"/>
-  <text x="460" y="40" fill="#9ae6b4" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Mata-Driven CDF</text>
+  <text x="460" y="40" fill="#9ae6b4" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Meta-Driven CDF</text>
   <text x="460" y="65" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">Build-time merging, compile-time checks,</text>
   <text x="460" y="85" fill="#fff" font-family="Arial" font-size="11" text-anchor="middle">fully decoupled, 100% clean JARs</text>
 </svg>
