@@ -27,7 +27,7 @@ style: |
 
 <center>
 
-![width:450px](assets/slide1.svg)
+![width:950px](assets/slide1.svg)
 
 </center>
 
@@ -37,14 +37,14 @@ Welcome everyone. Today we are presenting the new Extensible Microservice Platfo
 
 ---
 
-## 2. Decoupling the Schema
+## Decoupling the Schema
 
-* **Traditional:** Tight coupling, slow runtime reflection, and schema complexity.
-* **CDF Pattern:** Meta-driven, zero runtime overhead, and clean upgrade paths.
+
+**Class Definition Files (CDF):** Meta-driven, zero runtime overhead, and clean upgrade paths.
 
 <center>
 
-![width:600px](assets/slide2.svg)
+![width:950px](assets/slide2.svg)
 
 </center>
 
@@ -55,7 +55,7 @@ Instead of using Hibernate polymorphic mappings or runtime reflection which caus
 
 ---
 
-## 3. Declarative JSON Schema
+## CDF - Declarative JSON Format
 
 * Class package, target superClass, and imports.
 * Accessor fields with annotations.
@@ -63,7 +63,7 @@ Instead of using Hibernate polymorphic mappings or runtime reflection which caus
 
 <center>
 
-![width:600px](assets/slide3.svg)
+![width:900px](assets/slide3.svg)
 
 </center>
 
@@ -73,15 +73,14 @@ Here we look at the structure of a CDF file. It is a highly structured JSON file
 
 ---
 
-## 4. Merging Architecture (Approach B)
-
+## Merging Architecture
 * Multi-project definitions merged centrally.
 * Package-filtered source directories for each subproject.
 * Zero compile-time circular dependency loops.
 
 <center>
 
-![width:650px](assets/slide4.svg)
+![width:1050px](assets/slide4.svg)
 
 </center>
 
@@ -90,20 +89,3 @@ This is the core build-time flow. All CDF JSON files across different projects a
 The plugin merges base schemas with service-specific extensions. It then outputs them back to the platform modules' source sets using precise, package-filtered directory mapping. This successfully keeps our dependencies strictly one-directional.
 -->
 
----
-
-## 5. Developer Guide Summary
-
-* **Add Entity:** Define JSON descriptor in platform module & delete manual Java.
-* **Add Extension:** List only new fields & imports in priceprovider.
-* **Prise Build:** Centralized and clean generated workspace under `build/`.
-
-<center>
-
-![width:350px](assets/slide5.svg)
-
-</center>
-
-<!--
-To summarize, introducing or extending a class is incredibly simple. For a new entity, you just define the JSON descriptors in the platform, and the plugin takes care of the rest. For extensions, like priceRepresentationMode on ChannelEntity, you define a small extension JSON in the priceprovider service, listing only the fields you are adding. The code is generated seamlessly under the build directory.
--->
