@@ -1,0 +1,34 @@
+{
+  "entity": "LanguageListRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.language.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.*",
+    "java.util.Collection"
+  ],
+  "superClass": "RestEntity<InfoListResult, IncludesListResult>",
+  "fields": [
+    {
+      "name": "items",
+      "type": "Collection<LanguageRestEntity>"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "pagingInfo", "type": "PagingInfo" },
+        { "name": "items", "type": "Collection<LanguageRestEntity>" }
+      ],
+      "body": "this.setInfo(new InfoListResult(pagingInfo)); this.items = items;"
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "pagingInfo", "type": "PagingInfo" },
+        { "name": "sortingInfo", "type": "SortingInfo" },
+        { "name": "items", "type": "Collection<LanguageRestEntity>" }
+      ],
+      "body": "this.setInfo(new InfoListResult(pagingInfo, sortingInfo)); this.items = items;"
+    }
+  ]
+}

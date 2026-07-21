@@ -1,0 +1,10 @@
+{
+  "entity": "ChannelRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.channel.restentity",
+  "fields": [
+    {
+      "name": "priceRepresentationMode",
+      "type": "String"
+    }
+  ]
+}

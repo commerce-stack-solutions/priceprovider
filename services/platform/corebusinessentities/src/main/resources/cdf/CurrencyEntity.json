@@ -1,0 +1,79 @@
+{
+  "entity": "CurrencyEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.time.OffsetDateTime",
+    "java.util.Map"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"currencyKey\")",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "currencyKey",
+      "type": "String",
+      "annotations": [
+        "@Id"
+      ]
+    },
+    {
+      "name": "symbol",
+      "type": "String",
+      "annotations": [
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>",
+      "annotations": [
+        "@ElementCollection",
+        "@CollectionTable(name = \"currency_localized_names\", joinColumns = @JoinColumn(name = \"currency_key\"))",
+        "@MapKeyColumn(name = \"language_code\")",
+        "@Column(name = \"name\")"
+      ]
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "currencyKey", "type": "String" }
+      ],
+      "body": "this.currencyKey = currencyKey;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"CurrencyEntity{\" + \"currencyKey='\" + currencyKey + '\\'' + \", symbol='\" + symbol + '\\'' + \", name=\" + name + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}

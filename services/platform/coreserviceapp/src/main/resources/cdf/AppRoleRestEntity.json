@@ -1,0 +1,28 @@
+{
+  "entity": "AppRoleRestEntity",
+  "package": "io.commercestacksolutions.coreserviceapp.facade.approle.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "io.commercestacksolutions.coreserviceapp.facade.approle.info.InfoAppRole",
+    "java.util.Set"
+  ],
+  "superClass": "RestEntity<InfoAppRole, IncludesAppRole>",
+  "fields": [
+    {
+      "name": "id",
+      "type": "Long"
+    },
+    {
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "description",
+      "type": "String"
+    },
+    {
+      "name": "permissionRefs",
+      "type": "Set<String>"
+    }
+  ]
+}

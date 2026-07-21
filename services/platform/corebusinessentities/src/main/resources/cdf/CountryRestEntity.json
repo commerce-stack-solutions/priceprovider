@@ -1,0 +1,29 @@
+{
+  "entity": "CountryRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.country.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity",
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "java.util.Map",
+    "java.util.Set"
+  ],
+  "superClass": "RestEntity<InfoAuditableRestEntity, IncludesCountry>",
+  "fields": [
+    {
+      "name": "isoKey",
+      "type": "String"
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>"
+    },
+    {
+      "name": "allowedCurrencyRefs",
+      "type": "Set<String>"
+    },
+    {
+      "name": "primaryCurrencyRef",
+      "type": "String"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "entity": "TaxClassRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.taxclass.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity",
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "java.math.BigDecimal"
+  ],
+  "superClass": "RestEntity<InfoAuditableRestEntity, IncludesTaxClass>",
+  "fields": [
+    {
+      "name": "taxClassId",
+      "type": "String"
+    },
+    {
+      "name": "taxRate",
+      "type": "BigDecimal"
+    },
+    {
+      "name": "countryRef",
+      "type": "String"
+    }
+  ]
+}

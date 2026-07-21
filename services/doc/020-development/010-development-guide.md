@@ -101,6 +101,7 @@ Each layer has its own focused guide with patterns, examples, and best practices
 | [012 – Service Layer](012-development-guide-service-layer.md) | `service` | Business Logic, Validation, IDD |
 | [013 – Facade Layer](013-development-guide-facade-layer.md) | `facade` | DTO Mapping, Expansion, Context, PatchMapper |
 | [014 – Controller Layer](014-development-guide-controller-layer.md) | `web/controller` | REST Endpoints, OpenAPI, Exception Handling |
+| [016 – CDF Code Generation Guide](016-cdf-code-generation-guide.md) | `cdf-codegen` | Class Definition Format (CDF), Merging, Entity Extension |
 
 ## Interface Driven Design (IDD)
 

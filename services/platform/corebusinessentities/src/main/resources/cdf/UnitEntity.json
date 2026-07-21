@@ -1,0 +1,125 @@
+{
+  "entity": "UnitEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.math.BigDecimal",
+    "java.time.OffsetDateTime",
+    "java.util.Map"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"symbol\")",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "symbol",
+      "type": "String",
+      "annotations": [
+        "@Id"
+      ]
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>",
+      "annotations": [
+        "@ElementCollection",
+        "@CollectionTable(name = \"unit_localized_names\", joinColumns = @JoinColumn(name = \"symbol\"))",
+        "@MapKeyColumn(name = \"language_code\")",
+        "@Column(name = \"name\")",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "measure",
+      "type": "String"
+    },
+    {
+      "name": "baseUnitRef",
+      "type": "UnitEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"base_unit_symbol\")"
+      ]
+    },
+    {
+      "name": "factor",
+      "type": "BigDecimal",
+      "annotations": [
+        "@Column(precision = 19, scale = 9)"
+      ]
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "symbol", "type": "String" }
+      ],
+      "body": "this.symbol = symbol;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "getBaseUnit",
+      "visibility": "public",
+      "returnType": "UnitEntity",
+      "body": "return baseUnitRef;"
+    },
+    {
+      "name": "setBaseUnit",
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "baseUnit", "type": "UnitEntity" }
+      ],
+      "body": "this.baseUnitRef = baseUnit;"
+    },
+    {
+      "name": "getBaseUnitRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return baseUnitRef != null ? baseUnitRef.getSymbol() : null;"
+    },
+    {
+      "name": "setBaseUnitRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "baseUnitRef", "type": "String" }
+      ],
+      "body": "if (baseUnitRef != null) { UnitEntity baseUnit = new UnitEntity(); baseUnit.setSymbol(baseUnitRef); this.baseUnitRef = baseUnit; } else { this.baseUnitRef = null; }"
+    },
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "String baseSymbol = null; try { if (this.baseUnitRef != null) { baseSymbol = this.baseUnitRef.getSymbol(); } } catch (Exception e) { baseSymbol = null; } return \"UnitEntity{\" + \"symbol='\" + symbol + \"'\" + \", name=\" + name + \", measure='\" + measure + \"'\" + \", baseUnitSymbol='\" + baseSymbol + \"'\" + \", factor=\" + factor + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "entity": "GroupRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.group.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "io.commercestacksolutions.corebusinessentities.facade.group.info.InfoGroup",
+    "java.util.Set"
+  ],
+  "superClass": "RestEntity<InfoGroup, IncludesGroup>",
+  "fields": [
+    {
+      "name": "id",
+      "type": "String"
+    },
+    {
+      "name": "path",
+      "type": "String"
+    },
+    {
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "parentRefs",
+      "type": "Set<String>"
+    },
+    {
+      "name": "subRefs",
+      "type": "Set<String>"
+    }
+  ]
+}

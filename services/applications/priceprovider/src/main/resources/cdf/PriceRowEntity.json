@@ -1,0 +1,327 @@
+{
+  "entity": "PriceRowEntity",
+  "package": "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId",
+    "io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity.ChannelEntity",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.converter.PriceTypeConverter",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceType",
+    "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceTypeDefinition",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity",
+    "jakarta.persistence.*",
+    "org.springframework.format.annotation.DateTimeFormat",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "java.math.BigDecimal",
+    "java.time.OffsetDateTime",
+    "java.util.HashSet",
+    "java.util.Set",
+    "java.util.stream.Collectors"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "type": "String",
+      "annotations": [
+        "@Id",
+        "@GeneratedId",
+        "@Column(length = 100)"
+      ]
+    },
+    {
+      "name": "pricedResourceId",
+      "type": "String",
+      "annotations": [
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "priceValue",
+      "type": "BigDecimal",
+      "annotations": [
+        "@Column(precision = 19, scale = 2)",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "minQuantity",
+      "type": "BigDecimal",
+      "annotations": [
+        "@Column(precision = 19, scale = 2)",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "unitRef",
+      "type": "UnitEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"unit_symbol\")",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "currencyRef",
+      "type": "CurrencyEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"currency_key\")",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "taxClassRef",
+      "type": "TaxClassEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"tax_class_id\", nullable = true)",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "priceType",
+      "type": "PriceType",
+      "annotations": [
+        "@Convert(converter = PriceTypeConverter.class)",
+        "@MetaDynamicEnum(beanType = PriceTypeDefinition.class)"
+      ]
+    },
+    {
+      "name": "validFrom",
+      "type": "OffsetDateTime",
+      "annotations": [
+        "@DateTimeFormat(pattern = \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\")"
+      ]
+    },
+    {
+      "name": "validTo",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "groupRefs",
+      "type": "Set<GroupEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany(fetch = FetchType.LAZY)",
+        "@JoinTable(name = \"price_row_groups\", joinColumns = @JoinColumn(name = \"price_row_id\"), inverseJoinColumns = @JoinColumn(name = \"group_id\"))"
+      ]
+    },
+    {
+      "name": "channelRefs",
+      "type": "Set<ChannelEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany(fetch = FetchType.LAZY)",
+        "@JoinTable(name = \"price_row_channels\", joinColumns = @JoinColumn(name = \"price_row_id\"), inverseJoinColumns = @JoinColumn(name = \"channel_id\"))"
+      ]
+    },
+    {
+      "name": "taxIncluded",
+      "type": "boolean"
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    }
+  ],
+  "methods": [
+    {
+      "name": "prePersist",
+      "annotations": ["@PrePersist"],
+      "visibility": "protected",
+      "returnType": "void",
+      "body": "if (this.id == null) { this.id = IdGeneratorProvider.generate(PriceRowEntity.class); }"
+    },
+    {
+      "name": "getUnit",
+      "visibility": "public",
+      "returnType": "UnitEntity",
+      "body": "return unitRef;"
+    },
+    {
+      "name": "setUnit",
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "unit", "type": "UnitEntity" }
+      ],
+      "body": "this.unitRef = unit;"
+    },
+    {
+      "name": "getCurrency",
+      "visibility": "public",
+      "returnType": "CurrencyEntity",
+      "body": "return currencyRef;"
+    },
+    {
+      "name": "setCurrency",
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "currency", "type": "CurrencyEntity" }
+      ],
+      "body": "this.currencyRef = currency;"
+    },
+    {
+      "name": "getTaxClass",
+      "visibility": "public",
+      "returnType": "TaxClassEntity",
+      "body": "return taxClassRef;"
+    },
+    {
+      "name": "setTaxClass",
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "taxClass", "type": "TaxClassEntity" }
+      ],
+      "body": "this.taxClassRef = taxClass;"
+    },
+    {
+      "name": "getGroups",
+      "visibility": "public",
+      "returnType": "Set<GroupEntity>",
+      "body": "return groupRefs;"
+    },
+    {
+      "name": "setGroups",
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "groups", "type": "Set<GroupEntity>" }
+      ],
+      "body": "this.groupRefs = groups;"
+    },
+    {
+      "name": "getUnitRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return unitRef != null ? unitRef.getSymbol() : null;"
+    },
+    {
+      "name": "setUnitRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "unitRef", "type": "String" }
+      ],
+      "body": "if (unitRef != null) { UnitEntity unit = new UnitEntity(); unit.setSymbol(unitRef); this.unitRef = unit; } else { this.unitRef = null; }"
+    },
+    {
+      "name": "getCurrencyRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return currencyRef != null ? currencyRef.getCurrencyKey() : null;"
+    },
+    {
+      "name": "setCurrencyRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "currencyRef", "type": "String" }
+      ],
+      "body": "if (currencyRef != null) { CurrencyEntity currency = new CurrencyEntity(); currency.setCurrencyKey(currencyRef); this.currencyRef = currency; } else { this.currencyRef = null; }"
+    },
+    {
+      "name": "getTaxClassRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return taxClassRef != null ? taxClassRef.getTaxClassId() : null;"
+    },
+    {
+      "name": "setTaxClassRef",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "taxClassRef", "type": "String" }
+      ],
+      "body": "if (taxClassRef != null) { TaxClassEntity taxClass = new TaxClassEntity(); taxClass.setTaxClassId(taxClassRef); this.taxClassRef = taxClass; } else { this.taxClassRef = null; }"
+    },
+    {
+      "name": "getGroupRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "Set<String>",
+      "body": "return groupRefs != null ? groupRefs.stream().filter(g -> g != null && g.getPath() != null).map(GroupEntity::getPath).collect(Collectors.toSet()) : new HashSet<>();"
+    },
+    {
+      "name": "setGroupRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "groupRefs", "type": "Set<String>" }
+      ],
+      "body": "if (groupRefs != null && !groupRefs.isEmpty()) { this.groupRefs = groupRefs.stream().map(ref -> { GroupEntity group = new GroupEntity(); group.setPath(ref); return group; }).collect(Collectors.toSet()); } else { this.groupRefs = new HashSet<>(); }"
+    },
+    {
+      "name": "getChannels",
+      "visibility": "public",
+      "returnType": "Set<ChannelEntity>",
+      "body": "return channelRefs;"
+    },
+    {
+      "name": "setChannels",
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "channels", "type": "Set<ChannelEntity>" }
+      ],
+      "body": "this.channelRefs = channels;"
+    },
+    {
+      "name": "getChannelRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "Set<String>",
+      "body": "return channelRefs != null ? channelRefs.stream().map(ChannelEntity::getId).collect(Collectors.toSet()) : new HashSet<>();"
+    },
+    {
+      "name": "setChannelRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "channelRefs", "type": "Set<String>" }
+      ],
+      "body": "if (channelRefs != null && !channelRefs.isEmpty()) { this.channelRefs = channelRefs.stream().map(ref -> { ChannelEntity channel = new ChannelEntity(); channel.setId(ref); return channel; }).collect(Collectors.toSet()); } else { this.channelRefs = new HashSet<>(); }"
+    },
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"PriceRowEntity{\" + \"id=\" + id + \", pricedResourceId='\" + pricedResourceId + \"'\" + \", priceValue=\" + priceValue + \", minQuantity=\" + minQuantity + \", unitRef=\" + (unitRef != null ? unitRef.getSymbol() : null) + \", currencyRef=\" + (currencyRef != null ? currencyRef.getCurrencyKey() : null) + \", taxClassRef=\" + (taxClassRef != null ? taxClassRef.getTaxClassId() : null) + \", priceType=\" + priceType + \", validFrom=\" + validFrom + \", validTo=\" + validTo + \", groupRefs=\" + (groupRefs != null ? groupRefs.stream().map(GroupEntity::getPath).collect(Collectors.toSet()) : null) + \", channelRefs=\" + (channelRefs != null ? channelRefs.stream().map(ChannelEntity::getId).collect(Collectors.toSet()) : null) + \", taxIncluded=\" + taxIncluded + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}
