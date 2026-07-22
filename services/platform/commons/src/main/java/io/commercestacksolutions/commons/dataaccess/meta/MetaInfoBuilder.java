@@ -108,23 +108,13 @@ public class MetaInfoBuilder {
                     }
                 }
 
-                List<String> fieldEnumValues = null;
-                if (field.getType().isEnum()) {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends Enum<?>> enumClass = (Class<? extends Enum<?>>) field.getType();
-                    fieldEnumValues = Arrays.stream(enumClass.getEnumConstants())
-                            .map(Enum::name)
-                            .toList();
-                }
-
                 String determinedType = determineFieldType(field);
 
                 MetaInfo.FieldMetadata fieldMeta = new MetaInfo.FieldMetadata(
                         field.getName(),
                         determinedType,
                         isReadOnly,
-                        precision,
-                        fieldEnumValues
+                        precision
                 );
 
                 // Prevent duplicates if overridden in subclass hierarchy (subclass overrides superclass)

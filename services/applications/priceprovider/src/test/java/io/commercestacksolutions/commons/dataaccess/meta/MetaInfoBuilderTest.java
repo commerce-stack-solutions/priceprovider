@@ -229,8 +229,6 @@ public class MetaInfoBuilderTest {
                 .filter(f -> "color".equals(f.getName())).findFirst().orElse(null);
         assertNotNull(colorMeta);
         assertEquals("Enum", colorMeta.getType());
-        assertNotNull(colorMeta.getEnumValues());
-        assertTrue(colorMeta.getEnumValues().containsAll(List.of("RED", "GREEN", "BLUE")));
     }
 
     @Test

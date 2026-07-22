@@ -92,7 +92,7 @@
                       <app-enum-selector
                         [formControlName]="field.name"
                         [placeholder]="'Select ' + getLabel(field.name) + '...'"
-                        [values]="field.enumValues || []"
+                        [values]="meta()?.enumValues?.[field.name] ?? []"
                         [isInvalid]="(getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) || hasFieldError(field.name)"
                         [required]="isMandatory(field.name)">
                       </app-enum-selector>

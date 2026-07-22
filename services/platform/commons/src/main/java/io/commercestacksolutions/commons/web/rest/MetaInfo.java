@@ -81,7 +81,6 @@ public class MetaInfo {
         private String type; // "Number", "Enum", "LocalizedString", "Reference", "Set<Reference>", "String", "DateTime", "Boolean"
         private Boolean readOnly;
         private Integer precision;
-        private List<String> enumValues;
 
         public FieldMetadata() {
         }
@@ -92,12 +91,11 @@ public class MetaInfo {
             this.readOnly = readOnly;
         }
 
-        public FieldMetadata(String name, String type, Boolean readOnly, Integer precision, List<String> enumValues) {
+        public FieldMetadata(String name, String type, Boolean readOnly, Integer precision) {
             this.name = name;
             this.type = type;
             this.readOnly = readOnly;
             this.precision = precision;
-            this.enumValues = enumValues;
         }
 
         public String getName() {
@@ -130,14 +128,6 @@ public class MetaInfo {
 
         public void setPrecision(Integer precision) {
             this.precision = precision;
-        }
-
-        public List<String> getEnumValues() {
-            return enumValues;
-        }
-
-        public void setEnumValues(List<String> enumValues) {
-            this.enumValues = enumValues;
         }
     }
 }
