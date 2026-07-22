@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  *       {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey @ReferenceKey};
  *       if none are found the identity fields are used as fallback</li>
  *   <li>Enum values — ALL enum-typed fields (mandatory or optional) are always included</li>
- *   <li>Field Metadata — Detailed field names, types, readonly and precision properties for generic UI generation</li>
+ *   <li>Field Metadata — Detailed field names, types, readonly, precision and referenced entities properties</li>
  * </ul>
  *
  * <h3>Auto-mandatory rule for @Id fields</h3>
@@ -110,11 +110,35 @@ public class MetaInfoBuilder {
 
                 String determinedType = determineFieldType(field);
 
+                // Discover target referenced entity
+                String referencedEntity = null;
+                Class<?> targetClass = null;
+                if (java.util.Collection.class.isAssignableFrom(field.getType())) {
+                    java.lang.reflect.Type genericType = field.getGenericType();
+                    if (genericType instanceof ParameterizedType paramType) {
+                        java.lang.reflect.Type[] typeArgs = paramType.getActualTypeArguments();
+                        if (typeArgs.length > 0 && typeArgs[0] instanceof Class<?> argClass) {
+                            targetClass = argClass;
+                        }
+                    }
+                } else {
+                    targetClass = field.getType();
+                }
+
+                if (targetClass != null && isEntityClass(targetClass)) {
+                    String name = targetClass.getSimpleName();
+                    if (name.endsWith("Entity")) {
+                        name = name.substring(0, name.length() - "Entity".length());
+                    }
+                    referencedEntity = name;
+                }
+
                 MetaInfo.FieldMetadata fieldMeta = new MetaInfo.FieldMetadata(
                         field.getName(),
                         determinedType,
                         isReadOnly,
-                        precision
+                        precision,
+                        referencedEntity
                 );
 
                 // Prevent duplicates if overridden in subclass hierarchy (subclass overrides superclass)

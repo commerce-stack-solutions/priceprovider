@@ -223,8 +223,9 @@ export class GenericFormComponent implements OnInit {
     return date.toISOString().slice(0, 16); // format for datetime-local
   }
 
-  getReferencedApiPlural(fieldName: string): string {
-    const lower = fieldName.toLowerCase();
+  getReferencedApiPlural(field: FieldMetadata): string {
+    const nameToUse = field.referencedEntity || field.name;
+    const lower = nameToUse.toLowerCase();
     if (lower.includes('unit')) return 'units';
     if (lower.includes('currency')) return 'currencies';
     if (lower.includes('taxclass')) return 'taxclasses';
@@ -255,7 +256,7 @@ export class GenericFormComponent implements OnInit {
   }
 
   getGenericDataSource(field: FieldMetadata): ReferenceDataSource {
-    const apiPlural = this.getReferencedApiPlural(field.name);
+    const apiPlural = this.getReferencedApiPlural(field);
     const displayKey = this.getReferencedDisplayKey(apiPlural);
 
     return (searchTerm: string, page: number): Observable<ReferenceDataSourceResult> => {
@@ -401,7 +402,7 @@ export class GenericFormComponent implements OnInit {
 
       if (patches.length === 0) {
         this.saving.set(false);
-        this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
+        this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
         return;
       }
 
@@ -415,7 +416,7 @@ export class GenericFormComponent implements OnInit {
             this.saving.set(false);
           } else {
             this.saving.set(false);
-            this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
+            this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
           }
         },
         error: (err) => {
@@ -472,7 +473,7 @@ export class GenericFormComponent implements OnInit {
             this.saving.set(false);
           } else {
             this.saving.set(false);
-            this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
+            this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
           }
         },
         error: (err) => {
@@ -520,7 +521,7 @@ export class GenericFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
+    this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
   }
 
   handleSaveKeyPress(event: Event): void {

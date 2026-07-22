@@ -81,6 +81,7 @@ public class MetaInfo {
         private String type; // "Number", "Enum", "LocalizedString", "Reference", "Set<Reference>", "String", "DateTime", "Boolean"
         private Boolean readOnly;
         private Integer precision;
+        private String referencedEntity;
 
         public FieldMetadata() {
         }
@@ -96,6 +97,14 @@ public class MetaInfo {
             this.type = type;
             this.readOnly = readOnly;
             this.precision = precision;
+        }
+
+        public FieldMetadata(String name, String type, Boolean readOnly, Integer precision, String referencedEntity) {
+            this.name = name;
+            this.type = type;
+            this.readOnly = readOnly;
+            this.precision = precision;
+            this.referencedEntity = referencedEntity;
         }
 
         public String getName() {
@@ -128,6 +137,14 @@ public class MetaInfo {
 
         public void setPrecision(Integer precision) {
             this.precision = precision;
+        }
+
+        public String getReferencedEntity() {
+            return referencedEntity;
+        }
+
+        public void setReferencedEntity(String referencedEntity) {
+            this.referencedEntity = referencedEntity;
         }
     }
 }

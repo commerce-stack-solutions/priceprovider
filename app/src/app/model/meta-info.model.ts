@@ -3,6 +3,7 @@ export interface FieldMetadata {
   type: 'Number' | 'Enum' | 'LocalizedString' | 'Reference' | 'Set<Reference>' | 'String' | 'DateTime' | 'Boolean';
   readOnly?: boolean;
   precision?: number;
+  referencedEntity?: string;
 }
 
 export interface MetaInfo {

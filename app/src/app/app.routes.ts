@@ -36,6 +36,8 @@ import { AppRoleDetailComponent } from './pages/approle/detail/app-role-detail.c
 import { AppRoleFormComponent } from './pages/approle/form/app-role-form.component';
 import { ServiceInitializationComponent } from './pages/service-initialization/service-initialization.component';
 import { GenericFormComponent } from './pages/generic-form/generic-form.component';
+import { GenericListComponent } from './pages/generic-list/generic-list.component';
+import { GenericDetailComponent } from './pages/generic-detail/generic-detail.component';
 import { TranslocoService } from '@jsverse/transloco';
 import { SessionService } from './service/session.service';
 import { Router } from '@angular/router';
@@ -123,7 +125,9 @@ export const routes: Routes = [
       { path: 'app-roles/add', component: AppRoleFormComponent },
       { path: 'app-roles/:id', component: AppRoleDetailComponent },
       { path: 'app-roles/:id/edit', component: AppRoleFormComponent },
+      { path: 'generic/:entityType', component: GenericListComponent },
       { path: 'generic/:entityType/add', component: GenericFormComponent },
+      { path: 'generic/:entityType/:id', component: GenericDetailComponent },
       { path: 'generic/:entityType/:id/edit', component: GenericFormComponent },
       { path: 'service-initialization', component: ServiceInitializationComponent }
     ]

@@ -249,5 +249,24 @@ public class MetaInfoBuilderTest {
         assertEquals(2, priceValueMeta.getPrecision(), "priceValue has scale=2 from @Column or @MetaPrecision");
         assertFalse(priceValueMeta.getReadOnly());
     }
+
+    @Test
+    void build_populatesReferencedEntityForRelationships() {
+        MetaInfo meta = MetaInfoBuilder.build(
+                io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity.class);
+        assertNotNull(meta.getFields());
+
+        MetaInfo.FieldMetadata parentRefsMeta = meta.getFields().stream()
+                .filter(f -> "parentRefs".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(parentRefsMeta);
+        assertEquals("Set<Reference>", parentRefsMeta.getType());
+        assertEquals("Group", parentRefsMeta.getReferencedEntity());
+
+        MetaInfo.FieldMetadata subRefsMeta = meta.getFields().stream()
+                .filter(f -> "subRefs".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(subRefsMeta);
+        assertEquals("Set<Reference>", subRefsMeta.getType());
+        assertEquals("Group", subRefsMeta.getReferencedEntity());
+    }
 }
 

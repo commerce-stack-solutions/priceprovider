@@ -1,0 +1,8 @@
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+  &:hover {
+    text-decoration: underline;
+  }
+}
