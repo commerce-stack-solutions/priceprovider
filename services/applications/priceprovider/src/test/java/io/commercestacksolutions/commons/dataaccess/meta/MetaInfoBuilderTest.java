@@ -212,5 +212,44 @@ public class MetaInfoBuilderTest {
         assertTrue(meta.getMandatoryFields().contains("priceValue"),
                 "PriceRowEntity: priceValue must be mandatory");
     }
+
+    @Test
+    void build_populatesFieldsMetadataWithCorrectTypesAndAttributes() {
+        MetaInfo meta = MetaInfoBuilder.build(ChildEntity.class);
+        assertNotNull(meta.getFields(), "Fields metadata list must not be null");
+
+        // Find specific fields
+        MetaInfo.FieldMetadata idMeta = meta.getFields().stream()
+                .filter(f -> "id".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(idMeta);
+        assertEquals("String", idMeta.getType());
+        assertFalse(idMeta.getReadOnly(), "BaseEntity id is @Id but not @GeneratedValue/@GeneratedId, so not readOnly");
+
+        MetaInfo.FieldMetadata colorMeta = meta.getFields().stream()
+                .filter(f -> "color".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(colorMeta);
+        assertEquals("Enum", colorMeta.getType());
+        assertNotNull(colorMeta.getEnumValues());
+        assertTrue(colorMeta.getEnumValues().containsAll(List.of("RED", "GREEN", "BLUE")));
+    }
+
+    @Test
+    void build_respectsMetaPrecisionAndReadOnlyForGeneratedValue() {
+        MetaInfo meta = MetaInfoBuilder.build(
+                io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity.class);
+        assertNotNull(meta.getFields());
+
+        MetaInfo.FieldMetadata idMeta = meta.getFields().stream()
+                .filter(f -> "id".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(idMeta);
+        assertTrue(idMeta.getReadOnly(), "PriceRowEntity id is @GeneratedId and must be readOnly");
+
+        MetaInfo.FieldMetadata priceValueMeta = meta.getFields().stream()
+                .filter(f -> "priceValue".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(priceValueMeta);
+        assertEquals("Number", priceValueMeta.getType());
+        assertEquals(2, priceValueMeta.getPrecision(), "priceValue has scale=2 from @Column or @MetaPrecision");
+        assertFalse(priceValueMeta.getReadOnly());
+    }
 }
 

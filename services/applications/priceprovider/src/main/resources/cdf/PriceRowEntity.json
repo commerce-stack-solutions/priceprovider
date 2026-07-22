@@ -15,6 +15,7 @@
     "io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.pricetype.PriceTypeDefinition",
     "io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity",
     "io.commercestacksolutions.corebusinessentities.dataaccess.unit.entity.UnitEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MetaPrecision",
     "jakarta.persistence.*",
     "org.springframework.format.annotation.DateTimeFormat",
     "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
@@ -53,6 +54,7 @@
       "type": "BigDecimal",
       "annotations": [
         "@Column(precision = 19, scale = 2)",
+        "@MetaPrecision(2)",
         "@MandatoryField"
       ]
     },
@@ -61,6 +63,7 @@
       "type": "BigDecimal",
       "annotations": [
         "@Column(precision = 19, scale = 2)",
+        "@MetaPrecision(2)",
         "@MandatoryField"
       ]
     },

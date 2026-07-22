@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
  *       {@link io.commercestacksolutions.commons.dataaccess.ReferenceKey @ReferenceKey};
  *       if none are found the identity fields are used as fallback</li>
  *   <li>Enum values — ALL enum-typed fields (mandatory or optional) are always included</li>
+ *   <li>Field Metadata — Detailed field names, types, readonly and precision properties for generic UI generation</li>
  * </ul>
  *
  * <h3>Auto-mandatory rule for @Id fields</h3>
@@ -33,18 +36,6 @@ import java.util.stream.Collectors;
  * unless it is also annotated with {@code @GeneratedValue}, which signals that the persistence
  * layer assigns the value automatically.  Adding {@code @MandatoryField} to an {@code @Id}
  * field is therefore redundant and should be avoided.</p>
- *
- * <h3>Similar annotations to consider for future entities</h3>
- * <ul>
- *   <li>{@code @Column(nullable = false)} — DB-level NOT NULL constraint; if a field carries this
- *       and is not auto-generated, it may be worth marking it {@code @MandatoryField} as
- *       well so the API consumer knows it is required.</li>
- *   <li>{@code @NotNull} (Bean Validation) — application-level non-null constraint; fields with
- *       this annotation are semantically mandatory from an API perspective and are also candidates
- *       for {@code @MandatoryField}.</li>
- *   <li>{@code @EmbeddedId} / {@code @IdClass} — composite-key patterns; if used, the builder
- *       may need extending to inspect embedded fields for identity/mandatory detection.</li>
- * </ul>
  */
 public class MetaInfoBuilder {
 
@@ -64,10 +55,15 @@ public class MetaInfoBuilder {
         List<String> mandatoryFields = new ArrayList<>();
         List<String> referenceKeyFields = new ArrayList<>();
         Map<String, List<String>> enumValues = new HashMap<>();
+        List<MetaInfo.FieldMetadata> fieldsMetadata = new ArrayList<>();
 
         Class<?> clazz = entityClass;
         while (clazz != null && clazz != Object.class) {
             for (Field field : clazz.getDeclaredFields()) {
+                if (field.isSynthetic() || Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
+
                 // @Id → identity field; also auto-mandatory unless the DB generates the value
                 if (field.isAnnotationPresent(Id.class)) {
                     identityFields.add(field.getName());
@@ -96,6 +92,46 @@ public class MetaInfoBuilder {
                             .collect(Collectors.toList());
                     enumValues.put(field.getName(), values);
                 }
+
+                // Build FieldMetadata
+                boolean isReadOnly = "createdAt".equals(field.getName())
+                        || "lastModifiedAt".equals(field.getName())
+                        || (field.isAnnotationPresent(Id.class) && (field.isAnnotationPresent(GeneratedValue.class) || field.isAnnotationPresent(GeneratedId.class)));
+
+                Integer precision = null;
+                if (field.isAnnotationPresent(MetaPrecision.class)) {
+                    precision = field.getAnnotation(MetaPrecision.class).value();
+                } else if (field.isAnnotationPresent(jakarta.persistence.Column.class)) {
+                    jakarta.persistence.Column column = field.getAnnotation(jakarta.persistence.Column.class);
+                    if (column.scale() > 0) {
+                        precision = column.scale();
+                    }
+                }
+
+                List<String> fieldEnumValues = null;
+                if (field.getType().isEnum()) {
+                    @SuppressWarnings("unchecked")
+                    Class<? extends Enum<?>> enumClass = (Class<? extends Enum<?>>) field.getType();
+                    fieldEnumValues = Arrays.stream(enumClass.getEnumConstants())
+                            .map(Enum::name)
+                            .toList();
+                }
+
+                String determinedType = determineFieldType(field);
+
+                MetaInfo.FieldMetadata fieldMeta = new MetaInfo.FieldMetadata(
+                        field.getName(),
+                        determinedType,
+                        isReadOnly,
+                        precision,
+                        fieldEnumValues
+                );
+
+                // Prevent duplicates if overridden in subclass hierarchy (subclass overrides superclass)
+                boolean exists = fieldsMetadata.stream().anyMatch(f -> f.getName().equals(field.getName()));
+                if (!exists) {
+                    fieldsMetadata.add(fieldMeta);
+                }
             }
             clazz = clazz.getSuperclass();
         }
@@ -107,7 +143,85 @@ public class MetaInfoBuilder {
 
         MetaInfo meta = new MetaInfo(identityFields, mandatoryFields, enumValues.isEmpty() ? null : enumValues);
         meta.setReferenceKeyFields(referenceKeyFields.isEmpty() ? null : referenceKeyFields);
+        meta.setFields(fieldsMetadata.isEmpty() ? null : fieldsMetadata);
         return meta;
     }
-}
 
+    private static String determineFieldType(Field field) {
+        Class<?> type = field.getType();
+
+        // 1. LocalizedString
+        if (Map.class.isAssignableFrom(type)) {
+            return "LocalizedString";
+        }
+
+        // 2. Set<Reference>
+        if (java.util.Collection.class.isAssignableFrom(type)) {
+            java.lang.reflect.Type genericType = field.getGenericType();
+            if (genericType instanceof ParameterizedType paramType) {
+                java.lang.reflect.Type[] typeArgs = paramType.getActualTypeArguments();
+                if (typeArgs.length > 0 && typeArgs[0] instanceof Class<?> argClass) {
+                    if (isEntityClass(argClass)) {
+                        return "Set<Reference>";
+                    }
+                }
+            }
+            // Fallback check on name ending with "Refs"
+            if (field.getName().endsWith("Refs") || field.getName().endsWith("Entities")) {
+                return "Set<Reference>";
+            }
+        }
+
+        // 3. Reference
+        if (isEntityClass(type)
+                || field.getName().endsWith("Ref")
+                || field.isAnnotationPresent(jakarta.persistence.ManyToOne.class)
+                || field.isAnnotationPresent(jakarta.persistence.OneToOne.class)) {
+            return "Reference";
+        }
+
+        // 4. Enum
+        if (type.isEnum() || field.isAnnotationPresent(MetaDynamicEnum.class)) {
+            return "Enum";
+        }
+
+        // 5. DateTime
+        if (type.equals(java.time.OffsetDateTime.class)
+                || type.equals(java.time.LocalDateTime.class)
+                || type.equals(java.time.LocalDate.class)
+                || type.equals(java.time.Instant.class)
+                || type.equals(java.util.Date.class)
+                || type.equals(java.time.ZonedDateTime.class)) {
+            return "DateTime";
+        }
+
+        // 6. Number
+        if (Number.class.isAssignableFrom(type)
+                || type.equals(int.class)
+                || type.equals(long.class)
+                || type.equals(double.class)
+                || type.equals(float.class)
+                || type.equals(short.class)) {
+            return "Number";
+        }
+
+        // 7. Boolean
+        if (type.equals(Boolean.class) || type.equals(boolean.class)) {
+            return "Boolean";
+        }
+
+        // 8. String / fallback
+        return "String";
+    }
+
+    private static boolean isEntityClass(Class<?> clazz) {
+        if (clazz == null) {
+            return false;
+        }
+        if (clazz.isAnnotationPresent(jakarta.persistence.Entity.class)) {
+            return true;
+        }
+        String name = clazz.getSimpleName();
+        return name.endsWith("Entity");
+    }
+}
