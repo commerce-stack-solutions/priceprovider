@@ -268,5 +268,12 @@ public class MetaInfoBuilderTest {
         assertEquals("Set<Reference>", subRefsMeta.getType());
         assertEquals("Group", subRefsMeta.getReferencedEntity());
     }
+
+    @Test
+    void build_populatesEntityType() {
+        MetaInfo meta = MetaInfoBuilder.build(
+                io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity.class);
+        assertEquals("Group", meta.getEntityType());
+    }
 }
 

@@ -34,6 +34,10 @@ export class GenericListComponent implements OnInit {
   entityType = signal<string>('');
 
   getPermissionEntityType(plural: string): string {
+    const metaEntity = this.meta()?.entityType;
+    if (metaEntity) {
+      return metaEntity;
+    }
     const lower = plural.toLowerCase();
     if (lower === 'currencies') return 'Currency';
     if (lower === 'channels') return 'Channel';
@@ -46,6 +50,10 @@ export class GenericListComponent implements OnInit {
     if (lower === 'organizations') return 'Organization';
     if (lower === 'app-roles') return 'AppRole';
     if (lower === 'app-permissions') return 'AppPermission';
+    if (lower.endsWith('s')) {
+      const singular = plural.slice(0, -1);
+      return singular.charAt(0).toUpperCase() + singular.slice(1);
+    }
     return plural.charAt(0).toUpperCase() + plural.slice(1);
   }
 
@@ -75,9 +83,9 @@ export class GenericListComponent implements OnInit {
   filterConfigs = computed<ColumnFilterConfig[]>(() => {
     const metaInfo = this.meta();
     if (!metaInfo || !metaInfo.fields) return [];
-    // Only allow filtering on String, Number or Enum fields
+    // Allow filtering on String, Number, Enum, or Reference fields
     return metaInfo.fields
-      .filter(f => ['String', 'Number', 'Enum'].includes(f.type) && !f.readOnly)
+      .filter(f => ['String', 'Number', 'Enum', 'Reference'].includes(f.type) && !f.readOnly)
       .map(f => ({
         field: f.name,
         type: f.type === 'Number' ? 'number' : 'string',
@@ -85,14 +93,42 @@ export class GenericListComponent implements OnInit {
       }));
   });
 
-  // Columns to display (excluding relationships and collections to keep table clean)
+  // Columns to display sorted: identity fields first, followed by referenceKeyFields, then other candidate fields (including Reference types, excluding Set<Reference>)
   displayColumns = computed<FieldMetadata[]>(() => {
     const metaInfo = this.meta();
     if (!metaInfo || !metaInfo.fields) return [];
-    return metaInfo.fields.filter(f =>
-      !['Set<Reference>', 'Reference', 'LocalizedString'].includes(f.type)
-    ).slice(0, 6); // First 6 primitive/basic columns
+
+    const identity = metaInfo.identityFields || [];
+    const refKeys = metaInfo.referenceKeyFields || [];
+
+    const candidates = metaInfo.fields.filter(f => !['Set<Reference>', 'LocalizedString'].includes(f.type));
+
+    const sorted = [...candidates].sort((a, b) => {
+      const aIsId = identity.indexOf(a.name);
+      const bIsId = identity.indexOf(b.name);
+      if (aIsId !== -1 && bIsId !== -1) return aIsId - bIsId;
+      if (aIsId !== -1) return -1;
+      if (bIsId !== -1) return 1;
+
+      const aIsRefKey = refKeys.indexOf(a.name);
+      const bIsRefKey = refKeys.indexOf(b.name);
+      if (aIsRefKey !== -1 && bIsRefKey !== -1) return aIsRefKey - bIsRefKey;
+      if (aIsRefKey !== -1) return -1;
+      if (bIsRefKey !== -1) return 1;
+
+      return 0;
+    });
+
+    return sorted.slice(0, 8);
   });
+
+  getReferenceDisplay(val: any): string {
+    if (val === null || val === undefined) return '-';
+    if (typeof val === 'object') {
+      return val.id || val.currencyKey || val.symbol || val.path || val.isoKey || val.taxClassId || JSON.stringify(val);
+    }
+    return String(val);
+  }
 
   // Localized String Columns
   localizedColumns = computed<FieldMetadata[]>(() => {

@@ -12,6 +12,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MetaInfo {
     
+    private String entityType;
     private List<String> identityFields;
     private List<String> mandatoryFields;
     private List<String> referenceKeyFields;
@@ -24,6 +25,14 @@ public class MetaInfo {
     public MetaInfo(List<String> identityFields, List<String> mandatoryFields) {
         this.identityFields = identityFields;
         this.mandatoryFields = mandatoryFields;
+    }
+
+    public String getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(String entityType) {
+        this.entityType = entityType;
     }
 
     public MetaInfo(List<String> identityFields, List<String> mandatoryFields, Map<String, List<String>> enumValues) {

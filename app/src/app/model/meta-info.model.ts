@@ -7,6 +7,7 @@ export interface FieldMetadata {
 }
 
 export interface MetaInfo {
+  entityType?: string;
   identityFields?: string[];
   mandatoryFields?: string[];
   referenceKeyFields?: string[];

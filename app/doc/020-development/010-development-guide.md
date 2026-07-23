@@ -420,7 +420,21 @@ export class ProductListComponent {
 
 The `$meta` API returns complete, structural metadata about an entity from the REST API. Consumed by the **Generic UI Engine**, this metadata dynamically generates full list, detail, and form user interfaces on the fly without writing any custom templates, component classes, or forms for each individual entity type.
 
+For details on how the dynamic frontend components utilize this metadata, see the dedicated documentation page: [Dynamic Generic UI Components](../040-components/050-generic-ui-components.md).
+
 For backend implementation details (annotations, registry, service-layer validation) see [060-meta-annotation-concept.md](../../../services/applications/priceprovider/doc/030-features/060-meta-annotation-concept.md).
+
+### `$meta` Response Fields
+
+The `$meta` object returned by the API provides structural parameters used to render dynamic forms and tables:
+
+| Field            | Description |
+|------------------|-------------|
+| `identityFields` | Primary key fields (from `@Id` on the JPA entity) |
+| `mandatoryFields`| Fields the caller must supply (from `@Id` without `@GeneratedValue`, and `@MandatoryField`) |
+| `referenceKeyFields`| Human-readable unique key fields used for relationship identifiers (from `@ReferenceKey` or fallback to identity fields) |
+| `enumValues`     | All valid values for every enum-typed field (mandatory **and** optional) |
+| `fields`         | Detailed field-level metadata array containing field name, type, read-only status, precision, and referenced entity mappings |
 
 ### Extended `$meta` API Response Structure
 
@@ -821,48 +835,9 @@ this.route.queryParamMap.subscribe(params => {
 
 ## Dynamic Generic UI Components
 
-To facilitate seamless extensibility and eliminate the overhead of manually creating form templates, list tables, and detail screens for every business entity, the Price Manager includes a dynamic **Generic UI Engine**.
+To eliminate the overhead of manually creating form templates, list tables, and detail screens for every business entity, the Price Manager includes a dynamic **Generic UI Engine**.
 
-### Architecture & Standalone Components
-
-This system is comprised of three core components in `app/src/app/pages/`:
-
-1. **`GenericListComponent`**: Generates tabular lists dynamically.
-   - Detects primitive fields (up to 6 columns) for grid display.
-   - Automatically supports sorting, column-based search filters, and bulk delete controls.
-   - Renders localized values for `LocalizedString` map fields automatically using active/preferred language fallbacks.
-
-2. **`GenericDetailComponent`**: Displays all properties of a specific record in structured detail sections.
-   - Automatically splits fields into standard attributes, relationships, and audit properties (using `<app-info-section>`).
-   - Translates all translatable string maps into tabs/languages.
-
-3. **`GenericFormComponent`**: Renders dynamic interactive forms based on `$meta` fields.
-   - **Type-Aware Renders**: Automatically displays regular inputs for `String`, number controls with correct step attributes for `Number`, checkboxes for `Boolean`, `datetime-local` selectors for `DateTime`, dropdowns for `Enum`, and dynamic multi-language subforms for `LocalizedString`.
-   - **Relationship Lookups**: Detects `Reference` and `Set<Reference>` types, maps `referencedEntity` to correct target administrative endpoints (e.g. `parentRefs` reference lists resolving to `/admin/api/groups`), and uses searchable type-ahead inputs.
-
-### Generic Routing
-
-The routes are registered in `app.routes.ts` under a localized dynamic routing hierarchy prefix `/generic/:entityType`:
-
-```typescript
-{
-  path: 'generic/:entityType',
-  children: [
-    { path: '', loadComponent: () => import('./pages/generic-list/generic-list.component').then(m => m.GenericListComponent) },
-    { path: 'add', loadComponent: () => import('./pages/generic-form/generic-form.component').then(m => m.GenericFormComponent) },
-    { path: ':id', loadComponent: () => import('./pages/generic-detail/generic-detail.component').then(m => m.GenericDetailComponent) },
-    { path: ':id/edit', loadComponent: () => import('./pages/generic-form/generic-form.component').then(m => m.GenericFormComponent) }
-  ]
-}
-```
-
-### Accessing Generic Interfaces
-
-Partners or developers can easily expose new endpoints without modifying application source code. Simply navigate to the generic views corresponding to the plural entity URL segment:
-- `/en/generic/currencies`
-- `/en/generic/channels`
-- `/en/generic/groups`
-- `/en/generic/taxclasses`
+For full architecture details, standalone component specifications, dynamic routing configuration, and reference-key sorting rules, see the dedicated documentation page: [Dynamic Generic UI Components](../040-components/050-generic-ui-components.md).
 
 ---
 

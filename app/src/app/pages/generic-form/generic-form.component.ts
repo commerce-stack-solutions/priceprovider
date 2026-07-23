@@ -536,6 +536,30 @@ export class GenericFormComponent implements OnInit {
     setTimeout(() => this.showSaveKeyHint.set(false), 500);
   }
 
+  getPermissionEntityType(plural: string): string {
+    const metaEntity = this.meta()?.entityType;
+    if (metaEntity) {
+      return metaEntity;
+    }
+    const lower = plural.toLowerCase();
+    if (lower === 'currencies') return 'Currency';
+    if (lower === 'channels') return 'Channel';
+    if (lower === 'pricerows') return 'PriceRow';
+    if (lower === 'groups') return 'Group';
+    if (lower === 'units') return 'Unit';
+    if (lower === 'taxclasses') return 'TaxClass';
+    if (lower === 'languages') return 'Language';
+    if (lower === 'countries') return 'Country';
+    if (lower === 'organizations') return 'Organization';
+    if (lower === 'app-roles') return 'AppRole';
+    if (lower === 'app-permissions') return 'AppPermission';
+    if (lower.endsWith('s')) {
+      const singular = plural.slice(0, -1);
+      return singular.charAt(0).toUpperCase() + singular.slice(1);
+    }
+    return plural.charAt(0).toUpperCase() + plural.slice(1);
+  }
+
   getLabel(fieldName: string): string {
     return fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
   }

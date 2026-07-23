@@ -42,6 +42,10 @@ export class GenericDetailComponent implements OnInit {
   showEditKeyHint = signal(false);
 
   getPermissionEntityType(plural: string): string {
+    const metaEntity = this.meta()?.entityType;
+    if (metaEntity) {
+      return metaEntity;
+    }
     const lower = plural.toLowerCase();
     if (lower === 'currencies') return 'Currency';
     if (lower === 'channels') return 'Channel';
@@ -54,6 +58,10 @@ export class GenericDetailComponent implements OnInit {
     if (lower === 'organizations') return 'Organization';
     if (lower === 'app-roles') return 'AppRole';
     if (lower === 'app-permissions') return 'AppPermission';
+    if (lower.endsWith('s')) {
+      const singular = plural.slice(0, -1);
+      return singular.charAt(0).toUpperCase() + singular.slice(1);
+    }
     return plural.charAt(0).toUpperCase() + plural.slice(1);
   }
 

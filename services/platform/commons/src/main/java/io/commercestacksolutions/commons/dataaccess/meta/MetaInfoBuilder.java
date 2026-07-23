@@ -158,6 +158,13 @@ public class MetaInfoBuilder {
         MetaInfo meta = new MetaInfo(identityFields, mandatoryFields, enumValues.isEmpty() ? null : enumValues);
         meta.setReferenceKeyFields(referenceKeyFields.isEmpty() ? null : referenceKeyFields);
         meta.setFields(fieldsMetadata.isEmpty() ? null : fieldsMetadata);
+
+        String entityName = entityClass.getSimpleName();
+        if (entityName.endsWith("Entity")) {
+            entityName = entityName.substring(0, entityName.length() - "Entity".length());
+        }
+        meta.setEntityType(entityName);
+
         return meta;
     }
 

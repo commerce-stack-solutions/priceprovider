@@ -95,6 +95,8 @@
                           </span>
                         } @else if (col.type === 'DateTime') {
                           {{ item[col.name] | date:'short' }}
+                        } @else if (col.type === 'Reference') {
+                          <span class="badge bg-light text-dark border">{{ getReferenceDisplay(item[col.name]) }}</span>
                         } @else {
                           {{ item[col.name] !== null && item[col.name] !== undefined ? item[col.name] : '-' }}
                         }
