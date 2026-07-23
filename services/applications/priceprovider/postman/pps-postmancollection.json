@@ -1622,6 +1622,56 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "GET Units Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/units/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "units",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Units including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -2595,6 +2645,56 @@
               ]
             }
           ]
+        },
+        {
+          "name": "GET Languages Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/languages/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "languages",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Languages including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -2760,7 +2860,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testw\u00e4hrung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X\",\n  \"name\": {\n    \"en\": \"Test Currency\",\n    \"de\": \"Testwährung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/create",
@@ -2803,7 +2903,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte W\u00e4hrung\"\n  }\n}"
+              "raw": "{\n  \"currencyKey\": \"XXX\",\n  \"symbol\": \"X$\",\n  \"name\": {\n    \"en\": \"Updated Currency\",\n    \"de\": \"Aktualisierte Währung\"\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/XXX",
@@ -2846,7 +2946,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"\u20ac\u20ac\" }\n]"
+              "raw": "[\n  { \"op\": \"replace\", \"path\": \"/symbol\", \"value\": \"€€\" }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/EUR",
@@ -3240,7 +3340,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"\u00a3\"\n  }\n]"
+              "raw": "[\n  {\n    \"currencyKey\": \"USD\",\n    \"name\": {\n      \"en\": \"US Dollar\",\n      \"de\": \"US-Dollar\"\n    },\n    \"symbol\": \"$\"\n  },\n  {\n    \"currencyKey\": \"GBP\",\n    \"name\": {\n      \"en\": \"British Pound\",\n      \"de\": \"Britisches Pfund\"\n    },\n    \"symbol\": \"£\"\n  }\n]"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/api/currencies/bulk-create-or-update",
@@ -3644,6 +3744,56 @@
                 }
               ],
               "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET Currencies Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/currencies/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "currencies",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Currencies including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
             }
           ]
         }
@@ -5903,6 +6053,56 @@
               ]
             }
           ]
+        },
+        {
+          "name": "GET Price Rows Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/pricerows/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "pricerows",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Price Rows including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -6372,7 +6572,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 \u2248 158.88 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-003 USD 2026 price is stored as gross (taxIncluded=true, 170.00 USD, us-sales-tax 7%). The API converts it to net: 170.00 / 1.07 ≈ 158.88 USD."
           },
           "event": [
             {
@@ -6496,7 +6696,7 @@
                 }
               ]
             },
-            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 \u2248 35.32 USD."
+            "description": "global-b2b-sales-channel uses FORCE_NET mode. DEMO-PRODUCT-002 USD 2026 price is stored as gross (taxIncluded=true, 37.79 USD). The API converts it to net: 37.79 / 1.07 ≈ 35.32 USD."
           },
           "event": [
             {
@@ -7837,6 +8037,56 @@
               ]
             }
           ]
+        },
+        {
+          "name": "GET Tax Classes Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/taxclasses/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "taxclasses",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Tax Classes including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -9172,6 +9422,56 @@
               ]
             }
           ]
+        },
+        {
+          "name": "GET Groups Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/groups/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "groups",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Groups including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -10042,6 +10342,56 @@
               ]
             }
           ]
+        },
+        {
+          "name": "GET Organizations Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/organizations/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "organizations",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Organizations including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -10149,6 +10499,56 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "GET Countries Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/countries/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "countries",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Countries including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -10552,6 +10952,56 @@
               ]
             }
           ]
+        },
+        {
+          "name": "GET Channels Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/channels/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "channels",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for Channels including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -10659,6 +11109,56 @@
                 "exec": [
                   "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
                   "pm.test('permission has id', function () { pm.expect(pm.response.json().id).to.exist; });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET App Permissions Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/app-permissions/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "app-permissions",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for App Permissions including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
                 ]
               }
             }
@@ -11218,6 +11718,56 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('expected status is 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET App Roles Meta ($meta)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/api/app-roles/$meta",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "api",
+                "app-roles",
+                "$meta"
+              ]
+            },
+            "description": "Retrieves metadata information for App Roles including field names, types, readOnly and decimal precision."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expected status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('response is valid json', function () { pm.response.to.be.json; });",
+                  "pm.test('Audit fields are DateTime and readOnly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('fields');",
+                  "    pm.expect(jsonData.fields).to.be.an('array');",
+                  "    ",
+                  "    var createdAtField = jsonData.fields.find(f => f.name === 'createdAt');",
+                  "    if (createdAtField) {",
+                  "        pm.expect(createdAtField.type).to.equal('DateTime');",
+                  "        pm.expect(createdAtField.readOnly).to.be.true;",
+                  "    }",
+                  "    ",
+                  "    var lastModifiedAtField = jsonData.fields.find(f => f.name === 'lastModifiedAt');",
+                  "    if (lastModifiedAtField) {",
+                  "        pm.expect(lastModifiedAtField.type).to.equal('DateTime');",
+                  "        pm.expect(lastModifiedAtField.readOnly).to.be.true;",
+                  "    }",
+                  "});"
                 ]
               }
             }

@@ -5,6 +5,8 @@ import io.commercestacksolutions.priceproviderservice.web.controller.adminapi.Pr
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.PriceRowFacade;
 import io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity.PriceRowRestEntity;
 import io.commercestacksolutions.commons.web.rest.Message;
+import io.commercestacksolutions.commons.web.rest.ErrorResponse;
+import io.commercestacksolutions.commons.service.entity.validation.exception.EntityValidationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -175,6 +177,46 @@ public class PriceRowControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("[\"id-1\", \"id-2\", \"id-3\"]"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testUpdatePriceRow_ValidPrecision_HappyPath() throws Exception {
+        PriceRowRestEntity input = new PriceRowRestEntity();
+        input.setPriceValue(new java.math.BigDecimal("120.50"));
+
+        PriceRowRestEntity output = new PriceRowRestEntity();
+        output.setPriceValue(new java.math.BigDecimal("120.50"));
+
+        when(priceRowFacade.createOrRecreate(anyString(), any())).thenReturn(output);
+
+        mockMvc.perform(put("/admin/api/pricerows/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.priceValue").value(120.50));
+    }
+
+    @Test
+    public void testUpdatePriceRow_InvalidPrecision_AngryPath() throws Exception {
+        PriceRowRestEntity input = new PriceRowRestEntity();
+        input.setPriceValue(new java.math.BigDecimal("120.1234"));
+
+        Message validationMessage = new Message(
+                Message.MessageType.ERROR,
+                "Field 'priceValue' has invalid decimal precision. Maximum allowed fractional digits is 2.",
+                List.of("priceValue")
+        );
+        EntityValidationException ex = new EntityValidationException("Validation failed", validationMessage);
+
+        when(priceRowFacade.createOrRecreate(anyString(), any())).thenThrow(ex);
+
+        mockMvc.perform(put("/admin/api/pricerows/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.$messages[0].type").value("ERROR"))
+                .andExpect(jsonPath("$.$messages[0]['message-key']").value("Field 'priceValue' has invalid decimal precision. Maximum allowed fractional digits is 2."))
+                .andExpect(jsonPath("$.$messages[0].fields[0]").value("priceValue"));
     }
 
 }
