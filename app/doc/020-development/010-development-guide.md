@@ -416,44 +416,67 @@ export class ProductListComponent {
 
 ---
 
-## `$meta` — Entity Metadata
+## `$meta` — Entity Metadata & Generic UI Generation
 
-The `$meta` expand returns structural metadata about an entity from the REST API. Form components consume it to drive mandatory-field markers and enum selector options without any hardcoding.
+The `$meta` API returns complete, structural metadata about an entity from the REST API. Consumed by the **Generic UI Engine**, this metadata dynamically generates full list, detail, and form user interfaces on the fly without writing any custom templates, component classes, or forms for each individual entity type.
 
 For backend implementation details (annotations, registry, service-layer validation) see [060-meta-annotation-concept.md](../../../services/applications/priceprovider/doc/030-features/060-meta-annotation-concept.md).
 
-### API Response Structure
+### Extended `$meta` API Response Structure
+
+The `$meta` endpoint now includes detailed field descriptors (`fields`) specifying field names, classifications, read-only constraints, decimal precision (for numbers), and cross-entity reference keys:
 
 ```json
 {
-  "id": "GRP-001",
-  "name": "Sample Group",
-  "groupType": "PROMOTION",
-  "$meta": {
-    "identityFields": ["id"],
-    "mandatoryFields": ["id", "name", "groupType"],
-    "enumValues": {
-      "groupType": ["ORGANIZATION", "PROMOTION"]
+  "identityFields": ["currencyKey"],
+  "mandatoryFields": ["currencyKey", "symbol"],
+  "referenceKeyFields": ["currencyKey"],
+  "enumValues": {},
+  "fields": [
+    {
+      "name": "currencyKey",
+      "type": "String",
+      "readOnly": false
+    },
+    {
+      "name": "symbol",
+      "type": "String",
+      "readOnly": false
+    },
+    {
+      "name": "name",
+      "type": "LocalizedString",
+      "readOnly": false
+    },
+    {
+      "name": "parentRefs",
+      "type": "Set<Reference>",
+      "referencedEntity": "Group",
+      "readOnly": false
     }
-  }
+  ]
 }
 ```
 
-| Field            | Description |
-|------------------|-------------|
-| `identityFields` | Primary key fields (from `@Id` on the JPA entity) |
-| `mandatoryFields`| Fields the caller must supply (from `@Id` without `@GeneratedValue`, and `@MandatoryField`) |
-| `enumValues`     | All valid values for every enum-typed field (mandatory **and** optional) |
+### Extended `MetaInfo` Interface
 
-### `MetaInfo` Interface
-
-The shared TypeScript interface lives in `app/src/app/model/meta-info.model.ts`:
+The shared TypeScript interfaces reside in `app/src/app/model/meta-info.model.ts`:
 
 ```typescript
+export interface FieldMetadata {
+  name: string;
+  type: 'Number' | 'Enum' | 'LocalizedString' | 'Reference' | 'Set<Reference>' | 'String' | 'DateTime' | 'Boolean';
+  readOnly?: boolean;
+  precision?: number;
+  referencedEntity?: string;
+}
+
 export interface MetaInfo {
   identityFields?: string[];
   mandatoryFields?: string[];
+  referenceKeyFields?: string[];
   enumValues?: { [key: string]: string[] };
+  fields?: FieldMetadata[];
 }
 ```
 
@@ -793,6 +816,53 @@ this.route.queryParamMap.subscribe(params => {
   this.loadProducts(parseInt(page), sort);
 });
 ```
+
+---
+
+## Dynamic Generic UI Components
+
+To facilitate seamless extensibility and eliminate the overhead of manually creating form templates, list tables, and detail screens for every business entity, the Price Manager includes a dynamic **Generic UI Engine**.
+
+### Architecture & Standalone Components
+
+This system is comprised of three core components in `app/src/app/pages/`:
+
+1. **`GenericListComponent`**: Generates tabular lists dynamically.
+   - Detects primitive fields (up to 6 columns) for grid display.
+   - Automatically supports sorting, column-based search filters, and bulk delete controls.
+   - Renders localized values for `LocalizedString` map fields automatically using active/preferred language fallbacks.
+
+2. **`GenericDetailComponent`**: Displays all properties of a specific record in structured detail sections.
+   - Automatically splits fields into standard attributes, relationships, and audit properties (using `<app-info-section>`).
+   - Translates all translatable string maps into tabs/languages.
+
+3. **`GenericFormComponent`**: Renders dynamic interactive forms based on `$meta` fields.
+   - **Type-Aware Renders**: Automatically displays regular inputs for `String`, number controls with correct step attributes for `Number`, checkboxes for `Boolean`, `datetime-local` selectors for `DateTime`, dropdowns for `Enum`, and dynamic multi-language subforms for `LocalizedString`.
+   - **Relationship Lookups**: Detects `Reference` and `Set<Reference>` types, maps `referencedEntity` to correct target administrative endpoints (e.g. `parentRefs` reference lists resolving to `/admin/api/groups`), and uses searchable type-ahead inputs.
+
+### Generic Routing
+
+The routes are registered in `app.routes.ts` under a localized dynamic routing hierarchy prefix `/generic/:entityType`:
+
+```typescript
+{
+  path: 'generic/:entityType',
+  children: [
+    { path: '', loadComponent: () => import('./pages/generic-list/generic-list.component').then(m => m.GenericListComponent) },
+    { path: 'add', loadComponent: () => import('./pages/generic-form/generic-form.component').then(m => m.GenericFormComponent) },
+    { path: ':id', loadComponent: () => import('./pages/generic-detail/generic-detail.component').then(m => m.GenericDetailComponent) },
+    { path: ':id/edit', loadComponent: () => import('./pages/generic-form/generic-form.component').then(m => m.GenericFormComponent) }
+  ]
+}
+```
+
+### Accessing Generic Interfaces
+
+Partners or developers can easily expose new endpoints without modifying application source code. Simply navigate to the generic views corresponding to the plural entity URL segment:
+- `/en/generic/currencies`
+- `/en/generic/channels`
+- `/en/generic/groups`
+- `/en/generic/taxclasses`
 
 ---
 
