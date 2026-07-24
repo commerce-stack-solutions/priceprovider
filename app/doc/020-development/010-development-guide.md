@@ -416,44 +416,81 @@ export class ProductListComponent {
 
 ---
 
-## `$meta` — Entity Metadata
+## `$meta` — Entity Metadata & Generic UI Generation
 
-The `$meta` expand returns structural metadata about an entity from the REST API. Form components consume it to drive mandatory-field markers and enum selector options without any hardcoding.
+The `$meta` API returns complete, structural metadata about an entity from the REST API. Consumed by the **Generic UI Engine**, this metadata dynamically generates full list, detail, and form user interfaces on the fly without writing any custom templates, component classes, or forms for each individual entity type.
+
+For details on how the dynamic frontend components utilize this metadata, see the dedicated documentation page: [Dynamic Generic UI Components](../040-components/050-generic-ui-components.md).
 
 For backend implementation details (annotations, registry, service-layer validation) see [060-meta-annotation-concept.md](../../../services/applications/priceprovider/doc/030-features/060-meta-annotation-concept.md).
 
-### API Response Structure
+### `$meta` Response Fields
 
-```json
-{
-  "id": "GRP-001",
-  "name": "Sample Group",
-  "groupType": "PROMOTION",
-  "$meta": {
-    "identityFields": ["id"],
-    "mandatoryFields": ["id", "name", "groupType"],
-    "enumValues": {
-      "groupType": ["ORGANIZATION", "PROMOTION"]
-    }
-  }
-}
-```
+The `$meta` object returned by the API provides structural parameters used to render dynamic forms and tables:
 
 | Field            | Description |
 |------------------|-------------|
 | `identityFields` | Primary key fields (from `@Id` on the JPA entity) |
 | `mandatoryFields`| Fields the caller must supply (from `@Id` without `@GeneratedValue`, and `@MandatoryField`) |
+| `referenceKeyFields`| Human-readable unique key fields used for relationship identifiers (from `@ReferenceKey` or fallback to identity fields) |
 | `enumValues`     | All valid values for every enum-typed field (mandatory **and** optional) |
+| `fields`         | Detailed field-level metadata array containing field name, type, read-only status, precision, and referenced entity mappings |
 
-### `MetaInfo` Interface
+### Extended `$meta` API Response Structure
 
-The shared TypeScript interface lives in `app/src/app/model/meta-info.model.ts`:
+The `$meta` endpoint now includes detailed field descriptors (`fields`) specifying field names, classifications, read-only constraints, decimal precision (for numbers), and cross-entity reference keys:
+
+```json
+{
+  "identityFields": ["currencyKey"],
+  "mandatoryFields": ["currencyKey", "symbol"],
+  "referenceKeyFields": ["currencyKey"],
+  "enumValues": {},
+  "fields": [
+    {
+      "name": "currencyKey",
+      "type": "String",
+      "readOnly": false
+    },
+    {
+      "name": "symbol",
+      "type": "String",
+      "readOnly": false
+    },
+    {
+      "name": "name",
+      "type": "LocalizedString",
+      "readOnly": false
+    },
+    {
+      "name": "parentRefs",
+      "type": "Set<Reference>",
+      "referencedEntity": "Group",
+      "readOnly": false
+    }
+  ]
+}
+```
+
+### Extended `MetaInfo` Interface
+
+The shared TypeScript interfaces reside in `app/src/app/model/meta-info.model.ts`:
 
 ```typescript
+export interface FieldMetadata {
+  name: string;
+  type: 'Number' | 'Enum' | 'LocalizedString' | 'Reference' | 'Set<Reference>' | 'String' | 'DateTime' | 'Boolean';
+  readOnly?: boolean;
+  precision?: number;
+  referencedEntity?: string;
+}
+
 export interface MetaInfo {
   identityFields?: string[];
   mandatoryFields?: string[];
+  referenceKeyFields?: string[];
   enumValues?: { [key: string]: string[] };
+  fields?: FieldMetadata[];
 }
 ```
 
@@ -793,6 +830,14 @@ this.route.queryParamMap.subscribe(params => {
   this.loadProducts(parseInt(page), sort);
 });
 ```
+
+---
+
+## Dynamic Generic UI Components
+
+To eliminate the overhead of manually creating form templates, list tables, and detail screens for every business entity, the Price Manager includes a dynamic **Generic UI Engine**.
+
+For full architecture details, standalone component specifications, dynamic routing configuration, and reference-key sorting rules, see the dedicated documentation page: [Dynamic Generic UI Components](../040-components/050-generic-ui-components.md).
 
 ---
 

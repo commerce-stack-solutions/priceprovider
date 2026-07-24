@@ -212,5 +212,68 @@ public class MetaInfoBuilderTest {
         assertTrue(meta.getMandatoryFields().contains("priceValue"),
                 "PriceRowEntity: priceValue must be mandatory");
     }
+
+    @Test
+    void build_populatesFieldsMetadataWithCorrectTypesAndAttributes() {
+        MetaInfo meta = MetaInfoBuilder.build(ChildEntity.class);
+        assertNotNull(meta.getFields(), "Fields metadata list must not be null");
+
+        // Find specific fields
+        MetaInfo.FieldMetadata idMeta = meta.getFields().stream()
+                .filter(f -> "id".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(idMeta);
+        assertEquals("String", idMeta.getType());
+        assertFalse(idMeta.getReadOnly(), "BaseEntity id is @Id but not @GeneratedValue/@GeneratedId, so not readOnly");
+
+        MetaInfo.FieldMetadata colorMeta = meta.getFields().stream()
+                .filter(f -> "color".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(colorMeta);
+        assertEquals("Enum", colorMeta.getType());
+    }
+
+    @Test
+    void build_respectsMetaPrecisionAndReadOnlyForGeneratedValue() {
+        MetaInfo meta = MetaInfoBuilder.build(
+                io.commercestacksolutions.priceproviderservice.dataaccess.pricerow.entity.PriceRowEntity.class);
+        assertNotNull(meta.getFields());
+
+        MetaInfo.FieldMetadata idMeta = meta.getFields().stream()
+                .filter(f -> "id".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(idMeta);
+        assertTrue(idMeta.getReadOnly(), "PriceRowEntity id is @GeneratedId and must be readOnly");
+
+        MetaInfo.FieldMetadata priceValueMeta = meta.getFields().stream()
+                .filter(f -> "priceValue".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(priceValueMeta);
+        assertEquals("Number", priceValueMeta.getType());
+        assertEquals(2, priceValueMeta.getPrecision(), "priceValue has scale=2 from @Column or @MetaPrecision");
+        assertFalse(priceValueMeta.getReadOnly());
+    }
+
+    @Test
+    void build_populatesReferencedEntityForRelationships() {
+        MetaInfo meta = MetaInfoBuilder.build(
+                io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity.class);
+        assertNotNull(meta.getFields());
+
+        MetaInfo.FieldMetadata parentRefsMeta = meta.getFields().stream()
+                .filter(f -> "parentRefs".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(parentRefsMeta);
+        assertEquals("Set<Reference>", parentRefsMeta.getType());
+        assertEquals("Group", parentRefsMeta.getReferencedEntity());
+
+        MetaInfo.FieldMetadata subRefsMeta = meta.getFields().stream()
+                .filter(f -> "subRefs".equals(f.getName())).findFirst().orElse(null);
+        assertNotNull(subRefsMeta);
+        assertEquals("Set<Reference>", subRefsMeta.getType());
+        assertEquals("Group", subRefsMeta.getReferencedEntity());
+    }
+
+    @Test
+    void build_populatesEntityType() {
+        MetaInfo meta = MetaInfoBuilder.build(
+                io.commercestacksolutions.corebusinessentities.dataaccess.group.entity.GroupEntity.class);
+        assertEquals("Group", meta.getEntityType());
+    }
 }
 

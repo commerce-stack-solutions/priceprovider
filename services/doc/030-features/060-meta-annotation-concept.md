@@ -22,7 +22,30 @@ GET /api/admin/groups/GRP-001?$expand=$includes,$info,$meta
     "referenceKeyFields": ["path"],
     "enumValues": {
       "groupType": ["ORGANIZATION", "PROMOTION"]
-    }
+    },
+    "fields": [
+      {
+        "name": "id",
+        "type": "String",
+        "readOnly": true
+      },
+      {
+        "name": "path",
+        "type": "String",
+        "readOnly": false
+      },
+      {
+        "name": "groupType",
+        "type": "Enum",
+        "enumValues": ["ORGANIZATION", "PROMOTION"],
+        "readOnly": false
+      },
+      {
+        "name": "name",
+        "type": "String",
+        "readOnly": false
+      }
+    ]
   }
 }
 ```
@@ -33,6 +56,27 @@ GET /api/admin/groups/GRP-001?$expand=$includes,$info,$meta
 | `mandatoryFields`    | Fields required for create/update (declared with `@MandatoryField`, plus non-generated `@Id` fields) |
 | `referenceKeyFields` | The human-readable alternative key field(s) used in JSON references and query filters (see `@ReferenceKey` below). Falls back to `identityFields` when no `@ReferenceKey` is declared. |
 | `enumValues`         | All valid string constants for every enum-typed field (mandatory **and** optional) |
+| `fields`             | Comprehensive list of `FieldMetadata` describing each field's name, dynamic type class, read-only flag, decimal precision, and enum values to support generic dynamic forms. |
+
+### Field Metadata Attributes
+
+Each object in the `fields` array contains:
+
+- `name`: The exact field name in the entity class.
+- `type`: Classified frontend field type mapping:
+  - `Number`: For fields assignable to numeric types (e.g. `BigDecimal`, `Double`, `Integer`, `Long`).
+  - `Enum`: For enum-typed or `@MetaDynamicEnum`-annotated fields.
+  - `LocalizedString`: For dynamic multi-language text fields represented as maps (`Map<String, String>`).
+  - `Reference`: For single entity relationship reference keys.
+  - `Set<Reference>`: For relationship collection/set reference keys (e.g., `Set<GroupEntity>`).
+  - `Boolean`: For `boolean` and `Boolean` fields.
+  - `DateTime`: For date and time fields (e.g. `OffsetDateTime`, `Instant`, `LocalDate`).
+  - `String`: Fallback text type.
+- `readOnly`: Boolean indicating if the field is write-blocked. Automatically true for:
+  - Technical fields (`createdAt`, `lastModifiedAt`).
+  - Primary key (`@Id`) fields annotated with `@GeneratedValue` or `@GeneratedId`.
+- `precision`: Number of decimal places, derived from `@MetaPrecision` or `@Column(scale = ...)`.
+- `enumValues`: List of string options if the type is classified as `Enum`.
 
 ## How It Works (Backend)
 
@@ -85,6 +129,10 @@ A field annotated with `@Id` is **implicitly mandatory** (the caller must supply
 `SpecificationBuilder` uses `referenceKeyFields` (via reflection) when building `.hasAny` / `.hasAll` predicates on collection fields, so callers can filter by readable keys (e.g. `groupRefs.hasAny:ORG-MY-COMPANY/ORG-IT-DEPT`) rather than UUID values.
 
 See [Reference Key and ID Generation](080-reference-key-and-id-generation.md) for full details and a guide on adding `@ReferenceKey` to new entities.
+
+#### `@MetaPrecision`
+
+`@MetaPrecision` (`commons.dataaccess.meta`) marks a numeric field (like `BigDecimal`, `Double`, etc.) with its decimal scale/precision (e.g. `2`). The builder scans for this annotation and exposes the value under `$meta.fields[x].precision` so the frontend form inputs can enforce exact decimal stepping.
 
 ### MetaInfoBuilder
 
@@ -141,6 +189,19 @@ Form components use `$meta` to:
 Note: Ensure that you import `IsMandatoryPipe` in your component's `@Component({ imports: [...] })` array so it can be used in the template.
 
 In **create mode** (no entity ID yet), the form fetches the list endpoint with `$expand=$meta` to obtain metadata before the entity exists.
+
+### Generic Form Component (`GenericFormComponent`)
+
+To avoid creating custom pages/templates for every entity type, the platform includes a dynamic, metadata-driven generic form component at route paths:
+
+- Add form: `/:lang/generic/:entityType/add`
+- Edit form: `/:lang/generic/:entityType/:id/edit`
+
+The `GenericFormComponent` works fully generically:
+1. It reads the `:entityType` plural parameter (e.g. `currencies`, `groups`, `taxclasses`).
+2. It fetches the metadata (`admin/api/:entityType/$meta`) and dynamically constructs a `FormGroup`.
+3. It maps each field in `fields` metadata to its respective compiled control name and dynamically renders the appropriate UI widget (standard textbox, number input, checkbox, enum-selector, localized string editor, or single/multi-reference editor).
+4. On submit, it automatically handles building either PATCH operations (updates) or structured payloads (creates) and routes back to the main plural list path.
 
 ## Adding $meta Support to a New Entity
 

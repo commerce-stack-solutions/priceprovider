@@ -1,0 +1,113 @@
+<div class="container mt-4">
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  }
+
+  @if (entity()) {
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase()]">{{ entityType() | titlecase }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ id() }}</li>
+          </ol>
+        </nav>
+        <h1>{{ id() }}</h1>
+      </div>
+      <div class="d-flex gap-2">
+        <a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase()]" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+        </a>
+        @if (canWrite()) {
+          <a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase(), id(), 'edit']" class="btn btn-primary" [class.text-decoration-underline]="showEditKeyHint()">
+            <i class="bi bi-pencil me-1"></i> {{ 'common.actions.edit' | transloco }}
+          </a>
+        }
+        @if (canDelete()) {
+          <button class="btn btn-outline-danger" (click)="deleteEntity()">
+            <i class="bi bi-trash me-1"></i> {{ 'common.actions.delete' | transloco }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Basic Fields -->
+        <div class="card mb-4">
+          <div class="card-header bg-white">
+            <h5 class="card-title mb-0">General Details</h5>
+          </div>
+          <div class="card-body">
+            @for (field of basicFields(); track field.name) {
+              <div class="row mb-3 border-bottom pb-2">
+                <div class="col-sm-4 text-muted fw-semibold">{{ getLabel(field.name) }}</div>
+                <div class="col-sm-8">
+                  @if (field.type === 'Boolean') {
+                    <span class="badge" [class.bg-success]="entity()[field.name]" [class.bg-secondary]="!entity()[field.name]">
+                      {{ entity()[field.name] ? 'Active' : 'Inactive' }}
+                    </span>
+                  } @else if (field.type === 'DateTime') {
+                    {{ entity()[field.name] | date:'medium' }}
+                  } @else {
+                    {{ getDisplayValue(entity()[field.name]) }}
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Localized Fields -->
+        @for (field of localizedFields(); track field.name) {
+          <div class="card mb-4">
+            <div class="card-header bg-white">
+              <h5 class="card-title mb-0">{{ getLabel(field.name) }}</h5>
+            </div>
+            <div class="card-body">
+              <app-localized-stringfield-view [values]="entity()[field.name] || {}"></app-localized-stringfield-view>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="col-md-4">
+        <!-- Relationship Reference fields -->
+        @if (referenceFields().length > 0) {
+          <div class="card mb-4">
+            <div class="card-header bg-white">
+              <h5 class="card-title mb-0">Relationships</h5>
+            </div>
+            <div class="card-body">
+              @for (field of referenceFields(); track field.name) {
+                <div class="mb-3">
+                  <h6 class="text-muted mb-1">{{ getLabel(field.name) }}</h6>
+                  @if (field.type === 'Set<Reference>') {
+                    <div class="d-flex flex-wrap gap-1">
+                      @if (!entity()[field.name] || entity()[field.name].length === 0) {
+                        <span class="text-muted">-</span>
+                      } @else {
+                        @for (ref of entity()[field.name]; track ref) {
+                          <span class="badge bg-light text-dark border">{{ ref }}</span>
+                        }
+                      }
+                    </div>
+                  } @else {
+                    <span class="badge bg-light text-dark border">{{ entity()[field.name] || '-' }}</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Info/Audit Section -->
+        @if (infoSections().length > 0) {
+          <app-info-section [sections]="infoSections()"></app-info-section>
+        }
+      </div>
+    </div>
+  }
+</div>
