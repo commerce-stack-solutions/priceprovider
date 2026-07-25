@@ -3,6 +3,14 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "core": [
+        "./dist/core"
+      ],
+      "corebusiness": [
+        "./dist/corebusiness"
+      ]
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -29,6 +37,18 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/core/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/core/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/corebusiness/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/corebusiness/tsconfig.spec.json"
     }
   ]
 }
