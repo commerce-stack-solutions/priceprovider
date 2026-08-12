@@ -1,0 +1,42 @@
+{
+  "entity": "LanguageRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.language.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity",
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "java.util.Map"
+  ],
+  "superClass": "RestEntity<InfoAuditableRestEntity, IncludesLanguage>",
+  "fields": [
+    {
+      "name": "isoKey",
+      "type": "String"
+    },
+    {
+      "name": "active",
+      "type": "Boolean"
+    },
+    {
+      "name": "mandatory",
+      "type": "Boolean"
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>"
+    }
+  ],
+  "methods": [
+    {
+      "name": "getActive",
+      "visibility": "public",
+      "returnType": "Boolean",
+      "body": "return this.active;"
+    },
+    {
+      "name": "getMandatory",
+      "visibility": "public",
+      "returnType": "Boolean",
+      "body": "return this.mandatory;"
+    }
+  ]
+}

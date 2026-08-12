@@ -1,0 +1,24 @@
+{
+  "entity": "PublicPriceListRestEntity",
+  "package": "io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "io.swagger.v3.oas.annotations.media.Schema",
+    "java.util.ArrayList",
+    "java.util.List"
+  ],
+  "classAnnotations": [
+    "@Schema(description = \"List of public prices ranked by matching priority\")"
+  ],
+  "superClass": "RestEntity<Object, Object>",
+  "fields": [
+    {
+      "name": "items",
+      "type": "List<PublicPriceRestEntity>",
+      "initialValue": "new ArrayList<>()",
+      "annotations": [
+        "@Schema(description = \"List of matching prices, ordered by rank (best match first)\")"
+      ]
+    }
+  ]
+}

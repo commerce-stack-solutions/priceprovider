@@ -1,0 +1,228 @@
+package io.commercestacksolutions.commons.service.setup;
+
+import io.commercestacksolutions.commons.config.security.AuthorizationContext;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission;
+import io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppRole;
+import io.commercestacksolutions.commons.service.approle.CommonAppPermissionService;
+import io.commercestacksolutions.commons.service.approle.AppRoleService;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * Implementation of DataImportManager interface.
+ * Manager that discovers and executes all SetupDataImporter implementations.
+ */
+@Component
+public class SetupDataImportManager implements SelectiveDataImportManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(SetupDataImportManager.class);
+
+    private final List<SetupDataImporter> dataImporters;
+    private final AuthorizationContext authorizationContext;
+    private final CommonAppPermissionService appPermissionService;
+    private final AppRoleService appRoleService;
+
+    @Value("${service-config.initialize.data-folder}")
+    private String dataFolder;
+
+    @Value("${service-config.initialize.essential-data-on}")
+    private Boolean essentialDataOn;
+
+    @Value("${service-config.initialize.sample-data-on}")
+    private Boolean sampleDataOn;
+
+    @Autowired
+    public SetupDataImportManager(List<SetupDataImporter> dataImporters,
+                                  AuthorizationContext authorizationContext,
+                                  CommonAppPermissionService appPermissionService,
+                                  AppRoleService appRoleService) {
+        this.dataImporters = dataImporters;
+        this.authorizationContext = authorizationContext;
+        this.appPermissionService = appPermissionService;
+        this.appRoleService = appRoleService;
+    }
+
+    @PostConstruct
+    @Override
+    public void loadData() {
+        // Enable bootstrap mode to bypass authorization during initial data setup
+        authorizationContext.activateBootstrapMode();
+        try {
+            // Bootstrap: Create minimal permission and role if database is empty
+            bootstrapMinimalAccess();
+
+            // Only auto-load if configured to do so
+            if (Boolean.TRUE.equals(essentialDataOn)) {
+                loadEssentialData();
+            }
+
+            if (Boolean.TRUE.equals(sampleDataOn)) {
+                loadSampleData();
+            }
+        } finally {
+            // Always disable bootstrap mode after data loading
+            authorizationContext.deactivateBootstrapMode();
+        }
+    }
+
+    /**
+     * Bootstrap minimal access control when database is empty.
+     * Creates the ServiceInitialization permission and Admin role to allow initial setup.
+     */
+    private void bootstrapMinimalAccess() {
+        try {
+            // Check if database is empty (no permissions and no roles)
+            boolean hasPermissions = !appPermissionService.getAllAppPermissions().isEmpty();
+            boolean hasRoles = !appRoleService.getAllAppRoles().isEmpty();
+
+            if (!hasPermissions && !hasRoles) {
+                logger.info("Database is empty. Creating bootstrap permission and role for service initialization.");
+
+                // Create the ServiceInitialization permission
+                CommonAppPermission initPermission = appPermissionService
+                    .createPermission("priceprovider.admin:ServiceInitialization:write", "Initialize service data");
+                logger.info("Created permission: {}", initPermission.getName());
+
+                // Create the AppRole:read permission (needed to load roles)
+                CommonAppPermission roleReadPermission = appPermissionService
+                    .createPermission("priceprovider.admin:AppRole:read", "Read app roles");
+                logger.info("Created permission: {}", roleReadPermission.getName());
+
+                // Create the Admin role with both permissions
+                Set<CommonAppPermission> permissions = new HashSet<>();
+                permissions.add(initPermission);
+                permissions.add(roleReadPermission);
+                CommonAppRole adminRole = appRoleService.createRole("priceprovider.admin:Admin", "Full admin access", permissions);
+                logger.info("Created role: {} with bootstrap permissions", adminRole.getName());
+
+                logger.info("Bootstrap complete. Admin users can now access the service initialization page.");
+            }
+        } catch (Exception e) {
+            logger.error("Error during bootstrap: {}", e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void loadEssentialData() {
+        loadEssentialDataInternal(false);
+    }
+
+    @Override
+    public void loadSampleData() {
+        loadSampleDataInternal(false);
+    }
+
+    @Override
+    @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void loadDataAsync(boolean loadEssential, boolean loadSample) {
+        try {
+            logger.info("Starting asynchronous data loading: essential={}, sample={}", loadEssential, loadSample);
+
+            // Enable bootstrap mode and set force load flag to override configuration
+            authorizationContext.activateBootstrapMode();
+            AbstractSetupDataImporter.setForceLoad(true);
+
+            try {
+                if (loadEssential) {
+                    loadEssentialDataInternal(true);
+                }
+
+                if (loadSample) {
+                    loadSampleDataInternal(true);
+                }
+
+                logger.info("Asynchronous data loading completed successfully");
+            } finally {
+                // Always clear the force load flag and disable bootstrap mode
+                AbstractSetupDataImporter.clearForceLoad();
+                authorizationContext.deactivateBootstrapMode();
+            }
+        } catch (Exception e) {
+            logger.error("Error during asynchronous data loading", e);
+            throw e;
+        }
+    }
+
+    private void loadEssentialDataInternal(boolean forceEagerLoad) {
+        // Sort data loaders by priority
+        List<SetupDataImporter> sortedDataLoaders = dataImporters.stream()
+                .sorted((dl1, dl2) -> Integer.compare(dl1.getPriority(), dl2.getPriority()))
+                .collect(Collectors.toList());
+
+        // Load essential data
+        for (SetupDataImporter dataLoader : sortedDataLoaders) {
+            dataLoader.loadEssentialData();
+        }
+    }
+
+    private void loadSampleDataInternal(boolean forceEagerLoad) {
+        // Sort data loaders by priority
+        List<SetupDataImporter> sortedDataLoaders = dataImporters.stream()
+                .sorted((dl1, dl2) -> Integer.compare(dl1.getPriority(), dl2.getPriority()))
+                .collect(Collectors.toList());
+
+        // Load sample data
+        for (SetupDataImporter dataLoader : sortedDataLoaders) {
+            dataLoader.loadSampleData();
+        }
+    }
+
+    @Override
+    public List<String> getEssentialDataFiles() {
+        return getDataFilesFromDirectory(dataFolder + "essential/");
+    }
+
+    @Override
+    public List<String> getSampleDataFiles() {
+        return getDataFilesFromDirectory(dataFolder + "sample/");
+    }
+
+    @Override
+    public String getEssentialDataDirectory() {
+        return dataFolder + "essential/";
+    }
+
+    @Override
+    public String getSampleDataDirectory() {
+        return dataFolder + "sample/";
+    }
+
+    private List<String> getDataFilesFromDirectory(String directory) {
+        Path dirPath = Path.of(directory);
+        List<String> files = new ArrayList<>();
+
+        if (!Files.exists(dirPath) || !Files.isDirectory(dirPath)) {
+            return files;
+        }
+
+        try (Stream<Path> paths = Files.list(dirPath)) {
+            files = paths
+                .filter(p -> p.getFileName().toString().endsWith(".json"))
+                .sorted()
+                .map(p -> p.getFileName().toString())
+                .collect(Collectors.toList());
+        } catch (IOException e) {
+            // Return empty list on error
+        }
+
+        return files;
+    }
+}

@@ -1,0 +1,173 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+      {{ isEditMode() ? 'Edit' : 'Add' }} {{ entityType() | titlecase }}
+    </h1>
+    <div>
+      <button (click)="cancel()" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.statuses.loading' | transloco }}</span>
+      </div>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ error() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert alert-success" role="alert">
+      <i class="bi bi-check-circle"></i> {{ successMessage() }}
+    </div>
+  }
+
+  @if (!loading() && form) {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mt-4">
+      <div class="card">
+        <div class="card-body">
+          @for (field of meta()?.fields; track field.name) {
+            <!-- Do not render read-only fields on CREATE mode unless they are the identity fields -->
+            @if (!field.readOnly || isEditMode()) {
+              <div class="row mb-4">
+                <label [for]="field.name" class="col-md-3 col-form-label">
+                  {{ getLabel(field.name) }}
+                  @if (field.name | isMandatory: meta()) {
+                    <span class="text-danger">*</span>
+                  }
+                </label>
+                <div class="col-md-9">
+                  <!-- Render different inputs based on field type -->
+                  @switch (field.type) {
+                    @case ('String') {
+                      <input
+                        type="text"
+                        class="form-control"
+                        [id]="field.name"
+                        [formControlName]="field.name"
+                        [class.is-invalid]="(getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) || hasFieldError(field.name)"
+                        [readonly]="field.readOnly && isEditMode()">
+                    }
+                    @case ('Number') {
+                      <input
+                        type="number"
+                        class="form-control"
+                        [id]="field.name"
+                        [formControlName]="field.name"
+                        [step]="field.precision ? '0.01' : '1'"
+                        [class.is-invalid]="(getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) || hasFieldError(field.name)"
+                        [readonly]="field.readOnly && isEditMode()">
+                    }
+                    @case ('Boolean') {
+                      <div class="form-check pt-2">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          [id]="field.name"
+                          [formControlName]="field.name"
+                          [class.is-invalid]="(getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) || hasFieldError(field.name)">
+                        <label class="form-check-label" [for]="field.name">
+                          Active / True
+                        </label>
+                      </div>
+                    }
+                    @case ('DateTime') {
+                      <input
+                        type="datetime-local"
+                        class="form-control"
+                        [id]="field.name"
+                        [formControlName]="field.name"
+                        [class.is-invalid]="(getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) || hasFieldError(field.name)"
+                        [readonly]="field.readOnly && isEditMode()">
+                    }
+                    @case ('Enum') {
+                      <app-enum-selector
+                        [formControlName]="field.name"
+                        [placeholder]="'Select ' + getLabel(field.name) + '...'"
+                        [values]="meta()?.enumValues?.[field.name] ?? []"
+                        [isInvalid]="(getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) || hasFieldError(field.name)"
+                        [required]="isMandatory(field.name)">
+                      </app-enum-selector>
+                    }
+                    @case ('Reference') {
+                      <app-reference-edit
+                        [inputFormControl]="getFormControl(field.name)"
+                        [placeholder]="'Select Reference...'"
+                        [isInvalid]="(getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) || hasFieldError(field.name)"
+                        [dataSource]="getGenericDataSource(field)"
+                        (cleared)="getFormControl(field.name)?.setValue('')">
+                      </app-reference-edit>
+                    }
+                    @case ('Set<Reference>') {
+                      <app-referencelist-edit
+                        [formControlName]="field.name"
+                        [label]="getLabel(field.name)"
+                        [placeholder]="'Search ' + getLabel(field.name) + '...'"
+                        [dataSource]="getGenericDataSource(field)">
+                      </app-referencelist-edit>
+                    }
+                    @case ('LocalizedString') {
+                      <app-localized-stringfield-edit
+                        [form]="form"
+                        [fieldPrefix]="field.name + '_'"
+                        [fieldLabel]="getLabel(field.name)"
+                        [configuredLanguages]="getLanguagesSignal(field.name)"
+                        [fieldErrors]="fieldErrors"
+                        [isEditMode]="isEditMode()"
+                        (removeLanguageEvent)="removeLocalizedLanguage(field.name, $event)"
+                        (addLanguageEvent)="addLocalizedLanguage(field.name, $event)">
+                      </app-localized-stringfield-edit>
+                    }
+                  }
+
+                  <!-- Display validation/field errors -->
+                  @if (getFormControl(field.name)?.invalid && getFormControl(field.name)?.touched) {
+                    <div class="invalid-feedback d-block">
+                      @if (getFormControl(field.name)?.errors?.['required']) {
+                        {{ getLabel(field.name) }} is required.
+                      }
+                      @if (getFormControl(field.name)?.errors?.['pattern']) {
+                        Invalid format for {{ getLabel(field.name) }}.
+                      }
+                    </div>
+                  }
+                  @if (hasFieldError(field.name)) {
+                    <div class="invalid-feedback d-block">
+                      @for (error of getFieldErrors(field.name); track error) {
+                        <div>{{ error }}</div>
+                      }
+                    </div>
+                  }
+                  @if (field.readOnly && isEditMode()) {
+                    <small class="form-text text-muted">{{ getLabel(field.name) }} cannot be changed in edit mode.</small>
+                  }
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()" [class.text-decoration-underline]="showSaveKeyHint()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
+          {{ 'common.actions.save' | transloco }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()" [disabled]="saving()">
+          {{ 'common.actions.cancel' | transloco }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

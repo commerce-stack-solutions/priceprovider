@@ -1,10 +1,70 @@
 # AGENTS.md
 This repository contains two sub-projects:
 
-- subfolder `service/` – the priceprovider service is a Java / Spring Boot backend using Gradle, see [AGENTS.md](service/AGENTS.md) for project specific architecture, conventions, and development guidelines
-- subfolder `app/` – the pricemanager app is an Angular frontend using Node.js and Bootstrap, see [AGENTS.md](app/AGENTS.md) for project specific architecture, conventions, and development guidelines
+- subfolder `services/applications/priceprovider/` – the priceprovider service is a Java / Spring Boot backend using Gradle, see [AGENTS.md](services/applications/priceprovider/AGENTS.md) for project specific architecture, conventions, and development guidelines
+- subfolder `apps/priceprovider/` – the pricemanager app is an Angular frontend using Node.js and Bootstrap, see [AGENTS.md](apps/priceprovider/AGENTS.md) for project specific architecture, conventions, and development guidelines
 
 Each project follows modern best practices and is structured for scalability, maintainability, and developer productivity.
+
+## Frontend Workspace Build/Run Commands
+
+The Angular workspace root is `apps/priceprovider/` and includes:
+- app project: `pricemanager-app`
+- shared library projects: `core`, `corebusiness` (sources in `apps-libs/`)
+
+Run all Angular commands from:
+
+```bash
+cd apps/priceprovider
+```
+
+Typical commands:
+
+```bash
+npm ci
+npm start
+npm run build
+npm run ng -- build core
+npm run ng -- build corebusiness
+```
+
+When changes span app + shared libraries, build libraries before app:
+
+```bash
+npm run ng -- build core && npm run ng -- build corebusiness && npm run build
+```
+
+Verified sequence from a clean checkout:
+
+```bash
+cd apps/priceprovider
+npm ci
+npm run ng -- build core
+npm run ng -- build corebusiness
+npm run build
+```
+
+`corebusiness` depends on `core`; build `core` first when touching libraries.
+
+## Module and Application Overview
+
+This repository is organized into a clean, decoupled architecture separating the frontend client application from backend service and reusable platform modules:
+
+### 1. Frontend Client Application
+- **`apps/priceprovider/`** (Price Manager App): A standalone, modern web application built with Angular 22, TypeScript 6, and Bootstrap/Tailwind CSS. Consumes the backend API to provide a comprehensive management interface for pricing operations. Contains an end-to-end test suite implemented with Playwright following the Page Object Model (POM) pattern.
+- **`apps-libs/`**: Shared Angular libraries extracted from the app workspace for reuse in other applications.
+
+### 2. Backend Modules & Service Applications (`services/`)
+Structured as a multi-module platform-to-application design to promote code reusability, modularity, and future support for multiple separated services:
+
+- **Platform Layer (`platform/`)**: Reusable components, plugins, and libraries that form the foundational stack for all application services:
+  - **`platform/cdf-plugin/`**: A custom Gradle plugin providing Common Definition Format (CDF) code generation. Generates JPA entities and schemas from build-time definition files.
+  - **`platform/commons/`**: Shared core library containing foundational utility classes, exception definitions, abstract mapper base classes, and request/response interceptors.
+  - **`platform/corebusinessentities/`**: Encapsulates core business master data (e.g., `Unit`, `Currency`, `TaxClass`, `Group`, `Organization`, and `Language`) including their persistence mappings, business validations, mapper classes, and REST endpoint controllers.
+  - **`platform/coreserviceapp/`**: Standard security module implementing application-level authentication, authorization (roles & permissions config), and endpoint security.
+
+- **Application Layer (`applications/`)**: Deployable service applications that bundle reusable platform capabilities with specific business logic:
+  - **`applications/priceprovider/`**: A fully functional, standalone Spring Boot backend service. It implements specific pricing domain models (like `PriceRowEntity`), handles bulk create/update operations, secures endpoints, and exposes administrative and public pricing APIs. Dependending on `platform/` modules, it compiles and runs as an independent microservice.
 
 ## AI Agent Skills
 

@@ -1,0 +1,7 @@
+{
+  "$schema": "../../apps/priceprovider/node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../apps/priceprovider/dist/core",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  }
+}

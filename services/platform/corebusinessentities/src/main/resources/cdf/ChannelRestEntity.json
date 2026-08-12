@@ -1,0 +1,20 @@
+{
+  "entity": "ChannelRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.channel.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity",
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "java.util.Set"
+  ],
+  "superClass": "RestEntity<InfoAuditableRestEntity, IncludesChannel>",
+  "fields": [
+    {
+      "name": "id",
+      "type": "String"
+    },
+    {
+      "name": "allowedCountryRefs",
+      "type": "Set<String>"
+    }
+  ]
+}
