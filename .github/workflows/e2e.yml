@@ -39,6 +39,14 @@ jobs:
         working-directory: apps/priceprovider
         run: npx playwright install --with-deps
 
+      - name: Build core library
+        working-directory: apps/priceprovider
+        run: npm run ng -- build core --configuration production
+
+      - name: Build corebusiness library
+        working-directory: apps/priceprovider
+        run: npm run ng -- build corebusiness --configuration production
+
       - name: Build application
         working-directory: apps/priceprovider
         run: npm run build -- --configuration production
