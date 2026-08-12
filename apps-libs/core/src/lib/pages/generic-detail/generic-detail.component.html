@@ -10,18 +10,18 @@
       <div>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb mb-1">
-            <li class="breadcrumb-item"><a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase()]">{{ entityType() | titlecase }}</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="['/' + lang(), entityType().toLowerCase()]">{{ entityType() | titlecase }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ id() }}</li>
           </ol>
         </nav>
         <h1>{{ id() }}</h1>
       </div>
       <div class="d-flex gap-2">
-        <a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase()]" class="btn btn-outline-secondary">
+        <a [routerLink]="['/' + lang(), entityType().toLowerCase()]" class="btn btn-outline-secondary">
           <i class="bi bi-arrow-left"></i> {{ 'common.actions.backToList' | transloco }}
         </a>
         @if (canWrite()) {
-          <a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase(), id(), 'edit']" class="btn btn-primary" [class.text-decoration-underline]="showEditKeyHint()">
+          <a [routerLink]="['/' + lang(), entityType().toLowerCase(), id(), 'edit']" class="btn btn-primary" [class.text-decoration-underline]="showEditKeyHint()">
             <i class="bi bi-pencil me-1"></i> {{ 'common.actions.edit' | transloco }}
           </a>
         }

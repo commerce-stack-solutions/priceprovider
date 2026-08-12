@@ -6,7 +6,7 @@ import { PricerowDetailComponent } from './pages/pricerow/detail/pricerow-detail
 import { PricerowFormComponent } from './pages/pricerow/form/pricerow-form.component';
 import { TranslocoService } from '@jsverse/transloco';
 import { Router } from '@angular/router';
-import { AppPermissionsComponent, AppPermissionDetailComponent, AppPermissionFormComponent, AppRolesComponent, AppRoleDetailComponent, AppRoleFormComponent, GenericFormComponent, GenericListComponent, GenericDetailComponent, ServiceInitializationComponent, SessionService } from 'core';
+import { AppPermissionsComponent, AppPermissionDetailComponent, AppPermissionFormComponent, AppRolesComponent, AppRoleDetailComponent, AppRoleFormComponent, ServiceInitializationComponent, SessionService, UnifiedDetailComponent, UnifiedFormComponent, UnifiedListComponent } from 'core';
 import { UnitsComponent, UnitDetailComponent, UnitFormComponent, LanguagesComponent, LanguageDetailComponent, LanguageFormComponent, CurrenciesComponent, CurrencyFormComponent, CurrencyDetailComponent, TaxClassesComponent, TaxClassFormComponent, TaxClassDetailComponent, GroupsComponent, GroupDetailComponent, GroupFormComponent, OrganizationsComponent, OrganizationDetailComponent, OrganizationFormComponent, CountriesComponent, CountryFormComponent, CountryDetailComponent, ChannelsComponent, ChannelFormComponent, ChannelDetailComponent } from 'corebusiness';
 
 // Guard to redirect root to user's preferred language
@@ -92,11 +92,11 @@ export const routes: Routes = [
       { path: 'app-roles/add', component: AppRoleFormComponent },
       { path: 'app-roles/:id', component: AppRoleDetailComponent },
       { path: 'app-roles/:id/edit', component: AppRoleFormComponent },
-      { path: 'generic/:entityType', component: GenericListComponent },
-      { path: 'generic/:entityType/add', component: GenericFormComponent },
-      { path: 'generic/:entityType/:id', component: GenericDetailComponent },
-      { path: 'generic/:entityType/:id/edit', component: GenericFormComponent },
-      { path: 'service-initialization', component: ServiceInitializationComponent }
+      { path: 'service-initialization', component: ServiceInitializationComponent },
+      { path: 'generic/:entityType/add', component: UnifiedFormComponent },
+      { path: 'generic/:entityType/:id/edit', component: UnifiedFormComponent },
+      { path: 'generic/:entityType/:id', component: UnifiedDetailComponent },
+      { path: 'generic/:entityType', component: UnifiedListComponent }
     ]
   }
 ];

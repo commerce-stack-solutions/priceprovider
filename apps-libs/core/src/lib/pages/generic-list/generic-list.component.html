@@ -3,7 +3,7 @@
     <h1>{{ entityType() | titlecase }}</h1>
     <div class="d-flex gap-2">
       @if (hasWritePermission()) {
-        <a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase(), 'add']" class="btn btn-primary">
+        <a [routerLink]="['/' + lang(), entityType().toLowerCase(), 'add']" class="btn btn-primary">
           <i class="bi bi-plus-circle"></i> {{ 'common.actions.add' | transloco }}
         </a>
       }
@@ -113,11 +113,11 @@
                     <!-- Actions column -->
                     <td class="pe-3 align-middle">
                       <div class="d-flex gap-1">
-                        <a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase(), getItemId(item)]" class="btn btn-sm btn-outline-secondary" title="View details">
+                        <a [routerLink]="['/' + lang(), entityType().toLowerCase(), getItemId(item)]" class="btn btn-sm btn-outline-secondary" title="View details">
                           <i class="bi bi-eye"></i>
                         </a>
                         @if (hasWritePermission()) {
-                          <a [routerLink]="['/' + lang(), 'generic', entityType().toLowerCase(), getItemId(item), 'edit']" class="btn btn-sm btn-outline-primary" title="Edit">
+                          <a [routerLink]="['/' + lang(), entityType().toLowerCase(), getItemId(item), 'edit']" class="btn btn-sm btn-outline-primary" title="Edit">
                             <i class="bi bi-pencil"></i>
                           </a>
                         }

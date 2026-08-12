@@ -186,7 +186,7 @@ export class GenericDetailComponent implements OnInit {
       const url = `${environment.apiBaseUrl}admin/api/${this.entityType().toLowerCase()}/${encodeURIComponent(this.id()!)}`;
       this.http.delete<void>(url).subscribe({
         next: () => {
-          this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
+        this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
         },
         error: (error) => {
           this.error.set('Failed to delete entity.');
@@ -209,7 +209,7 @@ export class GenericDetailComponent implements OnInit {
     this.showEditKeyHint.set(true);
 
     if (this.canWrite()) {
-      this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase(), this.id(), 'edit']);
+      this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase(), this.id(), 'edit']);
     }
   }
 

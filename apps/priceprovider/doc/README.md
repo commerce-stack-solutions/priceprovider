@@ -23,6 +23,7 @@ apps/priceprovider/doc/
 - [Development Guide](020-development/010-development-guide.md) - Comprehensive development patterns and best practices for Angular development.
 - [Security Implementation Guide](020-development/020-security-implementation-guide.md) - OIDC, permissions, and organization context in the Angular app.
 - [Internationalization Guide](020-development/030-i18n-guide.md) - How to handle translations and multi-language support.
+- [Menu Sections and Custom View Registry Guide](020-development/040-menu-and-view-registry-guide.md) - Register menu sections, new sections, and custom entity pages.
 
 ### Component Documentation
 
