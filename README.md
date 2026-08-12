@@ -12,6 +12,45 @@ location: `apps/priceprovider/**`
 
 An Angular frontend application that consumes the price provider API to display and manage pricing data. For more details, see the [app README](apps/priceprovider/README.md).
 
+### Build and run Angular workspace (app + libraries)
+
+All Angular workspace commands are run from:
+
+```bash
+cd apps/priceprovider
+```
+
+Install dependencies:
+
+```bash
+npm ci
+```
+
+Run the app locally:
+
+```bash
+npm start
+```
+
+Build the app:
+
+```bash
+npm run build
+```
+
+Build shared libraries:
+
+```bash
+npm run ng -- build core
+npm run ng -- build corebusiness
+```
+
+Build app and both shared libraries:
+
+```bash
+npm run ng -- build core && npm run ng -- build corebusiness && npm run build
+```
+
 ## Module and Application Overview
 
 This repository is organized into a clean, decoupled architecture separating the frontend client application from backend service and reusable platform modules:

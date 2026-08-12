@@ -6,6 +6,34 @@ This repository contains two sub-projects:
 
 Each project follows modern best practices and is structured for scalability, maintainability, and developer productivity.
 
+## Frontend Workspace Build/Run Commands
+
+The Angular workspace root is `apps/priceprovider/` and includes:
+- app project: `pricemanager-app`
+- shared library projects: `core`, `corebusiness` (sources in `apps-libs/`)
+
+Run all Angular commands from:
+
+```bash
+cd apps/priceprovider
+```
+
+Typical commands:
+
+```bash
+npm ci
+npm start
+npm run build
+npm run ng -- build core
+npm run ng -- build corebusiness
+```
+
+When changes span app + shared libraries, build libraries before app:
+
+```bash
+npm run ng -- build core && npm run ng -- build corebusiness && npm run build
+```
+
 ## Module and Application Overview
 
 This repository is organized into a clean, decoupled architecture separating the frontend client application from backend service and reusable platform modules:
