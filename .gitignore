@@ -1,5 +1,5 @@
 .idea/
-app/pricemanager-app/package-lock.json
+apps/priceprovider/pricemanager-app/package-lock.json
 services/applications/priceprovider/logs/
 **/node_modules/
 **/dist/

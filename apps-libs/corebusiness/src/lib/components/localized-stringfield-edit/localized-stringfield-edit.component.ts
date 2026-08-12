@@ -1,0 +1,1 @@
+export { LocalizedStringfieldEditComponent } from 'core';

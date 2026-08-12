@@ -24,9 +24,10 @@ VERSION="$1"
 # ============================================================
 #  Resolve the app source directory
 #  This script lives in deployment/azure-container-apps/
-#  The app Dockerfile is in app/ (two levels up)
+#  Use repo root as build context and app Dockerfile from apps/priceprovider
 # ============================================================
-APP_DIR="${SCRIPT_DIR}/../../app"
+REPO_ROOT="${SCRIPT_DIR}/../.."
+APP_DOCKERFILE="${REPO_ROOT}/apps/priceprovider/Dockerfile"
 
 # ============================================================
 #  Log in to ACR
@@ -38,7 +39,7 @@ az acr login --name "${ACR_NAME}"
 #  Build Docker image
 # ============================================================
 echo "Building Docker image ${IMAGE_NAME}:${VERSION}..."
-docker build -t "${IMAGE_NAME}:${VERSION}" "${APP_DIR}"
+docker build -f "${APP_DOCKERFILE}" -t "${IMAGE_NAME}:${VERSION}" "${REPO_ROOT}"
 
 # ============================================================
 #  Tag image for ACR

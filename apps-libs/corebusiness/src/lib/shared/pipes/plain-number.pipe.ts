@@ -1,0 +1,1 @@
+export { PlainNumberPipe } from 'core';

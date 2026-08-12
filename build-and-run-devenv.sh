@@ -81,7 +81,7 @@ echo ""
 echo "  [2/2] Building Docker image for Price Manager App..."
 echo "        Image: price-manager-app:${VERSION}"
 echo ""
-(cd "${SCRIPT_DIR}/app" && bash dockerimage-create.sh "${VERSION}")
+(cd "${SCRIPT_DIR}/apps/priceprovider" && bash dockerimage-create.sh "${VERSION}")
 echo ""
 
 echo "================================================================"
@@ -158,7 +158,7 @@ echo ""
 echo "  Documentation:"
 echo "  Project README         ->  $(link "file://${SCRIPT_DIR}/README.md")"
 echo "  Service README         ->  $(link "file://${SCRIPT_DIR}/services/applications/priceprovider/README.md")"
-echo "  App README             ->  $(link "file://${SCRIPT_DIR}/app/README.md")"
+echo "  App README             ->  $(link "file://${SCRIPT_DIR}/apps/priceprovider/README.md")"
 echo "  Shop Frontend README   ->  $(link "file://${SCRIPT_DIR}/examples/shopfrontend/README.md")"
 echo "  Rental Frontend README ->  $(link "file://${SCRIPT_DIR}/examples/rentalfrontend/README.md")"
 echo "  In-Store Kiosk README  ->  $(link "file://${SCRIPT_DIR}/examples/instorekiosk/README.md")"
