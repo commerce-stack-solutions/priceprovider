@@ -3,12 +3,8 @@ import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PricerowsService } from '../../../service/pricerow/pricerows.service';
 import { PriceRow } from '../../../model/pricerow/price-row.model';
-import { SessionService } from '../../../service/session.service';
-import { InfoSectionComponent, InfoSection, InfoField } from '../../../components/info-section/info-section.component';
-import { DateTimeService } from '../../../service/datetime.service';
-import { LabelService } from '../../../service/label.service';
+import { SessionService, InfoSectionComponent, InfoSection, InfoField, DateTimeService, LabelService, PermissionService } from 'core';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { PermissionService } from '../../../service/permission.service';
 
 @Component({
   selector: 'app-pricerow-detail',

@@ -1,8 +1,7 @@
 import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
-import { SessionService } from '../../service/session.service';
-import { PermissionService } from '../../service/permission.service';
+import { SessionService, PermissionService } from 'core';
 
 @Component({
   selector: 'app-home',

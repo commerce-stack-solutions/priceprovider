@@ -3,6 +3,46 @@
 {
   "extends": "../../apps/priceprovider/tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "core": [
+        "../../apps/priceprovider/dist/core"
+      ],
+      "corebusiness": [
+        "../../apps/priceprovider/dist/corebusiness"
+      ],
+      "@angular/core": [
+        "../../apps/priceprovider/node_modules/@angular/core"
+      ],
+      "@angular/common": [
+        "../../apps/priceprovider/node_modules/@angular/common"
+      ],
+      "@angular/common/http": [
+        "../../apps/priceprovider/node_modules/@angular/common/types/http.d.ts"
+      ],
+      "@angular/forms": [
+        "../../apps/priceprovider/node_modules/@angular/forms"
+      ],
+      "@angular/router": [
+        "../../apps/priceprovider/node_modules/@angular/router"
+      ],
+      "@jsverse/transloco": [
+        "../../apps/priceprovider/node_modules/@jsverse/transloco"
+      ],
+      "angular-oauth2-oidc": [
+        "../../apps/priceprovider/node_modules/angular-oauth2-oidc"
+      ],
+      "rxjs": [
+        "../../apps/priceprovider/node_modules/rxjs"
+      ],
+      "rxjs/*": [
+        "../../apps/priceprovider/node_modules/rxjs/*"
+      ],
+      "tslib": [
+        "../../apps/priceprovider/node_modules/tslib/tslib.d.ts"
+      ]
+    },
     "outDir": "../../apps/priceprovider/out-tsc/lib",
     "declaration": true,
     "declarationMap": true,

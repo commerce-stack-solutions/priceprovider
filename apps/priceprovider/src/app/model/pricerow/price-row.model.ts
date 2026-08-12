@@ -1,4 +1,4 @@
-import { MetaInfo } from '../meta-info.model';
+import { MetaInfo } from 'core';
 
 export interface PriceRow {
   id: string;

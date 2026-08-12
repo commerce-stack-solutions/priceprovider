@@ -10,7 +10,7 @@ export * from './lib/components/column-filter/column-filter.component';
 export * from './lib/components/localized-stringfield-view/localized-stringfield-view.component';
 export * from './lib/components/enum-selector/enum-selector.component';
 export * from './lib/components/reference-edit/reference-edit.component';
-export * from './lib/components/referencelist-edit/referencelist-edit.component';
+export { ReferenceListEditComponent } from './lib/components/referencelist-edit/referencelist-edit.component';
 export * from './lib/components/language-switcher/language-switcher.component';
 export * from './lib/components/localized-stringfield-edit/localized-stringfield-edit.component';
 

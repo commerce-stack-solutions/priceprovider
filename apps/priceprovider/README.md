@@ -38,6 +38,21 @@ Verify the installation:
 ng version
 ```
 
+## Build order for app + shared libraries
+
+The Angular workspace root is this folder (`apps/priceprovider`), while shared libraries are located in `../../apps-libs`.
+
+From `apps/priceprovider`, use this order:
+
+```bash
+npm ci
+npm run ng -- build core
+npm run ng -- build corebusiness
+npm run build
+```
+
+`corebusiness` depends on `core`, so build `core` first whenever library code changed.
+
 ## Development server
 
 To start a local development server, run:

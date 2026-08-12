@@ -4,27 +4,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ReferenceDataSourceResult, ReferenceEditComponent } from '../../../components/reference-edit/reference-edit.component';
-import { ReferenceListEditComponent } from '../../../components/referencelist-edit/referencelist-edit.component';
-import { EnumSelectorComponent } from '../../../components/enum-selector/enum-selector.component';
+import { ReferenceDataSourceResult, ReferenceEditComponent, ReferenceListEditComponent, EnumSelectorComponent } from 'core';
 import { PriceRow } from '../../../model/pricerow/price-row.model';
-import { CurrenciesService } from '../../../service/currency/currencies.service';
-import { GroupsService } from '../../../service/group/groups.service';
-import { ChannelsService } from '../../../service/channel/channels.service';
-import { ModalService } from '../../../service/modal.service';
+import { CurrenciesService, GroupsService, ChannelsService, TaxClassesService, UnitsService, CurrencyFormComponent, TaxClassFormComponent, UnitFormComponent } from 'corebusiness';
+import { ModalService, SessionService, PermissionService, MessageTranslationService, Message, MetaInfo, IsMandatoryPipe } from 'core';
 import { PricerowsService } from '../../../service/pricerow/pricerows.service';
-import { TaxClassesService } from '../../../service/taxclass/taxclasses.service';
-import { UnitsService } from '../../../service/unit/units.service';
-import { CurrencyFormComponent } from '../../currency/form/currency-form.component';
-import { TaxClassFormComponent } from '../../taxclass/form/taxclass-form.component';
-import { UnitFormComponent } from '../../unit/form/unit-form.component';
-import { SessionService } from '../../../service/session.service';
-import { PermissionService } from '../../../service/permission.service';
 import { TranslocoModule } from '@jsverse/transloco';
-import { MessageTranslationService } from '../../../service/message-translation.service';
-import { Message } from '../../../model/message.model';
-import { MetaInfo } from '../../../model/meta-info.model';
-import { IsMandatoryPipe } from '../../../pipes/is-mandatory.pipe';
 
 const OPTIONS_PAGESIZE = 30;
 @Component({

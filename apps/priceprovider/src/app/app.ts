@@ -1,10 +1,6 @@
 import { Component, signal, ViewContainerRef, inject, EnvironmentInjector, AfterViewInit, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { ModalService } from './service/modal.service';
-import { AuthService } from './service/auth.service';
-import { PermissionService } from './service/permission.service';
+import { HeaderComponent, SidebarComponent, ModalService, AuthService, PermissionService } from 'core';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({

@@ -34,6 +34,18 @@ When changes span app + shared libraries, build libraries before app:
 npm run ng -- build core && npm run ng -- build corebusiness && npm run build
 ```
 
+Verified sequence from a clean checkout:
+
+```bash
+cd apps/priceprovider
+npm ci
+npm run ng -- build core
+npm run ng -- build corebusiness
+npm run build
+```
+
+`corebusiness` depends on `core`; build `core` first when touching libraries.
+
 ## Module and Application Overview
 
 This repository is organized into a clean, decoupled architecture separating the frontend client application from backend service and reusable platform modules:

@@ -5,11 +5,8 @@ import { RouterModule } from '@angular/router';
 import { PricerowsService } from '../../service/pricerow/pricerows.service';
 import { PriceRow, PriceRowList } from '../../model/pricerow/price-row.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionService } from '../../service/session.service';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { ColumnFilterComponent } from '../../components/column-filter/column-filter.component';
-import { FilterDefinition, ColumnFilterConfig, buildQueryString, parseQueryString } from '../../model/column-filter.model';
-import { PermissionService } from '../../service/permission.service';
+import { SessionService, ColumnFilterComponent, FilterDefinition, ColumnFilterConfig, buildQueryString, parseQueryString, PermissionService } from 'core';
 
 @Component({
   selector: 'app-pricerows',

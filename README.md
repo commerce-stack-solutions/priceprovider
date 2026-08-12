@@ -51,6 +51,18 @@ Build app and both shared libraries:
 npm run ng -- build core && npm run ng -- build corebusiness && npm run build
 ```
 
+Recommended build order (verified):
+
+```bash
+cd apps/priceprovider
+npm ci
+npm run ng -- build core
+npm run ng -- build corebusiness
+npm run build
+```
+
+`corebusiness` depends on `core`, so always build `core` first when libraries changed.
+
 ## Module and Application Overview
 
 This repository is organized into a clean, decoupled architecture separating the frontend client application from backend service and reusable platform modules:

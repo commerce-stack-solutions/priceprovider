@@ -11,7 +11,7 @@ import { provideOAuthClient } from 'angular-oauth2-oidc';
 
 import { routes } from './app.routes';
 import { translocoConfig } from './transloco-config';
-import { AuthService } from './service/auth.service';
+import { AuthService } from 'core';
 import { authInterceptor } from './shared/auth.interceptor';
 
 function initializeAuth(authService: AuthService): () => Promise<void> {

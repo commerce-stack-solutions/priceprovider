@@ -4,16 +4,9 @@ import { convertToParamMap } from '@angular/router';
 import { of, firstValueFrom } from 'rxjs';
 import { PricerowFormComponent } from './pricerow-form.component';
 import { PricerowsService } from '../../../service/pricerow/pricerows.service';
-import { CurrenciesService } from '../../../service/currency/currencies.service';
-import { UnitsService } from '../../../service/unit/units.service';
-import { TaxClassesService } from '../../../service/taxclass/taxclasses.service';
-import { GroupsService } from '../../../service/group/groups.service';
-import { ChannelsService } from '../../../service/channel/channels.service';
-import { ModalService } from '../../../service/modal.service';
+import { CurrenciesService, UnitsService, TaxClassesService, GroupsService, ChannelsService } from 'corebusiness';
+import { ModalService, SessionService, PermissionService, MessageTranslationService } from 'core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionService } from '../../../service/session.service';
-import { PermissionService } from '../../../service/permission.service';
-import { MessageTranslationService } from '../../../service/message-translation.service';
 
 describe('PricerowFormComponent', () => {
   let component: PricerowFormComponent;
