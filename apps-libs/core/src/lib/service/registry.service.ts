@@ -23,7 +23,7 @@ export interface SidebarMenuSection {
   items: SidebarMenuItem[];
 }
 
-interface RegisteredEntityType {
+export interface RegisteredEntityType {
   type: string;
   routePrefix?: string;
   navigationPath?: string;
@@ -34,20 +34,12 @@ interface RegisteredEntityType {
   permissionMode?: 'entityRead' | 'permission';
 }
 
+export interface RegistryConfiguration {
+  entities?: Array<RegisteredEntityType & { routePrefix: string }>;
+  menuItems?: SidebarMenuItem[];
+}
+
 const OTHER_TYPES_SECTION = 'Other Types';
-const DEFAULT_ENTITY_TYPES: Array<[string, string, string, string, string]> = [
-  ['Channel', 'channels', 'Commerce Management', 'channels', 'bi bi-broadcast'],
-  ['PriceRow', 'pricerows', 'Commerce Management', 'priceRows', 'bi bi-card-list'],
-  ['TaxClass', 'taxclasses', 'Commerce Management', 'taxClasses', 'bi bi-percent'],
-  ['Organization', 'organizations', 'Organizations & Groups', 'organizations', 'bi bi-building'],
-  ['Group', 'groups', 'Organizations & Groups', 'groups', 'bi bi-diagram-3'],
-  ['Country', 'countries', 'Master Data', 'countries', 'bi bi-flag'],
-  ['Currency', 'currencies', 'Master Data', 'currencies', 'bi bi-currency-exchange'],
-  ['Unit', 'units', 'Master Data', 'units', 'bi bi-box'],
-  ['Language', 'languages', 'Master Data', 'languages', 'bi bi-translate'],
-  ['AppRole', 'app-roles', 'System & Access Management', 'appRoles', 'bi bi-person-badge'],
-  ['AppPermission', 'app-permissions', 'System & Access Management', 'appPermissions', 'bi bi-shield-check']
-];
 
 @Injectable({
   providedIn: 'root'
@@ -57,22 +49,6 @@ export class RegistryService {
   private registeredEntityTypes = new Map<string, RegisteredEntityType>();
   private routePrefixToType = new Map<string, string>();
   private customMenuItems = new Map<string, SidebarMenuItem>();
-
-  constructor() {
-    DEFAULT_ENTITY_TYPES.forEach(([type, routePrefix, menuSection, labelKey, icon]) =>
-      this.registerEntityType({ type, routePrefix, menuSection, labelKey, icon })
-    );
-
-    this.registerMenuItem({
-      key: 'service-initialization',
-      path: 'service-initialization',
-      section: 'System & Access Management',
-      labelKey: 'serviceInitialization',
-      icon: 'bi bi-gear',
-      permission: 'priceprovider.admin:ServiceInitialization:write',
-      permissionMode: 'permission'
-    });
-  }
 
   registerCustomView(type: string, view: CustomView) {
     this.customViews.set(type.toLowerCase(), view);
@@ -98,6 +74,11 @@ export class RegistryService {
 
     this.registeredEntityTypes.set(key, registered);
     this.routePrefixToType.set(entity.routePrefix.toLowerCase(), registered.type);
+  }
+
+  registerMenuConfiguration(configuration: RegistryConfiguration) {
+    configuration.entities?.forEach(entity => this.registerEntityType(entity));
+    configuration.menuItems?.forEach(item => this.registerMenuItem(item));
   }
 
   registerMenuSection(type: string, section: string) {

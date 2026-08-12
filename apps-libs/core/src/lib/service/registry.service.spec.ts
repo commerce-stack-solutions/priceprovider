@@ -2,11 +2,39 @@ import { RegistryService } from './registry.service';
 
 class TestListComponent {}
 
+const DEFAULT_MENU_CONFIGURATION = {
+  entities: [
+    { type: 'Channel', routePrefix: 'channels', menuSection: 'Commerce Management', icon: 'bi bi-broadcast' },
+    { type: 'PriceRow', routePrefix: 'pricerows', menuSection: 'Commerce Management', icon: 'bi bi-card-list' },
+    { type: 'TaxClass', routePrefix: 'taxclasses', menuSection: 'Commerce Management', icon: 'bi bi-percent' },
+    { type: 'Organization', routePrefix: 'organizations', menuSection: 'Organizations & Groups', icon: 'bi bi-building' },
+    { type: 'Group', routePrefix: 'groups', menuSection: 'Organizations & Groups', icon: 'bi bi-diagram-3' },
+    { type: 'Country', routePrefix: 'countries', menuSection: 'Master Data', icon: 'bi bi-flag' },
+    { type: 'Currency', routePrefix: 'currencies', menuSection: 'Master Data', icon: 'bi bi-currency-exchange' },
+    { type: 'Unit', routePrefix: 'units', menuSection: 'Master Data', icon: 'bi bi-box' },
+    { type: 'Language', routePrefix: 'languages', menuSection: 'Master Data', icon: 'bi bi-translate' },
+    { type: 'AppRole', routePrefix: 'app-roles', menuSection: 'System & Access Management', icon: 'bi bi-person-badge' },
+    { type: 'AppPermission', routePrefix: 'app-permissions', menuSection: 'System & Access Management', icon: 'bi bi-shield-check' }
+  ],
+  menuItems: [
+    {
+      key: 'service-initialization',
+      path: 'service-initialization',
+      section: 'System & Access Management',
+      label: 'Service Initialization',
+      icon: 'bi bi-gear',
+      permission: 'priceprovider.admin:ServiceInitialization:write',
+      permissionMode: 'permission' as const
+    }
+  ]
+};
+
 describe('RegistryService', () => {
   let service: RegistryService;
 
   beforeEach(() => {
     service = new RegistryService();
+    service.registerMenuConfiguration(DEFAULT_MENU_CONFIGURATION);
   });
 
   it('groups registered types by their configured menu section', () => {

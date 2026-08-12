@@ -6,7 +6,7 @@ The frontend now uses the `RegistryService` from the `core` library as the singl
 - introducing additional menu sections
 - registering custom pages that replace the generic list, detail, and form views
 
-Register these mappings during application bootstrap, for example from an `APP_INITIALIZER` or another startup hook in the app layer.
+Register these mappings during application bootstrap, for example from an `APP_INITIALIZER` or another startup hook in the app layer. In this app, the baseline menu structure lives in `/src/assets/config/menu-registry.json` and is loaded into the shared registry at startup.
 
 ## 1. Add a type to a menu section
 
@@ -82,7 +82,7 @@ That is the full setup needed for:
 
 ## 5. Suggested application-level setup
 
-An application can keep its existing dedicated top-level routes and still use registry-based generic routes for new types. A minimal bootstrap registration looks like this:
+An application can keep its existing dedicated top-level routes and still use registry-based generic routes for new types. Keep the baseline entity/menu declarations in the app-local JSON file and register type-specific custom pages in code:
 
 ```ts
 registry.registerCustomView('PriceRow', {
