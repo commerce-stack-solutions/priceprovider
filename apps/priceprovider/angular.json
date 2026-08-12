@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "../../apps-libs",
   "projects": {
     "pricemanager-app": {
       "projectType": "application",
@@ -115,18 +115,18 @@
     },
     "core": {
       "projectType": "library",
-      "root": "projects/core",
-      "sourceRoot": "projects/core/src",
+      "root": "../../apps-libs/core",
+      "sourceRoot": "../../apps-libs/core/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "configurations": {
             "production": {
-              "tsConfig": "projects/core/tsconfig.lib.prod.json"
+              "tsConfig": "../../apps-libs/core/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/core/tsconfig.lib.json"
+              "tsConfig": "../../apps-libs/core/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -134,25 +134,25 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/core/tsconfig.spec.json"
+            "tsConfig": "../../apps-libs/core/tsconfig.spec.json"
           }
         }
       }
     },
     "corebusiness": {
       "projectType": "library",
-      "root": "projects/corebusiness",
-      "sourceRoot": "projects/corebusiness/src",
+      "root": "../../apps-libs/corebusiness",
+      "sourceRoot": "../../apps-libs/corebusiness/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "configurations": {
             "production": {
-              "tsConfig": "projects/corebusiness/tsconfig.lib.prod.json"
+              "tsConfig": "../../apps-libs/corebusiness/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/corebusiness/tsconfig.lib.json"
+              "tsConfig": "../../apps-libs/corebusiness/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -160,7 +160,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/corebusiness/tsconfig.spec.json"
+            "tsConfig": "../../apps-libs/corebusiness/tsconfig.spec.json"
           }
         }
       }

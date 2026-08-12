@@ -2,7 +2,7 @@
 This repository contains two sub-projects:
 
 - subfolder `services/applications/priceprovider/` – the priceprovider service is a Java / Spring Boot backend using Gradle, see [AGENTS.md](services/applications/priceprovider/AGENTS.md) for project specific architecture, conventions, and development guidelines
-- subfolder `app/` – the pricemanager app is an Angular frontend using Node.js and Bootstrap, see [AGENTS.md](app/AGENTS.md) for project specific architecture, conventions, and development guidelines
+- subfolder `apps/priceprovider/` – the pricemanager app is an Angular frontend using Node.js and Bootstrap, see [AGENTS.md](apps/priceprovider/AGENTS.md) for project specific architecture, conventions, and development guidelines
 
 Each project follows modern best practices and is structured for scalability, maintainability, and developer productivity.
 
@@ -11,7 +11,8 @@ Each project follows modern best practices and is structured for scalability, ma
 This repository is organized into a clean, decoupled architecture separating the frontend client application from backend service and reusable platform modules:
 
 ### 1. Frontend Client Application
-- **`app/`** (Price Manager App): A standalone, modern web application built with Angular 22, TypeScript 6, and Bootstrap/Tailwind CSS. Consumes the backend API to provide a comprehensive management interface for pricing operations. Contains an end-to-end test suite implemented with Playwright following the Page Object Model (POM) pattern.
+- **`apps/priceprovider/`** (Price Manager App): A standalone, modern web application built with Angular 22, TypeScript 6, and Bootstrap/Tailwind CSS. Consumes the backend API to provide a comprehensive management interface for pricing operations. Contains an end-to-end test suite implemented with Playwright following the Page Object Model (POM) pattern.
+- **`apps-libs/`**: Shared Angular libraries extracted from the app workspace for reuse in other applications.
 
 ### 2. Backend Modules & Service Applications (`services/`)
 Structured as a multi-module platform-to-application design to promote code reusability, modularity, and future support for multiple separated services:

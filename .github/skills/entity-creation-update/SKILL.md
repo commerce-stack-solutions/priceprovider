@@ -105,11 +105,11 @@ pages that are required
 - make use $meta as expand parameter information on edit form pages / enum selector component
 
 ## Relevant Resources during this phase
-- see [development-guide.md](../../../app/docs/development-guide.md)
+- see [development-guide.md](../../../apps/priceprovider/docs/development-guide.md)
 
 ## Translations
 Texts in templates (labels, form field names, button labels, Action names, Statuses, page names,etc..) need to be inserted via transloco translation keys. (introduce new translation keys only if really required)
 Make use of the [SKILL.md](../translation/SKILL.md)
 ### Relevant Resources during this phase
-- see [i18n-guide.md](../../../app/docs/i18n-guide.md)
+- see [i18n-guide.md](../../../apps/priceprovider/docs/i18n-guide.md)
 

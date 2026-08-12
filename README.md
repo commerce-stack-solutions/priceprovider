@@ -8,16 +8,17 @@ location: `services/platform/commons/**` and `services/applications/priceprovide
 A Java/Spring Boot backend that provides a RESTful API for managing and retrieving price information. The backend is split into a shared commons module and the priceprovider application module. For more details, see the [priceprovider README](services/applications/priceprovider/README.md).
 
 ## Price Manager App
-location: `app/**`
+location: `apps/priceprovider/**`
 
-An Angular frontend application that consumes the price provider API to display and manage pricing data. For more details, see the [app README](app/README.md).
+An Angular frontend application that consumes the price provider API to display and manage pricing data. For more details, see the [app README](apps/priceprovider/README.md).
 
 ## Module and Application Overview
 
 This repository is organized into a clean, decoupled architecture separating the frontend client application from backend service and reusable platform modules:
 
 ### 1. Frontend Client Application
-- **`app/`** (Price Manager App): A standalone, modern web application built with Angular 22, TypeScript 6, and Bootstrap/Tailwind CSS. Consumes the backend API to provide a comprehensive management interface for pricing operations. Contains an end-to-end test suite implemented with Playwright following the Page Object Model (POM) pattern.
+- **`apps/priceprovider/`** (Price Manager App): A standalone, modern web application built with Angular 22, TypeScript 6, and Bootstrap/Tailwind CSS. Consumes the backend API to provide a comprehensive management interface for pricing operations. Contains an end-to-end test suite implemented with Playwright following the Page Object Model (POM) pattern.
+- **`apps-libs/`**: Shared Angular libraries extracted from the app workspace for reuse in other applications.
 
 ### 2. Backend Modules & Service Applications (`services/`)
 Structured as a multi-module platform-to-application design to promote code reusability, modularity, and future support for multiple separated services:

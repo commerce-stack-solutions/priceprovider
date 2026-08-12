@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: app
+        working-directory: apps/priceprovider
 
     steps:
       - name: Check out repository
@@ -98,7 +98,7 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: app/package-lock.json
+          cache-dependency-path: apps/priceprovider/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -124,5 +124,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-test-log
-          path: app/app-test-output.log
+          path: apps/priceprovider/app-test-output.log
           if-no-files-found: warn

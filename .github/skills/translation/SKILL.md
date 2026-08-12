@@ -13,7 +13,7 @@ description: 'skill for creating and updating text and labels in the backend ser
 
 # Relevant Files and Folders
 location of files with strings to translate:
-- for frontend app check: app/src/assets/i18n/**
+- for frontend app check: apps/priceprovider/src/assets/i18n/**
 - for backend service check:
     - services/applications/priceprovider/src/main/resources/initialize/** (initial demo or essential data)
     - MessageKeys.java‎ files - they contain the translation keys string published by the backend service, these keys should be reflected in the translation files of the frontend app
@@ -21,7 +21,7 @@ location of files with strings to translate:
 Please always check and update the files in these folders. Do not touch other files.
 
 # Resources
-- This technical guide [i18n-guide.md](../../../app/docs/i18n-guide.md) helps to setup new translation keys and files, and contains best practices for translation work.
+- This technical guide [i18n-guide.md](../../../apps/priceprovider/docs/i18n-guide.md) helps to setup new translation keys and files, and contains best practices for translation work.
 
 # Translation Tasks
 For the translation work, please follow the tasks below. Each task focuses on a specific set of languages. Ensure that you work on all languges.

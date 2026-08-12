@@ -114,7 +114,7 @@ We will use **@jsverse/transloco** for the following reasons:
 
 ### File Structure
 ```
-app/src/assets/i18n/
+apps/priceprovider/src/assets/i18n/
 ├── en/
 │   ├── common.json          # Shared keys: actions, fields, statuses
 │   ├── pages.json           # Page-level translations

@@ -169,7 +169,7 @@ This is handled automatically by `JwtClaimsExtractor` - no additional code neede
 
 ## Step 1: Setup OIDC Configuration
 
-**Location:** `app/src/environments/environment.ts`
+**Location:** `apps/priceprovider/src/environments/environment.ts`
 
 ```typescript
 export const environment = {
@@ -411,7 +411,7 @@ For public APIs, use organization context:
 # Relevant Resources
 
 - [Security Implementation Guide (Service)](../../../services/doc/020-development/021-security-implementation-guide.md) - Backend security technical details
-- [Security Implementation Guide (App)](../../../app/doc/020-development/020-security-implementation-guide.md) - Frontend security patterns
+- [Security Implementation Guide (App)](../../../apps/priceprovider/doc/020-development/020-security-implementation-guide.md) - Frontend security patterns
 - [RBAC and User Guide](../../../services/doc/030-features/050-rbac-and-user-guide.md) - RBAC model overview and sample users
 - Sample Data:
   - `services/applications/priceprovider/src/main/resources/initialize/essential/AppPermission.0010.json`

@@ -3,16 +3,17 @@
 FROM node:22-alpine AS builder
 
 # Set the working directory in the container
-WORKDIR /workspace/app
+WORKDIR /workspace/apps/priceprovider
 
 # Copy package files to download dependencies
-COPY package.json package-lock.json ./
+COPY apps/priceprovider/package.json apps/priceprovider/package-lock.json ./
 
 # Install dependencies
 RUN npm ci
 
 # Copy the source code
-COPY . .
+COPY apps/priceprovider/ ./
+COPY apps-libs/ /workspace/apps-libs/
 
 # Build the application for production
 RUN npm run build
@@ -25,7 +26,7 @@ FROM httpd:2.4-alpine
 RUN apk add --no-cache bash sed dos2unix
 
 # Copy the built application from the builder stage
-COPY --from=builder /workspace/app/dist/pricemanager-app/browser /usr/local/apache2/htdocs/
+COPY --from=builder /workspace/apps/priceprovider/dist/pricemanager-app/browser /usr/local/apache2/htdocs/
 
 # Copy custom Apache configuration
 COPY docker/httpd.conf /usr/local/apache2/conf/httpd.conf

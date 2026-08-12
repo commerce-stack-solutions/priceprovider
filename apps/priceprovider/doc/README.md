@@ -5,7 +5,7 @@ This directory contains the comprehensive documentation for the Price Provider A
 ## Structure
 
 ```
-app/doc/
+apps/priceprovider/doc/
 ├── README.md                          ← You are here
 ├── 010-architecture/                  Architecture and ADRs
 ├── 020-development/                   Development guides and security

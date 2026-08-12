@@ -712,8 +712,8 @@ Use `@if`, `@for`, `@switch` instead of `*ngIf`, `*ngFor`, `*ngSwitch`:
 
 # Relevant Resources
 
-- [Angular Development Guide](../../../app/doc/020-development/010-development-guide.md) - Comprehensive development patterns and best practices
-- [Localized String Field Edit Component](../../../app/doc/040-components/localized-stringfield-edit.md) - Detailed component documentation
-- [Reference Edit Component](../../../app/doc/040-components/reference-edit.md) - Autocomplete reference field component
-- [Security Implementation Guide](../../../app/doc/020-development/020-security-implementation-guide.md) - OIDC and permissions in Angular
-- [i18n Guide](../../../app/doc/020-development/030-i18n-guide.md) - Internationalization and translation management
+- [Angular Development Guide](../../../apps/priceprovider/doc/020-development/010-development-guide.md) - Comprehensive development patterns and best practices
+- [Localized String Field Edit Component](../../../apps/priceprovider/doc/040-components/localized-stringfield-edit.md) - Detailed component documentation
+- [Reference Edit Component](../../../apps/priceprovider/doc/040-components/reference-edit.md) - Autocomplete reference field component
+- [Security Implementation Guide](../../../apps/priceprovider/doc/020-development/020-security-implementation-guide.md) - OIDC and permissions in Angular
+- [i18n Guide](../../../apps/priceprovider/doc/020-development/030-i18n-guide.md) - Internationalization and translation management

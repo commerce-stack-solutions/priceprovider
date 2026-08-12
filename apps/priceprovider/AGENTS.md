@@ -5,10 +5,10 @@ The PriceProvider Angular frontend is structured around pages, each composed of 
 ## AI Agent Skills
 
 The following skills are particularly relevant when working on the frontend:
-- [**Entity Creation & Update (Frontend Phase)**](../.github/skills/entity-creation-update/SKILL.md#phase-5---frontend--app-for-new-types-group-and-organization): Phase 5 provides guidance on implementing list views, detail views, and forms.
-- [**Angular Components**](../.github/skills/angular-components/SKILL.md): Developing modern Angular components using signals, standalone components, and reusable UI patterns.
-- [**Security & RBAC (Frontend)**](../.github/skills/security-rbac/SKILL.md#frontend-implementation): Implementing permission-based UI access control and OIDC authentication.
-- [**Translation**](../.github/skills/translation/SKILL.md): Managing i18n translation keys in the Angular application.
+- [**Entity Creation & Update (Frontend Phase)**](../../.github/skills/entity-creation-update/SKILL.md#phase-5---frontend--app-for-new-types-group-and-organization): Phase 5 provides guidance on implementing list views, detail views, and forms.
+- [**Angular Components**](../../.github/skills/angular-components/SKILL.md): Developing modern Angular components using signals, standalone components, and reusable UI patterns.
+- [**Security & RBAC (Frontend)**](../../.github/skills/security-rbac/SKILL.md#frontend-implementation): Implementing permission-based UI access control and OIDC authentication.
+- [**Translation**](../../.github/skills/translation/SKILL.md): Managing i18n translation keys in the Angular application.
 
 ## Documentation
 
@@ -29,7 +29,7 @@ For detailed development guides, component documentation, and implementation exa
 ## Project Structure
 
 ```
-app/                                   # Angular frontend
+apps/priceprovider/                   # Angular frontend
 ├── public/                            # static assets (images, ...)
 ├── src/
 │   ├── app/
