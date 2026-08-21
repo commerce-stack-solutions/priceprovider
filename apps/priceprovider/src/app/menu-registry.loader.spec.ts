@@ -37,5 +37,7 @@ describe('MenuRegistryLoader', () => {
     expect(registry.getRoutePrefix('AuditLog')).toBe('audit-logs');
     expect(registry.getMenuSection('AuditLog')).toBe('Monitoring');
     expect(registry.getSidebarMenuItems().map(item => item.key)).toContain('service-initialization');
+    expect(loader.sidebarMenuSections().map(section => section.name)).toContain('Monitoring');
+    expect(loader.sidebarMenuSections().flatMap(section => section.items).map(item => item.key)).toContain('auditlog');
   });
 });

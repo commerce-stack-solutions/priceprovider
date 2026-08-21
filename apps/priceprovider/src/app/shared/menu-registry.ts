@@ -24,11 +24,14 @@ const SECTION_LABELS: Record<string, string> = {
 
 export function getVisibleMenuSections(
   registry: RegistryService,
-  permissionService: PermissionService
+  permissionService: PermissionService,
+  fallbackSections: SidebarMenuSectionLike[] = []
 ): SidebarMenuSectionLike[] {
-  return ((registry as RegistryService & {
+  const registrySections = (registry as RegistryService & {
     getSidebarMenuSections?: () => SidebarMenuSectionLike[];
-  }).getSidebarMenuSections?.() ?? [])
+  }).getSidebarMenuSections?.() ?? [];
+
+  return (registrySections.length > 0 ? registrySections : fallbackSections)
     .map(section => ({
       ...section,
       items: section.items.filter(item => canDisplay(item, permissionService))
