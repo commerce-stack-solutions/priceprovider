@@ -1,7 +1,8 @@
 import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
-import { getItemLabel, getLink, getSectionLabel, getVisibleMenuSections, LabelService, PermissionService, RegistryService, SessionService } from 'core';
+import { LabelService, PermissionService, RegistryService, SessionService } from 'core';
+import { getItemLabel, getLink, getSectionLabel, getVisibleMenuSections } from '../../shared/menu-registry';
 
 @Component({
   selector: 'app-home',
