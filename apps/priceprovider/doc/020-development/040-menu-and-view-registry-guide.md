@@ -1,46 +1,130 @@
 # Menu Sections and Custom View Registry Guide
 
-The frontend now uses the `RegistryService` from the `core` library as the single extension point for:
+The application adapts its navigation **declaratively** through the app-local JSON file:
+
+- `/src/assets/config/menu-registry.json`
+
+That file is loaded during application startup and its content is registered into the shared `RegistryService`.
+
+Use this JSON file for:
 
 - assigning entity types to menu sections
 - introducing additional menu sections
-- registering custom pages that replace the generic list, detail, and form views
+- defining entity menu entries, including entities coming from shared libraries such as `corebusiness`
+- defining standalone non-entity menu items
 
-Register these mappings during application bootstrap, for example from an `APP_INITIALIZER` or another startup hook in the app layer. In this app, the baseline menu structure lives in `/src/assets/config/menu-registry.json` and is loaded into the shared registry at startup.
+Use code-based registry registration only for:
 
-## 1. Add a type to a menu section
+- registering custom list/detail/form components that should replace the generic pages
 
-Use `registerMenuSection()` for a single type or `registerMenuSectionAssignments()` for the JSON-style mapping from the issue.
+## 1. Declarative menu configuration in the application
 
-```ts
-registry.registerMenuSection('PriceRow', 'Commerce Management');
+The menu configuration is owned by the Angular application, not by the shared library. To adapt the menu for an application, edit:
 
-registry.registerMenuSectionAssignments({
-  PriceRow: 'Commerce Management',
-  AppRole: 'System & Access Management'
-});
+- `/src/assets/config/menu-registry.json`
+
+Structure:
+
+```json
+{
+  "entities": [
+    {
+      "type": "PriceRow",
+      "routePrefix": "pricerows",
+      "menuSection": "Commerce Management",
+      "icon": "bi bi-card-list"
+    }
+  ],
+  "menuItems": [
+    {
+      "key": "service-initialization",
+      "path": "service-initialization",
+      "section": "System & Access Management",
+      "label": "Service Initialization",
+      "icon": "bi bi-gear",
+      "permission": "priceprovider.admin:ServiceInitialization:write",
+      "permissionMode": "permission"
+    }
+  ]
+}
 ```
 
-If a type has no menu-section assignment, it is automatically rendered in the **Other Types** section.
+All entity menu entries that should be visible in the application should be declared here, including shared entities such as `Unit`, `Currency`, `TaxClass`, `Group`, `Organization`, and `Language`.
 
-## 2. Introduce a new menu section
+## 2. Add or move a type to a menu section
 
-Menu sections are created on demand. Registering a new section name is enough.
+To place a type in a menu section, set `menuSection` on its `entities` entry:
 
-```ts
-registry.registerRoutePrefix('AuditLog', 'audit-logs');
-registry.registerMenuSection('AuditLog', 'Monitoring');
+```json
+{
+  "type": "PriceRow",
+  "routePrefix": "pricerows",
+  "menuSection": "Commerce Management",
+  "icon": "bi bi-card-list"
+}
 ```
 
-Once the type is registered, the sidebar and home page render the new **Monitoring** section automatically.
+Changing `menuSection` moves the item in both the sidebar and the home page.
 
-If the type only uses the generic pages, the generated menu entry points to the generic route automatically:
+If a type has no `menuSection`, it falls back to **Other Types**.
+
+## 3. Introduce a new menu section
+
+Menu sections are created on demand. Use a new `menuSection` name in the JSON:
+
+```json
+{
+  "type": "AuditLog",
+  "routePrefix": "audit-logs",
+  "menuSection": "Monitoring",
+  "icon": "bi bi-activity"
+}
+```
+
+Once the application loads this configuration, the new **Monitoring** section is rendered automatically.
+
+## 4. Add standalone menu items declaratively
+
+Use `menuItems` for entries that are not entity types:
+
+```json
+{
+  "key": "service-initialization",
+  "path": "service-initialization",
+  "section": "System & Access Management",
+  "label": "Service Initialization",
+  "icon": "bi bi-gear",
+  "permission": "priceprovider.admin:ServiceInitialization:write",
+  "permissionMode": "permission"
+}
+```
+
+Use this for application-specific pages that should appear together with the entity navigation.
+
+## 5. Route behavior for declarative entity entries
+
+For entity entries, the JSON configuration drives generic navigation:
+
+- `routePrefix` defines the generated route segment
+- the generated entity link points to `/:lang/generic/<routePrefix>`
+
+Example:
+
+```json
+{
+  "type": "AuditLog",
+  "routePrefix": "audit-logs",
+  "menuSection": "Monitoring"
+}
+```
+
+This produces navigation to:
 
 - `/:lang/generic/audit-logs`
 
-## 3. Register custom pages for a type
+## 6. Custom view overrides stay code-based
 
-Use `registerCustomView()` to replace the generic pages for a type.
+If a type should use custom Angular pages instead of the generic `core` pages, register those views in code:
 
 ```ts
 registry.registerCustomView('PriceRow', {
@@ -59,35 +143,11 @@ The unified generic routes resolve those registrations automatically:
 
 If no custom view is registered, the app falls back to the generic `core` pages.
 
-## 4. Registering a new type end-to-end
+## 7. Typical application workflow
 
-For a new type that should appear in navigation and optionally use custom pages:
+For most application-level menu changes:
 
-```ts
-registry.registerRoutePrefix('AuditLog', 'audit-logs');
-registry.registerMenuSection('AuditLog', 'Monitoring');
-
-registry.registerCustomView('AuditLog', {
-  list: AuditLogsComponent,
-  detail: AuditLogDetailComponent,
-  form: AuditLogFormComponent
-});
-```
-
-That is the full setup needed for:
-
-- menu placement
-- route resolution
-- generic fallback replacement
-
-## 5. Suggested application-level setup
-
-An application can keep its existing dedicated top-level routes and still use registry-based generic routes for new types. Keep the baseline entity/menu declarations in the app-local JSON file and register type-specific custom pages in code:
-
-```ts
-registry.registerCustomView('PriceRow', {
-  list: PriceRowsComponent,
-  detail: PricerowDetailComponent,
-  form: PricerowFormComponent
-});
-```
+1. Edit `/src/assets/config/menu-registry.json`
+2. Add or adjust the `entities` / `menuItems` declarations
+3. Start the app and verify the sidebar and home page
+4. Only add code registration when a type needs custom list/detail/form components
