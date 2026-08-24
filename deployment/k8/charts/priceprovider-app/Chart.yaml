@@ -1,0 +1,6 @@
+apiVersion: v2
+name: priceprovider-app
+description: Helm chart for PriceProvider App (Frontend Management UI)
+type: application
+version: 0.1.0
+appVersion: "0.0.0-SNAPSHOT"

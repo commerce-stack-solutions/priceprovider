@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "priceprovider-service.fullname" . }}
+  labels:
+    {{- include "priceprovider-service.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "priceprovider-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "priceprovider-service.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PPS_DB_JDBCURL
+              value: {{ .Values.env.dbJdbcUrl | quote }}
+            - name: PPS_DB_USERNAME
+              value: {{ .Values.env.dbUsername | quote }}
+            - name: PPS_DB_PASSWORD
+              value: {{ .Values.env.dbPassword | quote }}
+            - name: PPS_DB_DRIVER
+              value: {{ .Values.env.dbDriver | quote }}
+            - name: PPS_JPA_DB_PLATFORM
+              value: {{ .Values.env.jpaDbPlatform | quote }}
+            - name: PPS_OIDC_ISSUER_URI
+              value: {{ .Values.env.oidcIssuerUri | quote }}
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              value: {{ .Values.env.jwkSetUri | quote }}
+            - name: PPS_OIDC_CLIENT_ID
+              value: {{ .Values.env.oidcClientId | quote }}
+            - name: PPS_CORS_ALLOWED_ORIGINS
+              value: {{ .Values.env.corsAllowedOrigins | quote }}
+            - name: SERVICE_CONFIG_INITIALIZE_ESSENTIAL_DATA_ON
+              value: {{ .Values.env.initializeEssentialData | quote }}
+            - name: SERVICE_CONFIG_INITIALIZE_SAMPLE_DATA_ON
+              value: {{ .Values.env.initializeSampleData | quote }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

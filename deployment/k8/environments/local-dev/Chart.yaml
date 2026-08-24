@@ -1,0 +1,23 @@
+apiVersion: v2
+name: local-dev
+description: Umbrella Helm chart for local-dev environment (Applications and Infrastructure)
+type: application
+version: 0.1.0
+appVersion: "0.0.0-SNAPSHOT"
+dependencies:
+  - name: postgres
+    version: 0.1.0
+    repository: "file://../../infrastructure/postgres"
+    condition: postgres.enabled
+  - name: keycloak
+    version: 0.1.0
+    repository: "file://../../infrastructure/keycloak"
+    condition: keycloak.enabled
+  - name: priceprovider-service
+    version: 0.1.0
+    repository: "file://../../charts/priceprovider-service"
+    condition: priceprovider-service.enabled
+  - name: priceprovider-app
+    version: 0.1.0
+    repository: "file://../../charts/priceprovider-app"
+    condition: priceprovider-app.enabled

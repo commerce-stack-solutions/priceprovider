@@ -1,0 +1,87 @@
+postgres:
+  enabled: true
+  fullnameOverride: "postgres"
+  service:
+    type: ClusterIP
+    port: 5432
+  env:
+    postgresDb: "priceProviderService"
+    postgresUser: "postgres"
+    postgresPassword: "postgres"
+
+keycloak:
+  enabled: true
+  fullnameOverride: "keycloak"
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    hosts:
+      - host: "keycloak.priceprovider.local"
+        paths:
+          - path: /
+            pathType: Prefix
+
+priceprovider-service:
+  enabled: true
+  fullnameOverride: "service"
+  image:
+    repository: "price-provider-service"
+    tag: "0.0.0-SNAPSHOT"
+    pullPolicy: "IfNotPresent"
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    hosts:
+      - host: "service.priceprovider.local"
+        paths:
+          - path: /
+            pathType: Prefix
+  env:
+    dbJdbcUrl: "jdbc:postgresql://postgres:5432/priceProviderService"
+    dbUsername: "postgres"
+    dbPassword: "postgres"
+    dbDriver: "org.postgresql.Driver"
+    jpaDbPlatform: "org.hibernate.dialect.PostgreSQLDialect"
+    oidcIssuerUri: "http://keycloak.priceprovider.local/realms/priceprovider"
+    jwkSetUri: "http://keycloak.priceprovider.local/realms/priceprovider/protocol/openid-connect/certs"
+    oidcClientId: "priceprovider-service"
+    corsAllowedOrigins: "http://localhost,http://localhost:4200,http://app.priceprovider.local"
+    initializeEssentialData: "true"
+    initializeSampleData: "true"
+
+priceprovider-app:
+  enabled: true
+  fullnameOverride: "app"
+  image:
+    repository: "price-manager-app"
+    tag: "0.0.0-SNAPSHOT"
+    pullPolicy: "IfNotPresent"
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    hosts:
+      - host: "app.priceprovider.local"
+        paths:
+          - path: /
+            pathType: Prefix
+  env:
+    baseUrl: "http://service.priceprovider.local/"
+    oidcIssuerUri: "http://keycloak.priceprovider.local/realms/priceprovider"
+    oidcRequireHttps: "false"

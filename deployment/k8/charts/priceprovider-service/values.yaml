@@ -1,0 +1,70 @@
+replicaCount: 1
+
+image:
+  repository: price-provider-service
+  tag: 0.0.0-SNAPSHOT
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+  hosts:
+    - host: service.priceprovider.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+env:
+  dbJdbcUrl: "jdbc:postgresql://postgres:5432/priceProviderService"
+  dbUsername: "postgres"
+  dbPassword: "postgres"
+  dbDriver: "org.postgresql.Driver"
+  jpaDbPlatform: "org.hibernate.dialect.PostgreSQLDialect"
+  oidcIssuerUri: "http://keycloak.priceprovider.local/realms/priceprovider"
+  jwkSetUri: "http://keycloak.priceprovider.local/realms/priceprovider/protocol/openid-connect/certs"
+  oidcClientId: "priceprovider-service"
+  corsAllowedOrigins: "http://localhost,http://localhost:4200,http://app.priceprovider.local"
+  initializeEssentialData: "true"
+  initializeSampleData: "true"
+
+readinessProbe:
+  httpGet:
+    path: /public/actuator/health
+    port: 8080
+  initialDelaySeconds: 40
+  periodSeconds: 30
+
+livenessProbe: {}
