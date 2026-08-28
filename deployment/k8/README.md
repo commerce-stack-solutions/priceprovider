@@ -13,11 +13,11 @@ deployment/k8/
 │   ├── postgres/                     # PostgreSQL Database Helm Chart
 │   └── keycloak/                     # Keycloak Identity Provider (IAM) Helm Chart
 ├── environments/                     # Environment umbrella deployment configurations
-│   └── local-dev/                    # Umbrella chart & local-dev values override
+│   └── local-dev/                    # Umbrella chart, shared Gateway, and local-dev values
 ├── argocd/                           # Argo CD GitOps Application manifests
-│   ├── app-of-apps.yaml              # Root App-of-Apps master manifest
-│   ├── local-dev-infrastructure.yaml # Argo CD Application for Infrastructure (Postgres & Keycloak)
-│   └── local-dev-applications.yaml   # Argo CD Application for Applications (Service & App)
+│   ├── app-of-apps.yaml              # Root App-of-Apps manifest for the application layer
+│   ├── local-dev-infrastructure.yaml # Optional Argo CD Application for Postgres & Keycloak
+│   └── local-dev-applications.yaml   # Argo CD Application for Gateway + Service + App
 ├── setup-helm.sh                     # Bash helper script for local deployment & dependency update
 └── setup-helm.bat                    # Windows CMD helper script for local deployment
 ```
@@ -29,7 +29,8 @@ deployment/k8/
 - **Kubernetes cluster** (Docker Desktop, Minikube, K3s, or remote cluster).
 - **`kubectl`** CLI tool.
 - **`helm`** v3 CLI tool.
-- **NGINX Ingress Controller** enabled on the cluster.
+- **Gateway API CRDs** installed on the cluster.
+- A **Gateway API-compatible controller** with a `GatewayClass` configured in `environments/local-dev/values.yaml` (`gateway.className`). Replace the default placeholder (`replace-me`) before deploying.
 
 ---
 
@@ -76,11 +77,11 @@ helm upgrade --install local-dev environments/local-dev --namespace price-provid
 
 ### Option 2: Argo CD GitOps Deployment
 
-The GitOps setup uses an **App-of-Apps** pattern with separated infrastructure and application layers:
+The GitOps setup uses an **App-of-Apps** pattern with separated application and optional infrastructure layers:
 
-- `local-dev-infrastructure.yaml`: Deploys PostgreSQL and Keycloak into namespace `price-provider`.
-- `local-dev-applications.yaml`: Deploys `priceprovider-service` and `priceprovider-app` into namespace `price-provider`.
-- `app-of-apps.yaml`: Root Argo CD application orchestrating both applications.
+- `local-dev-applications.yaml`: Deploys the shared `Gateway` plus `priceprovider-service` and `priceprovider-app` into namespace `price-provider`.
+- `local-dev-infrastructure.yaml`: Optionally deploys PostgreSQL and Keycloak into namespace `price-provider` for environments without external database or identity services.
+- `app-of-apps.yaml`: Root Argo CD application that tracks the application layer only.
 
 #### Deploying via Argo CD:
 
@@ -95,4 +96,9 @@ kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 kubectl apply -f argocd/app-of-apps.yaml
 ```
 
-2. Argo CD will continuously sync state with repository: `https://github.com/commerce-stack-solutions/priceprovider.git` on branch `master`.
+2. If the target environment also needs bundled infrastructure, apply the optional infrastructure application separately:
+```bash
+kubectl apply -f argocd/local-dev-infrastructure.yaml
+```
+
+3. Argo CD will continuously sync state with repository: `https://github.com/commerce-stack-solutions/priceprovider.git` on branch `master`.

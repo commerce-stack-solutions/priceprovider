@@ -13,6 +13,8 @@ spec:
     path: deployment/k8/environments/local-dev
     helm:
       values: |
+        gateway:
+          enabled: false
         postgres:
           enabled: true
         keycloak:

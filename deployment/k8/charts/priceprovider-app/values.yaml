@@ -22,16 +22,14 @@ service:
   port: 80
   targetPort: 80
 
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
-  hosts:
-    - host: app.priceprovider.local
-      paths:
-        - path: /
-          pathType: Prefix
+httpRoute:
+  enabled: false
+  parentRefs: []
+  hostnames: []
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
 
 resources:
   limits:
