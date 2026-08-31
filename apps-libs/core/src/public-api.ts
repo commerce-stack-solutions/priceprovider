@@ -37,6 +37,7 @@ export * from './lib/service/session.service';
 export * from './lib/service/auth.service';
 export * from './lib/service/datetime.service';
 export * from './lib/service/label.service';
+export * from './lib/service/menu-registry';
 export * from './lib/service/permission.service';
 export * from './lib/service/modal.service';
 export * from './lib/service/message-translation.service';

@@ -402,7 +402,7 @@ export class GenericFormComponent implements OnInit {
 
       if (patches.length === 0) {
         this.saving.set(false);
-        this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
+        this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
         return;
       }
 
@@ -416,7 +416,7 @@ export class GenericFormComponent implements OnInit {
             this.saving.set(false);
           } else {
             this.saving.set(false);
-            this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
+            this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
           }
         },
         error: (err) => {
@@ -473,7 +473,7 @@ export class GenericFormComponent implements OnInit {
             this.saving.set(false);
           } else {
             this.saving.set(false);
-            this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
+            this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
           }
         },
         error: (err) => {
@@ -521,7 +521,7 @@ export class GenericFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/' + this.lang(), 'generic', this.entityType().toLowerCase()]);
+    this.router.navigate(['/' + this.lang(), this.entityType().toLowerCase()]);
   }
 
   handleSaveKeyPress(event: Event): void {

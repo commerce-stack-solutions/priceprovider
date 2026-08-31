@@ -25,26 +25,26 @@ Renders dynamic interactive forms mapped to fields' metadata.
 
 ---
 
-## Generic Routing
+## Unified Generic Routing and Registry Overrides
 
-The routes are registered in `app.routes.ts` under a localized dynamic routing hierarchy prefix `/generic/:entityType`:
+The generic routes are registered in `app.routes.ts` and resolved through the unified registry-aware wrappers:
 
 ```typescript
-{
-  path: 'generic/:entityType',
-  children: [
-    { path: '', loadComponent: () => import('./pages/generic-list/generic-list.component').then(m => m.GenericListComponent) },
-    { path: 'add', loadComponent: () => import('./pages/generic-form/generic-form.component').then(m => m.GenericFormComponent) },
-    { path: ':id', loadComponent: () => import('./pages/generic-detail/generic-detail.component').then(m => m.GenericDetailComponent) },
-    { path: ':id/edit', loadComponent: () => import('./pages/generic-form/generic-form.component').then(m => m.GenericFormComponent) }
-  ]
-}
+{ path: 'generic/:entityType', component: UnifiedListComponent }
+{ path: 'generic/:entityType/add', component: UnifiedFormComponent }
+{ path: 'generic/:entityType/:id', component: UnifiedDetailComponent }
+{ path: 'generic/:entityType/:id/edit', component: UnifiedFormComponent }
 ```
+
+The unified components first ask `RegistryService` whether a type has a registered custom list, detail, or form component. If no custom component is registered, they fall back to the generic components documented above.
 
 ## Accessing Generic Interfaces
 
-Partners or developers can easily expose new endpoints without modifying application source code. Simply navigate to the generic views corresponding to the plural entity URL segment:
+Partners or developers can expose new endpoints with only registry configuration. Generic entity URLs use the plural route prefix:
+
 - `/en/generic/currencies`
 - `/en/generic/channels`
 - `/en/generic/groups`
 - `/en/generic/taxclasses`
+
+For setup instructions, see [Menu Sections and Custom View Registry Guide](../020-development/040-menu-and-view-registry-guide.md).

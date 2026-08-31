@@ -7,49 +7,48 @@ export interface CustomView {
 }
 
 export interface SidebarMenuItem {
-  type: string;
+  key: string;
   path: string;
-  labelKey: string;
-  icon: string;
+  type?: string;
+  section?: string;
+  labelKey?: string;
+  label?: string;
+  icon?: string;
   permission?: string;
+  permissionMode?: 'entityRead' | 'permission';
 }
+
+export interface SidebarMenuSection {
+  name: string;
+  items: SidebarMenuItem[];
+}
+
+export interface RegisteredEntityType {
+  type: string;
+  routePrefix?: string;
+  navigationPath?: string;
+  menuSection?: string;
+  labelKey?: string;
+  icon?: string;
+  permission?: string;
+  permissionMode?: 'entityRead' | 'permission';
+}
+
+export interface RegistryConfiguration {
+  entities?: Array<RegisteredEntityType & { routePrefix: string }>;
+  menuItems?: SidebarMenuItem[];
+}
+
+const OTHER_TYPES_SECTION = 'Other Types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistryService {
   private customViews = new Map<string, CustomView>();
-  private menuSections = new Map<string, string>(); // type -> section name
-  private routePrefixes = new Map<string, string>(); // type -> plural route prefix e.g. 'Currency' -> 'currencies'
-
-  constructor() {
-    // Register default menu sections
-    this.registerMenuSection('Channel', 'Commerce Management');
-    this.registerMenuSection('PriceRow', 'Commerce Management');
-    this.registerMenuSection('TaxClass', 'Commerce Management');
-    this.registerMenuSection('Organization', 'Organizations & Groups');
-    this.registerMenuSection('Group', 'Organizations & Groups');
-    this.registerMenuSection('Country', 'Master Data');
-    this.registerMenuSection('Currency', 'Master Data');
-    this.registerMenuSection('Unit', 'Master Data');
-    this.registerMenuSection('Language', 'Master Data');
-    this.registerMenuSection('AppRole', 'System & Access Management');
-    this.registerMenuSection('AppPermission', 'System & Access Management');
-    this.registerMenuSection('ServiceInitialization', 'System & Access Management');
-
-    // Register route prefixes
-    this.registerRoutePrefix('Channel', 'channels');
-    this.registerRoutePrefix('PriceRow', 'pricerows');
-    this.registerRoutePrefix('TaxClass', 'taxclasses');
-    this.registerRoutePrefix('Organization', 'organizations');
-    this.registerRoutePrefix('Group', 'groups');
-    this.registerRoutePrefix('Country', 'countries');
-    this.registerRoutePrefix('Currency', 'currencies');
-    this.registerRoutePrefix('Unit', 'units');
-    this.registerRoutePrefix('Language', 'languages');
-    this.registerRoutePrefix('AppRole', 'app-roles');
-    this.registerRoutePrefix('AppPermission', 'app-permissions');
-  }
+  private registeredEntityTypes = new Map<string, RegisteredEntityType>();
+  private routePrefixToType = new Map<string, string>();
+  private customMenuItems = new Map<string, SidebarMenuItem>();
 
   registerCustomView(type: string, view: CustomView) {
     this.customViews.set(type.toLowerCase(), view);
@@ -59,28 +58,119 @@ export class RegistryService {
     return this.customViews.get(type.toLowerCase());
   }
 
+  registerEntityType(entity: RegisteredEntityType & { routePrefix: string }) {
+    const key = entity.type.toLowerCase();
+    const existing = this.registeredEntityTypes.get(key);
+    const registered: RegisteredEntityType = {
+      type: existing?.type ?? entity.type,
+      routePrefix: entity.routePrefix,
+      navigationPath: existing?.navigationPath ?? entity.routePrefix,
+      menuSection: entity.menuSection ?? existing?.menuSection,
+      labelKey: entity.labelKey ?? existing?.labelKey,
+      icon: entity.icon ?? existing?.icon,
+      permission: entity.permission ?? existing?.permission ?? entity.type,
+      permissionMode: entity.permissionMode ?? existing?.permissionMode ?? 'entityRead'
+    };
+
+    this.registeredEntityTypes.set(key, registered);
+    this.routePrefixToType.set(entity.routePrefix.toLowerCase(), registered.type);
+  }
+
+  registerMenuConfiguration(configuration: RegistryConfiguration) {
+    configuration.entities?.forEach(entity => this.registerEntityType(entity));
+    configuration.menuItems?.forEach(item => this.registerMenuItem(item));
+  }
+
   registerMenuSection(type: string, section: string) {
-    this.menuSections.set(type.toLowerCase(), section);
+    const key = type.toLowerCase();
+    const existing = this.registeredEntityTypes.get(key);
+    this.registeredEntityTypes.set(key, {
+      type: existing?.type ?? type,
+      routePrefix: existing?.routePrefix,
+      navigationPath: existing?.navigationPath,
+      menuSection: section,
+      labelKey: existing?.labelKey,
+      icon: existing?.icon,
+      permission: existing?.permission ?? type,
+      permissionMode: existing?.permissionMode ?? 'entityRead'
+    });
   }
 
   getMenuSection(type: string): string | undefined {
-    return this.menuSections.get(type.toLowerCase());
+    return this.registeredEntityTypes.get(type.toLowerCase())?.menuSection;
+  }
+
+  registerMenuSectionAssignments(assignments: Record<string, string>) {
+    Object.entries(assignments).forEach(([type, section]) => this.registerMenuSection(type, section));
   }
 
   getMenuSections(): Map<string, string> {
-    return this.menuSections;
+    return new Map(
+      Array.from(this.registeredEntityTypes.values())
+        .filter(entity => !!entity.menuSection)
+        .map(entity => [entity.type.toLowerCase(), entity.menuSection!])
+    );
   }
 
   registerRoutePrefix(type: string, prefix: string) {
-    this.routePrefixes.set(type.toLowerCase(), prefix);
-    this.routePrefixes.set(prefix.toLowerCase(), type); // dual mapping
+    const key = type.toLowerCase();
+    const existing = this.registeredEntityTypes.get(key);
+    this.registeredEntityTypes.set(key, {
+      type: existing?.type ?? type,
+      routePrefix: prefix,
+      navigationPath: existing?.navigationPath ?? `generic/${prefix}`,
+      menuSection: existing?.menuSection,
+      labelKey: existing?.labelKey,
+      icon: existing?.icon,
+      permission: existing?.permission ?? type,
+      permissionMode: existing?.permissionMode ?? 'entityRead'
+    });
+    this.routePrefixToType.set(prefix.toLowerCase(), existing?.type ?? type);
   }
 
   getRoutePrefix(type: string): string | undefined {
-    return this.routePrefixes.get(type.toLowerCase());
+    return this.registeredEntityTypes.get(type.toLowerCase())?.routePrefix;
   }
 
   getEntityTypeFromPrefix(prefix: string): string | undefined {
-    return this.routePrefixes.get(prefix.toLowerCase());
+    return this.routePrefixToType.get(prefix.toLowerCase());
+  }
+
+  registerMenuItem(item: SidebarMenuItem) {
+    this.customMenuItems.set(item.key.toLowerCase(), item);
+  }
+
+  getSidebarMenuItems(): SidebarMenuItem[] {
+    const entityItems = Array.from(this.registeredEntityTypes.values())
+      .filter(entity => !!entity.routePrefix)
+      .map(entity => ({
+        key: entity.type.toLowerCase(),
+        type: entity.type,
+        path: entity.navigationPath ?? entity.routePrefix!,
+        section: entity.menuSection,
+        labelKey: entity.labelKey,
+        icon: entity.icon,
+        permission: entity.permission ?? entity.type,
+        permissionMode: entity.permissionMode ?? 'entityRead'
+      }));
+
+    return [...entityItems, ...this.customMenuItems.values()];
+  }
+
+  getSidebarMenuSections(): SidebarMenuSection[] {
+    const sections = new Map<string, SidebarMenuItem[]>();
+
+    this.getSidebarMenuItems().forEach(item => {
+      const section = item.section?.trim() || OTHER_TYPES_SECTION;
+      const items = sections.get(section) ?? [];
+      items.push(item);
+      sections.set(section, items);
+    });
+
+    return Array.from(sections.entries()).map(([name, items]) => ({ name, items }));
+  }
+
+  getOtherTypesSectionName(): string {
+    return OTHER_TYPES_SECTION;
   }
 }
