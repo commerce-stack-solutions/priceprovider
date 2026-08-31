@@ -2,6 +2,13 @@
 
 This directory contains the professional Kubernetes setup for Price Provider applications and infrastructure using **Helm** and **Argo CD** (GitOps).
 
+The setup is split into:
+
+- **application charts** for deployable Price Provider workloads
+- **infrastructure charts** for optional local supporting services
+- a **local-dev umbrella chart** that wires the charts together
+- **Argo CD applications** that separate always-on app deployment from opt-in infrastructure deployment
+
 ## Directory Structure
 
 ```text
@@ -21,6 +28,29 @@ deployment/k8/
 ├── setup-helm.sh                     # Bash helper script for local deployment & dependency update
 └── setup-helm.bat                    # Windows CMD helper script for local deployment
 ```
+
+---
+
+## Architecture Overview
+
+### Layer responsibilities
+
+| Layer | Location | Responsibility |
+| --- | --- | --- |
+| Application charts | `deployment/k8/charts/` | Deploy the Price Provider service and frontend app |
+| Infrastructure charts | `deployment/k8/infrastructure/` | Deploy local PostgreSQL and Keycloak when external services are not available |
+| Environment chart | `deployment/k8/environments/local-dev/` | Combines dependencies, shared Gateway config, and environment-specific values |
+| GitOps manifests | `deployment/k8/argocd/` | Defines Argo CD Applications for app layer and optional infrastructure layer |
+
+### Routing model
+
+This setup uses **Gateway API** instead of Kubernetes `Ingress`:
+
+- the **Gateway** is defined once at the environment level in `environments/local-dev/templates/gateway.yaml`
+- each routable chart owns only its own **HTTPRoute**
+- the umbrella environment values connect the routes to the shared Gateway through `httpRoute.parentRefs`
+
+This keeps cross-cutting ingress/gateway ownership out of individual application charts while still letting each chart describe its own hostname and path matching.
 
 ---
 
@@ -51,6 +81,95 @@ Add the following local hosts mapping to your `/etc/hosts` (Linux/macOS) or `C:\
 
 ---
 
+## Helm Chart Reference
+
+### `charts/priceprovider-service`
+
+Backend Spring Boot application chart.
+
+**Rendered resources**
+- `Deployment`
+- `Service`
+- `HorizontalPodAutoscaler` when autoscaling is enabled
+- `HTTPRoute` when `httpRoute.enabled=true`
+
+**Main values**
+- `image.*`: backend image repository, tag, and pull policy
+- `service.*`: service exposure and target container port (`8080`)
+- `httpRoute.*`: Gateway API hostname/path routing
+- `env.*`: datasource, OIDC, CORS, and data initialization settings
+- `resources.*`, `autoscaling.*`, `readinessProbe`, `livenessProbe`
+
+### `charts/priceprovider-app`
+
+Frontend Angular management UI chart.
+
+**Rendered resources**
+- `Deployment`
+- `Service`
+- `HorizontalPodAutoscaler` when autoscaling is enabled
+- `HTTPRoute` when `httpRoute.enabled=true`
+
+**Main values**
+- `image.*`: frontend image repository, tag, and pull policy
+- `service.*`: service exposure and target container port (`80`)
+- `httpRoute.*`: Gateway API hostname/path routing
+- `env.*`: backend base URL and OIDC browser settings
+- `resources.*`, `autoscaling.*`, `readinessProbe`, `livenessProbe`
+
+### `infrastructure/postgres`
+
+Optional PostgreSQL chart used mainly for local or isolated environments.
+
+**Rendered resources**
+- `Deployment`
+- `Service`
+- `PersistentVolumeClaim` when persistence is enabled
+
+**Main values**
+- `image.*`: PostgreSQL image configuration
+- `service.*`: service exposure and target port (`5432`)
+- `persistence.*`: PVC toggle, storage class, access mode, and size
+- `env.*`: database name, username, and password
+- `resources.*`
+
+### `infrastructure/keycloak`
+
+Optional Keycloak chart used mainly for local or isolated environments.
+
+**Rendered resources**
+- `ConfigMap`
+- `Deployment`
+- `Service`
+- `HTTPRoute` when `httpRoute.enabled=true`
+
+**Main values**
+- `image.*`: Keycloak image configuration
+- `service.*`: service exposure and target container port (`8080`)
+- `httpRoute.*`: Gateway API hostname/path routing
+- `env.*`: admin bootstrap credentials
+- `args`: runtime arguments such as `start-dev` and realm import
+- `resources.*`, `readinessProbe`
+
+### `environments/local-dev`
+
+Umbrella chart that assembles the local developer environment.
+
+**Responsibilities**
+- declares chart dependencies for app and infrastructure charts
+- creates the shared `Gateway`
+- provides environment-specific defaults for hostnames, routes, service wiring, and bootstrap configuration
+- allows selective enabling/disabling of infrastructure and application components
+
+**Key values**
+- `gateway.*`: shared Gateway name, class, and listeners
+- `postgres.enabled`: toggles bundled PostgreSQL
+- `keycloak.enabled`: toggles bundled Keycloak
+- `priceprovider-service.enabled`: toggles backend deployment
+- `priceprovider-app.enabled`: toggles frontend deployment
+
+---
+
 ## Deployment Options
 
 ### Option 1: Direct Helm Deployment (Local Testing)
@@ -71,6 +190,28 @@ Or manually via Helm:
 ```bash
 helm dependency update environments/local-dev
 helm upgrade --install local-dev environments/local-dev --namespace price-provider --create-namespace
+```
+
+### Useful targeted variants
+
+Applications only:
+```bash
+helm template local-dev-applications environments/local-dev \
+  --set gateway.enabled=true \
+  --set postgres.enabled=false \
+  --set keycloak.enabled=false \
+  --set priceprovider-service.enabled=true \
+  --set priceprovider-app.enabled=true
+```
+
+Optional infrastructure only:
+```bash
+helm template local-dev-infrastructure environments/local-dev \
+  --set gateway.enabled=false \
+  --set postgres.enabled=true \
+  --set keycloak.enabled=true \
+  --set priceprovider-service.enabled=false \
+  --set priceprovider-app.enabled=false
 ```
 
 ---
@@ -102,3 +243,41 @@ kubectl apply -f argocd/local-dev-infrastructure.yaml
 ```
 
 3. Argo CD will continuously sync state with repository: `https://github.com/commerce-stack-solutions/priceprovider.git` on branch `master`.
+
+### Argo CD manifest responsibilities
+
+#### `argocd/app-of-apps.yaml`
+- root application
+- tracks only `local-dev-applications.yaml`
+- keeps the core app layer active by default
+
+#### `argocd/local-dev-applications.yaml`
+- deploys the `local-dev` umbrella chart with:
+  - shared Gateway enabled
+  - `priceprovider-service` enabled
+  - `priceprovider-app` enabled
+  - `postgres` disabled
+  - `keycloak` disabled
+
+#### `argocd/local-dev-infrastructure.yaml`
+- deploys the same umbrella chart with:
+  - Gateway disabled
+  - `postgres` enabled
+  - `keycloak` enabled
+  - application charts disabled
+
+This split allows environments with managed database and identity services to run the application layer without forcing local infrastructure components.
+
+---
+
+## Validation Workflow
+
+From `deployment/k8/environments/local-dev`:
+
+```bash
+helm dependency build
+helm lint .
+helm template local-dev .
+```
+
+For split validation, also render the applications-only and infrastructure-only variants shown above. This is the preferred targeted validation flow after changing Helm charts, Gateway routing, or Argo CD values in `deployment/k8`.
