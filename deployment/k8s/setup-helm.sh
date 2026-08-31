@@ -26,15 +26,18 @@ kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -
 # Build Helm dependencies for local-dev
 echo "Updating Helm chart dependencies for local-dev environment..."
 helm dependency update "${SCRIPT_DIR}/environments/local-dev"
+echo "Ensure gateway.className in environments/local-dev/values.yaml matches an installed GatewayClass before deploying."
 
 # Option to deploy via direct Helm or via Argo CD
 MODE="${1:-helm}"
 
 if [ "$MODE" = "argocd" ]; then
-    echo "Deploying via Argo CD App-of-Apps..."
+    echo "Deploying application layer via Argo CD App-of-Apps..."
     kubectl create namespace ${ARGOCD_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
     kubectl apply -f "${SCRIPT_DIR}/argocd/app-of-apps.yaml"
     echo "Argo CD App-of-Apps applied successfully!"
+    echo "Optional infrastructure can be added with:"
+    echo "kubectl apply -f ${SCRIPT_DIR}/argocd/local-dev-infrastructure.yaml"
 else
     echo "Deploying local-dev environment directly via Helm..."
     helm upgrade --install local-dev "${SCRIPT_DIR}/environments/local-dev" --namespace ${NAMESPACE}

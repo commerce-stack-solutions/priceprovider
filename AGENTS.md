@@ -25,3 +25,4 @@ To ensure consistency and quality in complex tasks, several specialized "skills"
 - Always work with the existing codebase and reuse established patterns.
 - Follow project-specific conventions and examples as documented.
 - Consistency and alignment with the defined architecture take priority over personal preferences.
+- For `deployment/k8s/` changes, keep shared Gateway ownership at the environment chart level and use Helm validation from `deployment/k8s/environments/local-dev` before finalizing.
