@@ -1,13 +1,3 @@
-gateway:
-  enabled: true
-  name: "local-dev-gateway"
-  className: "replace-me"
-  listeners:
-    - name: "http"
-      protocol: "HTTP"
-      port: 80
-      hostname: "*.priceprovider.local"
-
 postgres:
   enabled: true
   fullnameOverride: "postgres"
@@ -25,16 +15,16 @@ keycloak:
   service:
     type: ClusterIP
     port: 80
-  httpRoute:
+  ingress:
     enabled: true
-    parentRefs:
-      - name: "local-dev-gateway"
-    hostnames:
-      - "keycloak.priceprovider.local"
-    matches:
-      - path:
-          type: PathPrefix
-          value: /
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    hosts:
+      - host: "keycloak.priceprovider.local"
+        paths:
+          - path: /
+            pathType: Prefix
 
 priceprovider-service:
   enabled: true
@@ -47,16 +37,16 @@ priceprovider-service:
     type: ClusterIP
     port: 80
     targetPort: 8080
-  httpRoute:
+  ingress:
     enabled: true
-    parentRefs:
-      - name: "local-dev-gateway"
-    hostnames:
-      - "service.priceprovider.local"
-    matches:
-      - path:
-          type: PathPrefix
-          value: /
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    hosts:
+      - host: "service.priceprovider.local"
+        paths:
+          - path: /
+            pathType: Prefix
   env:
     dbJdbcUrl: "jdbc:postgresql://postgres:5432/priceProviderService"
     dbUsername: "postgres"
@@ -81,16 +71,16 @@ priceprovider-app:
     type: ClusterIP
     port: 80
     targetPort: 80
-  httpRoute:
+  ingress:
     enabled: true
-    parentRefs:
-      - name: "local-dev-gateway"
-    hostnames:
-      - "app.priceprovider.local"
-    matches:
-      - path:
-          type: PathPrefix
-          value: /
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    hosts:
+      - host: "app.priceprovider.local"
+        paths:
+          - path: /
+            pathType: Prefix
   env:
     baseUrl: "http://service.priceprovider.local/"
     oidcIssuerUri: "http://keycloak.priceprovider.local/realms/priceprovider"

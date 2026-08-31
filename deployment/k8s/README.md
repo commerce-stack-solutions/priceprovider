@@ -1,6 +1,6 @@
 # Kubernetes Helm Charts & Argo CD Setup (`deployment/k8s`)
 
-This directory contains the Kubernetes setup for Price Provider applications and infrastructure using **Helm**, **Gateway API**, and **Argo CD** (GitOps).
+This directory contains the professional Kubernetes setup for Price Provider applications and infrastructure using **Helm** and **Argo CD** (GitOps).
 
 ## Directory Structure
 
@@ -13,26 +13,14 @@ deployment/k8s/
 │   ├── postgres/                     # PostgreSQL Database Helm Chart
 │   └── keycloak/                     # Keycloak Identity Provider (IAM) Helm Chart
 ├── environments/                     # Environment umbrella deployment configurations
-│   └── local-dev/                    # Umbrella chart, shared Gateway, and local-dev values
+│   └── local-dev/                    # Umbrella chart & local-dev values override
 ├── argocd/                           # Argo CD GitOps Application manifests
-│   ├── app-of-apps.yaml              # Root App-of-Apps manifest for the application layer
-│   ├── local-dev-infrastructure.yaml # Optional Argo CD Application for Postgres & Keycloak
-│   └── local-dev-applications.yaml   # Argo CD Application for Gateway + Service + App
+│   ├── app-of-apps.yaml              # Root App-of-Apps master manifest
+│   ├── local-dev-infrastructure.yaml # Argo CD Application for Infrastructure (Postgres & Keycloak)
+│   └── local-dev-applications.yaml   # Argo CD Application for Applications (Service & App)
 ├── setup-helm.sh                     # Bash helper script for local deployment & dependency update
 └── setup-helm.bat                    # Windows CMD helper script for local deployment
 ```
-
----
-
-## Routing Model
-
-The charts no longer render Kubernetes `Ingress` resources.
-
-- the shared `Gateway` is defined once in `environments/local-dev/templates/gateway.yaml`
-- each routable chart renders its own `HTTPRoute`
-- the umbrella chart values bind those routes to the shared Gateway
-
-This keeps Gateway ownership at the environment layer and avoids duplicating cross-cutting entrypoint resources inside each application chart.
 
 ---
 
@@ -50,7 +38,7 @@ This keeps Gateway ownership at the environment layer and avoids duplicating cro
   - `env.oidcIssuerUri`, `env.jwkSetUri`, `env.oidcClientId`: OIDC/OAuth2 authentication parameters.
   - `env.corsAllowedOrigins`: Allowed CORS origins.
   - `env.initializeEssentialData`, `env.initializeSampleData`: Data initialization toggles.
-  - `httpRoute.enabled`, `httpRoute.hostnames`, `httpRoute.matches`: Gateway API route configuration.
+  - `ingress.enabled`, `ingress.hosts`: Ingress configuration (default host: `service.priceprovider.local`).
   - `resources`: CPU and memory requests/limits.
   - `autoscaling`: Horizontal Pod Autoscaler settings (`enabled`, `minReplicas`, `maxReplicas`, `targetCPUUtilizationPercentage`).
 
@@ -63,7 +51,7 @@ This keeps Gateway ownership at the environment layer and avoids duplicating cro
   - `env.baseUrl`: Backend service endpoint (`http://service.priceprovider.local/`).
   - `env.oidcIssuerUri`: Keycloak realm issuer URI (`http://keycloak.priceprovider.local/realms/priceprovider`).
   - `env.oidcRequireHttps`: Require HTTPS flag (`false` for local dev).
-  - `httpRoute.enabled`, `httpRoute.hostnames`, `httpRoute.matches`: Gateway API route configuration.
+  - `ingress.enabled`, `ingress.hosts`: Ingress routing configuration (default host: `app.priceprovider.local`).
   - `resources` & `autoscaling`: Resource requests/limits and HPA settings.
 
 ---
@@ -86,7 +74,7 @@ This keeps Gateway ownership at the environment layer and avoids duplicating cro
   - `args`: Arguments passed to Keycloak (`start-dev`, `--import-realm`).
   - `env.keycloakAdmin`, `env.keycloakAdminPassword`: Admin credentials.
   - Auto-mounts `realm-export.json` ConfigMap into `/opt/keycloak/data/import` for automatic realm initialization.
-  - `httpRoute.enabled`, `httpRoute.hostnames`, `httpRoute.matches`: Gateway API route configuration.
+  - `ingress.enabled`, `ingress.hosts`: Ingress routing configuration (default host: `keycloak.priceprovider.local`).
 
 ---
 
@@ -101,7 +89,7 @@ The `local-dev` chart acts as an umbrella chart orchestrating all components usi
   - `priceprovider-app` (condition: `priceprovider-app.enabled`)
 
 - **Overrides (`values.yaml`)**:
-  - Provides Gateway, route, hostname, database connection URI, and credentials for all components in one place.
+  - Provides local development hostnames, database connection URIs, and credentials for all components in one place.
 
 ---
 
@@ -110,8 +98,7 @@ The `local-dev` chart acts as an umbrella chart orchestrating all components usi
 - **Kubernetes cluster** (Docker Desktop, Minikube, K3s, or remote cluster).
 - **`kubectl`** CLI tool.
 - **`helm`** v3 CLI tool.
-- **Gateway API CRDs** installed on the cluster.
-- A **Gateway API-compatible controller** with a `GatewayClass` matching `gateway.className` in `environments/local-dev/values.yaml`.
+- **NGINX Ingress Controller** enabled on the cluster.
 
 ---
 
@@ -158,11 +145,11 @@ helm upgrade --install local-dev environments/local-dev --namespace price-provid
 
 ### Option 2: Argo CD GitOps Deployment
 
-The GitOps setup uses an **App-of-Apps** pattern with separated application and optional infrastructure layers:
+The GitOps setup uses an **App-of-Apps** pattern with separated infrastructure and application layers:
 
-- `local-dev-applications.yaml`: Deploys the shared Gateway plus `priceprovider-service` and `priceprovider-app` into namespace `price-provider`.
-- `local-dev-infrastructure.yaml`: Optionally deploys PostgreSQL and Keycloak into namespace `price-provider`.
-- `app-of-apps.yaml`: Root Argo CD application that tracks the application layer only.
+- `local-dev-infrastructure.yaml`: Deploys PostgreSQL and Keycloak into namespace `price-provider`.
+- `local-dev-applications.yaml`: Deploys `priceprovider-service` and `priceprovider-app` into namespace `price-provider`.
+- `app-of-apps.yaml`: Root Argo CD application orchestrating both applications.
 
 #### Deploying via Argo CD:
 
@@ -177,9 +164,4 @@ kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 kubectl apply -f argocd/app-of-apps.yaml
 ```
 
-2. If the environment also needs bundled infrastructure, apply it separately:
-```bash
-kubectl apply -f argocd/local-dev-infrastructure.yaml
-```
-
-3. Argo CD will continuously sync state with repository: `https://github.com/commerce-stack-solutions/priceprovider.git` on branch `master`.
+2. Argo CD will continuously sync state with repository: `https://github.com/commerce-stack-solutions/priceprovider.git` on branch `master`.
