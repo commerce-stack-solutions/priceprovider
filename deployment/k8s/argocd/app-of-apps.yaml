@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://github.com/commerce-stack-solutions/priceprovider.git'
     targetRevision: master
-    path: deployment/k8/argocd
+    path: deployment/k8s/argocd
     directory:
       recurse: false
       include: 'local-dev-*.yaml'

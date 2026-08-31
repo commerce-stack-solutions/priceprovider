@@ -1,11 +1,11 @@
-# Kubernetes Helm Charts & Argo CD Setup (`deployment/k8`)
+# Kubernetes Helm Charts & Argo CD Setup (`deployment/k8s`)
 
 This directory contains the professional Kubernetes setup for Price Provider applications and infrastructure using **Helm** and **Argo CD** (GitOps).
 
 ## Directory Structure
 
 ```text
-deployment/k8/
+deployment/k8s/
 ├── charts/                           # Microservices Application Helm Charts
 │   ├── priceprovider-service/        # Backend Service Helm Chart (Java / Spring Boot)
 │   └── priceprovider-app/            # Frontend Management App Helm Chart (Angular)
@@ -26,7 +26,7 @@ deployment/k8/
 
 ## Detailed Helm Chart Reference
 
-### 1. Application Charts (`deployment/k8/charts/`)
+### 1. Application Charts (`deployment/k8s/charts/`)
 
 #### `priceprovider-service` (Backend Service)
 - **Description**: Spring Boot REST microservice handling price management and calculation logic.
@@ -56,7 +56,7 @@ deployment/k8/
 
 ---
 
-### 2. Infrastructure Charts (`deployment/k8/infrastructure/`)
+### 2. Infrastructure Charts (`deployment/k8s/infrastructure/`)
 
 #### `postgres` (Database)
 - **Description**: PostgreSQL database server for storing persistent application data.
@@ -78,7 +78,7 @@ deployment/k8/
 
 ---
 
-### 3. Environment Umbrella Chart (`deployment/k8/environments/local-dev`)
+### 3. Environment Umbrella Chart (`deployment/k8s/environments/local-dev`)
 
 The `local-dev` chart acts as an umbrella chart orchestrating all components using Helm subchart dependencies.
 

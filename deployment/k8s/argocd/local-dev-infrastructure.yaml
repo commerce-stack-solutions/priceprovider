@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: local-dev-applications
+  name: local-dev-infrastructure
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,17 +10,17 @@ spec:
   source:
     repoURL: 'https://github.com/commerce-stack-solutions/priceprovider.git'
     targetRevision: master
-    path: deployment/k8/environments/local-dev
+    path: deployment/k8s/environments/local-dev
     helm:
       values: |
         postgres:
-          enabled: false
+          enabled: true
         keycloak:
-          enabled: false
+          enabled: true
         priceprovider-service:
-          enabled: true
+          enabled: false
         priceprovider-app:
-          enabled: true
+          enabled: false
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: price-provider
