@@ -1,9 +1,9 @@
 # AGENTS.md
-This repository contains three main working areas:
+This repository contains sub-projects and deployment configurations:
 
 - subfolder `service/` – the priceprovider service is a Java / Spring Boot backend using Gradle, see [AGENTS.md](service/AGENTS.md) for project specific architecture, conventions, and development guidelines
 - subfolder `app/` – the pricemanager app is an Angular frontend using Node.js and Bootstrap, see [AGENTS.md](app/AGENTS.md) for project specific architecture, conventions, and development guidelines
-- subfolder `deployment/k8/` – Kubernetes deployment assets using Helm and Argo CD for application charts, infrastructure charts, and environment-specific GitOps setup, see [README.md](deployment/k8/README.md) for the deployment structure and workflows
+- subfolder `deployment/k8/` – Kubernetes deployment using Helm charts (`charts/`, `infrastructure/`, `environments/`) and Argo CD GitOps (`argocd/`), see [README.md](deployment/k8/README.md) for detailed chart architecture, deployment options, and values customization.
 
 Each project follows modern best practices and is structured for scalability, maintainability, and developer productivity.
 
@@ -25,4 +25,3 @@ To ensure consistency and quality in complex tasks, several specialized "skills"
 - Always work with the existing codebase and reuse established patterns.
 - Follow project-specific conventions and examples as documented.
 - Consistency and alignment with the defined architecture take priority over personal preferences.
-- For `deployment/k8/` changes, keep the environment-level Gateway/API routing structure intact and validate manifests from `deployment/k8/environments/local-dev` using Helm before finalizing changes.

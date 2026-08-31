@@ -13,14 +13,16 @@ service:
   port: 80
   targetPort: 8080
 
-httpRoute:
-  enabled: false
-  parentRefs: []
-  hostnames: []
-  matches:
-    - path:
-        type: PathPrefix
-        value: /
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+  hosts:
+    - host: keycloak.priceprovider.local
+      paths:
+        - path: /
+          pathType: Prefix
 
 resources:
   limits:

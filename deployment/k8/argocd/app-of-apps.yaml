@@ -13,7 +13,7 @@ spec:
     path: deployment/k8/argocd
     directory:
       recurse: false
-      include: 'local-dev-applications.yaml'
+      include: 'local-dev-*.yaml'
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: argocd
