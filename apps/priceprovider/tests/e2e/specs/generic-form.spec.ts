@@ -87,8 +87,8 @@ test.describe('Generic Meta UI Components', () => {
     // Submit form
     await authenticatedPage.locator('button[type="submit"]').click();
 
-    // Verify it navigated back to currencies list
-    await expect(authenticatedPage).toHaveURL(/.*\/generic\/currencies/);
+    // Verify it navigated back to the currencies list route
+    await expect(authenticatedPage).toHaveURL(/.*\/currencies$/);
 
     // Verify payload is structured correctly
     expect(postBody).not.toBeNull();
