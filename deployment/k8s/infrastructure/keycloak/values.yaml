@@ -1,0 +1,48 @@
+replicaCount: 1
+
+image:
+  repository: quay.io/keycloak/keycloak
+  tag: 26.0.0
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+  hosts:
+    - host: keycloak.priceprovider.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+env:
+  keycloakAdmin: admin
+  keycloakAdminPassword: admin
+
+args:
+  - "start-dev"
+  - "--import-realm"
+
+readinessProbe:
+  httpGet:
+    path: /realms/priceprovider
+    port: 8080
+  initialDelaySeconds: 40
+  periodSeconds: 15

@@ -22,7 +22,6 @@ The setup includes the following components:
 - `app.yaml`: Sets up the frontend application with a LoadBalancer Service and HorizontalPodAutoscaler.
 - `setup.sh`: Bash script to apply all manifests and wait for resources.
 - `setup.bat`: Windows batch script to apply all manifests.
-- `ingress.yaml`: Sets up an Ingress resource to route traffic via hostnames.
 
 ## Prerequisites
 
