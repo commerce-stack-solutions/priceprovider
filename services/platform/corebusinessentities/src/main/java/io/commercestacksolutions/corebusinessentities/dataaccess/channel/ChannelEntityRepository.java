@@ -1,0 +1,10 @@
+package io.commercestacksolutions.corebusinessentities.dataaccess.channel;
+
+import io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity.ChannelEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ChannelEntityRepository extends JpaRepository<ChannelEntity, String>, JpaSpecificationExecutor<ChannelEntity> {
+}

@@ -1,0 +1,22 @@
+<nav id="sidebar" class="sidebar" [class.sidebar-hidden]="!(visible())">
+  <div class="list-group list-group-flush mx-3 mt-4">
+    @for (section of sections(); track section.name) {
+      <div class="sidebar-category-label">
+        {{ getSectionLabel(section.name) | transloco }}
+      </div>
+      @for (item of section.items; track item.key) {
+        <a [routerLink]="getLink(item)" class="list-group-item list-group-item-action py-2 ripple" routerLinkActive="active">
+          <i [class]="getItemIcon(item) + ' me-3'"></i>
+          @if (item.labelKey) {
+            <span>{{ ('components.sidebar.' + item.labelKey) | transloco }}</span>
+          } @else {
+            <span>{{ getItemLabel(item) }}</span>
+          }
+        </a>
+      }
+    }
+  </div>
+  <div class="mt-auto mx-3 mb-0 logo-container">
+    <img src="/logo.svg" alt="Composable Commerce Starters Logo" class="logo-img">
+  </div>
+</nav>

@@ -1,0 +1,112 @@
+{
+  "entity": "GroupEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.group.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.ReferenceKey",
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.idgenerator.GeneratedId",
+    "io.commercestacksolutions.commons.dataaccess.idgenerator.IdGeneratorProvider",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIdentityReference",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.time.OffsetDateTime",
+    "java.util.HashSet",
+    "java.util.Set"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@Inheritance(strategy = InheritanceType.JOINED)",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"path\", scope = GroupEntity.class)",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "type": "String",
+      "annotations": [
+        "@Id",
+        "@GeneratedId",
+        "@Column(length = 100)"
+      ]
+    },
+    {
+      "name": "path",
+      "type": "String",
+      "annotations": [
+        "@ReferenceKey",
+        "@MandatoryField",
+        "@Column(unique = true, nullable = false)"
+      ]
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "annotations": [
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "parentRefs",
+      "type": "Set<GroupEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany",
+        "@JoinTable(name = \"group_parents\", joinColumns = @JoinColumn(name = \"group_id\"), inverseJoinColumns = @JoinColumn(name = \"parent_id\"))",
+        "@JsonIdentityReference(alwaysAsId = true)"
+      ]
+    },
+    {
+      "name": "subRefs",
+      "type": "Set<GroupEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany(mappedBy = \"parentRefs\")",
+        "@JsonIdentityReference(alwaysAsId = true)"
+      ]
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "path", "type": "String" }
+      ],
+      "body": "this.path = path;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "prePersist",
+      "annotations": ["@PrePersist"],
+      "visibility": "protected",
+      "returnType": "void",
+      "body": "if (this.id == null) { this.id = IdGeneratorProvider.generate(GroupEntity.class); }"
+    },
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"GroupEntity{\" + \"id=\" + id + \", path='\" + path + '\\'' + \", name='\" + name + '\\'' + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}

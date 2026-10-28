@@ -1,0 +1,69 @@
+{
+  "entity": "CommonAppPermission",
+  "package": "io.commercestacksolutions.coreserviceapp.dataaccess.approle.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.time.OffsetDateTime"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@Inheritance(strategy = InheritanceType.JOINED)",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"id\", scope = CommonAppPermission.class)",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.approle.entity.CommonAppPermission"
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "type": "Long",
+      "annotations": [
+        "@Id",
+        "@GeneratedValue(strategy = GenerationType.IDENTITY)"
+      ]
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "annotations": [
+        "@MandatoryField",
+        "@Column(unique = true, nullable = false)"
+      ]
+    },
+    {
+      "name": "description",
+      "type": "String"
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    }
+  ],
+  "methods": [
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"AppPermissionEntity{\" + \"id=\" + id + \", name='\" + name + '\\'' + \", description='\" + description + '\\'' + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}

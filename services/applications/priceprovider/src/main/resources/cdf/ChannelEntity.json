@@ -1,0 +1,29 @@
+{
+  "entity": "ChannelEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.meta.MetaDynamicEnum",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeDefinition",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.channel.pricerepresentationmode.PriceRepresentationModeType"
+  ],
+  "fields": [
+    {
+      "name": "priceRepresentationMode",
+      "type": "PriceRepresentationModeType",
+      "annotations": [
+        "@MetaDynamicEnum(beanType = PriceRepresentationModeDefinition.class)",
+        "@MandatoryField"
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"ChannelEntity{\" + \"id='\" + getId() + \"'\" + \", allowedCountryRefs=\" + (getAllowedCountryRefs() != null ? getAllowedCountryRefs().stream().map(CountryEntity::getIsoKey).collect(Collectors.toSet()) : null) + \", priceRepresentationMode='\" + priceRepresentationMode + \"'\" + \", createdAt=\" + getCreatedAt() + \", lastModifiedAt=\" + getLastModifiedAt() + '}';"
+    }
+  ]
+}

@@ -12,7 +12,7 @@ Run the Postman collection against the Price Provider Service to validate all AP
 The Postman collection relies on sample data that is loaded when the Spring Boot service starts with the `dev` profile.
 
 ```bash
-cd service
+cd services/applications/priceprovider
 ./gradlew bootRun --args='--spring.profiles.active=dev'
 ```
 
@@ -34,7 +34,7 @@ npm install -g newman newman-reporter-html
 ## Full Collection Run
 
 ```bash
-cd service
+cd services/applications/priceprovider
 newman run postman/pps-postmancollection.json \
   --env-var "baseUrl=http://localhost:8080" \
   --reporters cli,html \
@@ -91,8 +91,8 @@ The Public Price API tests and several Admin API tests depend on specific sample
 
 This sample data is defined in:
 ```
-service/src/main/resources/initialize/essential/   ← always loaded (countries, currencies, etc.)
-service/src/main/resources/initialize/sample/      ← loaded when dev profile is active (sample-data-on: true)
+services/applications/priceprovider/src/main/resources/initialize/essential/   ← always loaded (countries, currencies, etc.)
+services/applications/priceprovider/src/main/resources/initialize/sample/      ← loaded when dev profile is active (sample-data-on: true)
 ```
 
 Data files follow the naming convention `{EntityTypeName}.{4-digit-number}.{optional-descriptor}.json`, for example:
@@ -108,8 +108,8 @@ When adding new features (e.g., channel-country pricing), update the sample data
 
 ## Collection File Location
 ```
-service/postman/pps-postmancollection.json   ← collection with all requests and test scripts
-service/postman/pps-environment.json         ← environment file with all pre-configured variables
+services/applications/priceprovider/postman/pps-postmancollection.json   ← collection with all requests and test scripts
+services/applications/priceprovider/postman/pps-environment.json         ← environment file with all pre-configured variables
 ```
 
 # Updating the Collection
@@ -132,8 +132,8 @@ When modifying or extending the collection:
 | Group       | `id`, `name`                        |
 
 # Relevant Resources
-- [Postman Collection Guide](../../../service/doc/020-development/040-postman.md) – detailed documentation on collection structure, Newman usage, and configuration
-- [Public Price API Integration Guide](../../../service/doc/030-features/040-public-price-api/010-integration-guide.md)
-- [Channels & Countries Business Guide](../../../service/doc/030-features/050-channels-countries/010-business-guide.md)
+- [Postman Collection Guide](../../../services/doc/020-development/040-postman.md) – detailed documentation on collection structure, Newman usage, and configuration
+- [Public Price API Integration Guide](../../../services/doc/050-service-applications/010-priceprovider/010-public-price-api/010-integration-guide.md)
+- [Channels & Countries Business Guide](../../../services/doc/030-features/050-channels-countries/010-business-guide.md)
 - Newman documentation: <https://www.npmjs.com/package/newman>
 - Postman: <https://www.postman.com/>

@@ -350,7 +350,7 @@ Add bulk operation examples to Postman collection:
 
 # Relevant Resources
 
-- [Bulk Update of Price Rows Guide](../../../service/doc/030-features/030-bulk-update-pricerows.md) - Comprehensive guide specific to PriceRow smart matching
-- [Development Guide - Service Layer](../../../service/doc/020-development/012-development-guide-service-layer.md) - Service layer patterns
-- [Development Guide - Controller Layer](../../../service/doc/020-development/014-development-guide-controller-layer.md) - REST API patterns
-- Postman Collection: `service/postman/pps-postmancollection.json`
+- [Bulk Update of Price Rows Guide](../../../services/doc/030-features/030-bulk-update-pricerows.md) - Comprehensive guide specific to PriceRow smart matching
+- [Development Guide - Service Layer](../../../services/doc/020-development/012-development-guide-service-layer.md) - Service layer patterns
+- [Development Guide - Controller Layer](../../../services/doc/020-development/014-development-guide-controller-layer.md) - REST API patterns
+- Postman Collection: `services/applications/priceprovider/postman/pps-postmancollection.json`

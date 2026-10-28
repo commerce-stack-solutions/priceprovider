@@ -1,0 +1,23 @@
+<div class="container mt-4">
+  <h1>{{ 'pages.home.title' | transloco }}</h1>
+  <p>{{ 'pages.home.description' | transloco }}</p>
+
+  <div class="home-categories-grid">
+    @for (section of sections(); track section.name) {
+      <div class="home-category-card">
+        <div class="home-category-label">{{ getSectionLabel(section.name) | transloco }}</div>
+        <div class="list-group home-list-group">
+          @for (item of section.items; track item.key) {
+            <a [routerLink]="getLink(item)" class="list-group-item list-group-item-action">
+              @if (item.labelKey) {
+                {{ ('components.sidebar.' + item.labelKey) | transloco }}
+              } @else {
+                {{ getItemLabel(item) }}
+              }
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

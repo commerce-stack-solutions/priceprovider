@@ -1,0 +1,1 @@
+export { LocalizedStringfieldViewComponent } from 'core';

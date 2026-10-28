@@ -41,12 +41,13 @@ PPS_BASEURL="$2"
 
 # Ensure app image exists in ACR (build on demand)
 APP_IMAGE="${APP_APP}:${VERSION}"
-APP_BUILD_CONTEXT="../../app"
+APP_BUILD_CONTEXT="../.."
+APP_DOCKERFILE="apps/priceprovider/Dockerfile"
 
 echo "Checking ACR image tag \"${APP_IMAGE}\"..."
 if ! az acr repository show --name "${ACR_NAME}" --image "${APP_IMAGE}" >/dev/null 2>&1; then
     echo "Image not found. Building and pushing with az acr build..."
-    az acr build --registry "${ACR_NAME}" --image "${APP_IMAGE}" "${APP_BUILD_CONTEXT}"
+    az acr build --registry "${ACR_NAME}" --image "${APP_IMAGE}" --file "${APP_DOCKERFILE}" "${APP_BUILD_CONTEXT}"
 else
     echo "Image already exists in ACR."
 fi

@@ -1,0 +1,75 @@
+{
+  "entity": "PriceRowRestEntity",
+  "package": "io.commercestacksolutions.priceproviderservice.facade.pricerow.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "io.commercestacksolutions.priceproviderservice.facade.pricerow.info.InfoPriceRow",
+    "java.math.BigDecimal",
+    "java.time.OffsetDateTime",
+    "java.util.Set"
+  ],
+  "superClass": "RestEntity<InfoPriceRow, IncludesPriceRow>",
+  "fields": [
+    {
+      "name": "id",
+      "type": "String"
+    },
+    {
+      "name": "pricedResourceId",
+      "type": "String"
+    },
+    {
+      "name": "priceValue",
+      "type": "BigDecimal"
+    },
+    {
+      "name": "minQuantity",
+      "type": "BigDecimal"
+    },
+    {
+      "name": "unitRef",
+      "type": "String"
+    },
+    {
+      "name": "currencyRef",
+      "type": "String"
+    },
+    {
+      "name": "taxClassRef",
+      "type": "String"
+    },
+    {
+      "name": "priceType",
+      "type": "String"
+    },
+    {
+      "name": "validFrom",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "validTo",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "groupRefs",
+      "type": "Set<String>"
+    },
+    {
+      "name": "channelRefs",
+      "type": "Set<String>"
+    },
+    {
+      "name": "taxIncluded",
+      "type": "boolean"
+    }
+  ],
+  "methods": [
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"PriceRowRestEntity{\" + \"id=\" + id + \", pricedResourceId='\" + pricedResourceId + \"'\" + \", priceValue=\" + priceValue + \", minQuantity=\" + minQuantity + \", unitRef='\" + unitRef + \"'\" + \", currencyRef='\" + currencyRef + \"'\" + \", taxClassRef='\" + taxClassRef + \"'\" + \", priceType=\" + priceType + \", validFrom=\" + validFrom + \", validTo=\" + validTo + \", groupRefs=\" + groupRefs + \", channelRefs=\" + channelRefs + \", taxIncluded=\" + taxIncluded + '}';"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+export { ColumnFilterComponent } from 'core';

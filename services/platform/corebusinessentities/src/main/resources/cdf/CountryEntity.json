@@ -1,0 +1,141 @@
+{
+  "entity": "CountryEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.country.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.currency.entity.CurrencyEntity",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.taxclass.entity.TaxClassEntity",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.time.OffsetDateTime",
+    "java.util.ArrayList",
+    "java.util.HashSet",
+    "java.util.List",
+    "java.util.Map",
+    "java.util.Set",
+    "java.util.stream.Collectors"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"isoKey\")",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "isoKey",
+      "type": "String",
+      "annotations": [
+        "@Id"
+      ]
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>",
+      "annotations": [
+        "@ElementCollection",
+        "@CollectionTable(name = \"country_localized_names\", joinColumns = @JoinColumn(name = \"iso_key\"))",
+        "@MapKeyColumn(name = \"language_code\")",
+        "@Column(name = \"name\")",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "allowedCurrencyRefs",
+      "type": "Set<CurrencyEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany(fetch = FetchType.LAZY)",
+        "@JoinTable(name = \"country_currencies\", joinColumns = @JoinColumn(name = \"country_iso_key\"), inverseJoinColumns = @JoinColumn(name = \"currency_key\"))"
+      ]
+    },
+    {
+      "name": "primaryCurrencyRef",
+      "type": "CurrencyEntity",
+      "annotations": [
+        "@ManyToOne(fetch = FetchType.LAZY)",
+        "@JoinColumn(name = \"primary_currency_key\")",
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "taxClassRefs",
+      "type": "List<TaxClassEntity>",
+      "initialValue": "new ArrayList<>()",
+      "annotations": [
+        "@OneToMany(mappedBy = \"countryRef\", fetch = FetchType.LAZY)",
+        "@JsonIgnoreProperties(\"countryRef\")"
+      ]
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "isoKey", "type": "String" }
+      ],
+      "body": "this.isoKey = isoKey;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "getCurrencyRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "Set<String>",
+      "body": "return allowedCurrencyRefs != null ? allowedCurrencyRefs.stream().map(CurrencyEntity::getCurrencyKey).collect(Collectors.toSet()) : new HashSet<>();"
+    },
+    {
+      "name": "setCurrencyRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "currencyRefs", "type": "Set<String>" }
+      ],
+      "body": "if (currencyRefs != null && !currencyRefs.isEmpty()) { this.allowedCurrencyRefs = currencyRefs.stream().map(ref -> { CurrencyEntity currency = new CurrencyEntity(); currency.setCurrencyKey(ref); return currency; }).collect(Collectors.toSet()); } else { this.allowedCurrencyRefs = new HashSet<>(); }"
+    },
+    {
+      "name": "getPrimaryCurrencyKey",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return primaryCurrencyRef != null ? primaryCurrencyRef.getCurrencyKey() : null;"
+    },
+    {
+      "name": "setPrimaryCurrencyKey",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "primaryCurrencyKey", "type": "String" }
+      ],
+      "body": "if (primaryCurrencyKey != null && !primaryCurrencyKey.isBlank()) { CurrencyEntity currency = new CurrencyEntity(); currency.setCurrencyKey(primaryCurrencyKey); this.primaryCurrencyRef = currency; } else { this.primaryCurrencyRef = null; }"
+    },
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"CountryEntity{\" + \"isoKey='\" + isoKey + '\\'' + \", name=\" + name + \", allowedCurrencyRefs=\" + (allowedCurrencyRefs != null ? allowedCurrencyRefs.stream().map(CurrencyEntity::getCurrencyKey).collect(Collectors.toSet()) : null) + \", primaryCurrencyRef=\" + (primaryCurrencyRef != null ? primaryCurrencyRef.getCurrencyKey() : null) + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "entity": "LanguageEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.language.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.commons.dataaccess.meta.MandatoryField",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.time.OffsetDateTime",
+    "java.util.Map"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"isoKey\")",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "isoKey",
+      "type": "String",
+      "annotations": [
+        "@Id"
+      ]
+    },
+    {
+      "name": "active",
+      "type": "Boolean",
+      "annotations": [
+        "@MandatoryField"
+      ]
+    },
+    {
+      "name": "mandatory",
+      "type": "Boolean"
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>",
+      "annotations": [
+        "@ElementCollection",
+        "@CollectionTable(name = \"language_localized_names\", joinColumns = @JoinColumn(name = \"iso_key\"))",
+        "@MapKeyColumn(name = \"language_code\")",
+        "@Column(name = \"name\")"
+      ]
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "isoKey", "type": "String" }
+      ],
+      "body": "this.isoKey = isoKey;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "getActive",
+      "visibility": "public",
+      "returnType": "Boolean",
+      "body": "return this.active;"
+    },
+    {
+      "name": "getMandatory",
+      "visibility": "public",
+      "returnType": "Boolean",
+      "body": "return this.mandatory;"
+    },
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"LanguageEntity{\" + \"isoKey='\" + isoKey + '\\'' + \", active=\" + active + \", mandatory=\" + mandatory + \", name=\" + name + \", createdAt=\" + createdAt + \", lastModifiedAt=\" + lastModifiedAt + '}';"
+    }
+  ]
+}

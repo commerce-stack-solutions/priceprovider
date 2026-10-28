@@ -1,0 +1,36 @@
+{
+  "entity": "OrganizationRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.organization.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "io.commercestacksolutions.corebusinessentities.facade.organization.info.InfoOrganization",
+    "java.util.Set"
+  ],
+  "superClass": "RestEntity<InfoOrganization, IncludesOrganization>",
+  "fields": [
+    {
+      "name": "id",
+      "type": "String"
+    },
+    {
+      "name": "path",
+      "type": "String"
+    },
+    {
+      "name": "name",
+      "type": "String"
+    },
+    {
+      "name": "organizationType",
+      "type": "String"
+    },
+    {
+      "name": "parentRefs",
+      "type": "Set<String>"
+    },
+    {
+      "name": "subRefs",
+      "type": "Set<String>"
+    }
+  ]
+}

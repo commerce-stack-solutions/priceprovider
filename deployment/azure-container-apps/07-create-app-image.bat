@@ -23,10 +23,11 @@ set "VERSION=%~1"
 REM ============================================================
 REM  Resolve the app source directory
 REM  This script lives in deployment/azure-container-apps/
-REM  The app Dockerfile is in app/ (two levels up)
+REM  Use repo root as build context and app Dockerfile from apps\priceprovider
 REM ============================================================
 set "SCRIPT_DIR=%~dp0"
-set "APP_DIR=%SCRIPT_DIR%..\..\app"
+set "REPO_ROOT=%SCRIPT_DIR%..\.."
+set "APP_DOCKERFILE=%REPO_ROOT%\apps\priceprovider\Dockerfile"
 
 REM ============================================================
 REM  Log in to ACR
@@ -42,7 +43,7 @@ REM ============================================================
 REM  Build Docker image
 REM ============================================================
 echo Building Docker image %IMAGE_NAME%:%VERSION%...
-call docker build -t "%IMAGE_NAME%:%VERSION%" "%APP_DIR%"
+call docker build -f "%APP_DOCKERFILE%" -t "%IMAGE_NAME%:%VERSION%" "%REPO_ROOT%"
 if %errorlevel% neq 0 (
     echo ERROR: Docker build failed.
     exit /b 1

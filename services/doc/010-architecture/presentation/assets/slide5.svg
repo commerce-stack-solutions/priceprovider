@@ -1,0 +1,5 @@
+<svg width="350" height="80" viewBox="0 0 350 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="330" height="60" rx="5" fill="#2d3748" stroke="#4fc3f7" stroke-width="2"/>
+  <text x="175" y="35" fill="#4fc3f7" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle">100% Modularity &amp; Agility</text>
+  <text x="175" y="55" fill="#fff" font-family="Arial" font-size="10" text-anchor="middle">Upgrade platform modules without breaking app schemas</text>
+</svg>

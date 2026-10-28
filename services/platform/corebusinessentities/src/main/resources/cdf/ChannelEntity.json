@@ -1,0 +1,83 @@
+{
+  "entity": "ChannelEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.dataaccess.channel.entity",
+  "imports": [
+    "io.commercestacksolutions.commons.dataaccess.entity.AuditableEntity",
+    "io.commercestacksolutions.corebusinessentities.dataaccess.country.entity.CountryEntity",
+    "com.fasterxml.jackson.annotation.JsonIdentityInfo",
+    "com.fasterxml.jackson.annotation.JsonIgnoreProperties",
+    "com.fasterxml.jackson.annotation.ObjectIdGenerators",
+    "jakarta.persistence.*",
+    "java.time.OffsetDateTime",
+    "java.util.HashSet",
+    "java.util.Set",
+    "java.util.stream.Collectors"
+  ],
+  "classAnnotations": [
+    "@Entity",
+    "@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = \"id\")",
+    "@JsonIgnoreProperties({\"hibernateLazyInitializer\", \"handler\"})"
+  ],
+  "interfaces": [
+    "AuditableEntity"
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "type": "String",
+      "annotations": [
+        "@Id"
+      ]
+    },
+    {
+      "name": "allowedCountryRefs",
+      "type": "Set<CountryEntity>",
+      "initialValue": "new HashSet<>()",
+      "annotations": [
+        "@ManyToMany(fetch = FetchType.LAZY)",
+        "@JoinTable(name = \"channel_countries\", joinColumns = @JoinColumn(name = \"channel_id\"), inverseJoinColumns = @JoinColumn(name = \"country_iso_key\"))"
+      ]
+    },
+    {
+      "name": "createdAt",
+      "type": "OffsetDateTime"
+    },
+    {
+      "name": "lastModifiedAt",
+      "type": "OffsetDateTime"
+    }
+  ],
+  "constructors": [
+    {
+      "visibility": "public",
+      "parameters": [],
+      "body": ""
+    },
+    {
+      "visibility": "public",
+      "parameters": [
+        { "name": "id", "type": "String" }
+      ],
+      "body": "this.id = id;"
+    }
+  ],
+  "methods": [
+    {
+      "name": "getCountryRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "Set<String>",
+      "body": "return allowedCountryRefs != null ? allowedCountryRefs.stream().map(CountryEntity::getIsoKey).collect(Collectors.toSet()) : new HashSet<>();"
+    },
+    {
+      "name": "setCountryRefs",
+      "annotations": ["@Transient"],
+      "visibility": "public",
+      "returnType": "void",
+      "parameters": [
+        { "name": "countryRefs", "type": "Set<String>" }
+      ],
+      "body": "if (countryRefs != null && !countryRefs.isEmpty()) { this.allowedCountryRefs = countryRefs.stream().map(ref -> { CountryEntity country = new CountryEntity(); country.setIsoKey(ref); return country; }).collect(Collectors.toSet()); } else { this.allowedCountryRefs = new HashSet<>(); }"
+    }
+  ]
+}

@@ -45,13 +45,14 @@ REM ============================================================
 REM  Ensure app image exists in ACR (build on demand)
 REM ============================================================
 set "APP_IMAGE=%APP_APP%:%VERSION%"
-set "APP_BUILD_CONTEXT=..\..\app"
+set "APP_BUILD_CONTEXT=..\.."
+set "APP_DOCKERFILE=apps/priceprovider/Dockerfile"
 
 echo Checking ACR image tag "%APP_IMAGE%"...
 call az acr repository show --name "%ACR_NAME%" --image "%APP_IMAGE%" >nul 2>&1
 if %errorlevel% neq 0 (
     echo Image not found. Building and pushing with az acr build...
-    call az acr build --registry "%ACR_NAME%" --image "%APP_IMAGE%" "%APP_BUILD_CONTEXT%"
+    call az acr build --registry "%ACR_NAME%" --image "%APP_IMAGE%" --file "%APP_DOCKERFILE%" "%APP_BUILD_CONTEXT%"
     if %errorlevel% neq 0 (
         echo ERROR: Failed to build and push image "%APP_IMAGE%".
         exit /b 1

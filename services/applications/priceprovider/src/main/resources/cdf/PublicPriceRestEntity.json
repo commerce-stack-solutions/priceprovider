@@ -1,0 +1,118 @@
+{
+  "entity": "PublicPriceRestEntity",
+  "package": "io.commercestacksolutions.priceproviderservice.facade.publicprice.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "io.commercestacksolutions.priceproviderservice.facade.publicprice.info.InfoPublicPrice",
+    "io.swagger.v3.oas.annotations.media.Schema",
+    "java.math.BigDecimal",
+    "java.time.OffsetDateTime",
+    "java.util.Set"
+  ],
+  "classAnnotations": [
+    "@Schema(description = \"Public price information for a priced resource\")"
+  ],
+  "superClass": "RestEntity<InfoPublicPrice, IncludesPublicPrice>",
+  "fields": [
+    {
+      "name": "id",
+      "type": "String",
+      "annotations": [
+        "@Schema(description = \"Price row identifier\", example = \"550e8400-e29b-41d4-a716-446655440000\")"
+      ]
+    },
+    {
+      "name": "pricedResourceId",
+      "type": "String",
+      "annotations": [
+        "@Schema(description = \"Priced resource identifier (product, material, or service)\", example = \"PROD-001\")"
+      ]
+    },
+    {
+      "name": "priceValue",
+      "type": "BigDecimal",
+      "annotations": [
+        "@Schema(description = \"Calculated price value (net, gross, or as declared based on channel price representation mode)\", example = \"99.99\")"
+      ]
+    },
+    {
+      "name": "minQuantity",
+      "type": "BigDecimal",
+      "annotations": [
+        "@Schema(description = \"Minimum quantity for this price to apply\", example = \"1.00\")"
+      ]
+    },
+    {
+      "name": "unitRef",
+      "type": "String",
+      "annotations": [
+        "@Schema(description = \"Unit reference (symbol)\", example = \"pcs\")"
+      ]
+    },
+    {
+      "name": "currencyRef",
+      "type": "String",
+      "annotations": [
+        "@Schema(description = \"Currency reference (key)\", example = \"EUR\")"
+      ]
+    },
+    {
+      "name": "taxClassRef",
+      "type": "String",
+      "annotations": [
+        "@Schema(description = \"Tax class reference\", example = \"STANDARD\")"
+      ]
+    },
+    {
+      "name": "priceType",
+      "type": "String",
+      "annotations": [
+        "@Schema(description = \"Price type\", example = \"SALES_PRICE\")"
+      ]
+    },
+    {
+      "name": "validFrom",
+      "type": "OffsetDateTime",
+      "annotations": [
+        "@Schema(description = \"Valid from date (ISO 8601)\", example = \"2024-01-01T00:00:00Z\")"
+      ]
+    },
+    {
+      "name": "validTo",
+      "type": "OffsetDateTime",
+      "annotations": [
+        "@Schema(description = \"Valid to date (ISO 8601)\", example = \"2024-12-31T23:59:59Z\")"
+      ]
+    },
+    {
+      "name": "groupRefs",
+      "type": "Set<String>",
+      "annotations": [
+        "@Schema(description = \"Group references (if price is group-specific)\")"
+      ]
+    },
+    {
+      "name": "channelRefs",
+      "type": "Set<String>",
+      "annotations": [
+        "@Schema(description = \"Channel references\")"
+      ]
+    },
+    {
+      "name": "taxIncluded",
+      "type": "boolean",
+      "annotations": [
+        "@Schema(description = \"Indicates whether the returned price includes tax\", example = \"true\")"
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "name": "toString",
+      "annotations": ["@Override"],
+      "visibility": "public",
+      "returnType": "String",
+      "body": "return \"PublicPriceRestEntity{\" + \"id=\" + id + \", pricedResourceId='\" + pricedResourceId + \"'\" + \", priceValue=\" + priceValue + \", minQuantity=\" + minQuantity + \", unitRef='\" + unitRef + \"'\" + \", currencyRef='\" + currencyRef + \"'\" + \", taxClassRef='\" + taxClassRef + \"'\" + \", priceType=\" + priceType + \", validFrom=\" + validFrom + \", validTo=\" + validTo + \", groupRefs=\" + groupRefs + \", taxIncluded=\" + taxIncluded + '}';"
+    }
+  ]
+}

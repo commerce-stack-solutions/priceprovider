@@ -1,0 +1,38 @@
+{
+  "entity": "UnitRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.unit.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity",
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "java.math.BigDecimal",
+    "java.util.Map",
+    "com.fasterxml.jackson.databind.annotation.JsonSerialize",
+    "io.commercestacksolutions.corebusinessentities.facade.config.BigDecimalPlainSerializer"
+  ],
+  "superClass": "RestEntity<InfoAuditableRestEntity, IncludesUnit>",
+  "fields": [
+    {
+      "name": "symbol",
+      "type": "String"
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>"
+    },
+    {
+      "name": "measure",
+      "type": "String"
+    },
+    {
+      "name": "baseUnitRef",
+      "type": "String"
+    },
+    {
+      "name": "factor",
+      "type": "BigDecimal",
+      "annotations": [
+        "@JsonSerialize(using = BigDecimalPlainSerializer.class)"
+      ]
+    }
+  ]
+}

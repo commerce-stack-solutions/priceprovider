@@ -1,0 +1,1 @@
+export { MessageTranslationService } from 'core';

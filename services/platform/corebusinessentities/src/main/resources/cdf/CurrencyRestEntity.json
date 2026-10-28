@@ -1,0 +1,24 @@
+{
+  "entity": "CurrencyRestEntity",
+  "package": "io.commercestacksolutions.corebusinessentities.facade.currency.restentity",
+  "imports": [
+    "io.commercestacksolutions.commons.web.rest.InfoAuditableRestEntity",
+    "io.commercestacksolutions.commons.web.rest.RestEntity",
+    "java.util.Map"
+  ],
+  "superClass": "RestEntity<InfoAuditableRestEntity, IncludesCurrency>",
+  "fields": [
+    {
+      "name": "currencyKey",
+      "type": "String"
+    },
+    {
+      "name": "symbol",
+      "type": "String"
+    },
+    {
+      "name": "name",
+      "type": "Map<String, String>"
+    }
+  ]
+}
