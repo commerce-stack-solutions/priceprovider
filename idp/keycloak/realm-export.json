@@ -146,11 +146,15 @@
         "http://localhost:3002/*",
         "http://localhost:3002",
         "http://localhost:4000/",
+        "http://localhost:4000/*",
+        "http://127.0.0.1:4000/",
+        "http://127.0.0.1:4000/*",
         "io.commercestacksolutions.instorekiosk://login-callback"
       ],
       "webOrigins": [
         "http://localhost:3002",
-        "http://localhost:4000"
+        "http://localhost:4000",
+        "http://127.0.0.1:4000"
       ],
       "protocolMappers": [
         {

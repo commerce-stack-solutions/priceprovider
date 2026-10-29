@@ -19,7 +19,7 @@ class AuthServiceImpl implements AuthService {
   Future<void> init() async {
     final issuer = await Issuer.discover(Uri.parse('http://localhost:8081/realms/priceprovider'));
     final client = Client(issuer, 'instorekiosk');
-    _authenticator = Authenticator(client, scopes: ['openid', 'profile', 'email']);
+    _authenticator = Authenticator(client, scopes: ['profile', 'email']);
 
     _credential = await _authenticator!.credential;
     if (_credential != null) {
