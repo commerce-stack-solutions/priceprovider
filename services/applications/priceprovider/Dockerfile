@@ -3,9 +3,12 @@
 FROM eclipse-temurin:25-jdk-noble AS builder
 
 # Install the CA bundle and curl so Gradle can download dependencies from HTTPS
-# endpoints in the minimal container image.
+# endpoints in the minimal container image. The Temurin JDK base image does not
+# automatically populate the Java trust store from the OS bundle, so import the
+# system CA file explicitly before Gradle runs.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl ca-certificates ca-certificates-java && \
+    keytool -importcert -noprompt -storepass changeit -keystore "$JAVA_HOME/lib/security/cacerts" -alias ca-certificates -file /etc/ssl/certs/ca-certificates.crt && \
     update-ca-certificates -f && \
     rm -rf /var/lib/apt/lists/*
 

@@ -13,6 +13,6 @@ echo "Building Docker image ${IMAGE_NAME}:${VERSION}..."
 
 # Build the Docker image using the services directory as context so that the
 # Dockerfile's COPY platform/... and COPY applications/... entries resolve.
-docker build -t "${IMAGE_NAME}:${VERSION}" -f Dockerfile ..
+docker build -t "${IMAGE_NAME}:${VERSION}" -f Dockerfile ../..
 
 echo "Docker image ${IMAGE_NAME}:${VERSION} built successfully."
