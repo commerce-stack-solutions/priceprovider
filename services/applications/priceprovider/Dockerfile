@@ -2,13 +2,20 @@
 # Use a JDK image to build the application
 FROM eclipse-temurin:25-jdk-noble AS builder
 
+# Install the CA bundle and curl so Gradle can download dependencies from HTTPS
+# endpoints in the minimal container image.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl ca-certificates ca-certificates-java && \
+    update-ca-certificates -f && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set the working directory in the container
 WORKDIR /workspace/app
 
 # Copy the cdf-plugin (build logic plugin)
 COPY platform/cdf-plugin platform/cdf-plugin
 
-# Copy the platform platform libraries
+# Copy the platform libraries
 COPY platform/commons platform/commons
 COPY platform/corebusinessentities platform/corebusinessentities
 COPY platform/coreserviceapp platform/coreserviceapp
