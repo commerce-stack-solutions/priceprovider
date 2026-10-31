@@ -4,7 +4,7 @@ This is an Angular application that provides a user interface for the Price Prov
 
 For detailed information on the project's architecture, development guidelines, and conventions, please see the [AGENTS.md](AGENTS.md) file.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.5 and is verified with TypeScript 6.0.3.
 
 ## Developer Setup
 

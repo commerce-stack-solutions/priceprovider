@@ -32,36 +32,30 @@ Run the app locally:
 npm start
 ```
 
+`npm start` automatically builds the shared libraries before serving the app because the workspace packages are consumed via `./dist/<library>` paths.
+
 Build the app:
 
 ```bash
 npm run build
 ```
 
-Build shared libraries:
+Build shared libraries manually if needed:
 
 ```bash
 npm run ng -- build core
 npm run ng -- build corebusiness
 ```
 
-Build app and both shared libraries:
-
-```bash
-npm run ng -- build core && npm run ng -- build corebusiness && npm run build
-```
-
-Recommended build order (verified):
+Verified local build order:
 
 ```bash
 cd apps/priceprovider
 npm ci
-npm run ng -- build core
-npm run ng -- build corebusiness
 npm run build
 ```
 
-`corebusiness` depends on `core`, so always build `core` first when libraries changed.
+`corebusiness` depends on `core`, so the app's `prebuild`/`prestart` hooks build the libraries first when using the standard commands.
 
 ## Module and Application Overview
 
