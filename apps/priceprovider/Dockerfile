@@ -29,13 +29,13 @@ RUN apk add --no-cache bash sed dos2unix
 COPY --from=builder /workspace/apps/priceprovider/dist/pricemanager-app/browser /usr/local/apache2/htdocs/
 
 # Copy custom Apache configuration
-COPY docker/httpd.conf /usr/local/apache2/conf/httpd.conf
+COPY apps/priceprovider/docker/httpd.conf /usr/local/apache2/conf/httpd.conf
 
 # Copy .htaccess file for URL rewriting
-COPY docker/.htaccess /usr/local/apache2/htdocs/.htaccess
+COPY apps/priceprovider/docker/.htaccess /usr/local/apache2/htdocs/.htaccess
 
 # Copy the entrypoint script and fix line endings
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY apps/priceprovider/docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN dos2unix /usr/local/bin/entrypoint.sh && \
     chmod +x /usr/local/bin/entrypoint.sh
 

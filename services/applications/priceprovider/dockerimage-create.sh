@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Always execute from this script directory so relative paths are stable
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -10,7 +11,8 @@ IMAGE_NAME="price-provider-service"
 
 echo "Building Docker image ${IMAGE_NAME}:${VERSION}..."
 
-# Build the Docker image
-docker build -t ${IMAGE_NAME}:${VERSION} -f Dockerfile ../..
+# Build the Docker image using the services directory as context so that the
+# Dockerfile's COPY platform/... and COPY applications/... entries resolve.
+docker build -t "${IMAGE_NAME}:${VERSION}" -f Dockerfile ../..
 
 echo "Docker image ${IMAGE_NAME}:${VERSION} built successfully."

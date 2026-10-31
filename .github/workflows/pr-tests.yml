@@ -105,7 +105,7 @@ jobs:
 
       - name: Run app tests
         run: |
-          npm test -- --watch=false --browsers=ChromeHeadless | tee app-test-output.log
+          npm test | tee app-test-output.log
 
       - name: Summarize app test results
         if: always()

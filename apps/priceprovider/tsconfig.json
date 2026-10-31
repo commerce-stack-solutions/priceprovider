@@ -42,13 +42,7 @@
       "path": "../../apps-libs/core/tsconfig.lib.json"
     },
     {
-      "path": "../../apps-libs/core/tsconfig.spec.json"
-    },
-    {
       "path": "../../apps-libs/corebusiness/tsconfig.lib.json"
-    },
-    {
-      "path": "../../apps-libs/corebusiness/tsconfig.spec.json"
     }
   ]
 }
