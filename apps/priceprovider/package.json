@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prestart": "npm run ng -- build core && npm run ng -- build corebusiness",
     "start": "ng serve",
+    "prebuild": "npm run ng -- build core && npm run ng -- build corebusiness",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "pretest": "npm run ng -- build core && npm run ng -- build corebusiness",
