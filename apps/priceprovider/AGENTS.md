@@ -18,7 +18,7 @@ For detailed development guides, component documentation, and implementation exa
 
 ## Technology Stack
 
-- Angular CLI: 22.0.5
+- Angular CLI: 22.2.5
 - Node.js: 22.22.3+
 - TypeScript: 6.0.3
 - RxJS
